@@ -1,0 +1,193 @@
+11.07.2005:
+Changes by Tensor & SiENcE
+	-several changes o the init process
+	-we removed mapcompression, 2d renderer, localmappatches.cpp/h and mappatches.h
+	-kdevelop project files
+
+12.06.2005:
+Changes by SiENcE (Florian Fischer)
+	Fixed
+	------
+	Cliloc: now the Cliloc.enu is always loaded at first
+	and second the foreign Cliloc.* strings are exchanged with the english ones
+
+	Cursorbug: in 2D rendermode the graphical Cursor wasn't displayed
+
+	Pathloaderbug: if the mulpath had no "/" or "\" at the end Iris crashes
+
+	Vs2003 Project file added (lot's of bugs crashes Iris during Runtime if compiled with VS)
+
+	Gumps: status_aos.gfm, status.gfm, player_paperdoll.gfm, askquit.gfm, healthbar.gfm added
+
+	Scripts: iris.csl modified for new Gumps support; options.csl modified
+
+	Fontcolor: Bug fixed with HTMLGumps Fontcolors - now they look like OSI Client
+
+	Network: some packets are added; packetlogger added (thx to x.diablo)
+		 time packet added
+
+	XML: granny_aos.xml modified - dublicate models removed (some filenames are already wrong),
+	     added the ability to configure the TTF-Fonts in the config.xml File.
+
+	Multis: support added (thx to x.diablo) (custom Multis are missing right now)
+
+	Music: Musicloader rewritten (existing errors: midi is only mono; smpeg crashes sometimes loading mp3)
+
+18.04.2005:
+Changes by SiENcE (Florian Fischer)
+	-added Visual Studio 2003 Project Files
+	changed: ZRegEx.h, grntextchunk.cpp, decompress.cpp, uotype.h, ui3.cpp, ZBase.h
+	added: ZRegEx.c
+
+18.04.2005:
+Changes by SiENcE (Florian Fischer)
+	-fixed txt in /gfm/loading.gfm
+
+08.04.2005:
+Changes by SiENcE (Florian Fischer)
+	-applied endian patches from tharsade (StaticModelRaster.cpp, StaticModels.cpp)
+	-modified StaticTextureLoader.cpp because of the same fault
+
+08.04.2005:
+Changes by SiENcE (Florian Fischer)
+	-fixed Midi deinit Bug on Music.cpp, thx to tharsade
+
+22.03.2005:
+Changes by SiENcE (Florian Fischer)
+	-changed StaticModels.cpp; Bugfix
+
+22.03.2005:
+Changes by SiENcE (Florian Fischer)
+	-changed: $ui5_dir/include/loaders/StaticModelRaster.h to #include "irisgl.h"
+	-thanks to tharsade
+
+22.03.2005:
+Changes by SiENcE (Florian Fischer)
+	-changed StaticModels.cpp; Bugfix
+
+22.03.2005:
+Changes by SiENcE (Florian Fischer)
+	-changed: $ui5_dir/include/loaders/StaticModelRaster.h to #include "irisgl.h"
+	-thanks to tharsade
+
+22.03.2005:
+Changes by SiENcE (Florian Fischer)
+	-added FONTSET Configuration to config.xml
+	-files changed: Config.cpp, Config.h, ui3.cpp, iris.csl, config.xml
+
+02.03.2005:
+Changes by SiENcE (Florian Fischer)
+	-added "math.h" to soundmixer.cpp
+
+01.03.2005:
+Changes by Lucas C Vella
+	-added support for starting location server list
+
+01.03.2005:
+Changes by SiENcE (Florian Fischer)
+	- updated the DevCpp Project
+
+23.02.2005:
+Changes by ArT-iX
+	-fixed crash on DeInitRenderer
+
+23.02.2005:
+Changes by SiENcE (Florian Fischer)
+	-added <IS_UOX3>0</IS_UOX3> and <CLIENT_KEY>1</CLIENT_KEY> to xml/config.xml
+
+22.02.2005:
+Changes by SiENcE (Florian Fischer)
+	-xml/particles.xml updated with some effects from Thorgrim
+	-some DTD files where updated (xml/dtd/*)
+
+22.02.2005:
+Changes by ArT-iX
+	-fixed many Labels bugs
+	-temporary fixed  memory leaks with mounts (but need to find a better solution in the future)
+	-other minor fixes
+
+20.02.2005:
+Changes by ArT-iX
+	-fixed mapinfoloader deallocation into DeIniRender (Game.cpp)
+	-fixed a memory leak in Label.cpp
+
+19.02.2005:
+Changes by SiENcE (Florian Fischer)
+	-startup.csl : net_createchar was modified from "charlist_count+1" to charlist_count
+
+17.02.2005:
+Changes by Gordrim (Matt Stentiford)
+	-iris.csl - net_status is included
+	-net_statchange(); : statusInitialised=1
+
+17.02.2005:
+Changes by SiENcE (Florian Fischer)
+	-Serverpacket Idle Warning [0x53] is now handled
+	-Act_ClientState (packet); needs more modifications because only "Generic Network Error" is shown
+
+16.02.2005:
+Changes by SiENcE (Florian Fischer)
+	-fixed "charlist_count" bug in startup.csl
+	-fixed Bugs reported in forum by "X.diablo"
+		-MapBlock2D.h (virtual void Render (int base_x, int base_y) = 0;)
+		-csl/ZTrace.cpp (#include <fstream>)
+		-Music.cpp (Music::Music ())
+		-Game.cpp (void Game::InitRenderer (std::string mulpath))
+		-StaticModels.cpp (Visual C pragma)
+	-Implementation of iris_init(); and iris_deinit(); in CSLHandler.cpp for scripthandling
+	-modified handler_deinit (const sender) from iris.csl for deinit and init process
+	(this should solve all problems disconnecting and connceting to differect servers and logging
+	in with different charcters into different worlds)
+
+15.02.2005:
+Changes by ArT-iX
+	-added support for old spellbook protocol...(iris will support out-to-dated emulators spellbooks)
+	-htmlgumps temporarily disabled until i'll fix some ugly bug
+      - Multimap support added...
+
+14.02.2005:
+Changes by ArT-iX
+	-fixed moveable labels
+
+11.02.2005:
+Changes by ArT-iX
+	-fixed a bug with <a href> tag in htmlgumps
+	-fixed htmlgumps multilabel destructor
+	-fixed problems with apices into html attributes
+	-added clickability to Labels
+
+09.02.2005:
+Changes by SiENcE (Florian Fischer)
+	-added gfm/connecting.gfm
+	 modified startup.csl for connecting
+	-modified startup.csl for individual server select (handler_on_serverlistclick)
+	-modified startup.csl and gfm/serverlist.gfm for handler_on_serverlistclick support
+
+09.02.2005:
+Changes by ArT-iX
+	started endian compatibility for modelinfoloader, htmlgumps and musiclistloader
+	fixed highlighting bug with UOX3
+	added IS_UOX3 in config
+
+08.02.2005:
+Changes by SiENcE (Florian Fischer)
+	gfm/main_menu.gfm
+	script/startup.csl : added Ultima Iris Version String
+
+07.02.2005:
+Changes by SiENcE (Florian Fischer)
+	Added GFM File Support for Gumps (Menue-GFX). Thanks to Seung Yong, Choi !
+	Add the GFM-Directory to your root Iris directory.
+	Use the new CSL Scripts (startup.csl!).
+	Modify a GFM Files (Menue-GFX) with the "Gump Form Editor" 0.31
+	Take it from our repository at:
+	http://sourceforge.net/project/showfiles.php?group_id=79197
+	
+	(remeber to edit the <MULPATH> to your UO AoS/TD in the xml/confix.xml File)
+
+Changes by Lucas C Vella:
+	Added support for character deletion
+
+Changes by Lucas C Vella:
+	Init SDL and SDL_net from main
+	Added network support for character creation

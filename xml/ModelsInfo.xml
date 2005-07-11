@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MODELS>
+	<!-- cat -->
+	<MODEL>
+		<ID>201</ID>
+		<SCALE_X>6</SCALE_X>
+		<SCALE_Y>6</SCALE_Y>
+		<SCALE_Z>6</SCALE_Z>
+	</MODEL>
+	<!-- canines_dog_hound -->
+	<MODEL>
+		<ID>217</ID>
+		<SCALE_X>8</SCALE_X>
+		<SCALE_Y>8</SCALE_Y>
+		<SCALE_Z>8</SCALE_Z>
+	</MODEL>
+	<!-- rodents_rat_sewer_lod2 -->
+	<MODEL>
+		<ID>238</ID>
+		<SCALE_X>6</SCALE_X>
+		<SCALE_Y>6</SCALE_Y>
+		<SCALE_Z>6</SCALE_Z>
+	</MODEL>
+
+	<!-- Succubus -->
+	<MODEL>
+		<ID>174</ID>
+		<SCALE_X>20</SCALE_X>
+		<SCALE_Y>20</SCALE_Y>
+		<SCALE_Z>20</SCALE_Z>
+	</MODEL>
+	<!-- Orc Lord -->
+	<MODEL>
+		<ID>189</ID>
+		<SCALE_X>25</SCALE_X>
+		<SCALE_Y>25</SCALE_Y>
+		<SCALE_Z>25</SCALE_Z>
+	</MODEL>
+	<!-- Ethereal Horse (removed from granny_aos.xml) -->
+	<MODEL>
+		<ID>115</ID>
+		<ALPHA>100</ALPHA>
+		<ALT_BODY>204</ALT_BODY>
+		<DEFAULT_HUE>90</DEFAULT_HUE>
+	</MODEL>
+	<!-- Ethereal Horse (removed from granny_aos.xml) -->
+	<MODEL>
+		<ID>195</ID>
+		<ALPHA>100</ALPHA>
+		<ALT_BODY>791</ALT_BODY>
+	</MODEL>
+	<!-- Horde Medium -->
+	<MODEL>
+		<ID>795</ID>
+		<SCALE_X>20</SCALE_X>
+		<SCALE_Y>20</SCALE_Y>
+		<SCALE_Z>20</SCALE_Z>
+	</MODEL>
+	<!-- Horde Giant -->
+	<MODEL>
+		<ID>796</ID>
+		<SCALE_X>30</SCALE_X>
+		<SCALE_Y>30</SCALE_Y>
+		<SCALE_Z>30</SCALE_Z>
+	</MODEL>
+	<!-- Snake -->
+	<MODEL>
+		<ID>52</ID>
+		<SCALE_X>4</SCALE_X>
+		<SCALE_Y>4</SCALE_Y>
+		<SCALE_Z>4</SCALE_Z>
+	</MODEL>
+	<!-- Snake Ice-->
+	<MODEL>
+		<ID>837</ID>
+		<SCALE_X>4</SCALE_X>
+		<SCALE_Y>4</SCALE_Y>
+		<SCALE_Z>4</SCALE_Z>
+	</MODEL>
+	<!-- Snake Lava-->
+	<MODEL>
+		<ID>838</ID>
+		<SCALE_X>4</SCALE_X>
+		<SCALE_Y>4</SCALE_Y>
+		<SCALE_Z>4</SCALE_Z>
+	</MODEL>
+	<!-- Gargoyle Slave -->
+	<MODEL>
+		<ID>753</ID>
+		<SCALE_X>11</SCALE_X>
+		<SCALE_Y>11</SCALE_Y>
+		<SCALE_Z>11</SCALE_Z>
+	</MODEL>
+	<!-- Gargoyle Enforced -->
+	<MODEL>
+		<ID>754</ID>
+		<SCALE_X>12</SCALE_X>
+		<SCALE_Y>12</SCALE_Y>
+		<SCALE_Z>12</SCALE_Z>
+	</MODEL>
+	<!-- Gargoyle Guard -->
+	<MODEL>
+		<ID>755</ID>
+		<SCALE_X>20</SCALE_X>
+		<SCALE_Y>20</SCALE_Y>
+		<SCALE_Z>20</SCALE_Z>
+	</MODEL>
+	<!-- Gargoyle Shopkeep -->
+	<MODEL>
+		<ID>758</ID>
+		<SCALE_X>9</SCALE_X>
+		<SCALE_Y>9</SCALE_Y>
+		<SCALE_Z>9</SCALE_Z>
+	</MODEL>
+	<!-- Drake small -->
+	<MODEL>
+		<ID>60</ID>
+		<SCALE_X>7</SCALE_X>
+		<SCALE_Y>7</SCALE_Y>
+		<SCALE_Z>7</SCALE_Z>
+	</MODEL>
+	<!-- Drake small -->
+	<MODEL>
+		<ID>61</ID>
+		<SCALE_X>7</SCALE_X>
+		<SCALE_Y>7</SCALE_Y>
+		<SCALE_Z>7</SCALE_Z>
+	</MODEL>
+	<!-- Drake Wyrm -->
+	<MODEL>
+		<ID>61</ID>
+		<SCALE_X>12</SCALE_X>
+		<SCALE_Y>12</SCALE_Y>
+		<SCALE_Z>12</SCALE_Z>
+	</MODEL>
+</MODELS>
