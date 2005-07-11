@@ -1,0 +1,371 @@
+/*
+-------------------------------------------------------------------------------------------------
+	options.csl
+Written by Thorgrim and Johwood and SiENcE
+------------------------------------------------------------------------------------------------
+*/
+
+/*
+-------------------------------------------------------------------------------------------------
+global vars
+------------------------------------------------------------------------------------------------
+*/
+var options_select = 0;
+var options;
+var options_x = 270;
+var options_y = 5;
+
+var options_open = 0;
+
+var perspective = 0;
+
+var brightness;
+
+var speech_hue;
+
+var speech_hue_value;
+
+/*
+-------------------------------------------------------------------------------------------------
+ forward declarations
+-------------------------------------------------------------------------------------------------
+*/
+
+display_options();
+init_options();
+
+/*
+-------------------------------------------------------------------------------------------------
+Event Handelers
+-------------------------------------------------------------------------------------------------
+*/
+
+init_options ()
+{
+	speech_hue_value = config_getvalue(CONFIG_SPEECH_HUE);
+}
+
+handler_on_options (const sender)
+{
+	if (options_open == 0)
+	{
+		options_open = 1;
+		display_options();
+	}
+}
+
+handler_on_close_options(const sender)
+{
+	options_open = 0;
+}
+
+handler_on_options_select1 (const sender)
+{
+	options_x = control_getx (options);
+	options_y = control_gety (options);
+
+	control_close(options);
+	options_select = 0;
+	display_options();
+
+	control_setposition (options, options_x, options_y);
+}
+
+handler_on_options_select2 (const sender)
+{
+	options_x = control_getx (options);
+	options_y = control_gety (options);
+
+	control_close(options);
+	options_select = 1;
+	display_options();
+
+	control_setposition (options, options_x, options_y);
+}
+
+handler_on_options_select3 (const sender)
+{
+	options_x = control_getx (options);
+	options_y = control_gety (options);
+
+	control_close(options);
+	options_select = 2;
+	display_options();
+
+	control_setposition (options, options_x, options_y);
+}
+
+handler_on_options_select4 (const sender)
+{
+	options_x = control_getx (options);
+	options_y = control_gety (options);
+
+	control_close(options);
+	options_select = 3;
+	display_options();
+
+	control_setposition (options, options_x, options_y);
+}
+
+handler_change_sound (const sender)
+{
+	var sound = !config_getvalue(CONFIG_SOUND);
+        config_setvalue(CONFIG_SOUND,sound);
+        if (sound)
+	{
+		button_setgump(sender, 0, 0x869);
+		button_setgump(sender, 1, 0x86a);
+		button_setgump(sender, 2, 0x867);
+	} 
+	else
+	{
+		button_setgump(sender, 0, 0x867);
+		button_setgump(sender, 1, 0x868);
+		button_setgump(sender, 2, 0x869);
+	} 
+
+}
+
+handler_change_music (const sender)
+{
+	var music = !config_getvalue(CONFIG_MUSIC);
+	config_setvalue(CONFIG_MUSIC,music);
+	if (music)
+	{
+		button_setgump(sender, 0, 0x869);
+		button_setgump(sender, 1, 0x86a);
+		button_setgump(sender, 2, 0x867);
+	} 
+	else
+	{
+		button_setgump(sender, 0, 0x867);
+		button_setgump(sender, 1, 0x868);
+		button_setgump(sender, 2, 0x869);
+	} 
+}
+
+handler_on_perspective (const sender)
+{
+	perspective = !perspective;
+	config_setvalue(CONFIG_PERSPECTIVE,perspective);
+	if (perspective==0)
+	{
+		button_setgump(sender, 0, 0x869);
+		button_setgump(sender, 1, 0x86a);
+		button_setgump(sender, 2, 0x868);
+	} 
+	else
+	{
+		button_setgump(sender, 0, 0x867);
+		button_setgump(sender, 1, 0x868);
+		button_setgump(sender, 2, 0x869);
+	} 
+}
+
+handler_on_brightness_up (const sender)
+{
+	var bright = label_gettext(brightness);
+	label_settext(brightness, bright + 1);
+}
+
+handler_on_brightness_down (const sender)
+{
+	var bright = label_gettext(brightness);
+	label_settext(brightness, bright - 1);
+}
+
+handler_on_apply_disp_settings (const sender)
+{
+//	config_setvalue(CONFIG_RENDERMODE,perspective);
+	config_setvalue(CONFIG_BRIGHTNESS,label_gettext(brightness));
+	config_setvalue(CONFIG_SPEECH_HUE, input_gettext(speech_hue));
+//	input_sethue(commandline, input_gettext(speech_hue));
+	speech_hue_value = input_gettext(speech_hue);
+}
+
+/*
+-------------------------------------------------------------------------------------------------
+Display Functions
+-------------------------------------------------------------------------------------------------
+*/
+
+display_options()
+{
+	options = gui_addcontainer(config_getvalue(CONFIG_WIDTH) - 320, 20, 300, 405);
+	gui_setcontainer(options);
+	control_setalpha(options, 0);
+
+//	control_fade(options, 255, 100);
+
+	control_sethandler(options, FUNC_ONCLOSE, "handler_on_close_options");
+
+	if (options_select == 0) {
+		var button = gui_addbutton(-45, 105, 0xe1, 0xe1, 0xe1);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select2");
+        	button = gui_addbutton(-45, 170, 0xe3, 0xe3, 0xe3);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select3");
+        	button = gui_addbutton(-45, 235, 0xec, 0xec, 0xec);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select4");
+
+        	var border = gui_addborder(-5, -5, 0xa28, 0);
+	    	control_setsize(border, 300, 420);
+
+        	gui_addgump(-45, 40, 0xd9, 0);
+
+    		gui_addlabel(60,28, "Sound and Music", 0, 149);
+
+
+		gui_addlabel(45,150, "Brightness", 5, 1);
+
+    		button = gui_addbutton(210, 150, 0x983, 0x983, 0x984);
+	    	control_sethandler(button, FUNC_ONCLICK, "handler_on_brightness_up");
+    		button = gui_addbutton(210, 160, 0x985, 0x985, 0x986);
+	    	control_sethandler(button, FUNC_ONCLICK, "handler_on_brightness_down");
+
+		brightness = gui_addlabel(180,150, label_gettext(brightness), 5, 1);
+
+
+		gui_addlabel(45,180, "Speech Hue:", 5, 1);
+		border = gui_addborder(175, 180, 0xbb8, 0);
+		control_setsize(border, 70, 25);
+
+		speech_hue = gui_addinput(180,180,50,0,1,6);
+		input_settext(speech_hue, speech_hue_value);
+
+		button = gui_addbutton(180, 375, 0xef, 0xee, 0xf0);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_apply_disp_settings");
+
+
+
+/*
+	    	gui_addlabel(45,205, "View Distance:", 0, 1);
+
+	    	button = gui_addbutton(220, 220, 0xa92, 0xa92, 0xa93);
+    		control_sethandler(button, FUNC_ONCLICK, "handler_on_vd_down");
+	    	button = gui_addbutton(220, 200, 0xa90, 0xa90, 0xa91);
+    		control_sethandler(button, FUNC_ONCLICK, "handler_on_vd_up");
+*/
+
+	    	gui_addlabel(45,118, "Sound on/off", 5, 1);
+
+	
+		if(config_getvalue(CONFIG_SOUND) == 0)
+		{
+    			button = gui_addbutton(200, 120, 0x867, 0x868, 0x869);
+    			control_sethandler(button, FUNC_ONCLICK, "handler_change_sound");
+		}
+		else
+		{
+    			button = gui_addbutton(200, 120, 0x869, 0x86a, 0x867);
+    			control_sethandler(button, FUNC_ONCLICK, "handler_change_sound");
+		}
+	
+	
+    		gui_addlabel(45,78, "Music on/off", 5, 1);
+
+		if(config_getvalue(CONFIG_MUSIC) == 0)
+		{
+    			button = gui_addbutton(200, 80, 0x867, 0x868, 0x869);
+	    		control_sethandler(button, FUNC_ONCLICK, "handler_change_music");
+		}
+		else
+		{
+    			button = gui_addbutton(200, 80, 0x869, 0x86a, 0x867);
+	    		control_sethandler(button, FUNC_ONCLICK, "handler_change_music");
+		}
+
+	}
+	else if (options_select == 1) {
+
+		var button = gui_addbutton(-45, 40, 0xd9, 0xd9, 0xd9);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select1");
+        	button = gui_addbutton(-45, 170, 0xe3, 0xe3, 0xe3);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select3");
+        	button = gui_addbutton(-45, 235, 0xec, 0xec, 0xec);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select4");
+
+        	var border = gui_addborder(-5, -5, 0xa28, 0);
+	    	control_setsize(border, 300, 420);
+
+        	gui_addgump(-45, 105, 0xe1, 0);
+	
+    		gui_addlabel(109,28, "Display", 0, 149);
+
+	    	gui_addlabel(100,60, "Resolution", 5, 1);
+	    	gui_addlabel(45,85, "Width", 5, 1);
+        	gui_addgump(40, 115, 0xd6, 0);
+        	gui_addgump(65, 115, 0xd6, 0);
+        	gui_addgump(90, 115, 0xd6, 0);
+        	gui_addgump(115, 115, 0xd6, 0);
+        	gui_addgump(140, 115, 0xd6, 0);
+        	gui_addgump(165, 115, 0xd6, 0);
+        	var width = gui_addgump(config_getvalue(CONFIG_WIDTH) / 1024 * 180, 114, 0x233e, 0);
+
+	    	gui_addlabel(200,105, config_getvalue(CONFIG_WIDTH), 5, 1);
+
+	    	gui_addlabel(45,135, "Height", 5, 1);
+        	gui_addgump(40, 165, 0xd6, 0);
+        	gui_addgump(65, 165, 0xd6, 0);
+        	gui_addgump(90, 165, 0xd6, 0);
+        	gui_addgump(115, 165, 0xd6, 0);
+        	gui_addgump(140, 165, 0xd6, 0);
+        	gui_addgump(165, 165, 0xd6, 0);
+        	var height = gui_addgump(config_getvalue(CONFIG_HEIGHT) / 768 * 180, 164, 0x233e, 0);
+
+	    	gui_addlabel(200,155, config_getvalue(CONFIG_HEIGHT), 5, 1);
+
+    		button = gui_addbutton(180, 375, 0xef, 0xee, 0xf0);
+	    	//control_sethandler(button, FUNC_ONCLICK, "handler_display_opt_apply");
+	}
+
+	else if (options_select == 2) {
+
+		var button = gui_addbutton(-45, 40, 0xd9, 0xd9, 0xd9);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select1");
+        	button = gui_addbutton(-45, 105, 0xe1, 0xe1, 0xe1);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select2");
+        	button = gui_addbutton(-45, 235, 0xec, 0xec, 0xec);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select4");
+
+		var border = gui_addborder(-5, -5, 0xa28, 0);
+	    	control_setsize(border, 300, 420);
+
+        	gui_addgump(-45, 170, 0xe3, 0);
+	
+    		gui_addlabel(100,28, "Interface", 0, 149);
+
+	    	gui_addlabel(45,78, "First person on/off", 5, 1);
+
+		if(perspective == 1)
+		{
+    			button = gui_addbutton(220, 80, 0x867, 0x868, 0x869);
+	    		control_sethandler(button, FUNC_ONCLICK, "handler_on_perspective");
+		}
+		else
+		{
+    			button = gui_addbutton(220, 80, 0x869, 0x86a, 0x867);
+	    		control_sethandler(button, FUNC_ONCLICK, "handler_on_perspective");
+		}
+	}
+
+	else {
+
+		var button = gui_addbutton(-45, 40, 0xd9, 0xd9, 0xd9);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select1");
+        	button = gui_addbutton(-45, 105, 0xe1, 0xe1, 0xe1);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select2");
+        	button = gui_addbutton(-45, 170, 0xe3, 0xe3, 0xe3);
+		control_sethandler(button, FUNC_ONCLICK, "handler_on_options_select3");
+
+		var border = gui_addborder(-5, -5, 0xa28, 0);
+	    	control_setsize(border, 300, 420);
+
+        	gui_addgump(-45, 235, 0xec, 0);
+	
+    		gui_addlabel(100,28, "Macros", 0, 149);
+
+	}
+
+	gui_setcontainer();
+
+}

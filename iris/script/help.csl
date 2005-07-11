@@ -1,0 +1,91 @@
+/*
+-------------------------------------------------------------------------------------------------
+	help.csl
+Written by Thorgrim
+------------------------------------------------------------------------------------------------
+*/
+
+/*
+-------------------------------------------------------------------------------------------------
+global vars
+------------------------------------------------------------------------------------------------
+*/
+
+var help;
+var help_x = 270;
+var help_y = 5;
+var help_open = 0;
+
+/*
+-------------------------------------------------------------------------------------------------
+ forward declarations
+-------------------------------------------------------------------------------------------------
+*/
+
+display_help();
+
+/*
+-------------------------------------------------------------------------------------------------
+Event Handelers
+-------------------------------------------------------------------------------------------------
+*/
+
+handler_on_help (const sender)
+{
+	if(help_open == 0) {
+		help_open = 1;
+		display_help();
+	}
+}
+
+handler_on_close_help(const sender)
+{
+	help_open = 0;
+}
+
+
+/*
+-------------------------------------------------------------------------------------------------
+Display Functions
+-------------------------------------------------------------------------------------------------
+*/
+
+display_help()
+{
+	help = gui_addcontainer(config_getvalue(CONFIG_WIDTH) - 450, 20, 430, 420);
+	gui_setcontainer(help);
+	control_setalpha(help, 0);
+	//control_fade(help, 255, 100);
+	control_sethandler(help, FUNC_ONCLOSE, "handler_on_close_help");
+	
+	var border = gui_addborder(-5, -5, 0xa28, 0);
+	control_setsize(border, 430, 420);
+	
+	//gui_addlabel(180,28, "HELP", 0, 149);
+	
+	gui_addlabel(165,40, "CONTROLS", 0, 149);
+	gui_addlabel(25,90, "Movement:", 7, 149);
+	gui_addlabel(170,90, "Right click and hold (UO style)", 7,  1);
+	gui_addlabel(170,110, "OR     Arrow Keys", 7, 1);
+	
+	gui_addlabel(25,140, "Rotate Camera:", 7, 149);
+	gui_addlabel(170,140, "Left/right shift + right mouse button", 7, 1);
+	gui_addlabel(170,160, "down and horizontal mouse motion.", 7, 1);
+	
+	gui_addlabel(25,190, "Zoom in/out:", 7, 149);
+	gui_addlabel(170,190, "Left shift + right mouse button down", 7, 1);
+	gui_addlabel(170,210, "and vertical mouse motion.", 7, 1);
+	gui_addlabel(170,230, "OR  Mouse scroll wheel", 7, 1);
+	
+	gui_addlabel(25,260, "Change camera angle", 7, 149);
+	gui_addlabel(25,280, "with horisontal:", 7, 149);
+	gui_addlabel(170,260, "Right shift + right mouse button down", 7, 1);
+	gui_addlabel(170,280, "and vertical mouse motion.", 7, 1);
+	
+	gui_addlabel(25,310, "Repeat previous speech:", 7, 149);
+	gui_addlabel(170,310, "           Tab", 7, 1);
+	/*gui_addlabel(25,340, "Clear speech bar:", 7, 149);
+	gui_addlabel(170,340, "           Delete", 7, 1);*/
+	  
+	gui_setcontainer();
+}
