@@ -400,6 +400,8 @@ void net_containercontent (unsigned int contid)
 
 
 
+
+
 void game_onstatusdrag (Uint32 charid, int mousex, int mousey)
 {
   char buf[15], buf2[15], buf3[15];
@@ -455,7 +457,7 @@ void net_warmodechange (unsigned int mode)
   char buf[15];
   sprintf (buf, "%d", mode);
   bool war_mode = mode != 0x00;
-  pUOGUI->setwarmode (war_mode);
+  pUOGUI.setwarmode (war_mode);
   if (pCSLHandler.ExecuteFunction ("net_warmodechange", buf))
     pDebug.Log ("No Warmode Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
@@ -631,13 +633,11 @@ void net_displaypopup (int count, int x, int y)
 
 static Control *api_findcontrol (unsigned int id)
 {
-  if (pUOGUI)
-      {
         unsigned int c_id = id >> 16;
         if (c_id)
             {
               Container *container = NULL;
-              Control *control = pUOGUI->GetControl (c_id);
+              Control *control = pUOGUI.GetControl (c_id);
               if (control)
                 if (control->getType () == CONTROLTYPE_CONTAINER)
                   container = (Container *) control;
@@ -645,27 +645,22 @@ static Control *api_findcontrol (unsigned int id)
                 return container->GetControl (id);
             }
 
-        return pUOGUI->GetControl (id);
-      }
-  return NULL;
+        return pUOGUI.GetControl (id);
 }
 
 static Container *api_findcontainer (unsigned int id)
 {
-  if (pUOGUI)
-      {
         unsigned int c_id = id >> 16;
         if (c_id)
             {
               Container *container = NULL;
-              Control *control = pUOGUI->GetControl (c_id);
+              Control *control = pUOGUI.GetControl (c_id);
               if (control)
                 if (control->getType () == CONTROLTYPE_CONTAINER)
                   container = (Container *) control;
               return container;
             }
-      }
-  return NULL;
+        return NULL;
 }
 
 void edit_handler_position_reply (int x, int y, int z)
@@ -691,13 +686,11 @@ void api_addcontrol (Control * control)
   control->OnClose (on_closehandler);
   control->OnMouseDown (on_mousedownhandler);
   control->OnMouseUp (on_mouseuphandler);
-  if (pUOGUI)
-      {
         Container *container = NULL;
 
         if (act_container_id)
             {
-              Control *ccontrol = pUOGUI->GetControl (act_container_id);
+              Control *ccontrol = pUOGUI.GetControl (act_container_id);
               if (ccontrol)
                 if (ccontrol->getType () == CONTROLTYPE_CONTAINER)
                   container = (Container *) ccontrol;
@@ -709,9 +702,8 @@ void api_addcontrol (Control * control)
             }
         else
             {
-              pUOGUI->AddControl (control);
+              pUOGUI.AddControl (control);
             }
-      }
 
 }
 
@@ -765,8 +757,6 @@ static ZString api_gui_clear (ZCsl * aCsl)
   if (argCount == 1)
       {
         int id = aCsl->get ("id").asInt ();
-        if (pUOGUI)
-            {
               Control *control = api_findcontrol (id);
               if (control)
                 if (control->getType () == CONTROLTYPE_CONTAINER)
@@ -774,12 +764,10 @@ static ZString api_gui_clear (ZCsl * aCsl)
                       ((Container *) control)->ClearControls ();
                       return "0";
                     }
-            }
       }
   else
       {
-        if (pUOGUI)
-          pUOGUI->ClearControls ();
+          pUOGUI.ClearControls ();
       }
   return "";
 }
@@ -787,13 +775,11 @@ static ZString api_gui_clear (ZCsl * aCsl)
 static ZString api_gui_setfocus (ZCsl * aCsl)
 {
   int id = aCsl->get ("id").asInt ();
-  if (pUOGUI)
-      {
         unsigned int c_id = id >> 16;
         if (c_id)
             {
               Container *container = NULL;
-              Control *control = pUOGUI->GetControl (c_id);
+              Control *control = pUOGUI.GetControl (c_id);
               if (control)
                 if (control->getType () == CONTROLTYPE_CONTAINER)
                   container = (Container *) control;
@@ -801,29 +787,25 @@ static ZString api_gui_setfocus (ZCsl * aCsl)
                 container->SetFocus (id);
             }
 
-        pUOGUI->SetFocus (id);
-      }
+        pUOGUI.SetFocus (id);
   return "0";
 }
 
 static ZString api_gui_setdefaultfocus (ZCsl * aCsl)
 {
   int id = aCsl->get ("id").asInt ();
-  if (pUOGUI)
-      {
-        Control *control = pUOGUI->GetControl (id);
-        pUOGUI->SetDefaultFocus (control);
-      }
+        Control *control = pUOGUI.GetControl (id);
+        pUOGUI.SetDefaultFocus (control);
   return "0";
 }
 
 static ZString api_gui_translate (ZCsl * aCsl)
 {
-  if (pUOGUI)
-    pUOGUI->SetPosition (aCsl->get ("x").asInt (), aCsl->get ("y").asInt ());
+    pUOGUI.SetPosition (aCsl->get ("x").asInt (), aCsl->get ("y").asInt ());
 
   return "0";
 }
+
 
 static ZString api_gui_setcontainer (ZCsl * aCsl)
 {
@@ -844,22 +826,17 @@ static ZString api_gui_addgump (ZCsl * aCsl)
   if (argCount == 4)
     flags = aCsl->get ("flags").asInt ();
 
-  if (pUOGUI)
-      {
         Image *image =
           new Image (aCsl->get ("x").asInt (), aCsl->get ("y").asInt (),
                      aCsl->get ("gump").asInt (), flags);
         api_addcontrol (image);
         return ZString (image->GetID ());
-      }
   return "0";
 }
 
 static ZString api_gui_additemcontainer (ZCsl * aCsl)
 {
 
-  if (pUOGUI)
-      {
         ItemContainer *itemcontainer = new ItemContainer;
         itemcontainer->SetPosition (aCsl->get ("x").asInt (),
                                     aCsl->get ("y").asInt ());
@@ -868,7 +845,6 @@ static ZString api_gui_additemcontainer (ZCsl * aCsl)
         itemcontainer->Rebuild ();
         api_addcontrol (itemcontainer);
         return ZString (itemcontainer->GetID ());
-      }
   return "0";
 }
 
@@ -881,8 +857,6 @@ static ZString api_gui_addart (ZCsl * aCsl)
     flags = aCsl->get ("flags").asInt ();
   if (argCount == 5)
     hue = aCsl->get ("hue").asInt ();
-  if (pUOGUI)
-      {
         ImageArt *image =
           new ImageArt (aCsl->get ("x").asInt (), aCsl->get ("y").asInt (),
                         aCsl->get ("artid").asInt (), flags);
@@ -890,8 +864,7 @@ static ZString api_gui_addart (ZCsl * aCsl)
           image->SetHue (hue);
         api_addcontrol (image);
         return ZString (image->GetID ());
-      }
-  return "0";
+   
 }
 
 
@@ -903,21 +876,17 @@ static ZString api_gui_addborder (ZCsl * aCsl)
   if (argCount == 4)
     flags = aCsl->get ("flags").asInt ();
 
-  if (pUOGUI)
-      {
+
         Border *border =
           new Border (aCsl->get ("x").asInt (), aCsl->get ("y").asInt (),
                       aCsl->get ("gump").asInt (), flags);
         api_addcontrol (border);
         return ZString (border->GetID ());
-      }
-  return "0";
 }
 
 static ZString api_gui_addcontainer (ZCsl * aCsl)
 {
-  if (pUOGUI)
-      {
+
         Container *container = new Container;
         container->SetPosition (aCsl->get ("x").asInt (),
                                 aCsl->get ("y").asInt ());
@@ -925,16 +894,14 @@ static ZString api_gui_addcontainer (ZCsl * aCsl)
                             aCsl->get ("height").asInt ());
         api_addcontrol (container);
         return ZString (container->GetID ());
-      }
-  return "0";
+
 }
 
 static ZString api_gui_addbutton (ZCsl * aCsl)
 {
   int argCount = aCsl->get ("argCount").asInt ();
 
-  if (pUOGUI)
-      {
+
         Button *button =
           new Button (aCsl->get ("x").asInt (), aCsl->get ("y").asInt ());
         if (argCount >= 3)
@@ -952,27 +919,22 @@ static ZString api_gui_addbutton (ZCsl * aCsl)
         button->OnClick (on_clickhandler);
         api_addcontrol (button);
         return ZString (button->GetID ());
-      }
-  return "0";
+
 }
 
 static ZString api_gui_addtextbox (ZCsl * aCsl)
 {
-  if (pUOGUI)
-      {
+
         Textbox *textbox = new Textbox ();
         api_addcontrol (textbox);
         return ZString (textbox->GetID ());
-      }
-  return "0";
+
 }
 
 static ZString api_gui_addlabel (ZCsl * aCsl)
 {
   int argCount = aCsl->get ("argCount").asInt ();
 
-  if (pUOGUI)
-      {
         Label *label =
           new Label (aCsl->get ("x").asInt (), aCsl->get ("y").asInt (),
                      aCsl->get ("text").buffer ());
@@ -985,8 +947,7 @@ static ZString api_gui_addlabel (ZCsl * aCsl)
 
         api_addcontrol (label);
         return ZString (label->GetID ());
-      }
-  return "0";
+
 }
 
 
@@ -994,8 +955,7 @@ static ZString api_gui_rewind (ZCsl * aCsl)
 {
   int argCount = aCsl->get ("argCount").asInt ();
 
-  if (pUOGUI)
-      {
+
         Container *container = NULL;
         Control *control = NULL;
         if (argCount == 1)
@@ -1010,19 +970,17 @@ static ZString api_gui_rewind (ZCsl * aCsl)
             }
         else
             {
-              pUOGUI->Rewind ();
+              pUOGUI.Rewind ();
             }
         return "0";
-      }
-  return "-1";
+
 }
 
 static ZString api_gui_findnext (ZCsl * aCsl)
 {
   int argCount = aCsl->get ("argCount").asInt ();
 
-  if (pUOGUI)
-      {
+
         Container *container = NULL;
         Control *control = NULL;
         if (argCount == 1)
@@ -1037,34 +995,29 @@ static ZString api_gui_findnext (ZCsl * aCsl)
             }
         else
             {
-              control = pUOGUI->GetNext ();
+              control = pUOGUI.GetNext ();
             }
 
         if (control)
           return ZString (control->GetID ());
-      }
-  return "0";
+        return "0";
+
 }
 
 static ZString api_gui_registergump (ZCsl * aCsl)
 {
 
-  if (pUOGUI)
-      {
         Texture *texture = new Texture;
         texture->LoadFromFile (aCsl->get ("filename").buffer ());
-        return ZString ((int) pUOGUI->RegisterGump (texture));
-      }
-  return "0";
+        return ZString ((int) pUOGUI.RegisterGump (texture));
+
 }
 
 static ZString api_gui_unregistergump (ZCsl * aCsl)
 {
 
-  if (pUOGUI)
-      {
-        pUOGUI->UnregisterGump (aCsl->get ("id").asInt ());
-      }
+        pUOGUI.UnregisterGump (aCsl->get ("id").asInt ());
+
   return "0";
 }
 
@@ -1073,8 +1026,7 @@ static ZString api_gui_addinputfield (ZCsl * aCsl)
 {
   int argCount = aCsl->get ("argCount").asInt ();
 
-  if (pUOGUI)
-      {
+
         int hue = 0;
         int font = 3;
         int passwordchar = 0;
@@ -1098,22 +1050,19 @@ static ZString api_gui_addinputfield (ZCsl * aCsl)
 
         api_addcontrol (input);
         return ZString (input->GetID ());
-      }
-  return "0";
+
 }
 
 
 static ZString api_gui_addpaperdoll (ZCsl * aCsl)
 {
-  if (pUOGUI)
-      {
+
         Paperdoll *paperdoll =
           new Paperdoll (aCsl->get ("x").asInt (), aCsl->get ("y").asInt (),
                          0);
         api_addcontrol (paperdoll);
         return ZString (paperdoll->GetID ());
-      }
-  return "0";
+
 }
 
 static ZString api_gui_gettextwidth (ZCsl * aCsl)
@@ -1205,6 +1154,7 @@ static ZString api_control_sety (ZCsl * aCsl)
         control->SetY (y);
         return "0";
       }
+
   return "-1";
 }
 
@@ -1240,6 +1190,7 @@ static ZString api_control_setalpha (ZCsl * aCsl)
   int id = aCsl->get ("id").asInt ();
   int alpha = aCsl->get ("alpha").asInt ();
   Control *control = api_findcontrol (id);
+
   if (control)
       {
         control->SetAlpha (alpha);
@@ -1498,6 +1449,7 @@ static ZString api_input_sethue (ZCsl * aCsl)
   int id = aCsl->get ("id").asInt ();
   Control *control = api_findcontrol (id);
   if (control)
+
       {
         if (control->getType () == CONTROLTYPE_INPUTFIELD)
           ((InputField *) control)->setHue (aCsl->get ("hue").asInt ());
@@ -1812,8 +1764,8 @@ static ZString api_gui_gumpexists (ZCsl * aCsl)
 
 static ZString api_quit (ZCsl * aCsl)
 {
-  if (pUOGUI)
-    pUOGUI->SetQuitFlag (1);
+
+    pUOGUI.SetQuitFlag (1);
   return "-1";
 }
 
@@ -1968,6 +1920,7 @@ static ZString api_net_updateselllist (ZCsl * aCsl)
     pClient->updateSellList (0);
   else
       {
+
         if (argcount == 2)
           pClient->updateSellList (mode, aCsl->get ("itemid").asInt ());
         else if (argcount == 3)
@@ -2167,6 +2120,7 @@ static ZString api_net_deletechar (ZCsl* aCsl)
 
 static ZString api_net_sendspeech (ZCsl * aCsl)
 {
+
   int argCount = aCsl->get ("argCount").asInt ();
   int mode = 0;
 
@@ -2209,9 +2163,9 @@ static ZString api_net_rename (ZCsl * aCsl)
 {
   Uint32 id = aCsl->get ("id").asInt ();
 
-  if (pClient && pCharacterList)
+  if (pClient)
       {
-        cCharacter *character = pCharacterList->Get ((Uint32) id);
+        cCharacter *character = pCharacterList.Get ((Uint32) id);
         if (character)
             {
               if (character->name_change ())
@@ -2287,9 +2241,8 @@ static ZString api_object_getcontentcount (ZCsl * aCsl)
   Uint32 id = aCsl->get ("id").asInt ();
 
   Uint32 count = 0;
-  if (pDynamicObjectList)
       {
-        dynamiclist_t *dynamics = pDynamicObjectList->GetList ();
+        dynamiclist_t *dynamics = pDynamicObjectList.GetList ();
         dynamiclist_t::iterator iter;
         for (iter = dynamics->begin (); iter != dynamics->end (); iter++)
           if (iter->second->parent == id)
@@ -2305,9 +2258,8 @@ static ZString api_object_getcontententry (ZCsl * aCsl)
   Uint32 index = aCsl->get ("index").asInt ();
   Uint32 id = aCsl->get ("id").asInt ();
 
-  if (pDynamicObjectList)
       {
-        dynamiclist_t *dynamics = pDynamicObjectList->GetList ();
+        dynamiclist_t *dynamics = pDynamicObjectList.GetList ();
         dynamiclist_t::iterator iter;
         for (iter = dynamics->begin (); iter != dynamics->end (); iter++)
           if (iter->second->parent == id)
@@ -2330,10 +2282,8 @@ static ZString api_net_getaostooltip (ZCsl * aCsl)
   cCharacter *character = NULL;
   cDynamicObject *object = NULL;
 
-  if (pCharacterList)
-    character = pCharacterList->Get (id);
-  if (pDynamicObjectList)
-    object = pDynamicObjectList->Get (id);
+  character = pCharacterList.Get (id);
+  object = pDynamicObjectList.Get (id);
   std::string msg = "";
   if (character)
     msg = character->GetAOSTooltip (index);
@@ -2368,26 +2318,21 @@ static ZString api_object_gethue (ZCsl * aCsl)
 {
   Uint32 id = aCsl->get ("id").asInt ();
 
-  if (pDynamicObjectList)
-      {
-        cDynamicObject *object = pDynamicObjectList->Get (id);
+        cDynamicObject *object = pDynamicObjectList.Get (id);
         if (object)
           return ZString (object->dye);
-      }
 
   return "0";
 }
+
 
 static ZString api_object_getbody (ZCsl * aCsl)
 {
   Uint32 id = aCsl->get ("id").asInt ();
 
-  if (pDynamicObjectList)
-      {
-        cDynamicObject *object = pDynamicObjectList->Get (id);
+        cDynamicObject *object = pDynamicObjectList.Get (id);
         if (object)
           return ZString (object->model);
-      }
 
   return "0";
 }
@@ -2396,12 +2341,10 @@ static ZString api_object_getquantity (ZCsl * aCsl)
 {
   Uint32 id = aCsl->get ("id").asInt ();
 
-  if (pDynamicObjectList)
-      {
-        cDynamicObject *object = pDynamicObjectList->Get (id);
+        cDynamicObject *object = pDynamicObjectList.Get (id);
         if (object)
+
           return ZString (object->itemcount);
-      }
 
   return "0";
 }
@@ -2410,16 +2353,13 @@ static ZString api_object_getposition (ZCsl * aCsl)
 {
   Uint32 id = aCsl->get ("id").asInt ();
 
-  if (pDynamicObjectList)
-      {
-        cDynamicObject *object = pDynamicObjectList->Get (id);
+        cDynamicObject *object = pDynamicObjectList.Get (id);
         if (object)
             {
               aCsl->set ("x", ZString (object->x));
               aCsl->set ("y", ZString (object->y));
               aCsl->set ("z", ZString (object->z));
             }
-      }
 
   return "0";
 }
@@ -2429,19 +2369,16 @@ static ZString api_object_getparent (ZCsl * aCsl)
 {
   Uint32 id = aCsl->get ("id").asInt ();
 
-  if (pDynamicObjectList)
-      {
-        cDynamicObject *object = pDynamicObjectList->Get (id);
+        cDynamicObject *object = pDynamicObjectList.Get (id);
         if (object)
           return ZString (object->parent);
-      }
 
   return "0";
 }
 
 static ZString api_net_openbackpack (ZCsl * aCsl)
 {
-  if (pClient && pCharacterList)
+  if (pClient)
       {
         cCharacter *character = pClient->player_character ();
         if (character)
@@ -2461,9 +2398,8 @@ static ZString api_char_getstatus (ZCsl * aCsl)
 {
   Uint32 id = aCsl->get ("id").asInt ();
   int property = aCsl->get ("property").asInt ();
-  if (pCharacterList)
       {
-        cCharacter *character = pCharacterList->Get ((Uint32) id);
+        cCharacter *character = pCharacterList.Get ((Uint32) id);
         if (character)
             {
               switch (property)
@@ -2530,9 +2466,8 @@ static ZString api_char_getskill (ZCsl * aCsl)
 {
   Uint32 id = aCsl->get ("id").asInt ();
   int argCount = aCsl->get ("argCount").asInt ();
-  if (pCharacterList)
       {
-        cCharacter *character = pCharacterList->Get ((Uint32) id);
+        cCharacter *character = pCharacterList.Get ((Uint32) id);
         if (character)
             {
               Uint32 skillid = aCsl->get ("skillid").asInt ();
@@ -2566,9 +2501,8 @@ static ZString api_paperdoll_refresh (ZCsl * aCsl)
 {
   int id = aCsl->get ("id").asInt ();
   int charid = aCsl->get ("charid").asInt ();
-  if (pCharacterList)
       {
-        cCharacter *character = pCharacterList->Get ((Uint32) charid);
+        cCharacter *character = pCharacterList.Get ((Uint32) charid);
         Control *control = api_findcontrol (id);
         if (control && character)
             {
@@ -2599,7 +2533,6 @@ static ZString api_gui_setcontainershape (ZCsl * aCsl)
 
 static ZString api_char_addtext (ZCsl * aCsl)
 {
-  if (pCharacterList)
       {
         Uint32 id = aCsl->get ("id").asInt ();
         int argCount = aCsl->get ("argCount").asInt ();
@@ -2610,7 +2543,7 @@ static ZString api_char_addtext (ZCsl * aCsl)
         if (argCount >= 4)
           hue = aCsl->get ("hue").asInt ();
 
-        cCharacter *character = pCharacterList->Get ((Uint32) id);
+        cCharacter *character = pCharacterList.Get ((Uint32) id);
         if (character)
             {
               character->AddText (string (aCsl->get ("text").buffer ()),
@@ -2652,8 +2585,7 @@ static ZString api_gui_addhtmllabel (ZCsl * aCsl)
   int height = aCsl->get ("height").asInt ();
   string htmltext = string (aCsl->get ("htmltext").buffer ());
   int scrollbar = aCsl->get ("scrollbar").asInt ();
-  if (pUOGUI)
-      {
+
         pDebug.Log (htmltext.c_str ());
 
         cMultiLabel *label = new cMultiLabel (x, y, width, height, scrollbar);
@@ -2667,8 +2599,7 @@ static ZString api_gui_addhtmllabel (ZCsl * aCsl)
         //pDebug.Log("CSL4");
         return ZString (label->GetID ());
         //pDebug.Log("CSL5");
-      }
-  return "-1";
+
 
 }
 
@@ -2732,8 +2663,7 @@ static ZString api_char_gethighlight (ZCsl * aCsl)
 {
   int id = aCsl->get ("id").asInt ();
   cCharacter *character = NULL;
-  if (pCharacterList)
-    character = pCharacterList->Get (id);
+  character = pCharacterList.Get (id);
   if (character)
     return ZString (character->getHighlightColor ());
   return "-1";

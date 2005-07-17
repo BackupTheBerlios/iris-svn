@@ -26,6 +26,8 @@
 
 using namespace std;
 
+GumpHandler pGumpHandler;
+
 GumpHandler::GumpHandler ()
 {
 }
@@ -70,4 +72,3 @@ void GumpHandler::DelTexture (int index)
   tex_root.erase ((Uint32) index);
 }
 
-GumpHandler *pGumpHandler = NULL;

@@ -95,7 +95,6 @@ void SDLEvent::WaitEvent ()
 }
 void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
 {
-  assert (pUOGUI);
   gui_message msg;
   switch (event.type)
       {
@@ -153,15 +152,15 @@ void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
         else
             {
               msg.type = MESSAGE_MOUSEUP;
-              pUOGUI->SetDragging (false);
+              pUOGUI.SetDragging (false);
               dragging = false;
               if (pGame.CheckDragDrop (event.button.x, event.button.y))
                 break;
             }
-        msg.mouseevent.x = event.button.x - pUOGUI->GetX ();
-        msg.mouseevent.y = event.button.y - pUOGUI->GetY ();
+        msg.mouseevent.x = event.button.x - pUOGUI.GetX ();
+        msg.mouseevent.y = event.button.y - pUOGUI.GetY ();
         msg.mouseevent.button = event.button.button;
-        if (!pUOGUI->HandleMessage (&msg))
+        if (!pUOGUI.HandleMessage (&msg))
             {
               if (event.type == SDL_MOUSEBUTTONUP)
                   {
@@ -218,10 +217,9 @@ void SDLEvent::HandleKeyPress (SDL_keysym * keysym)
   else if (keysym->sym == SDLK_RIGHT)
     msg.keypressed.key = SDLK_RIGHT;
 
-  if (pUOGUI)
-    if (pUOGUI->HandleMessage (&msg))
+    if (pUOGUI.HandleMessage (&msg))
         {
-          pUOGUI->HandleMessageQueues ();
+          pUOGUI.HandleMessageQueues ();
           return;
         }
 
@@ -249,6 +247,7 @@ void SDLEvent::HandleKeyPress (SDL_keysym * keysym)
   /* F1 key was pressed this toggles fullscreen mode - does not work under windows currently */
 
 #ifndef WIN32
+
   if (keys[SDLK_F1] == SDL_PRESSED)
     SDLscreen->ToggleFullScreen ();
 
@@ -305,8 +304,6 @@ void SDLEvent::HandleMovement (void)
 
 void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
 {
-  if (!pUOGUI)
-    return;
 
   if (!event)
       {
@@ -315,23 +312,22 @@ void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
         return;
       }
 
-  if (pUOGUI)
-    pUOGUI->SetCursorPos (event->x, event->y);
+    pUOGUI.SetCursorPos (event->x, event->y);
 
   pGame.UpdateDragMode (event->x, event->y);
 
   gui_message msg;
 
   msg.type = MESSAGE_MOUSEMOTION;
-  msg.mousemotionevent.x = event->x - pUOGUI->GetX ();
-  msg.mousemotionevent.y = event->y - pUOGUI->GetY ();
+  msg.mousemotionevent.x = event->x - pUOGUI.GetX ();
+  msg.mousemotionevent.y = event->y - pUOGUI.GetY ();
   msg.mousemotionevent.button = event->state;
   msg.mousemotionevent.relx = event->xrel;
   msg.mousemotionevent.rely = event->yrel;
 
-  if (pUOGUI->HandleMessage (&msg))
+  if (pUOGUI.HandleMessage (&msg))
       {
-        pUOGUI->HandleMessageQueues ();
+        pUOGUI.HandleMessageQueues ();
       }
   else
       {

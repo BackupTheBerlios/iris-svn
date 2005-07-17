@@ -184,13 +184,17 @@ class cParticleLoader
      std::map <std::string, Particle::cEffectDefinition *> effects;
      Particle::cParticleTextureManager * m_texture_manager;
   public:
-    cParticleLoader (std::string filename);
+    cParticleLoader ();
     ~cParticleLoader ();
+
+    void Init (std::string filename);
+    void DeInit ();
+    
     Particle::cEffectDefinition * getEffect (std::string name);
     Particle::cParticleTextureManager * texture_manager ();
 };
 
-extern cParticleLoader * pParticleLoader;
+extern cParticleLoader pParticleLoader;
 
 
 #endif //_PARTICLELOADER_H_

@@ -111,7 +111,7 @@ void cCharacterLight::Generate (float char_x, float char_y, float char_z, int bl
 
 
             std::list < cLight3D * >static_light_list =
-              pLightManager->static_light_list ();
+              pLightManager.static_light_list ();
             std::list < cLight3D * >::iterator light_iter;
 
             int temp_colors[6][3];

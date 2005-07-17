@@ -130,6 +130,6 @@ protected:
    void (*callback_OnDelete) (cDynamicObject * object);
 };
 
-extern cDynamicObjectList * pDynamicObjectList;
+extern cDynamicObjectList pDynamicObjectList;
 
 #endif //_DYNAMICOBJECTS_H_

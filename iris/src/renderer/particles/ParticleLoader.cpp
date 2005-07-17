@@ -31,7 +31,7 @@
 
 using namespace std;
 
-cParticleLoader *pParticleLoader = NULL;
+cParticleLoader pParticleLoader;
 
 
 namespace Particle
@@ -416,8 +416,19 @@ namespace Particle
 }
 
 
-cParticleLoader::cParticleLoader (std::string filename)
+cParticleLoader::cParticleLoader ()
 {
+  m_texture_manager = NULL;
+}
+
+cParticleLoader::~cParticleLoader ()
+{
+    DeInit ();
+}
+
+void cParticleLoader::Init (std::string filename)
+{
+  DeInit ();
   m_texture_manager = NULL;
 
   XML::Parser parser;
@@ -468,7 +479,7 @@ cParticleLoader::cParticleLoader (std::string filename)
 }
 
 
-cParticleLoader::~cParticleLoader ()
+void cParticleLoader::DeInit ()
 {
   delete m_texture_manager;
   m_texture_manager = NULL;
@@ -481,6 +492,8 @@ cParticleLoader::~cParticleLoader ()
 
 Particle::cParticleTextureManager * cParticleLoader::texture_manager ()
 {
+  if (!m_texture_manager)
+    THROWEXCEPTION ("invalid call of cParticleLoader::texture_manager ()");
   return m_texture_manager;
 }
 

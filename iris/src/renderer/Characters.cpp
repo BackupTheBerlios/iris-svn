@@ -31,6 +31,7 @@
 
 
 
+
 #include <cassert>
 #include "renderer/3D/Light3D.h"
 #include "granny/GrannyLoader.h"
@@ -38,7 +39,7 @@
 
 using namespace std;
 
-cCharacterList *pCharacterList = NULL;
+cCharacterList pCharacterList;
 
 float Char_Outbox[12][3][3] = {
   {{0, 0, 0}, {1, 0, 0}, {1, 1, 0}},      // Bottom
@@ -426,6 +427,7 @@ sSkillEntry *cCharacter::skill (Uint16 id)
   iter = m_skills.find (id);
   if (iter != m_skills.end ())
     return iter->second;
+
   sSkillEntry *result = new sSkillEntry;
   memset (result, 0, sizeof (struct sSkillEntry));
   m_skills.insert (make_pair (id, result));
@@ -630,6 +632,7 @@ void cCharacter::DoAnimation (int animid, int repeat)
               case 0x03:
                 m_forceanim = 2;
                 break;
+
               case 0x04:case 0x05:
                 m_forceanim = 4;
                 break;

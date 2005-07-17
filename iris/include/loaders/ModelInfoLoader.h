@@ -31,27 +31,41 @@
 #include <string>
 #include <map>
 
-struct cModelInfoEntry
+class cModelInfoEntry
 {
- int id;
- int scalex;
- int scaley;
- int scalez;
- int alpha;
- int defhue;
- int alt_body;
+   private:
+     int m_id;
+     int m_scalex;
+     int m_scaley;
+     int m_scalez;
+     int m_alpha;
+     int m_defhue;
+     int m_alt_body;
+   public:
+      cModelInfoEntry (int id, int scalex, int scaley, int scalez, int alpha, int defhue, int alt_body);
+      int id ();
+      int scalex ();
+      int scaley ();
+      int scalez ();
+      int alpha ();
+      int defhue ();
+      int alt_body ();   
 };
 
 class cModelInfoLoader
 {
  private:
-     std::map<int, cModelInfoEntry*> model_infos;
+     std::map<int, cModelInfoEntry *> model_infos;
  public:
   cModelInfoLoader();
-  ~cModelInfoLoader();     
+  ~cModelInfoLoader();
+
+  void Init (std::string filename);
+  void DeInit ();
+  
   cModelInfoEntry * GetModelEntry(int id);   
 };
 
-extern cModelInfoLoader * pModelInfoLoader;
+extern cModelInfoLoader pModelInfoLoader;
 
 #endif

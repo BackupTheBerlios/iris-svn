@@ -37,11 +37,13 @@ public:
    Texture * GetGroundTexture(int index);
    Texture * GetArtTexture(int index);
 
+   void Clear ();
+
 protected:
 	Cache< Texture > groundTiles;
 	Cache< Texture > artTiles;
 };
 
-extern	TextureBuffer	* pTextureBuffer;
+extern	TextureBuffer pTextureBuffer;
 
 #endif //_GROUND_H_

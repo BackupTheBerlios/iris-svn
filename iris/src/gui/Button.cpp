@@ -201,18 +201,17 @@ int Button::HandleMessage (gui_message * msg)
 
 bool Button::CheckPixel (int x, int y)
 {
-  assert (pGumpHandler);
   Texture *texture = NULL;
 
   if (!pressed)
       {
         if (mouseover)
-          texture = LoadGump (button_gump[1], pGumpHandler, false);
+          texture = LoadGump (button_gump[1], &pGumpHandler, false);
         else
-          texture = LoadGump (button_gump[0], pGumpHandler, false);
+          texture = LoadGump (button_gump[0], &pGumpHandler, false);
       }
   else
-    texture = LoadGump (button_gump[2], pGumpHandler, false);
+    texture = LoadGump (button_gump[2], &pGumpHandler, false);
 
   if (texture)
       {

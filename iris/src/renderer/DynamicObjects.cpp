@@ -62,10 +62,10 @@ cDynamicObject::~cDynamicObject ()
   if (m_motive)
     delete m_motive;
   m_motive = NULL;
-  if (m_light_source && pLightManager)
-    pLightManager->UnRegisterLight (m_light_source);
-  if (m_particle_effect_handle && pParticleEngine)
-    pParticleEngine->RemoveEffect (m_particle_effect_handle);
+  if (m_light_source)
+    pLightManager.UnRegisterLight (m_light_source);
+  if (m_particle_effect_handle)
+    pParticleEngine.RemoveEffect (m_particle_effect_handle);
 }
 
 void cDynamicObject::setMotive (cMotiveBasedLight * motive)
@@ -112,7 +112,7 @@ Uint32 cDynamicObject::GetParticleEffectHandle ()
 }
 
 
-cDynamicObjectList *pDynamicObjectList = NULL;
+cDynamicObjectList pDynamicObjectList;
 
 
 cDynamicObjectList::cDynamicObjectList ()
@@ -269,6 +269,7 @@ cDynamicObject *cDynamicObjectList::AddCharEquip (Uint32 id, Uint16 model,
                                                   Uint16 dye, Uint32 parent)
 
 
+
 {
   cDynamicObject *result = Add (id);
   assert (result);
@@ -315,6 +316,7 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
   result->type = DYNAMICTYPE_WORLD;
   result->model = model;
   result->x = x;
+
   result->y = y;
   result->z = z;
   result->itemcount = itemcount;
@@ -334,14 +336,14 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
                                               static_model);
               result->setMotive (light);
               if (static_model->GetLightSourceInfo ())
-                result->setLightSource (pLightManager->
+                result->setLightSource (pLightManager.
                                         AddDefinedStaticLightSource (x, y, z,
                                                                      static_model->
                                                                      GetLightSourceInfo
                                                                      ()));
 
               std::list < cLight3D * >static_light_list =
-                pLightManager->static_light_list ();
+                pLightManager.static_light_list ();
               std::list < cLight3D * >::iterator light_iter;
               for (light_iter = static_light_list.begin ();
                    light_iter != static_light_list.end (); light_iter++)
@@ -350,8 +352,8 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
                       light->AddLight (*light_iter);
                     }
 
-              if (static_model->GetParticleEffectInfo () && pParticleEngine)
-                result->SetParticleEffectHandle (pParticleEngine->
+              if (static_model->GetParticleEffectInfo ())
+                result->SetParticleEffectHandle (pParticleEngine.
                                                  AddEffect (static_model->
                                                             GetParticleEffectInfo
                                                             (), x, y,

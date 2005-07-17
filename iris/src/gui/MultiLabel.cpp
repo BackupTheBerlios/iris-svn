@@ -23,52 +23,86 @@
 #include "gui/Button.h"
 #include "gui/GUIHandler.h"
 #include "gui/Container.h"
+#include "gui/Control.h"
 #include "Debug.h"
 #include <iostream>
 
 int onscrollup (Control * contr)
 {
-  if (!pUOGUI)
-    return -1;
-
-  cMultiLabel *mlabel;
+  cMultiLabel *mlabel = NULL;
+  Control * control;
   if (contr->GetData (1))
       {
-        Container *cont =
-          (Container *) pUOGUI->GetControl (contr->GetData (1));
-        mlabel = (cMultiLabel *) cont->GetControl (contr->GetData (0));
+        control = pUOGUI.GetControl (contr->GetData (1));
+        if (control->getType () != CONTROLTYPE_CONTAINER) {
+            pDebug.Log ("Invalid multilabel container cast in onscrolldown!!");
+            return -1;
+        }
+        Container *container = (Container *) control;
+
+        if (container)
+            {
+              control = container->GetControl (contr->GetData (0));
+              if (control->getType () != CONTROLTYPE_MULTILABEL) {
+                    pDebug.Log ("Invalid multilabel cast onscrolldown!!");
+                    return -1;
+              }
+              mlabel = (cMultiLabel *) control;
+
+            }
       }
-  else
-    mlabel = (cMultiLabel *) pUOGUI->GetControl (contr->GetData (0));
+  else  {
+    control = pUOGUI.GetControl (contr->GetData (0));
+              if (control->getType () != CONTROLTYPE_MULTILABEL) {
+                    pDebug.Log  ("Invalid multilabel cast onscrolldown!!");
+                    return -1;
+              }
+    mlabel = (cMultiLabel *) control;
+  }
 
   if (mlabel)
-    mlabel->ScrollUp ();
+      {
+        mlabel->ScrollUp ();
+      }
   return -1;
 }
 
 int onscrolldown (Control * contr)
 {
-  if (!pUOGUI)
-    return -1;
-
   cMultiLabel *mlabel = NULL;
+  Control * control;
   if (contr->GetData (1))
       {
-        Container *cont =
-          (Container *) pUOGUI->GetControl (contr->GetData (1));
-        if (cont)
+        control = pUOGUI.GetControl (contr->GetData (1));
+        if (control->getType () != CONTROLTYPE_CONTAINER) {
+            pDebug.Log  ("Invalid multilabel container cast in onscrolldown!!");
+            return -1;
+        }
+        Container *container = (Container *) control;
+        
+        if (container)
             {
-              mlabel = (cMultiLabel *) cont->GetControl (contr->GetData (0));
+              control = container->GetControl (contr->GetData (0));
+              if (control->getType () != CONTROLTYPE_MULTILABEL) {
+                    pDebug.Log  ("Invalid multilabel cast onscrolldown!!");
+                    return -1;
+              }
+              mlabel = (cMultiLabel *) control;
 
             }
       }
-  else
-    mlabel = (cMultiLabel *) pUOGUI->GetControl (contr->GetData (0));
+  else  {
+    control = pUOGUI.GetControl (contr->GetData (0));
+              if (control->getType () != CONTROLTYPE_MULTILABEL) {
+                    pDebug.Log  ("Invalid multilabel cast onscrolldown!!");
+                    return -1;
+              }
+    mlabel = (cMultiLabel *) control;
+  }
 
   if (mlabel)
       {
         mlabel->ScrollDown ();
-
       }
   return -1;
 }
@@ -97,7 +131,7 @@ cMultiLabel::~cMultiLabel ()
 {
 
 
-  for(int i = 0; i < labels.size(); i++){
+  for(unsigned int i = 0; i < labels.size(); i++){
      
      Label * l =  labels.at(i);
       //(if(labels.at(i))
@@ -130,12 +164,12 @@ void cMultiLabel::Create ()
   Label *label;
   //int check = 0;
   //std::cout << "Lines size: " << lines.size () << std::endl;
-  for (int i = 0; i < lines.size (); i++)
+  for (unsigned int i = 0; i < lines.size (); i++)
       {
         __line curr_line = lines.at (i);
 
        
-        for (int idx = 0; idx < curr_line.size (); idx++)
+        for (unsigned int idx = 0; idx < curr_line.size (); idx++)
             {
               //std::cout << "Line: " << i <<" Comp: " << idx << std::endl;
               
@@ -208,7 +242,7 @@ void cMultiLabel::Draw (GumpHandler * gumps)
 
   Control::Draw (gumps);
 
-  for (int i = 0; i < labels.size (); i++)
+  for (unsigned int i = 0; i < labels.size (); i++)
       {
         Label *lab = labels.at (i);
 
@@ -252,8 +286,8 @@ void cMultiLabel::Draw (GumpHandler * gumps)
                   }
               else
                   {
-                    pUOGUI->AddControl (scrollup);
-                    pUOGUI->AddControl (scrolldown);
+                    pUOGUI.AddControl (scrollup);
+                    pUOGUI.AddControl (scrolldown);
                   }
               scrollbuts_created = true;
             }
@@ -296,7 +330,7 @@ void cMultiLabel::ScrollUp ()
 
 
 
-  for (int i = 0; i < labels.size (); i++)
+  for (unsigned int i = 0; i < labels.size (); i++)
       {
         Label *lab = labels.at (i);
 
@@ -313,7 +347,7 @@ void cMultiLabel::ScrollDown ()
 
 
 
-  for (int i = 0; i < labels.size (); i++)
+  for (unsigned int i = 0; i < labels.size (); i++)
       {
         Label *lab = labels.at (i);
 

@@ -43,7 +43,7 @@ public:
 	void setGump( unsigned short data ) { generated = false; _gump = data; }
 	unsigned short gump() const { return _gump; }
 
-	virtual void Draw( GumpHandler *gumps );
+	virtual void Draw( GumpHandler * gumps );
 
 private:
 	unsigned short _gump;

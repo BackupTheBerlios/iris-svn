@@ -28,6 +28,8 @@
 #include "renderer/DynamicObjects.h"
 #include "renderer/TextureBuffer.h"
 
+
+
 #include "loaders/ArtLoader.h"
 #include <cassert>
 
@@ -38,7 +40,7 @@ bool c_aostooltip = false;
 cItemContainerEntry::cItemContainerEntry (Uint32 id, Uint16 model, int x,
                                           int y, Uint16 hue)
 {
-  cDynamicObject *obj = pDynamicObjectList->Get (id);
+  cDynamicObject *obj = pDynamicObjectList.Get (id);
   int count = obj->itemcount;
   if (model == 0xEEA || model == 0xEED || model == 0xEF0)
       {
@@ -92,7 +94,7 @@ void ItemContainer::Draw (GumpHandler * gumps)
   std::map < Uint32, cItemContainerEntry * >::iterator iter;
   for (iter = entries.begin (); iter != entries.end (); iter++)
       {
-        cDynamicObject *obj = pDynamicObjectList->Get (iter->second->id ());
+        cDynamicObject *obj = pDynamicObjectList.Get (iter->second->id ());
         if (obj)
             {
               int hue = (int) obj->dye;
@@ -127,7 +129,7 @@ void ItemContainer::Draw (GumpHandler * gumps)
 
 int ItemContainer::HandleMessage (gui_message * msg)
 {
-  if (!pDynamicObjectList || !pTextureBuffer || !m_containerid)
+  if (!m_containerid)
     return false;
 
   cItemContainerEntry *entry;
@@ -151,10 +153,10 @@ int ItemContainer::HandleMessage (gui_message * msg)
         if (entry)
             {
               mouseover_id = entry->id ();
-              if (nConfig::aostooltips && pDynamicObjectList && !c_aostooltip)
+              if (nConfig::aostooltips && !c_aostooltip)
                   {
                     cDynamicObject *obj =
-                      pDynamicObjectList->Get (entry->id ());
+                      pDynamicObjectList.Get (entry->id ());
                     int count = obj->aostooltips_count ();
                     pGame.DrawAOSTooltip (entry->id (), count,
                                           msg->mousemotionevent.x,
@@ -246,7 +248,7 @@ int ItemContainer::HandleMessage (gui_message * msg)
         if (msg->addcontaineritem.containerid == m_containerid)
             {
               cDynamicObject *object;
-              object = pDynamicObjectList->Get (msg->addcontaineritem.id);
+              object = pDynamicObjectList.Get (msg->addcontaineritem.id);
               if (object)
                 AddItem (object);
               return true;
@@ -267,9 +269,8 @@ void ItemContainer::Clear ()
 void ItemContainer::Rebuild ()
 {
   Clear ();
-  assert (pDynamicObjectList);
 
-  dynamiclist_t *dynamics = pDynamicObjectList->GetList ();
+  dynamiclist_t *dynamics = pDynamicObjectList.GetList ();
   assert (dynamics);
 
   dynamiclist_t::iterator iter;

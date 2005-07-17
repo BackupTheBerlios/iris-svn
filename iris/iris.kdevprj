@@ -161,14 +161,14 @@ type=DATA
 
 [Config for BinMakefileAm]
 addcxxflags=
-bin_program=iris
+bin_program=ui3
 cflags=
 cppflags=
 cxxflags=\s-O0
 ldadd=
-ldflags=\s
+ldflags=\s\s
 libtool_dir=
-path_to_bin_program=.
+path_to_bin_program=./src
 
 [General]
 AMChanged=false

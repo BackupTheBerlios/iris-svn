@@ -48,5 +48,7 @@ private:
  GumpBuffer_t	tex_root;
 
 };
-extern GumpHandler * pGumpHandler;
+
+extern GumpHandler pGumpHandler;
+
 #endif

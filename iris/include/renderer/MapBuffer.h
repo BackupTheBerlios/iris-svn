@@ -64,6 +64,19 @@ public:
 
 };
 
-extern	cMapbuffer	* pMapbuffer;
+class cMapbufferHandler
+{
+    private:
+       cMapbuffer * map_buffer;
+    public:
+        cMapbufferHandler ();
+        ~ cMapbufferHandler ();
+        void Init (cMapbuffer * map_buffer);
+        void DeInit ();
+        cMapbuffer * buffer ();
+};
+
+
+extern cMapbufferHandler pMapbufferHandler;
 
 #endif //_MAPBUFFER_H_

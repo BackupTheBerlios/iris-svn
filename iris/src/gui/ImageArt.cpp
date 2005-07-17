@@ -72,8 +72,6 @@ void ImageArt::Draw (GumpHandler * gumps)
 
   Control::Draw (gumps);
 
-  if (pTextureBuffer)
-      {
 
         Texture *texture;
 
@@ -85,7 +83,7 @@ void ImageArt::Draw (GumpHandler * gumps)
 
         //    texture = pTextureBuffer->GetGroundTexture(texid);
 
-        texture = pTextureBuffer->GetArtTexture (texid + 16384);
+        texture = pTextureBuffer.GetArtTexture (texid + 16384);
 
         if (texture)
             {
@@ -105,7 +103,5 @@ void ImageArt::Draw (GumpHandler * gumps)
                 DrawRect (GetX (), GetY (), texture->GetWidth (),
                           texture->GetHeight (), texture, GetAlpha (), true);
             }
-
-      }
 
 }

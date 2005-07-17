@@ -129,13 +129,12 @@ int Renderer3D::Init (void)
 
   LoadSkyboxTextures ();
 
-  if (pUOGUI)
-      {
-        pUOGUI->LoadCursor (0, 0x205a);
-        pUOGUI->LoadCursor (1, 0x205b);
-        pUOGUI->LoadCursor (2, 8305);
-        pUOGUI->LoadCursor (3, 8310);
-      }
+
+        pUOGUI.LoadCursor (0, 0x205a);
+        pUOGUI.LoadCursor (1, 0x205b);
+        pUOGUI.LoadCursor (2, 8305);
+        pUOGUI.LoadCursor (3, 8310);
+
 
 
   init_vertex_buffer ();
@@ -194,6 +193,9 @@ void Renderer3D::LoadSkyboxTextures ()
 
 int Renderer3D::DeInit (void)
 {
+
+
+
   for (int index = 0; index < 5; index++)
     if (skyboxtextures[index])
         {
@@ -207,7 +209,6 @@ int Renderer3D::DeInit (void)
   delete tex_char_shadow;
   tex_char_shadow = NULL;
 
-  printf ("DeInit\n");
 
   free_vertex_buffer ();
 
@@ -314,6 +315,7 @@ extern int m_count;
      if(sizeof(CalIndex)==2)
      glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_SHORT, &meshFaces[0][0]);
      else
+
      glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_INT, &meshFaces[0][0]);
 
 
@@ -378,6 +380,7 @@ for(vertexId = 0; vertexId < vertexCount; vertexId++)
      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
      } */
 
+
   // end the rendering
 /*  pCalRenderer->endRendering();
   glPopMatrix ();
@@ -387,9 +390,6 @@ for(vertexId = 0; vertexId < vertexCount; vertexId++)
 
 int Renderer3D::RenderScene (void)
 {
-
-  if (!pMapbuffer)
-    return false;
 
   float fog_view_dist = (float) (view_distance - 2.5f) * 8 + pCamera.GetZoom();
   glFogf (GL_FOG_START, (float) fog_view_dist);
@@ -431,8 +431,8 @@ int Renderer3D::RenderScene (void)
           light_angle_dir = -1.0f;
         if (light_angle < 3.14159f * 0.1f)
           light_angle_dir = 1.0f;
-        ((cMapbuffer3D *) pMapbuffer)->SetRecalcAmbientLightFlag ();
-        pDynamicObjectList->SetRecalcAmbientLightFlag ();
+        ((cMapbuffer3D *) pMapbufferHandler.buffer ())->SetRecalcAmbientLightFlag ();
+        pDynamicObjectList.SetRecalcAmbientLightFlag ();
 
 
         light_last_change = current_ticks;
@@ -497,9 +497,8 @@ int Renderer3D::RenderScene (void)
 
         if (z != old_z)
             {
-              if (pMapbuffer)
-                pMapbuffer->setRoofZ (z);
-              pMapbuffer->UpdateAlpha ();
+                pMapbufferHandler.buffer ()->setRoofZ (z);
+              pMapbufferHandler.buffer ()->UpdateAlpha ();
               if (static_faders.size ())
                   {
                     old_z = ROOF_WAIT;
@@ -532,7 +531,7 @@ int Renderer3D::RenderScene (void)
       }
 
   if (do_culling)
-    pMapbuffer->SetUsageFlag (false);
+    pMapbufferHandler.buffer ()->SetUsageFlag (false);
 
   RenderTerrain (do_culling);
   RenderDynamics (do_culling);
@@ -545,15 +544,13 @@ int Renderer3D::RenderScene (void)
   RenderCharacters (do_culling);
 
 //  does not work correct
-  if (pParticleEngine)
-    pParticleEngine->Render ();
+    pParticleEngine.Render ();
 
   render_vertex_buffer_transparent ();
 
   glMatrixMode (GL_MODELVIEW_MATRIX);
 
-  if (pUOGUI)
-    pUOGUI->Draw ();
+    pUOGUI.Draw ();
 
   return SDLscreen->DrawGL ();
 }
@@ -586,7 +583,7 @@ void Renderer3D::RenderTerrain (bool do_culling)
         {
           cMapblock3D *block =
             reinterpret_cast <
-            cMapblock3D * >(pMapbuffer->CreateBlock (blockx + x, blocky + y));
+            cMapblock3D * >(pMapbufferHandler.buffer ()->CreateBlock (blockx + x, blocky + y));
           if (block)
               {
                 block->Render (x, y, do_culling, x * 8.0f, y * 8.0f);
@@ -622,7 +619,7 @@ void Renderer3D::RenderWater (bool do_culling)
         {
           cMapblock3D *block =
             reinterpret_cast <
-            cMapblock3D * >(pMapbuffer->CreateBlock (blockx + x, blocky + y));
+            cMapblock3D * >(pMapbufferHandler.buffer ()->CreateBlock (blockx + x, blocky + y));
           if (block)
               {
                 glPushMatrix ();
@@ -637,8 +634,7 @@ void Renderer3D::RenderWater (bool do_culling)
 
 void Renderer3D::RenderDynamics (bool do_culling)
 {
-  if (!pDynamicObjectList)
-    return;
+
 
   int blockx = pCamera.GetBlockX ();
   int blocky = pCamera.GetBlockY ();
@@ -650,7 +646,7 @@ void Renderer3D::RenderDynamics (bool do_culling)
   int dx = blockx * 8;
   int dy = blocky * 8;
 
-  dynamiclist_t *dynamics = pDynamicObjectList->GetList ();
+  dynamiclist_t *dynamics = pDynamicObjectList.GetList ();
   dynamiclist_t::iterator iter;
 
   for (iter = dynamics->begin (); iter != dynamics->end (); iter++)
@@ -669,6 +665,7 @@ void Renderer3D::RenderDynamics (bool do_culling)
                 pStaticModelLoader.getModel (object->model);
               if (model)
                   {
+
                     if (object->motive ())
                         {
                           if (object->RecalcAmbientLightFlag ())
@@ -689,7 +686,7 @@ void Renderer3D::RenderDynamics (bool do_culling)
 
 void Renderer3D::RenderCharacters (bool do_culling)
 {
-  if (!pCharacterList || !pClient)
+  if (!pClient)
     return;
 
   int blockx = pCamera.GetBlockX ();
@@ -704,7 +701,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
 
   float colr, colg, colb;
 
-  characterlist_t *characters = pCharacterList->GetList ();
+  characterlist_t *characters = pCharacterList.GetList ();
   characterlist_t::iterator iter;
   Uint32 currentticks = SDL_GetTicks ();
 
@@ -716,19 +713,19 @@ void Renderer3D::RenderCharacters (bool do_culling)
             && (character->x () <= max_x) && (character->y () <= max_y))
             {
 
-              cModelInfoEntry * modelinfo = pModelInfoLoader->GetModelEntry(character->body());
+              cModelInfoEntry * modelinfo = pModelInfoLoader.GetModelEntry(character->body());
 
               float alpha = 1.0f;
               float scalex = 1.0f, scaley = 1.0f, scalez = 1.0f;
               int defhue = 0, altbody = 0;
                                  if(modelinfo)
                                  {
-                                  scalex = modelinfo->scalex / 10.0f;
-                                  scaley = modelinfo->scaley / 10.0f;
-                                  scalez = modelinfo->scalez / 10.0f;
-                                  alpha = modelinfo->alpha / 255.0f;
-                                  defhue = modelinfo->defhue;
-                                  altbody = modelinfo->alt_body;
+                                  scalex = modelinfo->scalex () / 10.0f;
+                                  scaley = modelinfo->scaley () / 10.0f;
+                                  scalez = modelinfo->scalez () / 10.0f;
+                                  alpha = modelinfo->alpha () / 255.0f;
+                                  defhue = modelinfo->defhue ();
+                                  altbody = modelinfo->alt_body ();
                                  }
 
               float matrix[16], invmatrix[16];
@@ -836,11 +833,12 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                       int mod_id = eqp->anim ();
 
                                       cModelEntry *modelentry =
-                                        pStitchinLoader->GetModel (mod_id);
+                                        pStitchinLoader.GetModel (mod_id);
                                       if (!modelentry)
                                         continue;
 
                                       int *covers = modelentry->GetCovers ();
+
 
                                       for (int c = 0; c < 13; c++)
                                           {
@@ -890,6 +888,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                     glPopMatrix ();
 
                     glPushMatrix ();
+
                     glMultMatrixf (left_matrix.matrix);
                     glGetFloatv (GL_MODELVIEW_MATRIX, left_matrix.matrix);
                     glPopMatrix ();
@@ -964,6 +963,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                         {
                           if (character->direction () & 0x80)
                             mountanim = 2;
+
                           else
                             mountanim = 0;
                         }
@@ -993,6 +993,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                   }
               character->setAnimtime (curtime);
               glPopMatrix ();
+
             }
 
 
@@ -1000,7 +1001,9 @@ void Renderer3D::RenderCharacters (bool do_culling)
 
 
 
+
 }
+
 
 void Renderer3D::RenderDragModel ()
 {
@@ -1024,9 +1027,6 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
     *r_object = NULL;
   if (r_character)
     *r_character = NULL;
-
-  if (!pDynamicObjectList || !pCharacterList)
-    return;
 
   {
     // Obtain Cam Coords and PickRay
@@ -1062,7 +1062,7 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
 
     float distance = 1000000.0f;
     float lambda;
-    dynamiclist_t *dynamics = pDynamicObjectList->GetList ();
+    dynamiclist_t *dynamics = pDynamicObjectList.GetList ();
     dynamiclist_t::iterator iter;
 
     for (iter = dynamics->begin (); iter != dynamics->end (); iter++)
@@ -1087,7 +1087,7 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
     if (r_character)
         {
           cCharacter *character =
-            pCharacterList->CheckRay (vecPickRayOrigin, vecPickRayDir,
+            pCharacterList.CheckRay (vecPickRayOrigin, vecPickRayDir,
 
                                       -deltax, -deltay, 0.0f, lambda);
           if (character)        // if character is nearer than found object
@@ -1108,10 +1108,9 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
 void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3],
                                     int *cursor_character)
 {
-  if (!pCharacterList )
-    return;
 
   // Obtain Cam Coords and PickRay
+
 
   float vecPickRayOrigin[3];
   float vecPickRayDir[3];
@@ -1131,6 +1130,7 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3],
   CamBlockX = (int) CamX / 8;
   CamBlockY = (int) CamY / 8;
   CamX -= CamBlockX * 8.0f;
+
   CamY -= CamBlockY * 8.0f;
 
   // Check Blocks against ray
@@ -1151,7 +1151,8 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3],
         {
           cMapblock3D *block =
             reinterpret_cast <
-            cMapblock3D * >(pMapbuffer->CreateBlock (blockx + x, blocky + y));
+
+            cMapblock3D * >(pMapbufferHandler.buffer ()->CreateBlock (blockx + x, blocky + y));
           if (block)
               {
                 float act_distance;

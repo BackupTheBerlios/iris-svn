@@ -41,6 +41,9 @@ class cParticleEngine
   public:
     cParticleEngine ();
     ~cParticleEngine ();
+
+    void Reset ();
+    
     void Handle ();
     void Render();
     
@@ -48,7 +51,7 @@ class cParticleEngine
     void RemoveEffect (Uint32 id);
 };
 
-extern cParticleEngine * pParticleEngine;
+extern cParticleEngine pParticleEngine;
 
 
 #endif //_PARTICLEENGINE_H_

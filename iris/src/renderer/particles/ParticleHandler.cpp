@@ -26,6 +26,7 @@
 #include "renderer/particles/ParticleHandler.h"
 #include "include.h"
 #include "Config.h"
+#include "Exception.h"
 #include "Geometry.h"
 #include "irisgl.h"
 
@@ -157,20 +158,18 @@ namespace Particle
     m_y = y;
     m_z = z;
 
-    if (pParticleLoader)
-        {
+
           m_texture =
-            pParticleLoader->texture_manager ()->loadTexture (m_definition->
+            pParticleLoader.texture_manager ()->loadTexture (m_definition->
                                                               texture_name
                                                               ());
-          assert (m_texture);
+          ASSERT (m_texture);
           m_texturewidth = m_texture->GetWidth ();
           m_textureheight = m_texture->GetHeight ();
           if (m_texturewidth < 32)
             m_texturewidth = 32;
           if (m_textureheight < 32)
             m_textureheight = 32;
-        }
 
     Start ();
   }

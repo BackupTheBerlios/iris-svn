@@ -184,6 +184,7 @@ private:
         sColor light_points [8];
         
         cCharacterLight * m_light;
+
         
         Uint32 aostooltips_listID;
         std::vector<std::string> aostooltips_list;
@@ -253,6 +254,7 @@ public:
 	void displayDeath(){m_forceanim = 22;}
 	void setAsCorpse(){m_corpse = true;}
    bool isCorpse(){return m_corpse;}
+
 	
 	Uint32 id () { return m_id; }
 	int x () { return (int) (m_x + 0.5f); }
@@ -377,6 +379,6 @@ protected:
 
 };
 
-extern cCharacterList * pCharacterList;
+extern cCharacterList pCharacterList;
 
 #endif //_CHARACTERS_H_

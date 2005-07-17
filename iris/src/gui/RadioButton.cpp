@@ -87,7 +87,7 @@ int RadioButton::HandleMessage (gui_message * msg)
 
                     if (parent == NULL)
                         {
-                          list = pUOGUI->GetControlList ();
+                          list = pUOGUI.GetControlList ();
 
                         }
                     else

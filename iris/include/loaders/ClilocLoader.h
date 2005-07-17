@@ -42,17 +42,18 @@ using namespace std;
 class cClilocLoader
 {
   public:
-      cClilocLoader(std::string path);
-      ~cClilocLoader();  
+      cClilocLoader ();
+      ~cClilocLoader();
+
+      void Init (std::string path);
+      void DeInit ();
+      
       std::string GetMessage(int id);
       std::string GetMessageWithArguments(int id, int args_num, vector<std::string> &args);
-      //std::string GetMessageWithArguments(int id, int args_num, vector<std::string> & args);
-      //char * GetMessageToChar(int id);
   private:
-      std::ifstream clilocfile;
-      std::map <int, std::string> cliloc_messages;   
+      std::map <int, std::string> cliloc_messages;
 };
 
-extern cClilocLoader * pClilocLoader;
+extern cClilocLoader pClilocLoader;
 
 #endif

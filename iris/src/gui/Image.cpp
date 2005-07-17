@@ -98,10 +98,10 @@ void Image::Draw (GumpHandler * gumps)
 
 bool Image::CheckPixel (int x, int y)
 {
-  assert (pGumpHandler);
+
   Texture *texture = NULL;
 
-  texture = LoadGump (gump, pGumpHandler, false);
+  texture = LoadGump (gump, &pGumpHandler, false);
 
   if (texture)
     return texture->CheckPixel (x, y);

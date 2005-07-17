@@ -517,6 +517,7 @@ cStaticModel::~cStaticModel ()
   m_face_light_nodes.clear ();
   m_point_light_nodes.clear ();
   m_nodes.clear ();
+
   m_faces.clear ();
 
   delete light_source_info;
@@ -562,8 +563,8 @@ void cStaticModel::Render (float x, float y, float z, Uint8 alpha)
                   GetGLTex ();
               else
                 face->m_gl_texture =
-                  pTextureBuffer->GetArtTexture (-face->m_texture +
-                                                 16384)->GetGLTex ();
+                  pTextureBuffer.GetArtTexture (-face->m_texture +
+                                                 16384)->GetGLTex (); // Not good, can cause texture errors
             }
 
         vertex *verts[3];

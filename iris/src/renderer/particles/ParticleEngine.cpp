@@ -30,7 +30,7 @@
 
 using namespace std;
 
-cParticleEngine *pParticleEngine = NULL;
+cParticleEngine pParticleEngine;
 
 cParticleEngine::cParticleEngine ()
 {
@@ -39,11 +39,17 @@ cParticleEngine::cParticleEngine ()
 
 cParticleEngine::~cParticleEngine ()
 {
+    Reset ();
+}
+
+void cParticleEngine::Reset ()
+{
   std::map < Uint32, Particle::cParticleHandler * >::iterator iter;
   for (iter = particle_handlers.begin (); iter != particle_handlers.end ();
        iter++)
     delete iter->second;
   particle_handlers.clear ();
+  current_handle = 0;
 }
 
 void cParticleEngine::Handle ()
@@ -83,10 +89,9 @@ Uint32 cParticleEngine::AddEffect (cStaticModelParticleEffectInfo *
   printf ("[Adding Effect \"%s\" (%d)]\n", effect_info->name ().c_str (),
           current_handle);
 
-  if (pParticleLoader)
-      {
+
         Particle::cEffectDefinition * effect_definition =
-          pParticleLoader->getEffect (effect_info->name ());
+          pParticleLoader.getEffect (effect_info->name ());
         if (effect_definition)
             {
 
@@ -104,7 +109,6 @@ Uint32 cParticleEngine::AddEffect (cStaticModelParticleEffectInfo *
               pDebug.Log ("Warning: Effect not found: " +
                           effect_info->name ());
             }
-      }
 
   return current_handle;
 }

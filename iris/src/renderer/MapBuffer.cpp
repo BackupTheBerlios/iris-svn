@@ -25,13 +25,15 @@
 #include <assert.h>
 #include "Debug.h"
 #include "Config.h"
+#include "Exception.h"
 #include "include.h"
 #include "renderer/Camera.h"
 
 using namespace std;
 
 
-cMapbuffer *pMapbuffer = NULL;
+
+cMapbufferHandler pMapbufferHandler;
 
 cMapbuffer::cMapbuffer ()
 {
@@ -126,6 +128,7 @@ void cMapbuffer::UpdateAlpha ()
         {
           iter->second->SetAlpha (-255, 255, false);
           if (m_roof_z != ROOF_NONE)
+
             iter->second->SetAlpha (m_roof_z, nConfig::roof_fade_alpha,
                                     false);
         }
@@ -136,4 +139,34 @@ void cMapbuffer::ResetLight ()
   MapBuffer_t::iterator iter;
   for (iter = root.begin (); iter != root.end (); iter++)
     iter->second->ResetLight ();
+}
+
+
+cMapbufferHandler::cMapbufferHandler ()
+{
+    map_buffer = NULL;
+}
+
+cMapbufferHandler::~cMapbufferHandler ()
+{
+    DeInit ();
+}
+
+void cMapbufferHandler::Init (cMapbuffer * map_buffer)
+{
+    DeInit ();
+    this->map_buffer = map_buffer;
+}
+
+void cMapbufferHandler::DeInit ()
+{
+    delete map_buffer;
+    map_buffer = NULL;
+}
+
+cMapbuffer * cMapbufferHandler::buffer ()
+{
+      if (!map_buffer)
+          THROWEXCEPTION ("Invalid Map buffer access");
+      return map_buffer;
 }

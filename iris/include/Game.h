@@ -64,6 +64,8 @@ private:
  
  void SetDragInWorld(bool value);
  
+   void InitRenderer(std::string mulpath); /** Initialize Renderer */
+   void DeInitRenderer(void); /** Deinitialize */
 
 public:
     Game ();
@@ -71,11 +73,8 @@ public:
 
    void Init(void);  /** Initialize a new game */
    void DeInit(void); /** Deinitialization */
-   void ReInitRenderer(void); /** Uses DeinitRenderer / InitRenderer to restart the renderer */
-   
-   void InitRenderer(std::string mulpath); /** Initialize Renderer */
-   void DeInitRenderer(void); /** Deinitialize */
-   
+
+
    void RenderScene(void); /** Renders the whole scene */
    void Handle(void); /** Handles the scene */
    

@@ -105,12 +105,16 @@ Game::Game ()
   callback_OnStatusDrag = NULL;
   callback_OnDynamicDrag = NULL;
   callback_OnAOSTooltip = NULL;
+
+  pMapLoader = NULL;
+  pGrannyLoader = NULL;
+  pMultisLoader = NULL;
 }
 
 Game::~Game ()
 {
-//flo: schon in ui3.cpp definiert, doppelt gemoppelt
-//    DeInit ();
+//flo: schon in ui3.cpp definiert, doppelt gemoppelt - haelt aber besser. Beim zweiten Aufruf sollte sich da naemlich genau nichts tun :)
+    DeInit ();
 }
 
 
@@ -140,12 +144,15 @@ void OnDeleteCharacter (cCharacter * character)
 
 void Game::Init (void)
 {
-//flo: wozu ? - der deinit wird doch vom iris.csl script gemeacht, beim logout
-//  DeInit ();
+// flo: wozu ? - der deinit wird doch vom iris.csl script gemeacht, beim logout
+// Nur zur Sicherheit :)
+// Wenn alles korrekt deinitialisiert ist, dann sollte das gar nichts tun....
+
+  DeInit ();
   
-  pDynamicObjectList = NULL;
-  pCharacterList = NULL;
-  renderer = NULL;
+  pMapLoader = NULL;
+  pGrannyLoader = NULL;
+  pMultisLoader = NULL;
   pTextManager = NULL;
 
   try
@@ -159,19 +166,16 @@ void Game::Init (void)
 
     CreateSinTable ();
 
-    pDynamicObjectList = new cDynamicObjectList;
-    pDynamicObjectList->OnAdd (OnAddDynamic);
-    pDynamicObjectList->OnDelete (OnDeleteDynamic);
+    pDynamicObjectList.Clear ();
+    pDynamicObjectList.OnAdd (OnAddDynamic);
+    pDynamicObjectList.OnDelete (OnDeleteDynamic);
 
-    pCharacterList = new cCharacterList;
-    pCharacterList->OnAdd (OnAddCharacter);
-    pCharacterList->OnDelete (OnDeleteCharacter);
+    pCharacterList.Clear ();
+    pCharacterList.OnAdd (OnAddCharacter);
+    pCharacterList.OnDelete (OnDeleteCharacter);
 
     pDebug.Log ("    | -> loading particles");
-    pParticleLoader = new cParticleLoader ("xml/particles.xml");
-
-    pDebug.Log ("    | -> particle engine");
-    pParticleEngine = new cParticleEngine;
+    pParticleLoader.Init ("xml/particles.xml");
 
     pDebug.Log ("    | -> renderer");
     renderer = new Renderer3D ();
@@ -180,6 +184,7 @@ void Game::Init (void)
 
     SetPosition (nConfig::startx, nConfig::starty, nConfig::startz);
     SetPause (true);
+
 
     m_click_mode = CLICK_NORMAL;
   }
@@ -194,10 +199,8 @@ void Game::Init (void)
 void Game::DeInit (void)
 {
   pDebug.Log ("SYS | Deinitializing Iris....");
-  delete pParticleEngine;
-  pParticleEngine = NULL;
-  delete pParticleLoader;
-  pParticleLoader = NULL;
+  pParticleEngine.Reset ();
+  pParticleLoader.DeInit ();
 
   if (renderer)
       renderer->DeInit ();
@@ -206,10 +209,9 @@ void Game::DeInit (void)
   
   pCamera.Reset ();
 
-  delete pDynamicObjectList;
-  pDynamicObjectList = NULL;
-  delete pCharacterList;
-  pCharacterList = NULL;
+  pDynamicObjectList.Clear ();
+  pCharacterList.Clear ();
+
   delete renderer;
   renderer = NULL;
   delete pTextManager;
@@ -226,15 +228,8 @@ void Game::InitRenderer (std::string mulpath)
   string mul_texidx = mulpath + "texidx.mul";
 
   pMapLoader = NULL;
-  pMapbuffer = NULL;
-  pTextureBuffer = NULL;
   pGrannyLoader = NULL;
-  pLightManager = NULL;
 
-  pStitchinLoader = NULL;
-  pClilocLoader = NULL;
-  pModelInfoLoader = NULL;
-  pMultisLoader = NULL;
 
       pDebug.Log ("    | -> mapinfo");
       pMapInfoLoader.Init ("xml/Maps.xml");
@@ -268,10 +263,7 @@ void Game::InitRenderer (std::string mulpath)
      pVerdataLoader.Init (mulpath + "verdata.mul");
 
     pDebug.Log ("    | -> map buffer");
-    pMapbuffer = new cMapbuffer3D;
-
-    pDebug.Log ("    | -> texture buffer");
-    pTextureBuffer = new TextureBuffer;
+    pMapbufferHandler.Init (new cMapbuffer3D);
 
     pDebug.Log ("    | -> tiledata buffer");
     pTileDataBuffer.Clear ();
@@ -287,31 +279,28 @@ void Game::InitRenderer (std::string mulpath)
                 pGrannyLoader = new cGrannyLoader ("xml/granny.xml", mulpath);
               }
 
+
           pDebug.Log ("    | -> 3D static models");
           pStaticModelLoader.Init ("./data/models.uim");
-
-    pDebug.Log ("    | -> light manager");
-    pLightManager = new cLightManager;
 
     if (nConfig::aos)
         {
 
           pDebug.Log ("    | -> stitchinloader");
-          pStitchinLoader =
-            new cStitchinLoader (mulpath + "Models/models.txt",
-                                 mulpath + "stitchin.def");
+          pStitchinLoader.Init (mulpath + "Models/models.txt", mulpath + "stitchin.def");
         }
         
         
     if(nConfig::clilocs)  {
         pDebug.Log ("    | -> clilocs");
-        pClilocLoader = new cClilocLoader (mulpath);
+
+        pClilocLoader.Init (mulpath);
         }
   
     
 
     pDebug.Log ("    | -> model infos");
-    pModelInfoLoader = new cModelInfoLoader ();
+    pModelInfoLoader.Init ("xml/ModelsInfo.xml");
 
     pDebug.Log ("    | -> multis");
     pMultisLoader = new cMultisLoader (mulpath + "multi.mul", mulpath + "multi.idx");
@@ -329,13 +318,14 @@ void Game::DeInitRenderer (void)
   pFontLoader.DeInit ();
   pGumpLoader.DeInit ();
   pHueLoader.DeInit ();
-  pTileDataLoader.DeInit ();
-  delete pMapbuffer;
-  pMapbuffer = NULL;
-  delete pTextureBuffer;
-  pTextureBuffer = NULL;
 
+  pTileDataLoader.DeInit ();
+  
+  pMapbufferHandler.DeInit ();
+  
+  pTextureBuffer.Clear ();
   pTileDataBuffer.Clear ();
+
   pVerdataLoader.DeInit ();
 
   delete pGrannyLoader;
@@ -343,27 +333,17 @@ void Game::DeInitRenderer (void)
   pSkillLoader.DeInit ();
   pStaticModelLoader.DeInit ();
 
-  delete pLightManager;
-  pLightManager = NULL;
-  delete pStitchinLoader;
-  pStitchinLoader = NULL;
-  delete pClilocLoader;
-  pClilocLoader = NULL;
-  delete pModelInfoLoader;
-  pModelInfoLoader = NULL;
-  
+  pLightManager.Clear ();
+
+  pStitchinLoader.DeInit();
+  pClilocLoader. DeInit ();
+  pModelInfoLoader.DeInit ();
   pMapInfoLoader.DeInit ();
 
   delete pMultisLoader;
   pMultisLoader = NULL;
 }
 
-
-void Game::ReInitRenderer (void)
-{
-//    DeInitRenderer ();
-//    InitRenderer (nConfig::mulpath);
-}
 
 void Game::RenderScene (void)
 {
@@ -373,10 +353,10 @@ void Game::RenderScene (void)
   if (paused ())
       {
         SDLscreen->ClearScreen ();
-        if (pUOGUI)
-          pUOGUI->Draw ();
+        pUOGUI.Draw ();
         SDLscreen->DrawGL ();
         return;
+
       }
 
   //if (pCamera)
@@ -410,23 +390,18 @@ void Game::Handle (void)
 
   counter = new_tick;
 
+  pUOGUI.HandleMessageQueues ();
 
-  if (pUOGUI)
-    pUOGUI->HandleMessageQueues ();
-
-  if (pCharacterList)
-    pCharacterList->Handle (time);
+  
+  pCharacterList.Handle (time);
 
   if (!paused ())
       {
-        if (pParticleEngine)
-          pParticleEngine->Handle ();
+        pParticleEngine.Handle ();
+        pLightManager.Handle (new_tick);
 
-        if (pLightManager)
-          pLightManager->Handle (new_tick);
-
-        if (pMapbuffer && renderer)
-          pMapbuffer->FreeBuffer (renderer->GetViewDistance () + 2);
+        if (renderer)
+          pMapbufferHandler.buffer()->FreeBuffer (renderer->GetViewDistance () + 2);
 
       }
 
@@ -471,6 +446,7 @@ void Game::HandleMouseMotion (SDL_MouseMotionEvent * event)
 
           
         if (nConfig::aostooltips)
+
             {
 
               if (callback_OnAOSTooltip)
@@ -516,6 +492,7 @@ void
 	pCamera->GetRenderCoords(vecP, tx, ty); */
   if ((buttonstate == SDL_BUTTON_LEFT) && pClient)
       {
+
         cDynamicObject *object;
         cCharacter *character;
         switch (click_mode ())
@@ -531,6 +508,7 @@ void
                         {
                           pClient->Send_Click (object->id);
                           if (nConfig::popup == 1)
+
                             pClient->Send_PopupRequest (object->id, x, y);
                         }
                   }
@@ -571,7 +549,6 @@ void
             }
 
 
-//              printf("%i %i %i\n", vector[0], vector[1], vector[2]);
       }
 
 }
@@ -623,6 +600,7 @@ void game_OnDragCancel (void)
 
 void game_OnDrag (unsigned int id, unsigned int model)
 {
+
   pGame.Drag (id, model);
 }
 
@@ -648,6 +626,7 @@ void game_OnTarget (unsigned int cursorid, unsigned int type)
 
 }
 
+
 void Game::Connect (void (*error_callback) (unsigned int error))
 {
   Disconnect ();
@@ -656,11 +635,8 @@ void Game::Connect (void (*error_callback) (unsigned int error))
   pClient->OnTeleport (game_OnTeleport);
   pClient->OnDragCancel (game_OnDragCancel);
   pClient->OnTarget (game_OnTarget);
-  if (pUOGUI)
-      {
-        pUOGUI->OnDrag (game_OnDrag);
-        pUOGUI->OnItemClick (game_OnItemClick);
-      }
+        pUOGUI.OnDrag (game_OnDrag);
+        pUOGUI.OnItemClick (game_OnItemClick);
 }
 
 void Game::Disconnect ()
@@ -746,6 +722,7 @@ void Game::MoveToMouse ()
   if (!pClient)
     return;
 
+
   if (SDL_GetModState () & (KMOD_LSHIFT | KMOD_RSHIFT))
     return;
 
@@ -794,8 +771,7 @@ void Game::MoveToMouse ()
 
 void Game::HandleDrag (int x, int y)
 {
-  if (paused () || !pClient || !pDynamicObjectList || !pCharacterList
-      || !pUOGUI)
+  if (paused () || !pClient)
     return;
   if (drag_id)
     return;
@@ -813,26 +789,25 @@ void Game::HandleDrag (int x, int y)
       }
   if (character && callback_OnStatusDrag)
     callback_OnStatusDrag (character->id (), cursorx, cursory);
-  pUOGUI->SetDragging (true);
+  pUOGUI.SetDragging (true);
 }
 
 
 void Game::DragCancel ()
 {
   drag_id = 0;
-  if (pUOGUI)
-    pUOGUI->LoadDragCursor (0);
+
+    pUOGUI.LoadDragCursor (0);
 
   if (renderer)
     renderer->setDragModel (0);
-  pUOGUI->SetDragging (false);
+  pUOGUI.SetDragging (false);
 }
 
 void Game::Drag (Uint32 id, Uint16 model)
 {
 
-  if (paused () || !pClient || !pDynamicObjectList || !pCharacterList
-      || !pUOGUI)
+  if (paused () || !pClient)
     return;
   if (drag_id)
     return;
@@ -840,7 +815,7 @@ void Game::Drag (Uint32 id, Uint16 model)
 
   drag_model = model;
   SetDragInWorld (false);
-  cDynamicObject *obj = pDynamicObjectList->Get (id);
+  cDynamicObject *obj = pDynamicObjectList.Get (id);
   if (obj->itemcount > 1)
       {
 
@@ -854,7 +829,7 @@ void Game::Drag (Uint32 id, Uint16 model)
       }
   renderer->setDragModel (drag_model, cursor3d[0], cursor3d[1], cursor3d[2]);
   pClient->Send_PickupRequest (id);
-  pUOGUI->SetDragging (true);
+  pUOGUI.SetDragging (true);
 }
 
 void
@@ -884,12 +859,12 @@ void
 void Game::UpdateDragMode (int mousex, int mousey)
 {
 
-  if (pUOGUI && drag_id)
+  if (drag_id)
       {
         GrabMousePosition (mousex, mousey);
         Uint32 containerid = 0;
         bool value =
-          !pUOGUI->FindDragContainer (mousex, mousey, &containerid);
+          !pUOGUI.FindDragContainer (mousex, mousey, &containerid);
         value = value || (!containerid);  /* if gui element is not a container -> put to world */
         if (value)
           value = value && (!cursor_character); // if abough character, show 2D cursor
@@ -904,13 +879,13 @@ void Game::UpdateDragMode (int mousex, int mousey)
 
 void Game::SetDragInWorld (bool value)
 {
-  if (pUOGUI)
+
     if (value != drag_in_world)
         {
           if (value)            // True = Drag in World = Don't show any 2D Cursor
-            pUOGUI->LoadDragCursor (0);
+            pUOGUI.LoadDragCursor (0);
           else
-            pUOGUI->LoadDragCursor (drag_model);
+            pUOGUI.LoadDragCursor (drag_model);
         }
 
   drag_in_world = value;
@@ -925,10 +900,12 @@ bool Game::CheckDragDrop (int mousex, int mousey)
   Uint32 charid = 0;
   int drop_x = 0, drop_y = 0;
 
+
   assert (pClient);
-  assert (pUOGUI);
-  if (pUOGUI->
+
+  if (pUOGUI.
       FindDragContainer (mousex, mousey, &containerid, &drop_x, &drop_y,
+
                          &charid))
       {
         if (charid)
@@ -937,7 +914,7 @@ bool Game::CheckDragDrop (int mousex, int mousey)
             }
         else if (containerid)
             {
-              pUOGUI->AdjustDropPosition (drop_x, drop_y);
+              pUOGUI.AdjustDropPosition (drop_x, drop_y);
               pClient->Send_DropRequest (drag_id, drop_x, drop_y, 0,
                                          containerid);
             }
@@ -955,9 +932,9 @@ bool Game::CheckDragDrop (int mousex, int mousey)
             }
       }
 
-  pUOGUI->SetDragging (false);
+  pUOGUI.SetDragging (false);
 
-  pUOGUI->LoadDragCursor (0);
+  pUOGUI.LoadDragCursor (0);
 
   if (renderer)
     renderer->setDragModel (0);
@@ -996,11 +973,12 @@ void Game::DelCharacter (cCharacter * character)
 void Game::SendPickup (int id, int model, int count)
 {
 
+
   drag_id = id;
   drag_model = model;
   renderer->setDragModel (drag_model, cursor3d[0], cursor3d[1], cursor3d[2]);
   pClient->Send_PickupRequest (id, count);
-  pUOGUI->SetDragging (true);
+  pUOGUI.SetDragging (true);
 }
 
 void Game::DrawAOSTooltip (int id, int count, int x, int y)

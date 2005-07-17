@@ -31,10 +31,21 @@
 #include "string_utils.h"
 #include <string>
 
-cClilocLoader *pClilocLoader = NULL;
+cClilocLoader pClilocLoader;
 
-cClilocLoader::cClilocLoader (std::string path)
+cClilocLoader::cClilocLoader ()
 {
+}
+
+cClilocLoader::~cClilocLoader ()
+{
+    DeInit ();
+}
+
+void cClilocLoader::Init (std::string path)
+{
+  std::ifstream clilocfile;
+
   std::string default_language = "enu";
   std::string filename = path + "cliloc." + default_language;
 
@@ -109,7 +120,7 @@ cClilocLoader::cClilocLoader (std::string path)
 
 }
 
-cClilocLoader::~cClilocLoader ()
+void cClilocLoader::DeInit ()
 {
  cliloc_messages.clear();
 }
@@ -138,6 +149,7 @@ std::string cClilocLoader::GetMessageWithArguments (int id, int args_num,
   char *tags = new char[message.size () + 1];
   memset(tags,0,message.size ()+1);
   strcpy (tags, message.c_str ());
+
 
   char *tag = strtok (tags, "~~");
 
@@ -176,6 +188,7 @@ std::string cClilocLoader::GetMessageWithArguments (int id, int args_num,
         ret_msg += word;
        delete[] newstr;
       }
+
 
   delete[] tags;
   delete[] tag;

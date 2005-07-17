@@ -111,7 +111,7 @@ void Border::generateTextures ()
   generated = true;
 }
 
-void Border::Draw (GumpHandler * gumps)
+void Border::Draw (GumpHandler *gumps)
 {
   Control::Draw (gumps);
 

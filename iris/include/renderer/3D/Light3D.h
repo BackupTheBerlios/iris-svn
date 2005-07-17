@@ -128,6 +128,6 @@ class cLightManager
 
 
 // global light manager instance
-extern cLightManager * pLightManager;
+extern cLightManager pLightManager;
  
 #endif //_LIGHT3D_H_

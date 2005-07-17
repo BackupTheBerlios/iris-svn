@@ -31,17 +31,8 @@
 
 using namespace std;
 
-cStitchinLoader *pStitchinLoader = NULL;
-/*
-cModelEntry::cModelEntry (int id, int type, int anim, unsigned int defhue, std::string name)
-{
-    m_id = id;
-    m_type = type;
-    m_anim = anim;
-    m_defhue = defhue;
-    m_name = name;
-}
-*/
+cStitchinLoader pStitchinLoader;
+
 cModelEntry::cModelEntry (int id, int *clist, std::vector < int >rlist,
                           std::map < int, int >replist)
 {
@@ -55,19 +46,29 @@ cModelEntry::cModelEntry (int id, int *clist, std::vector < int >rlist,
 
 
 
-cStitchinLoader::cStitchinLoader (std::string modelfilename,
-                                  std::string stitchindeffilename)
+cStitchinLoader::cStitchinLoader ()
 {
-  int actual_id;
+}
+
+cStitchinLoader::~cStitchinLoader ()
+{
+    DeInit ();
+}
+
+void cStitchinLoader::Init (std::string modelfilename, std::string stitchindeffilename) // TODO: Redo :)
+{
+  int actual_id = 0;
   //std::vector<std::string> c_list;
   int bodyparts[13] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 //     int * bodyparts = new int[13];
+
   std::vector < int >r_list;
   std::map < int, int >rep_list;
 
 
 
   ifstream modelfile (stitchindeffilename.c_str (), ios::in);
+  
   if (!modelfile.is_open ())
     THROWEXCEPTION (string ("Could not load stitchin.def: ") +
                     stitchindeffilename);
@@ -91,8 +92,6 @@ cStitchinLoader::cStitchinLoader (std::string modelfilename,
               p++;
             }
 
-        int i, len;
-
         stringSplit (splitline, string (line), " ");
         std::string firstword = splitline.at (0);
 
@@ -112,7 +111,7 @@ cStitchinLoader::cStitchinLoader (std::string modelfilename,
 
               for (int bp = 0; bp < 13; bp++)
                 bodyparts[bp] = 0;
-              for (int i = 1; i < splitline.size (); i++)
+              for (unsigned int i = 1; i < splitline.size (); i++)
                   {
                     if (splitline.at (i) == "EARS")
                       bodyparts[0] = 1;
@@ -165,7 +164,7 @@ cStitchinLoader::cStitchinLoader (std::string modelfilename,
 
               std::string r_id;
 
-              for (int r = 1; r < splitline.size (); r++)
+              for (unsigned int r = 1; r < splitline.size (); r++)
                   {
                     r_id = splitline.at (r);
                     r_list.push_back (atoi (r_id.c_str ()));
@@ -199,42 +198,12 @@ cStitchinLoader::cStitchinLoader (std::string modelfilename,
             }
         else
           continue;
-        /*
-           for (len = 0; *p; p++) 
-           if (*p > 32) len++;
-
-           if (len && (*line != '#')) {
-
-           string entries[9];
-           for (i = 0; i < 9; i++) entries[i] = ""; 
-
-           i = 0; 
-           char * oldp = line;
-           for (p = line; (i < 9) && *p; p++)
-           if (*p < 32) {
-           *p = 0;
-           entries[i] = string(oldp);
-           oldp = p + 1;
-           i++;
-           }
-
-           if (!*p && i < 9)
-           entries[8] = string(oldp);
-
-           int bodyid = atoi (entries[0].c_str());
-           int animid = atoi (entries[1].c_str());
-         */
-        //models.insert (make_pair (bodyid, new cModelEntry (bodyid, 0, animid, 0, entries[8])));
-        //unsigned int defhue = atoi(tempstr.c_str());
-
-        //printf("%i %i %s\n", bodyid, animid, entries[8].c_str());
-        //}
 
       }
 }
 
 
-cStitchinLoader::~cStitchinLoader ()
+void cStitchinLoader::DeInit ()
 {
   std::map < int, cModelEntry * >::iterator iter;
   for (iter = models.begin (); iter != models.end (); iter++)
@@ -245,6 +214,7 @@ cStitchinLoader::~cStitchinLoader ()
 //
 cModelEntry *cStitchinLoader::GetModel (int id)
 {
+
 
   std::map < int, cModelEntry * >::iterator iter;
   iter = models.find (id);
@@ -257,13 +227,3 @@ cModelEntry *cStitchinLoader::GetModel (int id)
 
 }
 
-// Temporary function to resolve some ugly graphics
-/*bool isException(int modid)
-{
- switch(modid){
-  case 449:
-  case 971:
-  case 447: return true; break;
-  default: return false;
-}  
-}*/

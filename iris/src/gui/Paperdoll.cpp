@@ -281,9 +281,7 @@ cCharacterEquip *Paperdoll::FindObjectAt (int x, int y, int &layer)
   if (!layer)
     return NULL;
 
-
-  assert (pCharacterList);
-  cCharacter *character = pCharacterList->Get (character_id);
+  cCharacter *character = pCharacterList.Get (character_id);
 
   if (!character)
     return NULL;
@@ -295,8 +293,8 @@ cCharacterEquip *Paperdoll::FindObjectAt (int x, int y, int &layer)
 
 void Paperdoll::DelObject (int layer)
 {
-  assert (pCharacterList);
-  cCharacter *character = pCharacterList->Get (character_id);
+
+  cCharacter *character = pCharacterList.Get (character_id);
 
   if (!character)
     return;
@@ -308,8 +306,8 @@ void Paperdoll::DelObject (int layer)
 
 void Paperdoll::Rebuild ()
 {
-  assert (pCharacterList);
-  cCharacter *character = pCharacterList->Get (character_id);
+
+  cCharacter *character = pCharacterList.Get (character_id);
 
   if (!character)
     return;

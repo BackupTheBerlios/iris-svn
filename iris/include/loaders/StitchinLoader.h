@@ -49,9 +49,9 @@ class cModelEntry
    public:
      //cModelEntry (int id, int type, int anim, unsigned int defhue, std::string name);
      cModelEntry (int id, int * clist, std::vector<int> rlist, std::map<int, int> replist);
-     int * GetCovers(){return coverlist;}
-     std::vector<int> GetRemoveList(){return removelist;}
-     std::map<int, int> GetReplaceList(){return replacelist;}
+     int * GetCovers () { return coverlist; }
+     std::vector<int> & GetRemoveList() { return removelist; }
+     std::map<int, int> & GetReplaceList() { return replacelist; }
 };
 
 class cStitchinLoader
@@ -59,11 +59,15 @@ class cStitchinLoader
 protected:
     std::map <int, cModelEntry *> models;
 public:
-    cStitchinLoader (std::string modelfilename, std::string stitchindeffilename);
+    cStitchinLoader ();
     ~cStitchinLoader ();
+
+    void Init (std::string modelfilename, std::string stitchindeffilename);
+    void DeInit ();
+    
     cModelEntry * GetModel(int id);
 };
 
-extern cStitchinLoader * pStitchinLoader;
+extern cStitchinLoader pStitchinLoader;
 
 #endif //_STITCHINLOADER_H_

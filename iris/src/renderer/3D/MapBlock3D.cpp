@@ -322,7 +322,7 @@ bool cMapblock3D::Generate (cLightNodeEnvironment & environment)
                       for (int new_y = -1; new_y <= 1; new_y++)
                           {
                             cMapblock *block =
-                              pMapbuffer->Get (m_blockx + new_x,
+                              pMapbufferHandler.buffer()->Get (m_blockx + new_x,
                                                m_blocky + new_y);
                             if (block)
                                 {
@@ -351,8 +351,7 @@ bool cMapblock3D::Generate (cLightNodeEnvironment & environment)
   shader_matrix.AddGround (&groundmap[0][0]);
 
   nodehandler.CalcNormals ();
-  std::list < cLight3D * >static_light_list =
-    pLightManager->static_light_list ();
+  std::list < cLight3D * >static_light_list =  pLightManager.static_light_list ();
   std::list < cLight3D * >::iterator light_iter;
 
   for (unsigned int i = 0; i < objects.count (); i++)
@@ -379,7 +378,7 @@ bool cMapblock3D::Generate (cLightNodeEnvironment & environment)
         model = pStaticModelLoader.getModel (object->tileid);
         if (model)
           if (model->GetLightSourceInfo ())
-            pLightManager->AddDefinedStaticLightSource (object->x +
+            pLightManager.AddDefinedStaticLightSource (object->x +
                                                         m_blockx * 8,
                                                         object->y +
                                                         m_blocky * 8,
@@ -474,9 +473,7 @@ void cMapblock3D::Render (int x, int y, bool do_culling, float move_x,
           for (int ty = 0; ty < 8; ty++)
               {
                 int texid = 0;
-                if (pTextureBuffer)
-                  texture =
-                    pTextureBuffer->GetGroundTexture (groundids[ty][tx]);
+                  texture = pTextureBuffer.GetGroundTexture (groundids[ty][tx]);
                 if (texture)
                   texid = texture->GetGLTex ();
                 add_quad_to_vertex_buffer (&ground_vertieces[ty][tx],
@@ -563,6 +560,7 @@ void cMapblock3D::RenderWater (int dx, int dy, bool do_culling)
             float sphere[4];
 
             sphere[0] = (float) x + 0.5f;
+
             sphere[1] = (float) y + 0.5f;
             sphere[2] = (float) ((watermap[y][x] & 511) - 128) * 0.1f;
             sphere[3] = 1.0f;
@@ -760,7 +758,7 @@ void cMapblock3D::AddMultiObject(Uint32 id, Uint16 tileid, Uint16 dye, int x, in
   for (int new_x = -1; new_x <= 1; new_x++)
     for (int new_y = -1; new_y <= 1; new_y++)
     {
-        cMapblock *block = pMapbuffer->Get (m_blockx + new_x, m_blocky + new_y);
+        cMapblock *block = pMapbufferHandler.buffer()->Get (m_blockx + new_x, m_blocky + new_y);
         if (!block) continue;
         ((cMapblock3D *) block)->GetShaderMatrix ()->AddModel (object->x - new_x * 8,
                                                                object->y - new_y * 8,

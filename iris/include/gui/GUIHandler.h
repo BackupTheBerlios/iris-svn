@@ -41,6 +41,9 @@ class GUIHandler
 public:
   GUIHandler ();
   ~GUIHandler ();
+
+  void DeInit ();
+  
   void Draw (void);
 
   void ClearControls (void);
@@ -101,7 +104,6 @@ private:
  ControlList_t	z_root;
 
  MessageStack stack;
- GumpHandler gumps;
 
  int default_focusid;
 
@@ -125,12 +127,12 @@ private:
  
  std::list <Uint32> refresh_times;
  
-
+ void Reset ();
 	
  void (*callback_OnDrag) (unsigned int itemid, unsigned int model);
  void (*callback_OnItemClick) (unsigned int itemid, bool doubleclick);
 };
 
-extern   GUIHandler  * pUOGUI;
+extern   GUIHandler  pUOGUI;
 
 #endif

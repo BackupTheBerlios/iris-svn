@@ -130,13 +130,14 @@ void InputField::regenerate ()
         tElement = new cTextElement (_text.c_str (), _hue, _font);
       }
 
+
   const stFont *font = pFontLoader.getFont (_font);
 
   if (!font)
     return;
 
-  unsigned int innerWidth = _width;
-  unsigned int innerHeight = font->maxHeight;
+//  unsigned int innerWidth = _width;
+//  unsigned int innerHeight = font->maxHeight;
 
   recalcXCrop ();
 

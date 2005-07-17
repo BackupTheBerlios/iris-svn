@@ -31,17 +31,72 @@
 
 using namespace std;
 
-cModelInfoLoader *pModelInfoLoader = NULL;
+cModelInfoLoader pModelInfoLoader;
+
+cModelInfoEntry::cModelInfoEntry (int id, int scalex, int scaley, int scalez, int alpha, int defhue, int alt_body)
+{
+      m_id = id;
+      m_scalex = scalex;
+      m_scaley = scaley;
+      m_alpha = alpha;
+      m_defhue = defhue;
+      m_alt_body = alt_body;
+}
+
+int cModelInfoEntry::id ()
+{
+    return m_id;
+}
+
+int cModelInfoEntry::scalex ()
+{
+    return m_scalex;
+}
+
+int cModelInfoEntry::scaley ()
+{
+    return m_scaley;
+}
+
+int cModelInfoEntry::scalez ()
+{
+    return m_scalez;
+}
+
+int cModelInfoEntry::alpha ()
+{
+    return m_alpha;
+}
+
+int cModelInfoEntry::defhue ()
+{
+    return m_defhue;
+}
+
+int cModelInfoEntry::alt_body ()
+{
+    return m_alt_body;
+}
+
+
 
 cModelInfoLoader::cModelInfoLoader ()
 {
+}
 
+cModelInfoLoader::~cModelInfoLoader()
+{
+    DeInit ();
+}
+
+void cModelInfoLoader::Init (std::string filename)
+{
   XML::Parser parser;
   XML::Node * models, *document;
 
   try
   {
-    parser.loadData ("./xml/ModelsInfo.xml");
+    parser.loadData (filename);
     document = parser.parseDocument ();
 
     models = document->findNode ("MODELS");
@@ -83,15 +138,8 @@ cModelInfoLoader::cModelInfoLoader ()
           defhue = value->asInteger ();
         if ((value = model_node->findNode ("ALT_BODY")))
           altbody = value->asInteger ();
-        cModelInfoEntry *modelinfo = new cModelInfoEntry;
-        
-        modelinfo->scalex = IRIS_SwapI32(scalex);
 
-        modelinfo->scaley = IRIS_SwapI32(scaley);
-        modelinfo->scalez = IRIS_SwapI32(scalez);
-        modelinfo->alpha = IRIS_SwapI32(alpha);
-        modelinfo->defhue = IRIS_SwapI32(defhue);
-        modelinfo->alt_body = IRIS_SwapI32(altbody);
+        cModelInfoEntry *modelinfo = new cModelInfoEntry (id, scalex, scaley, scalez, alpha, defhue, altbody);
         model_infos.insert (make_pair ((int) id, modelinfo));
         idx++;
       }
@@ -107,7 +155,7 @@ cModelInfoEntry *cModelInfoLoader::GetModelEntry (int id)
     return NULL;
 }
 
-cModelInfoLoader::~cModelInfoLoader()
+void cModelInfoLoader::DeInit ()
 {
  std::map<int, cModelInfoEntry*>::iterator iter;
   for (iter = model_infos.begin (); iter != model_infos.end (); iter++)

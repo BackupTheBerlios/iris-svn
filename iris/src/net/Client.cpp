@@ -94,7 +94,7 @@ int HandleGumpDialogEvent (Control * contr)
         int gump_id = (Uint32) dlg->GetGumpID ();
         int retval = (Uint32) bt->GetReturnMsg ();
         pClient->SendGumpDialogRet (gump_id, player_id, retval);
-        pUOGUI->CloseWindow (dlg->GetID ());
+        pUOGUI.CloseWindow (dlg->GetID ());
         pDebug.Log ("CLOSE");
       }
   else if (bt->IsPageSelector ())
@@ -472,6 +472,9 @@ void LogStream(void* data, int orig_len, bool dir)
 		for (int i = 0; i < orig_len; i++) 
 
 
+
+
+
 		{
 			fprintf(fp, "%02x ", (Uint32)*p); p++;
 			if (i % 16 == 15)
@@ -487,12 +490,12 @@ void cClient::OnData (void *data, unsigned int len)
   bool decompress_safe = decompress;
   void *uncompressed_data = data;
 
-  int orig_len = len;
+//  int orig_len = len;
   int last_packet = 255;
 
   if (decompress)
   {
-     int llen = len;
+//     int llen = len;
      uncompressed_data = malloc (MAX_PACKET_LEN);
      
      int dest_size = MAX_PACKET_LEN;
@@ -500,6 +503,12 @@ void cClient::OnData (void *data, unsigned int len)
      (*copier) ((char *) uncompressed_data, (char *) data, dest_size, src_size);
      len = dest_size;
   }
+
+  if (len + data_buffer_pos > MAX_PACKET_LEN) {
+              pDebug.Log ("NET | Buffer overflow");
+              data_buffer_pos = 0;
+    }
+  
 
   memcpy (&data_buffer[data_buffer_pos], uncompressed_data, len);
   data_buffer_pos += len;
@@ -526,6 +535,7 @@ void cClient::OnData (void *data, unsigned int len)
             }
 
         switch (packet->packet.Default.m_cmd)
+
             {
             case PCK_ServerList:
               Act_ServerList (packet);
@@ -781,6 +791,7 @@ void cClient::Act_SecureTrade (cPacket * packet)
 
 
 
+
       }
 }
 
@@ -847,6 +858,7 @@ void cClient::Act_BadLog (cPacket * packet)
 void cClient::Act_ClientState (cPacket * packet)
 {
   if (!packet)
+
     return;
 
   sServerPacket *pack = packet->serverpacket ();
@@ -942,6 +954,7 @@ void cClient::Act_CharList (cPacket * packet)
 
   ClearLoginLists ();
 
+
   packet->SetPosition (0);
   type = packet->GetByte ();
   packet->SetPosition (4);
@@ -996,12 +1009,12 @@ void cClient::Act_Char (cPacket * packet)
   //printf("Char (id:%x, model:%d, pos:%d/%d/%i)\n", id, model, x, y, z);
   Uint32 itemID;
 
+
   if (id == player_char)
     walk_direction = direction;
 
-  if (pCharacterList)
-      {
-        cCharacter *character = pCharacterList->Add (id, x, y, z, model);
+
+        cCharacter *character = pCharacterList.Add (id, x, y, z, model);
         character->setDirection (direction);
         character->setHue (skin);
         character->setHighlightColor (GetHighlightColor (notoriety));
@@ -1024,12 +1037,12 @@ void cClient::Act_Char (cPacket * packet)
                       equip->setModel (item_model);
                       equip->setAnim (entry.animid);
 
-                      pDynamicObjectList->AddCharEquip (itemID, item_model,
+                      pDynamicObjectList.AddCharEquip (itemID, item_model,
                                                         item_hue, id);
                       //printf("   Equip (id:%x, model:%d, layer:%d, hue:%d, anim:%d, \"%s\")\n", equip->id(), equip->model(), equip->layer(), equip->hue(), equip->anim(), entry.name);
                     }
 
-              }
+              
       }
 }
 
@@ -1107,7 +1120,7 @@ void cClient::Act_SpeakTable (cPacket * packet)
   stringSplit (arglist, arg_string, delim);
 
   std::string message =
-    pClilocLoader->GetMessageWithArguments ((int) msg, (int) arglist.size (),
+    pClilocLoader.GetMessageWithArguments ((int) msg, (int) arglist.size (),
                                             arglist);
 
   pDebug.Log (message.c_str ());
@@ -1149,19 +1162,15 @@ void cClient::Act_Put (cPacket * packet)
   y &= 0x3fff;
   if (model == 0x2006)
       {
-        if (pCharacterList)
-            {
-              cCharacter *character =
-                pCharacterList->Add (id, x, y, z, itemcount);
+              cCharacter *character =  pCharacterList.Add (id, x, y, z, itemcount);
               character->setHue (dye & 32767);
               std::cout << "Corpse hue: " << dye << endl;
               character->setDirection (direction);
               character->setAsCorpse ();
-            }
       }
 
      if (model>=MULTI_ID && pMultisLoader->MultiExists(model)
-			 && pDynamicObjectList && !pDynamicObjectList->Get(id))
+			 && !pDynamicObjectList.Get(id))
      {
         stMultiList* MultiList = pMultisLoader->GetMulti(model);
         MultiIter elem = MultiList->multiParts.begin();
@@ -1172,14 +1181,13 @@ void cClient::Act_Put (cPacket * packet)
           int my = y + multi.y;
 
           cMapblock3D *block = reinterpret_cast <cMapblock3D *>
-               (pMapbuffer->CreateBlock (mx /8, my /8));
+               (pMapbufferHandler.buffer ()->CreateBlock (mx /8, my /8));
           if (block) block->AddMultiObject(id,multi.tile,dye,mx,my,z + multi.z);
         }
      }
 
 
-  if (pDynamicObjectList)
-    pDynamicObjectList->AddWorldItem (id, model, dye, x, y, z, itemcount,
+    pDynamicObjectList.AddWorldItem (id, model, dye, x, y, z, itemcount,
                                       incrcounter, direction, flag);
 
 
@@ -1188,10 +1196,8 @@ void cClient::Act_Put (cPacket * packet)
 void cClient::Act_View (cPacket * packet)
 {
   Uint32 id = (Uint32) packet->packet.View.m_id;
-  if (pCharacterList)
-      {
         cCharacter *character =
-          pCharacterList->Add (id, (Uint16) packet->packet.View.m_x,
+          pCharacterList.Add (id, (Uint16) packet->packet.View.m_x,
                                (Uint16) packet->packet.View.m_y,
                                (Sint8) packet->packet.View.m_z,
                                (Uint16) packet->packet.View.m_bodyType);
@@ -1213,7 +1219,6 @@ void cClient::Act_View (cPacket * packet)
         player_position[1] = (Uint16) packet->packet.View.m_y;
         player_position[2] = (Sint8) packet->packet.View.m_z;
         walk_direction = (Uint8) packet->packet.View.m_dir;
-      }
 }
 
 void cClient::Act_VendOpenBuy (cPacket * packet)
@@ -1225,14 +1230,12 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
   Uint8 item_count = packet->GetByte ();
  
   int incr = 1;
-  if (!pDynamicObjectList)
-    return;
   buy_opening = true;
   
   if (callback_OnBuyWindowOpen)
     callback_OnBuyWindowOpen (inventory_id);
 
-  dynamiclist_t *objlist = pDynamicObjectList->GetList ();
+  dynamiclist_t *objlist = pDynamicObjectList.GetList ();
   dynamiclist_t::iterator iter;
   dynamiclist_t::iterator iter2;
   dynamiclist_t::iterator iter3;
@@ -1245,9 +1248,6 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
   Uint8 namelen;
   int count;
   bool found = false;
-
-  if (!pDynamicObjectList)
-    return;
 
   signed int i;
   if (nConfig::is_pol)
@@ -1276,6 +1276,7 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
              
                     model = object->model;
                     count = object->itemcount;
+
                     Uint16 hue = object->dye;
 
                     price = packet->GetDword ();
@@ -1291,10 +1292,8 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
                         {
 
                           int index = atoi (name);
-                          if (pClilocLoader)
-                              {
                                 std::string cliloc_name =
-                                  pClilocLoader->GetMessage (index);
+                                  pClilocLoader.GetMessage (index);
                                 
                                 if (callback_OnBuyWinAdd)
                                   callback_OnBuyWinAdd (object->id, model,
@@ -1302,14 +1301,6 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
                                                         (char *) cliloc_name.
                                                         c_str ());
                                 
-                              }
-                              else
-                              {
-                               if (callback_OnBuyWinAdd)
-                                  callback_OnBuyWinAdd (object->id, model,
-                                                        count, hue, price,
-                                                        name);
-                              }
 
                         }
                     else
@@ -1370,20 +1361,11 @@ void cClient::Act_VendOpenSell (cPacket * packet)
             {
 
               int index = atoi (name);
-              if (pClilocLoader)
-                  {
                     std::string cliloc_name =
-                      pClilocLoader->GetMessage (index);
+                      pClilocLoader.GetMessage (index);
                     if (callback_OnSellWinAdd)
                       callback_OnSellWinAdd (id, model, count, hue, price,
                                              (char *) cliloc_name.c_str ());
-                  }
-               else
-                  {
-                    if (callback_OnSellWinAdd)
-                      callback_OnSellWinAdd (id, model, count, hue, price,
-                                             name);
-                  }
 
             }
         else
@@ -1401,23 +1383,21 @@ void cClient::Act_VendorBuy (cPacket * packet)
   packet->SetPosition (3);
   Uint32 id = packet->GetDword ();
   Uint8 nonames = packet->GetByte ();
-  if (!pDynamicObjectList)
-    return;
   if (id != vendor_id)
       {
         std::map < int, int >::iterator iter;
 
         for (iter = selllist.begin (); iter != selllist.end (); iter++)
             {
-              cDynamicObject *object = pDynamicObjectList->Get (iter->first);
+              cDynamicObject *object = pDynamicObjectList.Get (iter->first);
               if (object)
                   {
                     if (object->itemcount > iter->second)
                       object->itemcount -= iter->second;
                     else
                         {
-                          pDynamicObjectList->Delete (iter->first);
-                          pUOGUI->Rewind ();
+                          pDynamicObjectList.Delete (iter->first);
+                          pUOGUI.Rewind ();
                         }
                   }
             }
@@ -1432,9 +1412,7 @@ void cClient::Act_CharDeath (cPacket * packet)
 {
   packet->SetPosition (1);
   Uint32 id = packet->GetDword ();
-  if (!pCharacterList)
-    return;
-  cCharacter *character = pCharacterList->Get (id);
+  cCharacter *character = pCharacterList.Get (id);
   character->displayDeath ();
 }
 
@@ -1442,10 +1420,8 @@ void cClient::Act_Start (cPacket * packet)
 {
   in_game = true;
   Uint32 id = (Uint32) packet->packet.Start.m_id;
-  if (pCharacterList)
-      {
         cCharacter *character =
-          pCharacterList->Add (id, (Uint16) packet->packet.Start.m_x,
+          pCharacterList.Add (id, (Uint16) packet->packet.Start.m_x,
                                (Uint16) packet->packet.Start.m_y,
                                (Sint8) packet->packet.Start.m_z,
                                (Uint16) packet->packet.Start.m_bodyType);
@@ -1460,7 +1436,6 @@ void cClient::Act_Start (cPacket * packet)
         player_position[1] = (Uint16) packet->packet.Start.m_y;
         player_position[2] = (Sint8) packet->packet.Start.m_z;
         walk_direction = (Uint8) packet->packet.Start.m_dir;
-      }
 
   if (nConfig::client_version != "none")
       {
@@ -1489,9 +1464,7 @@ void cClient::Act_WalkAck (cPacket * packet)
   if (entry.requestid == sequence)
       {
         walk_stack.erase (walk_stack.begin (), walk_stack.begin () + 1);
-        if (pCharacterList)
-            {
-              cCharacter *character = pCharacterList->Get (player_char);
+              cCharacter *character = pCharacterList.Get (player_char);
               if (character)
                   {
                     character->MoveTo (entry.x, entry.y, entry.z);
@@ -1500,7 +1473,6 @@ void cClient::Act_WalkAck (cPacket * packet)
                     player_position[1] = entry.y;
                     player_position[2] = entry.z;
                   }
-            }
 
         if (nConfig::footsteps)
             {
@@ -1527,10 +1499,9 @@ void cClient::Act_WalkAck (cPacket * packet)
 
 void cClient::Act_WalkCancel (cPacket * packet)
 {
-  if (pCharacterList)
 
       {
-        cCharacter *character = pCharacterList->Get (player_char);
+        cCharacter *character = pCharacterList.Get (player_char);
 
         if (character)
             {
@@ -1580,9 +1551,8 @@ void cClient::Act_War (cPacket * packet)
   int mode = packet->GetByte ();
   m_warmode = mode != 0x00;
 
-  if (pCharacterList)
       {
-        cCharacter *character = pCharacterList->Get (player_char);
+        cCharacter *character = pCharacterList.Get (player_char);
 
         if (character)
           character->setWarmode (m_warmode);
@@ -1599,12 +1569,10 @@ void cClient::Act_Delete (cPacket * packet)
 {
   packet->SetPosition (1);
   Uint32 id = packet->GetDword ();
-  if (pDynamicObjectList)
-    pDynamicObjectList->Delete (id);
-  if (pCharacterList)
-      {
-        pCharacterList->Delete (id);
-        characterlist_t *characters = pCharacterList->GetList ();
+  pDynamicObjectList.Delete (id);
+
+        pCharacterList.Delete (id);
+        characterlist_t *characters = pCharacterList.GetList ();
         characterlist_t::iterator iter;
 
         for (iter = characters->begin (); iter != characters->end (); iter++)
@@ -1620,17 +1588,15 @@ void cClient::Act_Delete (cPacket * packet)
                         }
                   }
             }
-      }
+      
 }
 
 void cClient::Act_Status (cPacket * packet)
 {
-  if (!pCharacterList)
-    return;
 
   packet->SetPosition (3);
   Uint32 id = packet->GetDword ();
-  cCharacter *character = pCharacterList->Get (id);
+  cCharacter *character = pCharacterList.Get (id);
   Uint8 flag = 0;
   if (character)
       {
@@ -1687,9 +1653,6 @@ void cClient::Act_Status (cPacket * packet)
 
 void cClient::Act_Content (cPacket * packet)
 {
-  if (!pDynamicObjectList)
-
-    return;
 
   vector < Uint32 > containers;
   unsigned int j;
@@ -1713,7 +1676,7 @@ void cClient::Act_Content (cPacket * packet)
 
         Uint16 hue = packet->GetWord ();
         
-        cDynamicObject * cont_obj = pDynamicObjectList->Get(contid);
+        cDynamicObject * cont_obj = pDynamicObjectList.Get(contid);
         
         
         if (contid == corpse_id)
@@ -1726,7 +1689,7 @@ void cClient::Act_Content (cPacket * packet)
                     if (pTileDataLoader.LoadEntry (model, &entry))
                         {
                           cCharacter *character =
-                            pCharacterList->Get (contid);
+                            pCharacterList.Get (contid);
                           if (character)
                               {
                                 cCharacterEquip *equip =
@@ -1770,7 +1733,7 @@ void cClient::Act_Content (cPacket * packet)
             }
    
        if(!is_spellbook)
-        pDynamicObjectList->AddContainerContent (id, model, hue, contid, x, y,
+        pDynamicObjectList.AddContainerContent (id, model, hue, contid, x, y,
                                                  stackcount);
         bool found = false;
         for (j = 0; j < containers.size (); j++)
@@ -1794,13 +1757,10 @@ void cClient::Act_Content (cPacket * packet)
   if (callback_OnContainerContent)
     for (j = 0; j < containers.size (); j++)
         {
-          if (pUOGUI)
-              {
                 gui_message msg;
                 msg.type = MESSAGE_REBUILDITEMCONTAINER;
                 msg.rebuilditemcontainer.containerid = containers[j];
-                pUOGUI->AddMessageToStack (&msg);
-              }
+                pUOGUI.AddMessageToStack (&msg);
           callback_OnContainerContent (containers[j]);
         }
 
@@ -1810,16 +1770,13 @@ void cClient::Act_Content (cPacket * packet)
 
 void cClient::Act_StatChange (cPacket * packet)
 {
-  if (!pCharacterList)
-    return;
-
 
   Uint32 id = packet->packet.StatChange.m_id;
   Uint16 max = packet->packet.StatChange.m_max;
   Uint16 current = packet->packet.StatChange.m_val;
   Uint32 type = 0;
 
-  cCharacter *character = pCharacterList->Get (id);
+  cCharacter *character = pCharacterList.Get (id);
   if (character)
       {
         switch (packet->packet.StatChange.m_cmd)
@@ -1924,11 +1881,9 @@ void cClient::Act_Skill (cPacket * packet)
 
 void cClient::Act_CharMove (cPacket * packet)
 {
-  if (!pCharacterList)
-    return;
 
   Uint32 id = packet->packet.CharMove.m_id;
-  cCharacter *character = pCharacterList->Get (id);
+  cCharacter *character = pCharacterList.Get (id);
   if (character)
       {
         Uint16 model = packet->packet.CharMove.m_model;
@@ -1958,16 +1913,13 @@ void cClient::Act_DragCancel (cPacket * packet)
 
 void cClient::Act_ItemEquip (cPacket * packet)
 {
-  if (!pCharacterList || !pDynamicObjectList)
-    return;
-
   Uint32 id = packet->packet.ItemEquip.m_itemID;
   Uint32 charid = packet->packet.ItemEquip.m_playerId;
   Uint16 model = packet->packet.ItemEquip.m_model;
   Uint8 layer = packet->packet.ItemEquip.m_layer;
   Uint16 hue = packet->packet.ItemEquip.m_hue;
 
-  cCharacter *character = pCharacterList->Get (charid);
+  cCharacter *character = pCharacterList.Get (charid);
 
   struct TileDataStaticEntry entry;
   if (pTileDataLoader.LoadEntry (model, &entry))
@@ -1979,26 +1931,23 @@ void cClient::Act_ItemEquip (cPacket * packet)
           equip->setModel (model);
           equip->setAnim (entry.animid);
 
-          cDynamicObject *object = pDynamicObjectList->Get (id);
+          cDynamicObject *object = pDynamicObjectList.Get (id);
 
           if (object)
-            if (pUOGUI && (object->type == DYNAMICTYPE_CONTAINER))
+            if (object->type == DYNAMICTYPE_CONTAINER)
                 {
                   gui_message msg;
                   msg.type = MESSAGE_REBUILDITEMCONTAINER;
                   msg.rebuilditemcontainer.containerid = object->parent;
-                  pUOGUI->AddMessageToStack (&msg);
+                  pUOGUI.AddMessageToStack (&msg);
                 }
 
-          pDynamicObjectList->AddCharEquip (id, model, hue, charid);
+          pDynamicObjectList.AddCharEquip (id, model, hue, charid);
 
-          if (pUOGUI)
-              {
                 gui_message msg;
                 msg.type = MESSAGE_UPDATEPAPERDOLL;
                 msg.updatepaperdoll.id = charid;
-                pUOGUI->AddMessageToStack (&msg);
-              }
+                pUOGUI.AddMessageToStack (&msg);
         }
 }
 
@@ -2132,11 +2081,9 @@ void cClient::Act_AOSTooltip (cPacket * packet)
   Uint32 listID = packet->GetDword ();
   cCharacter *character = NULL;
   cDynamicObject *obj = NULL;
-  if (pCharacterList)
-    character = pCharacterList->Get (id);
+  character = pCharacterList.Get (id);
 
-  if (pDynamicObjectList)
-    obj = pDynamicObjectList->Get (id);
+  obj = pDynamicObjectList.Get (id);
 
   if (character)
       {
@@ -2183,7 +2130,7 @@ void cClient::Act_AOSTooltip (cPacket * packet)
 
 
         std::string message =
-          pClilocLoader->GetMessageWithArguments ((int) clilocID,
+          pClilocLoader.GetMessageWithArguments ((int) clilocID,
                                                   (int) arglist.size (),
                                                   arglist);
 
@@ -2224,6 +2171,7 @@ Send Gump Menu Dialog (Variable # of bytes)
   Uint32 gumpid = packet->GetDword ();
   Uint32 px = packet->GetDword ();
   Uint32 py = packet->GetDword ();
+
 
   printf ("[GumpDialog (Size: %d, ID: %d, GumpID: %d, Position(%d, %d))]\n",
           size, id, gumpid, px, py);
@@ -2296,6 +2244,7 @@ Send Gump Menu Dialog (Variable # of bytes)
 
   for (it = cmds_list.begin (); it != cmds_list.end (); it++)
       {
+
         stringstream stream;
         string command;
         stream << (*it);
@@ -2385,7 +2334,7 @@ Send Gump Menu Dialog (Variable # of bytes)
                 new cMultiLabel (params[0], params[1], params[2], params[3],
                                  params[6]);
               cHTMLGumpParser parser;
-              parser.Parse (pClilocLoader->GetMessage (params[4]), label);
+              parser.Parse (pClilocLoader.GetMessage (params[4]), label);
               label->Create ();
               control = label;
 
@@ -2399,7 +2348,7 @@ Send Gump Menu Dialog (Variable # of bytes)
                                  params[6]);
               cHTMLGumpParser parser;
               parser.setDefaultColor (params[7]);
-              parser.Parse (pClilocLoader->GetMessage (params[4]), label);
+              parser.Parse (pClilocLoader.GetMessage (params[4]), label);
               label->Create ();
               control = label;
 
@@ -2513,7 +2462,7 @@ Send Gump Menu Dialog (Variable # of bytes)
 
       }
   dialog->SetCurrentPage (1);
-  pUOGUI->AddControl (dialog);
+  pUOGUI.AddControl (dialog);
 }
 
 void cClient::Act_PlayMusic (cPacket * packet)
@@ -2544,10 +2493,8 @@ void cClient::Act_ContAdd (cPacket * packet)
         return;
       }
 
-  if (!pDynamicObjectList)
-    return;
 
-  pDynamicObjectList->AddContainerContent (packet->packet.ContAdd.m_itemId,
+  pDynamicObjectList.AddContainerContent (packet->packet.ContAdd.m_itemId,
                                            packet->packet.ContAdd.m_body,
                                            packet->packet.ContAdd.m_hue,
                                            packet->packet.ContAdd.
@@ -2558,15 +2505,12 @@ void cClient::Act_ContAdd (cPacket * packet)
                                            m_ContainerY,
                                            packet->packet.ContAdd.
                                            m_itemCount);
-  if (pUOGUI)
-      {
         gui_message msg;
         msg.type = MESSAGE_ADDCONTAINERITEM;
         msg.addcontaineritem.id = packet->packet.ContAdd.m_itemId;
         msg.addcontaineritem.containerid =
           packet->packet.ContAdd.m_ContainerID;
-        pUOGUI->AddMessageToStack (&msg);
-      }
+        pUOGUI.AddMessageToStack (&msg);
 
 }
 
@@ -2586,18 +2530,16 @@ void cClient::Act_Sound (cPacket * packet)
 void cClient::Act_CharAction (cPacket * packet)
 {
   assert (packet);
-  if (pCharacterList)
-      {
         cCharacter *character =
-          pCharacterList->Get ((int) packet->packet.CharAction.m_id);
+          pCharacterList.Get ((int) packet->packet.CharAction.m_id);
         if (character)
             {
+
               character->DoAnimation ((int) packet->packet.CharAction.
                                       m_movement,
                                       (int) packet->packet.CharAction.
                                       m_repeat);
             }
-      }
 }
 
 
@@ -2618,8 +2560,8 @@ void cClient::Act_SubCommands (cPacket * packet)
 
 		  if(pMapLoader)
 			delete pMapLoader;
-		  if(pMapbuffer)
-			pMapbuffer->Clear();
+	
+		  pMapbufferHandler.buffer ()->Clear();
   
 				cMapInfoEntry * mapinfo_entry = pMapInfoLoader.GetMapInfo(mapID);
 				if(!mapinfo_entry)
@@ -2687,10 +2629,8 @@ void cClient::Act_SubCommands (cPacket * packet)
           Uint32 listID = packet->GetDword ();
           cCharacter *mob = NULL;
           cDynamicObject *obj = NULL;
-          if (pCharacterList)
-            mob = pCharacterList->Get (objserial);
-          if (pDynamicObjectList)
-            obj = pDynamicObjectList->Get (objserial);
+           mob = pCharacterList.Get (objserial);
+           obj = pDynamicObjectList.Get (objserial);
 
           bool found = false;
              if(mob)
@@ -2912,6 +2852,7 @@ void cClient::Send_Speech (std::string text, Uint8 mode)
 
 }
 
+
 void cClient::Send_CharName (Uint32 id, std::string name)
 {
   cPacket packet;
@@ -2932,6 +2873,7 @@ void cClient::Send_StatusRequest (Uint32 id, Uint8 mode)
   else
     packet.AddByte (4);
   packet.AddDword (id);
+
   Send (&packet);
 }
 
@@ -3316,9 +3258,7 @@ OnOpenSpellBook (void (*callback)
 
 cCharacter *cClient::player_character ()
 {
-  if (!pCharacterList)
-    return NULL;
-  return pCharacterList->Get (player_char);
+  return pCharacterList.Get (player_char);
 }
 
 bool cClient::Walk_Simple (Uint8 action)
@@ -3361,10 +3301,7 @@ bool cClient::Walk (Uint8 direction)
 int cClient::GetZPositionForWalk (int destx, int desty, int srcz)
 {
 
-  if (!pMapbuffer || !pDynamicObjectList)
-    return 255;
-
-  cMapblock *block = pMapbuffer->CreateBlock (destx / 8, desty / 8);
+  cMapblock *block = pMapbufferHandler.buffer ()->CreateBlock (destx / 8, desty / 8);
   if (!block)
     return 255;
 
@@ -3372,7 +3309,7 @@ int cClient::GetZPositionForWalk (int destx, int desty, int srcz)
   if (groundz == 255)
     return 255;
 
-  dynamiclist_t *dynamics = pDynamicObjectList->GetList ();
+  dynamiclist_t *dynamics = pDynamicObjectList.GetList ();
   dynamiclist_t::iterator iter;
 
   for (iter = dynamics->begin (); iter != dynamics->end (); iter++)
@@ -3460,6 +3397,7 @@ void cClient::CastSpell (int spellid)
        packet.AddByte (0x12);
        packet.AddWord (len);
        packet.AddByte (0x56);
+
        packet.AddData(&buf, len - 5);
        packet.AddByte (0);
        Send(&packet);

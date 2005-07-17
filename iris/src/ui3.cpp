@@ -95,8 +95,6 @@ int main (int argc, char **args)
     else
       pSoundMix = NULL;
 
-    /* initialize GUI */
-    pUOGUI = new GUIHandler;
 
     /* initialize Scripting */
     pCSLHandler.Init ();
@@ -120,7 +118,7 @@ int main (int argc, char **args)
     pCSLHandler.ExecuteFunction ("main");
 
     /* main loop */
-    while (!SDLevent->quit && !pUOGUI->QuitFlag ())
+    while (!SDLevent->quit && !pUOGUI.QuitFlag ())
         {
           // Handle events in the queue
           SDLevent->PollEvent ();
@@ -134,9 +132,7 @@ int main (int argc, char **args)
     /* clean up */
     pGame.Disconnect ();
     pGame.DeInit ();
-
-    delete pUOGUI;
-    pUOGUI = NULL;
+    pUOGUI.DeInit ();
 
     if (pSoundMix)
       delete pSoundMix;
@@ -162,3 +158,4 @@ int main (int argc, char **args)
 
   return 0;
 }
+

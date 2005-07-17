@@ -38,7 +38,7 @@
 
 using namespace std;
 
-cLightManager *pLightManager = NULL;
+cLightManager pLightManager;
 
 /****************************************************************************************************
    cLight3D - Base Class for Light effects
@@ -142,6 +142,7 @@ void cLight3D::Handle (int aTick)
 
 
 
+
 /*****************************************************************************************************
    cFlickeringLight3D - class for Flickering Lights (a very nice effect)
 *****************************************************************************************************/
@@ -220,6 +221,7 @@ cLightManager::~cLightManager ()
 
 void cLightManager::Clear ()
 {
+
   ClearStatic ();
   ClearDynamic ();
 }
@@ -286,8 +288,8 @@ cLight3D *cLightManager::AddDefinedStaticLightSource (int x, int y, int z,
                           light_info->color (), false);
         AddStaticLight (light);
 
-        ((cMapbuffer3D *) pMapbuffer)->AddLight (light);
-        pDynamicObjectList->AddLight (light);
+        ((cMapbuffer3D *) pMapbufferHandler.buffer())->AddLight (light);
+        pDynamicObjectList.AddLight (light);
         return light;
 }
 
@@ -295,10 +297,9 @@ cLight3D *cLightManager::AddDefinedStaticLightSource (int x, int y, int z,
 void cLightManager::UnRegisterLight (cLight3D * light)
 {
   assert (light);
-  if (pMapbuffer)
-    ((cMapbuffer3D *) pMapbuffer)->RemoveLight (light);
-  if (pDynamicObjectList)
-    pDynamicObjectList->RemoveLight (light);
+  ((cMapbuffer3D *) pMapbufferHandler.buffer())->RemoveLight (light);
+    
+  pDynamicObjectList.RemoveLight (light);
 
   list < cLight3D * >::iterator iter;
   for (iter = static_lights.begin (); iter != static_lights.end (); iter++)

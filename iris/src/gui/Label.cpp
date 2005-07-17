@@ -53,7 +53,7 @@ Label::~Label ()
     free(_text);
   if (element)
     delete element;
- for(int i = 0; i < wrapped_text.size(); i++)
+ for(unsigned int i = 0; i < wrapped_text.size(); i++)
   delete wrapped_text.at(i);
 }
 
@@ -122,7 +122,7 @@ void Label::Draw (GumpHandler * gumps)
       }
   if (_wrapped)
       {
-        for (int i = 0; i < wrapped_text.size (); i++)
+        for (unsigned int i = 0; i < wrapped_text.size (); i++)
             {                   //std::cout << "drawrap" << std::endl;
               switch (_align)
                   {
@@ -213,7 +213,7 @@ void Label::Crop (int width, int height)
   int fontsize = element->width () / (int) strlen ((const char *) _text);
 
   int croppedsize = width / fontsize;
-  if (element->width () > width)
+  if ((int) element->width () > width)
       {
         char *newtext = new char[croppedsize + 1];
         newtext[croppedsize] = 0;
@@ -265,10 +265,10 @@ int Label::Wrap (int width)
   for (;;)
       {
 
-        if (croppedsize > str.size () - 1)
+        if (croppedsize > (int) str.size () - 1)
           break;
         int pos2;
-        if (str.size () - pos >= croppedsize)
+        if ((int) str.size () - pos >= croppedsize)
           pos2 = croppedsize;
         else
           pos2 = std::string::npos;
@@ -279,7 +279,7 @@ int Label::Wrap (int width)
         wrapped_text.push_back (wrap_elem);
 
         pos += croppedsize;
-        if (pos2 == std::string::npos)
+        if (pos2 == (int) std::string::npos)
           break;
       }
   return lines;

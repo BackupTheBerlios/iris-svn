@@ -30,7 +30,7 @@
 
 using namespace std;
 
-TextureBuffer *pTextureBuffer = NULL;
+TextureBuffer pTextureBuffer;
 
 TextureBuffer::TextureBuffer ()
 {
@@ -45,6 +45,7 @@ TextureBuffer::TextureBuffer ()
 
 TextureBuffer::~TextureBuffer ()
 {
+    Clear ();
 }
 
 Texture *TextureBuffer::GetGroundTexture (int index)
@@ -106,3 +107,12 @@ Texture *TextureBuffer::GetArtTexture (int index)
 
   return result;
 }
+
+
+void TextureBuffer::Clear ()
+{
+      artTiles.Clear ();
+      groundTiles.Clear ();
+      
+}
+

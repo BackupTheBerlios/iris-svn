@@ -95,13 +95,12 @@ int Renderer::SetFader (int min_z, Uint8 alpha, cFader * fader, bool below)
   for (int y = -view_distance; y < view_distance; y++)
     for (int x = -view_distance; x < view_distance; x++)
         {
-          cMapblock *block = pMapbuffer->CreateBlock (blockx + x, blocky + y);
+          cMapblock *block = pMapbufferHandler.buffer ()->CreateBlock (blockx + x, blocky + y);
           if (block)
             count += block->UpdateFader (min_z, alpha, fader, below);
         }
 
-  if (pDynamicObjectList)
-    count += pDynamicObjectList->UpdateFader (min_z, alpha, fader, below);
+    count += pDynamicObjectList.UpdateFader (min_z, alpha, fader, below);
 
   return count;
 
@@ -109,11 +108,9 @@ int Renderer::SetFader (int min_z, Uint8 alpha, cFader * fader, bool below)
 
 void Renderer::ResetFader (cFader * fader)
 {
-  if (pMapbuffer)
-    pMapbuffer->ResetFader (fader);
+    pMapbufferHandler.buffer ()->ResetFader (fader);
 
-  if (pDynamicObjectList)
-    pDynamicObjectList->ResetFader (fader);
+    pDynamicObjectList.ResetFader (fader);
 
 }
 
@@ -128,14 +125,14 @@ int Renderer::GetRoofHeight ()
   int z;
   pCamera.GetGamePosition (x, y, z);
 
-  cMapblock *block = pMapbuffer->CreateBlock (x / 8, y / 8);
+  cMapblock *block = pMapbufferHandler.buffer ()->CreateBlock (x / 8, y / 8);
   if (block)
       {
         if (block->GetRoofHeight (x % 8, y % 8, z) != ROOF_NONE)
           return z + 15;
       }
 
-  if (pDynamicObjectList->GetRoofHeight (x, y, z) != ROOF_NONE)
+  if (pDynamicObjectList.GetRoofHeight (x, y, z) != ROOF_NONE)
     return z + 15;
 
   return ROOF_NONE;
@@ -164,16 +161,16 @@ void Renderer::AdjustCameraZ ()
 
   cMapblock *block;
 
-  block = pMapbuffer->CreateBlock (x1 / 8, y1 / 8);
+  block = pMapbufferHandler.buffer ()->CreateBlock (x1 / 8, y1 / 8);
   z1 = block->GetGroundZ (x1 % 8, y1 % 8);
 
-  block = pMapbuffer->CreateBlock (x2 / 8, y2 / 8);
+  block = pMapbufferHandler.buffer ()->CreateBlock (x2 / 8, y2 / 8);
   z2 = block->GetGroundZ (x2 % 8, y2 % 8);
 
-  block = pMapbuffer->CreateBlock (x3 / 8, y3 / 8);
+  block = pMapbufferHandler.buffer ()->CreateBlock (x3 / 8, y3 / 8);
   z3 = block->GetGroundZ (x3 % 8, y3 % 8);
 
-  block = pMapbuffer->CreateBlock (x4 / 8, y4 / 8);
+  block = pMapbufferHandler.buffer ()->CreateBlock (x4 / 8, y4 / 8);
   z4 = block->GetGroundZ (x4 % 8, y4 % 8);
 
   float fracx = act_x - (float) ((int) act_x);

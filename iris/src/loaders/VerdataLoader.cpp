@@ -35,6 +35,7 @@ cVerdataLoader pVerdataLoader;
 cVerdataLoader::cVerdataLoader ()
 {
   patches = NULL;
+  verdatafile = NULL;
 }
 
 cVerdataLoader::~cVerdataLoader ()
@@ -70,6 +71,8 @@ void cVerdataLoader::Init (std::string filename)
                                     sizeof (struct VerDataEntry));
   verdatafile->read ((char *) patches,
                      patch_count * sizeof (struct VerDataEntry));
+                     
+#if SDL_BYTEORDER==SDL_BIG_ENDIAN                     
   for (unsigned int ii = 0; ii < patch_count; ii++)
       {
         patches[ii].fileid = IRIS_SwapU32 (patches[ii].fileid);
@@ -78,12 +81,16 @@ void cVerdataLoader::Init (std::string filename)
         patches[ii].len = IRIS_SwapU32 (patches[ii].len);
         patches[ii].extra = IRIS_SwapU32 (patches[ii].extra);
       }
+#endif
+
 }
 
 void cVerdataLoader::DeInit ()
 {
   delete verdatafile;
-  free (patches);
+  verdatafile = NULL;
+  if (patches)
+    free (patches);
   patches = NULL;
 }
 
@@ -95,7 +102,10 @@ struct sPatchResult cVerdataLoader::FindPatch (unsigned int fileid,
 
   if (!patches)
       return result;
+  if (!verdatafile)
+      return result;
 
+      
   for (Uint32 i = 0; i < patch_count; i++)
     if ((patches[i].fileid == fileid) && (patches[i].blockid == blockid))
         {

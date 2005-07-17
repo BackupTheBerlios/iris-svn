@@ -33,9 +33,20 @@
 
 using namespace std;
 
-GUIHandler *pUOGUI = NULL;
+GUIHandler pUOGUI;
 
 GUIHandler::GUIHandler ()
+{
+  Reset ();
+}
+
+
+GUIHandler::~GUIHandler ()
+{
+    DeInit ();
+}
+
+void GUIHandler::Reset ()
 {
   posx = 0;
   posy = 0;
@@ -49,13 +60,14 @@ GUIHandler::GUIHandler ()
   callback_OnDrag = NULL;
   callback_OnItemClick = NULL;
   for (int i = 0; i < 9; i++)
+
     tex_cursors[i] = NULL;
-  pGumpHandler = &gumps;
   drag_cursor = NULL;
   m_dragging = false;
 }
 
-GUIHandler::~GUIHandler ()
+
+void GUIHandler::DeInit ()
 {
   ClearControls ();
   for (int i = 0; i < 9; i++)
@@ -68,7 +80,11 @@ GUIHandler::~GUIHandler ()
     delete drag_cursor;
   drag_cursor = NULL;
 
-  pGumpHandler = NULL;
+  refresh_times.clear ();
+  stack.Clear ();
+  pGumpHandler.ClearTextures ();
+
+  Reset ();
 }
 
 void GUIHandler::ClearControls (void)
@@ -82,6 +98,7 @@ void GUIHandler::ClearControls (void)
   z_root.clear ();
 
 }
+
 
 
 void GUIHandler::ClearControlsSafe (void)
@@ -189,14 +206,14 @@ void GUIHandler::Draw (void)    //Uint16 hue)
 
   glLoadIdentity ();
 
-  if (pCharacterList)
-    pCharacterList->RenderText ();
+
+  pCharacterList.RenderText ();
 
   glTranslatef (posx, -posy, 0.0f);
 
   ControlList_t::iterator iter;
   for (iter = z_root.begin (); iter != z_root.end (); iter++)
-    iter->second->Draw (&gumps);
+    iter->second->Draw (&pGumpHandler);
 
   if (drag_cursor)
       {
@@ -506,14 +523,14 @@ Uint32 GUIHandler::RegisterGump (Texture * texture)
 {
   static Uint32 id = 65536;
   id++;
-  gumps.AddTexture (id, texture);
+  pGumpHandler.AddTexture (id, texture);
   return id;
 }
 
 void GUIHandler::UnregisterGump (Uint32 id)
 {
   if (id >= 65536)
-    gumps.DelTexture (id);
+    pGumpHandler.DelTexture (id);
 }
 
 

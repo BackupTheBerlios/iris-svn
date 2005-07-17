@@ -54,7 +54,7 @@
 
 #include "xml.h"
 
-extern GUIHandler * pUOGUI;
+extern GUIHandler pUOGUI;
 
 // in xml.cpp
 
@@ -117,7 +117,7 @@ static Uint32 get_controlid(std::string name)
 
 ZString api_control_getid(ZCsl* aCsl)
 {
-	if (!pUOGUI) return "0";
+
 	ZString name = aCsl->get("name");
 
 	return get_controlid(name.buffer());
@@ -125,7 +125,7 @@ ZString api_control_getid(ZCsl* aCsl)
 
 ZString api_gui_addform (ZCsl* aCsl)
 {
-	if (!pUOGUI) return "0";
+
 
 	clear_controlid_list();
 
