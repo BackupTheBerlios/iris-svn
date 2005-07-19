@@ -62,9 +62,6 @@
 using namespace std;
 
 cClient *pClient = NULL;
-//cDecompressor decompressor;
-//CCompressDecoder decoder;
-//DecompressingCopier decoder;
 int spellbooktype = 2;
 
 int actual_map = 0;
@@ -74,8 +71,6 @@ int direction_worldcoords[8][2] =
 
 Uint32 popserial = 0;
 
-int popupx = 0;
-int popupy = 0;
 Uint32 corpse_id = 0;
 std::map < Uint32, Uint8 > corpse_equip;
 bool buy_opening = false;
@@ -273,7 +268,8 @@ cClient::cClient (void (*error_callback) (unsigned int error))
   m_warmode = false;
   data_buffer_pos = 0;
   in_game = false;
-
+  m_popupx = 0;
+  m_popupy = 0;
   enemy = 0;
   last_footstep_sound = 0;
 
@@ -975,8 +971,9 @@ void cClient::Act_CharList (cPacket * packet)
 	Uint8 id;
 	char name[32];
 
-	for (unsigned int i = 0; i < login_location_list.size (); i++)
+    for ( i = 0; i < login_location_list.size(); i++ )
 	  delete login_location_list[i];
+
 	login_location_list.clear ();
 	name[31] = 0;
 	for (i = packet->GetByte (); i > 0; i--)
@@ -2602,7 +2599,7 @@ void cClient::Act_SubCommands (cPacket * packet)
                   entrycolor = packet->GetWord ();
               }
           if (callback_OnPopupDisplay)
-            callback_OnPopupDisplay (popup_entries.size (), popupx, popupy);
+            callback_OnPopupDisplay (popup_entries.size (), m_popupx, m_popupy);
           break;
         }
       case 0x1B:
@@ -3060,8 +3057,10 @@ void cClient::Send_MenuChoice (Uint32 dialogid, Uint16 menuid, Uint16 index,
 
 void cClient::Send_PopupRequest (Uint32 serial, int x, int y)
 {
-  popupx = x;
-  popupy = y;
+//  popupx = x;
+//  popupy = y;
+  m_popupx = x;
+  m_popupy = y;
   cPacket packet;
   packet.AddByte (0xBF);
   packet.AddWord (0x09);        // packet size

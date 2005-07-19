@@ -1,3 +1,11 @@
+12.06.2005:
+Changes by SiENcE (Florian Fischer)
+	-bugreport from Grandmaster, popupx and popupy moved to Client.h
+
+xx.07.2005:
+Changes by Tensor
+	-please write down your changes
+
 11.07.2005:
 Changes by Tensor & SiENcE
 	-several changes o the init process

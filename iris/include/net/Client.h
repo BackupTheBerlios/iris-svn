@@ -83,7 +83,7 @@ private:
 	TCPsocket socket;
 	SDLNet_SocketSet socketset;
 	DecompressingCopier * copier;
-//  cDecompressor decompressor;
+    int m_popupx, m_popupy;
 
 	int state;
 	Uint32 player_char;
@@ -91,23 +91,23 @@ private:
 	Uint8 walk_direction;
 	bool decompress;
 	bool m_warmode;
- 
-        Uint32 enemy;  
+    
+    Uint32 enemy;  
 
 	int player_position[3];
 
 	bool connected;
 	bool in_game;
-        
-        Uint32 last_footstep_sound; // time (in ticks) of last footstep sound
+    
+    Uint32 last_footstep_sound; // time (in ticks) of last footstep sound
 
 	std::vector <struct sWalkStackEntry> walk_stack;
 	std::vector <cLoginListEntry *> login_char_list;
 	std::vector <cLoginListEntry *> login_location_list;
 	std::vector <cLoginListEntry *> login_server_list;
-        
-        std::vector <Uint16> popup_entries;
-        std::vector <Uint16> popup_tags; 
+    
+    std::vector <Uint16> popup_entries;
+    std::vector <Uint16> popup_tags; 
         
 	/* handlers for incoming packets */
 	void Act_ServerList(cPacket * packet);
@@ -140,33 +140,34 @@ private:
 	void Act_Paperdoll(cPacket * packet);
 	void Act_AttackOK(cPacket * packet);
 	void Act_Dye(cPacket * packet);
-        void Act_ContAdd(cPacket * packet);
-        void Act_Sound(cPacket * packet);
-        void Act_CharAction(cPacket * packet);
-        void Act_SubCommands(cPacket * packet); 
+    void Act_ContAdd(cPacket * packet);
+    void Act_Sound(cPacket * packet);
+    void Act_CharAction(cPacket * packet);
+    void Act_SubCommands(cPacket * packet); 
 	void Act_CorpEquip(cPacket * packet);
-        void Act_SpeakTable(cPacket * packet);
-        void Act_VendOpenBuy(cPacket * packet);
-        void Act_VendOpenSell(cPacket * packet);
-        void Act_VendorBuy(cPacket * packet);
-        void Act_SecureTrade(cPacket * packet);
-        void Act_PlayMusic(cPacket * packet);
-        void Act_AOSTooltip(cPacket * packet);
-        void Act_CharDeath(cPacket * packet);
-        void Act_Time(cPacket * packet);
+    void Act_SpeakTable(cPacket * packet);
+    void Act_VendOpenBuy(cPacket * packet);
+    void Act_VendOpenSell(cPacket * packet);
+    void Act_VendorBuy(cPacket * packet);
+    void Act_SecureTrade(cPacket * packet);
+    void Act_PlayMusic(cPacket * packet);
+    void Act_AOSTooltip(cPacket * packet);
+    void Act_CharDeath(cPacket * packet);
+    void Act_Time(cPacket * packet);
   
-        int GetZPositionForWalk(int destx, int desty, int srcz);
+    int GetZPositionForWalk(int destx, int desty, int srcz);
 	
 	void ClearLoginLists();
 	
 	char data_buffer[MAX_PACKET_LEN];
 	int data_buffer_pos;
-   
-        std::vector <std::string> menu_entries;
-        std::vector <int> menu_models;
-        
-        std::map <int, int> buylist;
-        std::map <int, int> selllist;
+    
+    
+    std::vector <std::string> menu_entries;
+    std::vector <int> menu_models;
+    
+    std::map <int, int> buylist;
+    std::map <int, int> selllist;
 
 public:
     cClient (void (*error_callback) (unsigned int error));
