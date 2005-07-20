@@ -71,75 +71,70 @@
 
 using namespace std;
 
-Game pGame;
-
 extern SDLScreen *SDLscreen;
 
+Game pGame;
 
-Uint32 mousemotion_last_tick = SDL_GetTicks ();
-bool aostooltip = false;
-
-Game::Game ()
+Game::Game()
 {
+	m_MouseLastTick = SDL_GetTicks();
+	m_AOSToolTip = false;
 
-  // Default values
-  renderer = NULL;
-  m_paused = true;
-  int i;
+	// Default values
+	pRenderer = NULL;
+	m_paused = true;
 
-  for (i = 0; i < 3; i++)
-    cursor3d[i] = 0;
+	for ( int i = 0; i < 3; i++ )
+		cursor3d[i] = 0;
 
-  cursorx = 0;
-  cursory = 0;
-  button_left = false;
-  button_right = false;
+	cursorx = 0;
+	cursory = 0;
+	button_left = false;
+	button_right = false;
 
-  cursor_character = 0;
+	cursor_character = 0;
 
-  drag_id = 0;
-  drag_model = 0;
+	drag_id = 0;
+	drag_model = 0;
 
-  m_click_mode = CLICK_NORMAL;
+	m_click_mode = CLICK_NORMAL;
 
-  callback_OnStatusDrag = NULL;
-  callback_OnDynamicDrag = NULL;
-  callback_OnAOSTooltip = NULL;
+	callback_OnStatusDrag = NULL;
+	callback_OnDynamicDrag = NULL;
+	callback_OnAOSTooltip = NULL;
 
-  pMapLoader = NULL;
-  pGrannyLoader = NULL;
-  pMultisLoader = NULL;
+	pMapLoader = NULL;
+	pGrannyLoader = NULL;
+	pMultisLoader = NULL;
 }
 
-Game::~Game ()
+Game::~Game()
 {
-//flo: schon in ui3.cpp definiert, doppelt gemoppelt - haelt aber besser. Beim zweiten Aufruf sollte sich da naemlich genau nichts tun :)
-    DeInit ();
+	//flo: schon in ui3.cpp definiert, doppelt gemoppelt - haelt aber besser. Beim zweiten Aufruf sollte sich da naemlich genau nichts tun :)
+	DeInit();
 }
 
 
 /* Callback handlers */
-void OnAddDynamic (cDynamicObject * object)
+void OnAddDynamic( cDynamicObject * object )
 {
-  pGame.AddDynamic (object);
+	pGame.AddDynamic( object );
 }
 
-void OnDeleteDynamic (cDynamicObject * object)
+void OnDeleteDynamic( cDynamicObject * object )
 {
-  pGame.DelDynamic (object);
+	pGame.DelDynamic( object );
 }
 
-void OnAddCharacter (cCharacter * character)
+void OnAddCharacter( cCharacter * character )
 {
-  pGame.AddCharacter (character);
+	pGame.AddCharacter( character );
 }
 
-void OnDeleteCharacter (cCharacter * character)
-
+void OnDeleteCharacter( cCharacter * character )
 {
-  pGame.DelCharacter (character);
+	pGame.DelCharacter( character );
 }
-
 
 
 void Game::Init (void)
@@ -178,9 +173,9 @@ void Game::Init (void)
     pParticleLoader.Init ("xml/particles.xml");
 
     pDebug.Log ("    | -> renderer");
-    renderer = new Renderer3D ();
+    pRenderer = new Renderer3D ();
 
-    renderer->Init ();
+    pRenderer->Init ();
 
     SetPosition (nConfig::startx, nConfig::starty, nConfig::startz);
     SetPause (true);
@@ -196,26 +191,26 @@ void Game::Init (void)
 }
 
 
-void Game::DeInit (void)
+void Game::DeInit( void )
 {
-  pDebug.Log ("SYS | Deinitializing Iris....");
-  pParticleEngine.Reset ();
-  pParticleLoader.DeInit ();
+	pDebug.Log("SYS | Deinitializing Iris....");
+	pParticleEngine.Reset();
+	pParticleLoader.DeInit();
 
-  if (renderer)
-      renderer->DeInit ();
+	if ( pRenderer )
+		pRenderer->DeInit();
       
-  DeInitRenderer ();
-  
-  pCamera.Reset ();
+	DeInitRenderer();
 
-  pDynamicObjectList.Clear ();
-  pCharacterList.Clear ();
+	pCamera.Reset();
 
-  delete renderer;
-  renderer = NULL;
-  delete pTextManager;
-  pTextManager = NULL;
+	pDynamicObjectList.Clear();
+	pCharacterList.Clear();
+
+	delete pRenderer;
+	pRenderer = NULL;
+	delete pTextManager;
+	pTextManager = NULL;
 }
 
 
@@ -345,139 +340,123 @@ void Game::DeInitRenderer (void)
 }
 
 
-void Game::RenderScene (void)
+void Game::RenderScene( void )
 {
-  if (!renderer)
-    return;
+	if ( !pRenderer )
+		return;
 
-  if (paused ())
-      {
-        SDLscreen->ClearScreen ();
-        pUOGUI.Draw ();
-        SDLscreen->DrawGL ();
-        return;
+	if ( m_paused )
+	{
+		SDLscreen->ClearScreen ();
+		pUOGUI.Draw ();
+		SDLscreen->DrawGL ();
+		return;
+	}
 
-      }
-
-  //if (pCamera)
-  if (drag_id /*pCamera->CamHasChanged_DontReset()) */ )
-      {
-        //      GrabMousePosition(cursorx, cursory);
-        if (drag_id)
-            {
-              if (drag_in_world)
-                renderer->setDragModel (drag_model, cursor3d[0],
-                                        cursor3d[1], cursor3d[2]);
-              else
-                renderer->setDragModel (0);
-            }
-      }
-
-  renderer->RenderScene ();
+	//if (pCamera)
+	if ( drag_id /*pCamera->CamHasChanged_DontReset()) */ )
+	{
+		//      GrabMousePosition(cursorx, cursory);
+		if ( drag_id )
+        {
+			if ( drag_in_world )
+				pRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
+			else
+				pRenderer->setDragModel(0);
+		}
+	}
+	pRenderer->RenderScene();
 }
 
-void Game::Handle (void)
+void Game::Handle( void )
 {
-  static int counter = 0;
-  int new_tick = SDL_GetTicks ();
+	static int counter = 0;
+	int new_tick = SDL_GetTicks();
 
-  float time = (new_tick - counter) / 1000.0;
+	float time = ( new_tick - counter ) / 1000.0;
 
-  if (time > 1.0)
-    time = 1.0;
-  if (time <= 0.0f)
-    time = 0.001f;
+	if ( time > 1.0 )
+		time = 1.0;
+	if ( time <= 0.0f )
+		time = 0.001f;
 
-  counter = new_tick;
+	counter = new_tick;
 
-  pUOGUI.HandleMessageQueues ();
+	pUOGUI.HandleMessageQueues ();
 
-  
-  pCharacterList.Handle (time);
+	pCharacterList.Handle (time);
 
-  if (!paused ())
-      {
-        pParticleEngine.Handle ();
-        pLightManager.Handle (new_tick);
+	if ( !m_paused )
+	{
+		pParticleEngine.Handle ();
+		pLightManager.Handle (new_tick);
 
-        if (renderer)
-          pMapbufferHandler.buffer()->FreeBuffer (renderer->GetViewDistance () + 2);
+		if ( pRenderer )
+			pMapbufferHandler.buffer()->FreeBuffer (pRenderer->GetViewDistance () + 2);
+	}
 
-      }
-
-
-  if (button_right)
-    MoveToMouse ();
-
+	if ( button_right )
+		MoveToMouse();
 }
 
-Renderer *Game::GetRenderer (void)
+Renderer *Game::GetRenderer( void )
 {
-  return renderer;
+	return pRenderer;
 }
 
 void Game::OnKeyPress (SDL_keysym * key)
 {
 }
 
-void Game::HandleMouseMotion (SDL_MouseMotionEvent * event)
+void Game::HandleMouseMotion( SDL_MouseMotionEvent * event )
 {
-  cursorx = event->x;
-  cursory = event->y;
-  if (!nConfig::mousemotion_timer)
-    return;
-  if (SDL_GetTicks () - (unsigned int) mousemotion_last_tick > (unsigned int)  nConfig::mousemotion_timer)
-      {
-        GrabMousePosition (cursorx, cursory);
-        cDynamicObject *object;
-        cCharacter *character;
-        GrabDynamic (cursorx, cursory, &object, &character);
-        if (character)
-          pointed_obj = character->id ();
-        else if (object)
-          pointed_obj = object->id;
-        else{
-            if(nConfig::is_uox3)
-             pointed_obj = (dword)-1;
-            else
-             pointed_obj = 0;
-            
-            }
+	cursorx = event->x;
+	cursory = event->y;
 
-          
-        if (nConfig::aostooltips)
+	if ( !nConfig::mousemotion_timer )
+		return;
 
-            {
+	if ( SDL_GetTicks () - (unsigned int) m_MouseLastTick > (unsigned int)  nConfig::mousemotion_timer )
+	{
+		GrabMousePosition (cursorx, cursory);
+		cDynamicObject *object;
+		cCharacter *character;
+		GrabDynamic (cursorx, cursory, &object, &character);
 
-              if (callback_OnAOSTooltip)
-                  {
-                    if (character && !aostooltip)
-                        {
-                          int count = character->aostooltips_count ();
-                          callback_OnAOSTooltip (character->id (),
-                                                 count, cursorx, cursory);
-                          aostooltip = true;
-                        }
-                    else if (object && !aostooltip)
-                        {
-                          int count = object->aostooltips_count ();
-                          callback_OnAOSTooltip (object->id, count,
-                                                 cursorx, cursory);
-                          aostooltip = true;
-                        }
-                    else
-                        {
-                          if (aostooltip)
-                              {
-                                callback_OnAOSTooltip (0, 0, 0, 0);
-                                aostooltip = false;
-                              }
-                        }
-                  }
-            }
-        mousemotion_last_tick = SDL_GetTicks ();
-      }
+		if ( character )
+			pointed_obj = character->id ();
+		else if ( object )
+			pointed_obj = object->id;
+        else
+		{
+			if( nConfig::is_uox3 )
+				pointed_obj = (dword)-1;
+			else
+				pointed_obj = 0;
+		}
 
+        if ( nConfig::aostooltips )
+		{
+			if ( callback_OnAOSTooltip )
+			{
+				if ( ( !m_AOSToolTip ) && ( character || object ) )
+				{
+					int count = character->aostooltips_count();
+					callback_OnAOSTooltip( character->id (), count, cursorx, cursory );
+					m_AOSToolTip = true;
+				}
+				else
+				{
+					if (m_AOSToolTip)
+					{
+						callback_OnAOSTooltip( 0, 0, 0, 0 );
+						m_AOSToolTip = false;
+					}
+				}
+			}
+		}
+		m_MouseLastTick = SDL_GetTicks();
+	}
 }
 
 void
@@ -583,47 +562,46 @@ void Game::SetPosition (int x, int y, int z)
 }
 
 
-void game_OnGameStart (void)
+void game_OnGameStart( void )
 {
-  pGame.SetPause (false);
+	pGame.SetPause( false );
 }
 
 void game_OnTeleport (int x, int y, int z)
 {
-  pGame.SetPosition (x, y, z);
+	pGame.SetPosition( x, y, z );
 }
 
-void game_OnDragCancel (void)
+void game_OnDragCancel( void )
 {
-  pGame.DragCancel ();
+	pGame.DragCancel();
 }
 
-void game_OnDrag (unsigned int id, unsigned int model)
+void game_OnDrag( unsigned int id, unsigned int model )
 {
-
-  pGame.Drag (id, model);
+	pGame.Drag( id, model );
 }
 
 
-void game_OnItemClick (unsigned int id, bool double_click)
+void game_OnItemClick( unsigned int id, bool double_click )
 {
-  pGame.ItemClick2D (id, double_click);
+	pGame.ItemClick2D( id, double_click );
 }
 
-void game_OnTarget (unsigned int cursorid, unsigned int type)
+void game_OnTarget( unsigned int cursorid, unsigned int type )
 {
-  if (type == TARGET_ID)
-      {
-//              printf("Targetting Entity...\n"); 
-        pGame.click_mode (CLICK_TARGET_ID);
-      }
-  else
-      {
-//              printf("Targetting Position...\n");
-        pGame.click_mode (CLICK_TARGET_XYZ);
-      }
-  pGame.cursorid (cursorid);
-
+	if ( type == TARGET_ID )
+	{
+		// printf("Targetting Entity...\n"); 
+		pGame.click_mode (CLICK_TARGET_ID);
+	}
+	else
+	{
+		// printf("Targetting Position...\n");
+		pGame.click_mode (CLICK_TARGET_XYZ);
+	}
+	
+	pGame.cursorid (cursorid);
 }
 
 
@@ -661,31 +639,28 @@ void Game::Walk_Simple (Uint8 action)
     pClient->Walk_Simple (action);
 }
 
-void Game::GrabMousePosition (int x, int y, int max_z)
+void Game::GrabMousePosition( int x, int y, int max_z )
 {
-  if (paused () || !renderer)
-    return;
+	if ( m_paused || !pRenderer )
+		return;
 
-  int cursor_char = 0;
+	int cursor_char = 0;
 
-  renderer->GrabMousePosition (x, y, max_z, cursor3d, &cursor_char);
+	pRenderer->GrabMousePosition (x, y, max_z, cursor3d, &cursor_char);
 
-  cursor_character = cursor_char;
+	cursor_character = cursor_char;
 }
 
-void
-  Game::GrabDynamic (int x, int y, cDynamicObject ** r_object,
-                     cCharacter ** r_character)
-
+void Game::GrabDynamic( int x, int y, cDynamicObject ** r_object, cCharacter ** r_character )
 {
-  if (r_object)
-    *r_object = NULL;
-  if (r_character)
-    *r_character = NULL;
-  if (paused () || !renderer)
-    return;
+	if ( r_object )
+		*r_object = NULL;
+	if ( r_character )
+		*r_character = NULL;
+	if ( m_paused || !pRenderer )
+		return;
 
-  renderer->GrabDynamic (x, y, r_object, r_character);
+	pRenderer->GrabDynamic (x, y, r_object, r_character);
 }
 
 
@@ -769,96 +744,93 @@ void Game::MoveToMouse ()
 
 }
 
-void Game::HandleDrag (int x, int y)
+void Game::HandleDrag( int x, int y )
 {
-  if (paused () || !pClient)
-    return;
-  if (drag_id)
-    return;
-  cDynamicObject *object;
-  cCharacter *character;
-  GrabDynamic (x, y, &object, &character);
-  if (object)
-      {
-        drag_id = object->id;
-        drag_model = object->model;
-        SetDragInWorld (true);
-        renderer->setDragModel (drag_model, cursor3d[0], cursor3d[1],
-                                cursor3d[2]);
-        pClient->Send_PickupRequest (object->id);
-      }
-  if (character && callback_OnStatusDrag)
-    callback_OnStatusDrag (character->id (), cursorx, cursory);
-  pUOGUI.SetDragging (true);
+	if ( m_paused || !pClient )
+		return;
+
+	if ( drag_id )
+		return;
+
+	cDynamicObject *object;
+	cCharacter *character;
+	GrabDynamic (x, y, &object, &character);
+
+	if (object)
+	{
+		drag_id = object->id;
+		drag_model = object->model;
+		SetDragInWorld (true);
+		pRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
+		pClient->Send_PickupRequest( object->id );
+	}
+  
+	if ( character && callback_OnStatusDrag )
+		callback_OnStatusDrag( character->id (), cursorx, cursory );
+
+	pUOGUI.SetDragging( true );
 }
 
 
-void Game::DragCancel ()
+void Game::DragCancel()
 {
-  drag_id = 0;
+	drag_id = 0;
 
-    pUOGUI.LoadDragCursor (0);
+    pUOGUI.LoadDragCursor(0);
 
-  if (renderer)
-    renderer->setDragModel (0);
-  pUOGUI.SetDragging (false);
+	if ( pRenderer )
+		pRenderer->setDragModel(0);
+	
+	pUOGUI.SetDragging( false );
 }
 
-void Game::Drag (Uint32 id, Uint16 model)
+void Game::Drag( Uint32 id, Uint16 model )
 {
+	if ( m_paused || !pClient )
+		return;
 
-  if (paused () || !pClient)
-    return;
-  if (drag_id)
-    return;
-  drag_id = id;
+	if (drag_id)
+		return;
+	
+	drag_id = id;
 
-  drag_model = model;
-  SetDragInWorld (false);
-  cDynamicObject *obj = pDynamicObjectList.Get (id);
-  if (obj->itemcount > 1)
-      {
+	drag_model = model;
+	SetDragInWorld(false);
+	cDynamicObject *obj = pDynamicObjectList.Get(id);
 
-        Uint32 cont = obj->parent;
-        if (callback_OnDynamicDrag)
-            {
-              callback_OnDynamicDrag (id, model, obj->itemcount, obj->x,
-                                      obj->y, cont);
-              return;
-            }
-      }
-  renderer->setDragModel (drag_model, cursor3d[0], cursor3d[1], cursor3d[2]);
-  pClient->Send_PickupRequest (id);
-  pUOGUI.SetDragging (true);
+	if (obj->itemcount > 1)
+	{
+		Uint32 cont = obj->parent;
+        
+		if (callback_OnDynamicDrag)
+		{
+			callback_OnDynamicDrag( id, model, obj->itemcount, obj->x, obj->y, cont );
+			return;
+		}
+	}
+
+	pRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
+	pClient->Send_PickupRequest( id );
+	pUOGUI.SetDragging( true );
 }
 
-void
-  Game::
-OnStatusDrag (void (*callback) (Uint32 charid, int mousex, int mousey))
+void Game::OnStatusDrag( void (*callback) ( Uint32 charid, int mousex, int mousey ) )
 {
-  callback_OnStatusDrag = callback;
+	callback_OnStatusDrag = callback;
 }
 
-void
-  Game::
-OnDynamicDrag (void (*callback)
-               (Uint32 id, Uint16 model, int count, int x, int y,
-                Uint32 container))
+void Game::OnDynamicDrag( void (*callback) ( Uint32 id, Uint16 model, int count, int x, int y, Uint32 container ) )
 {
-
-  callback_OnDynamicDrag = callback;
-
+	callback_OnDynamicDrag = callback;
 }
 
-void
-  Game::OnAOSTooltip (void (*callback) (Uint32 id, int count, int x, int y))
+void Game::OnAOSTooltip( void (*callback) ( Uint32 id, int count, int x, int y ) )
 {
-  callback_OnAOSTooltip = callback;
+	callback_OnAOSTooltip = callback;
 }
 
 void Game::UpdateDragMode (int mousex, int mousey)
 {
-
   if (drag_id)
       {
         GrabMousePosition (mousex, mousey);
@@ -891,98 +863,91 @@ void Game::SetDragInWorld (bool value)
   drag_in_world = value;
 }
 
-bool Game::CheckDragDrop (int mousex, int mousey)
+bool Game::CheckDragDrop( int mousex, int mousey )
 {
-  if (!drag_id)
-    return false;
+	if (!drag_id)
+		return false;
 
-  Uint32 containerid = 0;
-  Uint32 charid = 0;
-  int drop_x = 0, drop_y = 0;
+	Uint32 containerid = 0;
+	Uint32 charid = 0;
+	int drop_x = 0, drop_y = 0;
 
 
-  assert (pClient);
+	assert (pClient);
 
-  if (pUOGUI.
-      FindDragContainer (mousex, mousey, &containerid, &drop_x, &drop_y,
+	if ( pUOGUI.FindDragContainer( mousex, mousey, &containerid, &drop_x, &drop_y, &charid ) )
+	{
+		if ( charid )
+		{
+			pClient->Send_ItemEquipReq( drag_id, charid, drag_model );
+		}
+        else if ( containerid )
+		{
+			pUOGUI.AdjustDropPosition( drop_x, drop_y );
+			pClient->Send_DropRequest( drag_id, drop_x, drop_y, 0, containerid );
+		}
+	}
+	else
+	{
+		if (cursor_character)
+		{
+			pClient->Send_DropRequest( drag_id, 0, 0, 0, cursor_character );
+		}
+		else
+		{
+			pClient->Send_DropRequest( drag_id, cursor3d[0], cursor3d[1], cursor3d[2] );
+		}
+	}
 
-                         &charid))
-      {
-        if (charid)
-            {
-              pClient->Send_ItemEquipReq (drag_id, charid, drag_model);
-            }
-        else if (containerid)
-            {
-              pUOGUI.AdjustDropPosition (drop_x, drop_y);
-              pClient->Send_DropRequest (drag_id, drop_x, drop_y, 0,
-                                         containerid);
-            }
-      }
-  else
-      {
-        if (cursor_character)
-            {
-              pClient->Send_DropRequest (drag_id, 0, 0, 0, cursor_character);
-            }
-        else
-            {
-              pClient->Send_DropRequest (drag_id, cursor3d[0],
-                                         cursor3d[1], cursor3d[2]);
-            }
-      }
+	pUOGUI.SetDragging( false );
 
-  pUOGUI.SetDragging (false);
+	pUOGUI.LoadDragCursor( 0 );
 
-  pUOGUI.LoadDragCursor (0);
+	if ( pRenderer )
+		pRenderer->setDragModel( 0 );
 
-  if (renderer)
-    renderer->setDragModel (0);
+	drag_id = 0;
+	drag_model = 0;
 
-  drag_id = 0;
-
-  drag_model = 0;
-  return true;
+	return true;
 }
 
 
-void Game::AddDynamic (cDynamicObject * object)
+void Game::AddDynamic( cDynamicObject * object )
 {
-  if (renderer)
-    renderer->AddDynamic (object);
+	if ( pRenderer )
+		pRenderer->AddDynamic( object );
 }
 
-void Game::DelDynamic (cDynamicObject * object)
+void Game::DelDynamic( cDynamicObject * object )
 {
-  if (renderer)
-    renderer->DelDynamic (object);
+	if ( pRenderer )
+		pRenderer->DelDynamic( object );
 }
 
-void Game::AddCharacter (cCharacter * character)
+void Game::AddCharacter( cCharacter * character )
 {
-  if (renderer)
-    renderer->AddCharacter (character);
+	if ( pRenderer )
+		pRenderer->AddCharacter (character);
 }
 
-void Game::DelCharacter (cCharacter * character)
+void Game::DelCharacter( cCharacter * character )
 {
-  if (renderer)
-    renderer->DelCharacter (character);
+	if ( pRenderer )
+		pRenderer->DelCharacter( character );
 }
 
-void Game::SendPickup (int id, int model, int count)
+void Game::SendPickup( int id, int model, int count )
 {
-
-
-  drag_id = id;
-  drag_model = model;
-  renderer->setDragModel (drag_model, cursor3d[0], cursor3d[1], cursor3d[2]);
-  pClient->Send_PickupRequest (id, count);
-  pUOGUI.SetDragging (true);
+	drag_id = id;
+	drag_model = model;
+	pRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
+	pClient->Send_PickupRequest( id, count );
+	pUOGUI.SetDragging( true );
 }
 
-void Game::DrawAOSTooltip (int id, int count, int x, int y)
+void Game::DrawAOSTooltip( int id, int count, int x, int y )
 {
-  if (callback_OnAOSTooltip)
-    callback_OnAOSTooltip (id, count, cursorx, cursory);
+	if ( callback_OnAOSTooltip )
+		callback_OnAOSTooltip( id, count, cursorx, cursory );
 }
