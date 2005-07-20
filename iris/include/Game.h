@@ -38,34 +38,37 @@
 
 class Game
 {
-private:
- Renderer * renderer;
- bool m_paused;
- int cursor3d [3];
- int cursorx, cursory;
- 
- Uint32 cursor_character;
- Uint32 cursor_object;
- 
- bool button_left;
- bool button_right;
- 
- Uint32 drag_id;
- Uint16 drag_model;
- bool drag_in_world;
-     
- Uint32 pointed_obj;
- 
- void GrabMousePosition(int x, int y, int max_z = 1000);
- void MoveToMouse();
- void GrabDynamic(int x, int y, cDynamicObject ** r_object, cCharacter ** r_character);
- int m_click_mode;
- Uint32 m_cursorid;
- 
- void SetDragInWorld(bool value);
- 
-   void InitRenderer(std::string mulpath); /** Initialize Renderer */
-   void DeInitRenderer(void); /** Deinitialize */
+private:	// Member variables
+	Renderer *pRenderer;
+	bool m_paused;
+	bool m_AOSToolTip;
+
+	int cursor3d[3];
+	int cursorx, cursory;
+	Uint32 cursor_character;
+	Uint32 cursor_object;
+	Uint32 m_cursorid;
+
+	bool button_left;
+	bool button_right;
+	int m_click_mode;
+	Uint32 m_MouseLastTick;
+
+	Uint32 drag_id;
+	Uint16 drag_model;
+	bool drag_in_world;
+	    
+	Uint32 pointed_obj;
+
+private:	// Private Functions
+	void GrabMousePosition( int x, int y, int max_z = 1000 );
+	void MoveToMouse();
+	void GrabDynamic( int x, int y, cDynamicObject ** r_object, cCharacter ** r_character );
+
+	void SetDragInWorld( bool value );
+
+	void InitRenderer( std::string mulpath ); /** Initialize Renderer */
+	void DeInitRenderer( void ); /** Deinitialize */
 
 public:
     Game ();
@@ -129,6 +132,6 @@ protected:
    void (*callback_OnAOSTooltip) (Uint32 id, int count, int x, int y);
 };
 
-extern	Game	pGame;
+extern	Game pGame;
 
 #endif //_GAME_H_
