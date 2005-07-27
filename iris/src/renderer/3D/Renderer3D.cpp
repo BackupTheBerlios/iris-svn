@@ -1,7 +1,9 @@
 //
 // File: Renderer3D.cpp
 // Created by: Alexander Oster - tensor@ultima-iris.de
-//
+// Modified by: Florian Fischer - seabeams@gmx.de
+// 27.07.05 - custom Skybox support added via Maps.xml
+//          - and lots of bugfixes
 /*****
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -43,6 +45,8 @@
 #include "gui/Label.h"
 
 #include "net/Client.h"
+#include "loaders/MapInfo.h"
+#include "Exception.h"
 
 #include "include.h"
 #include "Config.h"
@@ -75,6 +79,7 @@ extern sColor sun_color;
 
 float SkyBoxTexCoords[4][3] =
   { {0.0, 0.0}, {0.0, 1.0}, {1.0, 1.0}, {1.0, 0.0} };
+
 float SkyBoxCoords[5][4][3] = {
   {{1.995f, -2.005f, 2.000f}, {1.995f, -2.005f, -2.000f}, {1.995f, 2.005f, -2.000f}, {1.995f, 2.005f, 2.000f}},   // East
   {{2.005f, -2.005f, 1.995f}, {2.005f, 2.005f, 1.995f}, {-2.005f, 2.005f, 1.995f}, {-2.005f, -2.005f, 1.995f}},   // Top
@@ -82,24 +87,14 @@ float SkyBoxCoords[5][4][3] = {
   {{-2.000f, -2.000f, 2.000f}, {-2.000f, -2.000f, -2.000f}, {2.000f, -2.000f, -2.000f}, {2.000f, -2.000f, 2.000f}},     // South
   {{2.000f, 2.000f, 2.000f}, {2.000f, 2.000f, -2.000f}, {-2.000f, 2.000f, -2.000f}, {-2.000f, 2.000f, 2.000f}}    // North
 };
-/*
-char SkyBoxTextureNames[5][35] = { "./textures/skybox/skybox_east.jpg",
-  "./textures/skybox/skybox_top.jpg", "./textures/skybox/skybox_west.jpg",
-  "./textures/skybox/skybox_north.jpg",
-  "./textures/skybox/skybox_south.jpg"
-};
 
-char SkyBoxTextureNames[5][35] = { "./textures/skybox/sunset_east.jpg",
-  "./textures/skybox/sunset_top.jpg", "./textures/skybox/sunset_west.jpg",
-  "./textures/skybox/sunset_north.jpg",
-  "./textures/skybox/sunset_south.jpg"
-};
-*/
-char SkyBoxTextureNames[5][36] = { "./textures/skybox/darksun_east.jpg",
-  "./textures/skybox/darksun_top.jpg", "./textures/skybox/darksun_west.jpg",
-  "./textures/skybox/darksun_north.jpg",
-  "./textures/skybox/darksun_south.jpg"
-};
+char SkyBoxTextureNames[5][12] = {
+  "_east.jpg",
+  "_top.jpg",
+  "_west.jpg",
+  "_north.jpg",
+  "_south.jpg"};
+
 
 Renderer3D::Renderer3D ()
 {
@@ -118,9 +113,6 @@ Renderer3D::~Renderer3D ()
 
 int Renderer3D::Init (void)
 {
-//flo: wozu?
-//  DeInit ();
-  
   tex_water = new Texture;
   tex_water->LoadFromFileWithTransparency ("./textures/water1.jpg", 200);
 
@@ -129,13 +121,10 @@ int Renderer3D::Init (void)
 
   LoadSkyboxTextures ();
 
-
-        pUOGUI.LoadCursor (0, 0x205a);
-        pUOGUI.LoadCursor (1, 0x205b);
-        pUOGUI.LoadCursor (2, 8305);
-        pUOGUI.LoadCursor (3, 8310);
-
-
+  pUOGUI.LoadCursor (0, 0x205a);
+  pUOGUI.LoadCursor (1, 0x205b);
+  pUOGUI.LoadCursor (2, 8305);
+  pUOGUI.LoadCursor (3, 8310);
 
   init_vertex_buffer ();
 
@@ -183,19 +172,31 @@ int Renderer3D::Init (void)
 
 void Renderer3D::LoadSkyboxTextures ()
 {
+  char skyboxset[50]; 
+  string skyboxtemp = "./textures/skybox/skybox";
+  string skyboxtype;
+
+  cMapInfoEntry * mapinfo_entry = pMapInfoLoader.GetMapInfo(0);
+  if(!mapinfo_entry)
+   THROWEXCEPTION ("unknown map!");
+
+  if(mapinfo_entry->skybox () != "")
+    skyboxtemp = mapinfo_entry->skybox ();
+
   for (int index = 0; index < 5; index++)
       {
         skyboxtextures[index] = new Texture ();
-        skyboxtextures[index]->LoadFromFile (SkyBoxTextureNames[index]);
+
+        skyboxtype=skyboxtemp + SkyBoxTextureNames[index];
+        strcpy( skyboxset, skyboxtype.c_str() );
+
+        skyboxtextures[index]->LoadFromFile (skyboxset);
       }
 }
 
 
 int Renderer3D::DeInit (void)
 {
-
-
-
   for (int index = 0; index < 5; index++)
     if (skyboxtextures[index])
         {
@@ -212,8 +213,6 @@ int Renderer3D::DeInit (void)
 
   free_vertex_buffer ();
 
-
-
   // destroy the model instance
   /*m_calModel.destroy();
 
@@ -224,9 +223,10 @@ int Renderer3D::DeInit (void)
 }
 
 
+/*
 extern int m_count;
 
-/*void renderMesh ()
+void renderMesh ()
 {
   // get the renderer of the model
   CalRenderer *pCalRenderer;
@@ -993,15 +993,8 @@ void Renderer3D::RenderCharacters (bool do_culling)
                   }
               character->setAnimtime (curtime);
               glPopMatrix ();
-
             }
-
-
       }
-
-
-
-
 }
 
 
