@@ -1,3 +1,8 @@
+27.07.2005:
+Changes by SiENcE (Florian Fischer)
+	-external Skybox support added, look into xml/Maps.xml
+	 you have to specify the rel. path and the firstname of the skybox
+
 12.06.2005:
 Changes by SiENcE (Florian Fischer)
 	-bugreport from Grandmaster, popupx and popupy moved to Client.h
