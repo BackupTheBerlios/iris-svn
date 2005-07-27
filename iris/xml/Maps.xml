@@ -1,11 +1,32 @@
 <MAPS>
+
+<-- if you have M.Legacy installed activate this one
+ <MAP>
+  <NAME>Trammel</NAME>
+  <ID>0</ID>
+  <WIDTH>896</WIDTH>
+  <HEIGHT>512</HEIGHT>
+  <SKYBOX>./textures/skybox/darksun</SKYBOX>
+ </MAP>
+
+ <MAP>
+  <NAME>Felucca</NAME>
+  <ID>1</ID>
+  <WIDTH>896</WIDTH>
+  <HEIGHT>512</HEIGHT>
+  <BASE_ID>0</BASE_ID>
+  <SKYBOX>./textures/skybox/darksun</SKYBOX>
+ </MAP>
+-->
+
+ <!-- activate if you have TD,AoS,SE,Gold -->
  <MAP>
   <NAME>Trammel</NAME>
   <ID>0</ID>
   <WIDTH>768</WIDTH>
   <HEIGHT>512</HEIGHT>
+  <SKYBOX>./textures/skybox/darksun</SKYBOX>
  </MAP>
-
 
  <MAP>
   <NAME>Felucca</NAME>
@@ -13,14 +34,15 @@
   <WIDTH>768</WIDTH>
   <HEIGHT>512</HEIGHT>
   <BASE_ID>0</BASE_ID>
+  <SKYBOX>./textures/skybox/darksun</SKYBOX>
  </MAP>
-
 
  <MAP>
   <NAME>Ilshenar</NAME>
   <ID>2</ID>
   <WIDTH>288</WIDTH>
   <HEIGHT>200</HEIGHT>
+  <SKYBOX>./textures/skybox/darksun</SKYBOX>
  </MAP>
 
 
@@ -29,13 +51,16 @@
   <ID>3</ID>
   <WIDTH>320</WIDTH>
   <HEIGHT>256</HEIGHT>
+  <SKYBOX>./textures/skybox/darksun</SKYBOX>
  </MAP>
 
+ <!-- uncomment, if you have Samurai Empire installed -->
  <MAP>
   <NAME>Tokuno</NAME>
   <ID>4</ID>
   <WIDTH>181</WIDTH>
   <HEIGHT>181</HEIGHT>
+  <SKYBOX>./textures/skybox/darksun</SKYBOX>
  </MAP> 
 
 </MAPS>
