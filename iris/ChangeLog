@@ -2,6 +2,7 @@
 Changes by SiENcE (Florian Fischer)
 	-external Skybox support added, look into xml/Maps.xml
 	 you have to specify the rel. path and the firstname of the skybox
+	-xml/MusicList.xml updated for the new UO M.Legacy Expansion
 
 12.06.2005:
 Changes by SiENcE (Florian Fischer)
