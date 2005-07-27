@@ -281,7 +281,7 @@
 		<LOOP>1</LOOP>
 	</MUSIC>
 
-<!-- Activate the last 3 if you have Samurai Empire installed ! -->
+	<!-- Samurai Empire Songs -->
 	<MUSIC>
 		<ID>49</ID>
 		<MP3>zento.mp3</MP3>
@@ -297,6 +297,38 @@
 	<MUSIC>
 		<ID>51</ID>
 		<MP3>taiko.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+		<LOOP>1</LOOP>
+	</MUSIC>
+
+	<!-- M.Legacy Songs -->
+	<MUSIC>
+		<ID>52</ID>
+		<MP3>dread_horn_area.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+		<LOOP>1</LOOP>
+	</MUSIC>
+	<MUSIC>
+		<ID>53</ID>
+		<MP3>elf_city_1.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+		<LOOP>1</LOOP>
+	</MUSIC>
+	<MUSIC>
+		<ID>54</ID>
+		<MP3>grizzle_dungeon.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+		<LOOP>1</LOOP>
+	</MUSIC>
+	<MUSIC>
+		<ID>55</ID>
+		<MP3>melisandes_lair.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+		<LOOP>1</LOOP>
+	</MUSIC>
+	<MUSIC>
+		<ID>56</ID>
+		<MP3>paroxysmus_lair.mp3</MP3>
 		<MIDI>moonglow.mid</MIDI>
 		<LOOP>1</LOOP>
 	</MUSIC>
