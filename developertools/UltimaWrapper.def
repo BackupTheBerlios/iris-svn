@@ -1,0 +1,3 @@
+LIBRARY UltimaWrapper
+EXPORTS FindLocation
+EXPORTS ClientIsRunning
