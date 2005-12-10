@@ -67,7 +67,7 @@ protected:
 	void RenderCharacters (bool do_culling);
 	void RenderDragModel();
     void GenerateLight ();
-    void LoadSkyboxTextures ();
+    //void LoadSkyboxTextures ();
 	
 	Texture * skyboxtextures[5];
     Texture * tex_water;
@@ -87,6 +87,8 @@ public:
    virtual void GrabMousePosition(int x, int y, int maxz, int cursor3d[3], int * cursor_character);
    virtual void AddDynamic (cDynamicObject * object);
    virtual void DelDynamic (cDynamicObject * object);
+   virtual void LoadSkyboxTextures(int map=0);
+   
 };
 
 #endif //_Renderer3D_H_

@@ -91,6 +91,9 @@ public:
    void FetchMatrix ();
    float GetZoom () { return this->zoom; }
    
+   void SetForceRotation(bool force);
+   bool forceRotation();
+   
 protected:
 
  float x, y, z;

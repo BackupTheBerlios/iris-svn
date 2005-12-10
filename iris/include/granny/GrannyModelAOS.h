@@ -49,13 +49,13 @@ public:
         void setBodyParts(std::vector<int> b_parts) {bodyparts = b_parts;}
 private:
         int last_tick;
-        int hand;
         int m_animset;
         std::string basepath;
         std::string defaultanimname;
         std::map <int, cGrannyModelTD *> models;
         std::vector<int> bodyparts;
         int left_hand_bone, right_hand_bone;
+        int hand;
 };
 
 #endif

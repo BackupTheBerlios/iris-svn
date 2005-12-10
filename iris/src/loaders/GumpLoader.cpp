@@ -59,8 +59,8 @@ void cGumpLoader::Init (std::string filename, std::string indexname)
       {
         errstr += filename;
         delete gumpfile;
-        delete gumpindex;
         gumpfile = NULL;
+        delete gumpindex;
         gumpindex = NULL;
         THROWEXCEPTION (errstr);
       }
@@ -69,8 +69,8 @@ void cGumpLoader::Init (std::string filename, std::string indexname)
       {
         errstr += indexname;
         delete gumpfile;
-        delete gumpindex;
         gumpfile = NULL;
+        delete gumpindex;
         gumpindex = NULL;
         THROWEXCEPTION (errstr);
       }
@@ -83,8 +83,8 @@ void cGumpLoader::Init (std::string filename, std::string indexname)
 void cGumpLoader::DeInit ()
 {
   delete gumpfile;
-  delete gumpindex;
   gumpfile = NULL;
+  delete gumpindex;
   gumpindex = NULL;
 }
 

@@ -51,12 +51,12 @@
 	</MUSIC>
 	<MUSIC>
 		<ID>8</ID>
-		<MP3>Stones1.mp3</MP3>
+		<MP3>stones1.mp3</MP3>
 		<MIDI>stones2.mid</MIDI>
 	</MUSIC>
 	<MUSIC>
 		<ID>9</ID>
-		<MP3>britainpos1.mp3</MP3>
+		<MP3>britainpos.mp3</MP3>
 		<MIDI>britain1.mid</MIDI>
 		<LOOP>1</LOOP>
 	</MUSIC>
@@ -331,5 +331,55 @@
 		<MP3>paroxysmus_lair.mp3</MP3>
 		<MIDI>moonglow.mid</MIDI>
 		<LOOP>1</LOOP>
+	</MUSIC>
+	<MUSIC>
+		<ID>57</ID>
+		<MP3>ConversationWithGwenno.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+	</MUSIC>
+	<MUSIC>
+		<ID>58</ID>
+		<MP3>GoodEndGame.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+	</MUSIC>
+	<MUSIC>
+		<ID>59</ID>
+		<MP3>GoodVsEvil.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+	</MUSIC>
+	<MUSIC>
+		<ID>60</ID>
+		<MP3>GreatEarthSerpentsTheme.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+	</MUSIC>
+	<MUSIC>
+		<ID>61</ID>
+		<MP3>HumanoidsU9.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+	</MUSIC>
+	<MUSIC>
+		<ID>62</ID>
+		<MP3>MinocNegative.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+	</MUSIC>
+	<MUSIC>
+		<ID>63</ID>
+		<MP3>Paws.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+	</MUSIC>
+	<MUSIC>
+		<ID>64</ID>
+		<MP3>SelimsBar.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+	</MUSIC>
+	<MUSIC>
+		<ID>65</ID>
+		<MP3>UltimaVIISerpentIsleCombat.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
+	</MUSIC>
+	<MUSIC>
+		<ID>66</ID>
+		<MP3>ValoriaShips.mp3</MP3>
+		<MIDI>moonglow.mid</MIDI>
 	</MUSIC>
 </MUSICLIST>

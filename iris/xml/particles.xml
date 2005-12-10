@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+Spell ID's
+----------
+----------
+Heal Spell	- StartEffectID: 9061 EndEffectID: 5005
+Magic Arrow	- StartEffectID: 9041 EndEffectID: no.moving effect
+Nightsight	- StartEffectID: 9031 EndEffectID: 5007
+Harm		- StartEffectID: 9001 EndEffectID: 5013
+Strength	- StartEffectID: 9061 EndEffectID: 5017
+Fireball	- StartEffectID: 9041 EndEffectID: 9502 (moving effect)
+Poison		- StartEffectID: 9051 EndEffectID: 5021
+Teleport	- StartEffectID: 9031 EndEffectID: 2023 und 5023 oder 5039
+Fire Field	- StartEffectID: 9041 EndEffectID: no
+Greater Heal- StartEffectID: 9061 EndEffectID: 5030
+Lightning	- StartEffectID: 9021 EndEffectID: no
+-->
+
 <effect_collection>
 	<effect>
+<effect_id>9502</effect_id>
 		<texture>explosion.png</texture>
 		<description>Explosion</description>
 		<name>explosion1</name>
@@ -2116,7 +2135,7 @@
 
 	<effect>
 		<texture>water.png</texture>
-		<description></description>
+		<description>Cozmic</description>
 		<name>Cozmic</name>
 		<appeartype>1</appeartype>
 		<time>100</time>
@@ -2307,7 +2326,7 @@
 		<particle_definition>
 			<id>1</id>
 			<description>Yell Particle</description>
-			<amount>65</amount>
+			<amount>85</amount>
 			<particletype>4</particletype>
 			<fadeout>1</fadeout>
 			<fadein>0</fadein>
@@ -2319,7 +2338,7 @@
 				<coneangle>30.0000</coneangle>
 				<amount>
 					<average>1.0000</average>
-					<variance>0.5000</variance>
+					<variance>0.0000</variance>
 				</amount>
 			</speed>
 			<acceleration>
@@ -2332,8 +2351,8 @@
 				</amount>
 			</acceleration>
 			<lifetime>
-				<average>0.4000</average>
-				<variance>0.0000</variance>
+				<average>0.8000</average>
+				<variance>0.5000</variance>
 			</lifetime>
 			<size>
 				<average>100.0000</average>
@@ -2884,6 +2903,7 @@
 	</effect>
 
 	<effect>
+<effect_id>9031</effect_id>
 		<texture>teleport.png</texture>
 		<description>Teleport effect</description>
 		<name>teleport</name>
@@ -3011,13 +3031,401 @@
 				</z>
 			</emission>
 		</particle_definition>
+	</effect>
+
+	<effect>
+<effect_id>2023</effect_id>
+		<texture>teleport.png</texture>
+		<description>Teleport effect</description>
+		<name>teleport2</name>
+		<appeartype>0</appeartype>
+		<time>100</time>
+		<particletype_definition>
+			<id>1</id>
+			<description>Spark</description>
+			<texcoord_x>0</texcoord_x>
+			<texcoord_y>0</texcoord_y>
+			<texcoord_w>127</texcoord_w>
+			<texcoord_h>127</texcoord_h>
+		</particletype_definition>
+
+		<particletype_definition>
+			<id>2</id>
+			<description>Smoke</description>
+			<texcoord_x>128</texcoord_x>
+			<texcoord_y>128</texcoord_y>
+			<texcoord_w>128</texcoord_w>
+			<texcoord_h>128</texcoord_h>
+		</particletype_definition>
+
+		<particle_definition>
+			<id>1</id>
+			<description>New Particle</description>
+			<amount>120</amount>
+			<particletype>1</particletype>
+			<fadeout>1</fadeout>
+			<fadein>0</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>0.5000</average>
+					<variance>1.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>2.0000</average>
+					<variance>1.0000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>2.0000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>120.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>500.0000</average>
+				<variance>200.0000</variance>
+			</appeartime>
+			<emission>
+				<type>sphere</type>
+				<radius>0.5000</radius>
+			</emission>
+		</particle_definition>
+
+		<particle_definition>
+			<id>2</id>
+			<description>New Particle</description>
+			<amount>50</amount>
+			<particletype>2</particletype>
+			<fadeout>1</fadeout>
+			<fadein>0</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>1.5000</average>
+					<variance>0.2000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>0.1000</average>
+					<variance>0.2000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>5.0000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>800.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>200.0000</average>
+				<variance>25.0000</variance>
+			</appeartime>
+			<emission>
+				<type>sphere</type>
+				<radius>0.5000</radius>
+			</emission>
+			<emission>
+				<type>translation</type>
+				<x>
+					<average>-0.1000</average>
+					<variance>0.0000</variance>
+				</x>
+				<y>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</y>
+				<z>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</z>
+			</emission>
+		</particle_definition>
+	</effect>
+
+	<effect>
+<effect_id>5023</effect_id>
+		<texture>teleport.png</texture>
+		<description>Teleport effect</description>
+		<name>teleport3</name>
+		<appeartype>0</appeartype>
+		<time>100</time>
+		<particletype_definition>
+			<id>1</id>
+			<description>Spark</description>
+			<texcoord_x>0</texcoord_x>
+			<texcoord_y>0</texcoord_y>
+			<texcoord_w>127</texcoord_w>
+			<texcoord_h>127</texcoord_h>
+		</particletype_definition>
+
+		<particletype_definition>
+			<id>2</id>
+			<description>Smoke</description>
+			<texcoord_x>128</texcoord_x>
+			<texcoord_y>128</texcoord_y>
+			<texcoord_w>128</texcoord_w>
+			<texcoord_h>128</texcoord_h>
+		</particletype_definition>
+
+		<particle_definition>
+			<id>1</id>
+			<description>New Particle</description>
+			<amount>120</amount>
+			<particletype>1</particletype>
+			<fadeout>1</fadeout>
+			<fadein>0</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>0.5000</average>
+					<variance>1.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>2.0000</average>
+					<variance>1.0000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>2.0000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>120.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>500.0000</average>
+				<variance>200.0000</variance>
+			</appeartime>
+			<emission>
+				<type>sphere</type>
+				<radius>0.5000</radius>
+			</emission>
+		</particle_definition>
+
+		<particle_definition>
+			<id>2</id>
+			<description>New Particle</description>
+			<amount>50</amount>
+			<particletype>2</particletype>
+			<fadeout>1</fadeout>
+			<fadein>0</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>1.5000</average>
+					<variance>0.2000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>0.1000</average>
+					<variance>0.2000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>5.0000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>800.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>200.0000</average>
+				<variance>25.0000</variance>
+			</appeartime>
+			<emission>
+				<type>sphere</type>
+				<radius>0.5000</radius>
+			</emission>
+			<emission>
+				<type>translation</type>
+				<x>
+					<average>-0.1000</average>
+					<variance>0.0000</variance>
+				</x>
+				<y>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</y>
+				<z>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</z>
+			</emission>
+		</particle_definition>
+	</effect>
+
+	<effect>
+<effect_id>9061</effect_id>
+		<texture>teleport.png</texture>
+		<description>Heal Spell</description>
+		<name>heal</name>
+		<appeartype>0</appeartype>
+		<time>100</time>
+		<particletype_definition>
+			<id>1</id>
+			<description>Spark</description>
+			<texcoord_x>0</texcoord_x>
+			<texcoord_y>0</texcoord_y>
+			<texcoord_w>127</texcoord_w>
+			<texcoord_h>127</texcoord_h>
+		</particletype_definition>
+
+		<particletype_definition>
+			<id>2</id>
+			<description>Smoke</description>
+			<texcoord_x>128</texcoord_x>
+			<texcoord_y>128</texcoord_y>
+			<texcoord_w>128</texcoord_w>
+			<texcoord_h>128</texcoord_h>
+		</particletype_definition>
+
+		<particletype_definition>
+			<id>3</id>
+			<description>Dark Spark</description>
+			<texcoord_x>0</texcoord_x>
+			<texcoord_y>128</texcoord_y>
+			<texcoord_w>128</texcoord_w>
+			<texcoord_h>128</texcoord_h>
+		</particletype_definition>
+
+		<particle_definition>
+			<id>1</id>
+			<description>New Particle</description>
+			<amount>150</amount>
+			<particletype>1</particletype>
+			<fadeout>1</fadeout>
+			<fadein>0</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>0.5000</average>
+					<variance>1.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>2.0000</average>
+					<variance>1.0000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>2.0000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>150.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>50.0000</average>
+				<variance>250.0000</variance>
+			</appeartime>
+			<emission>
+				<type>sphere</type>
+				<radius>1.5000</radius>
+			</emission>
+		</particle_definition>
+
+		<particle_definition>
+			<id>3</id>
+			<description>New Particle</description>
+			<amount>150</amount>
+			<particletype>3</particletype>
+			<fadeout>1</fadeout>
+			<fadein>0</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>0.5000</average>
+					<variance>1.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>360.0000</coneangle>
+				<amount>
+					<average>2.0000</average>
+					<variance>1.0000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>2.0000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>150.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>850.0000</average>
+				<variance>250.0000</variance>
+			</appeartime>
+			<emission>
+				<type>sphere</type>
+				<radius>1.5000</radius>
+			</emission>
+		</particle_definition>
 
 	</effect>
 
 	<effect>
+<effect_id>5005</effect_id>
 		<texture>teleport.png</texture>
 		<description>Heal Spell</description>
-		<name>heal</name>
+		<name>heal_end</name>
 		<appeartype>0</appeartype>
 		<time>100</time>
 		<particletype_definition>
@@ -3589,6 +3997,7 @@
 	</effect>
 
 	<effect>
+<effect_id>9041</effect_id>
 		<texture>flame.png</texture>
 		<description>flamestrike Spell</description>
 		<name>flamestrike</name>
@@ -3935,6 +4344,7 @@
 	</effect>
 
 	<effect>
+<effect_id>9041</effect_id>
 		<texture>sparkles2.png</texture>
 		<description>Heal Spell</description>
 		<name>redSparkle</name>
@@ -4058,6 +4468,7 @@
 		</particle_definition>
 
 	</effect>
+
 
 	<effect>
 		<texture>water.png</texture>
@@ -5150,7 +5561,7 @@
 	</effect>
 
 	<effect>
-		<texture>moongate.png</texture>
+		<texture>circle.png</texture>
 		<description>Flame Effect</description>
 		<name>markSpell</name>
 		<appeartype>0</appeartype>
@@ -7925,6 +8336,349 @@
 				<angle1>90.0000</angle1>
 				<angle2>90.0000</angle2>
 			</emission>
+		</particle_definition>
+
+	</effect>
+
+	<effect>
+		<texture>Torch_2.png</texture>
+		<description>Torch Effect</description>
+		<name>Torch_1</name>
+		<appeartype>1</appeartype>
+		<time>100</time>
+		<particletype_definition>
+			<id>5</id>
+			<description>flame</description>
+			<texcoord_x>0</texcoord_x>
+			<texcoord_y>0</texcoord_y>
+			<texcoord_w>128</texcoord_w>
+			<texcoord_h>128</texcoord_h>
+		</particletype_definition>
+
+		<particletype_definition>
+			<id>9</id>
+			<description>smoke</description>
+			<texcoord_x>128</texcoord_x>
+			<texcoord_y>0</texcoord_y>
+			<texcoord_w>128</texcoord_w>
+			<texcoord_h>128</texcoord_h>
+		</particletype_definition>
+
+		<particletype_definition>
+			<id>11</id>
+			<description>flame 2</description>
+			<texcoord_x>0</texcoord_x>
+			<texcoord_y>128</texcoord_y>
+			<texcoord_w>128</texcoord_w>
+			<texcoord_h>128</texcoord_h>
+		</particletype_definition>
+
+		<particletype_definition>
+			<id>12</id>
+			<description>smoke 2</description>
+			<texcoord_x>128</texcoord_x>
+			<texcoord_y>128</texcoord_y>
+			<texcoord_w>128</texcoord_w>
+			<texcoord_h>128</texcoord_h>
+		</particletype_definition>
+
+		<particle_definition>
+			<id>1</id>
+			<description>flame core</description>
+			<amount>1</amount>
+			<particletype>5</particletype>
+			<fadeout>1</fadeout>
+			<fadein>1</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>15.0000</coneangle>
+				<amount>
+					<average>0.1000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>0.0000</coneangle>
+				<amount>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>1.0000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>70.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>0.0000</average>
+				<variance>0.0000</variance>
+			</appeartime>
+		</particle_definition>
+
+		<particle_definition>
+			<id>4</id>
+			<description>smoke</description>
+			<amount>1</amount>
+			<particletype>9</particletype>
+			<fadeout>1</fadeout>
+			<fadein>1</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>15.0000</coneangle>
+				<amount>
+					<average>0.1000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>0.0000</coneangle>
+				<amount>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>3.0000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>35.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>0.0000</average>
+				<variance>0.0000</variance>
+			</appeartime>
+			<emission>
+				<type>translation</type>
+				<x>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</x>
+				<y>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</y>
+				<z>
+					<average>0.0500</average>
+					<variance>0.0000</variance>
+				</z>
+			</emission>
+		</particle_definition>
+
+		<particle_definition>
+			<id>5</id>
+			<description>smoke 2</description>
+			<amount>1</amount>
+			<particletype>12</particletype>
+			<fadeout>1</fadeout>
+			<fadein>1</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>30.0000</coneangle>
+				<amount>
+					<average>0.1000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>0.0000</coneangle>
+				<amount>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>4.0000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>100.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>0.0000</average>
+				<variance>0.0000</variance>
+			</appeartime>
+			<emission>
+				<type>translation</type>
+				<x>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</x>
+				<y>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</y>
+				<z>
+					<average>0.1000</average>
+					<variance>0.0000</variance>
+				</z>
+			</emission>
+			<emission>
+				<type>circle</type>
+				<radius>0.0200</radius>
+			</emission>
+		</particle_definition>
+
+		<particle_definition>
+			<id>6</id>
+			<description>sparkle</description>
+			<amount>1</amount>
+			<particletype>11</particletype>
+			<fadeout>1</fadeout>
+			<fadein>1</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>10.0000</coneangle>
+				<amount>
+					<average>0.1000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>20.0000</angle2>
+				<coneangle>0.0000</coneangle>
+				<amount>
+					<average>0.1000</average>
+					<variance>0.2000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>1.7000</average>
+				<variance>1.0000</variance>
+			</lifetime>
+			<size>
+				<average>4.0000</average>
+				<variance>3.0000</variance>
+			</size>
+			<appeartime>
+				<average>1000.0000</average>
+				<variance>1200.0000</variance>
+			</appeartime>
+			<emission>
+				<type>translation</type>
+				<x>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</x>
+				<y>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</y>
+				<z>
+					<average>0.1000</average>
+					<variance>0.0000</variance>
+				</z>
+			</emission>
+			<emission>
+				<type>circle</type>
+				<radius>0.0500</radius>
+			</emission>
+		</particle_definition>
+
+		<particle_definition>
+			<id>7</id>
+			<description>flame 2</description>
+			<amount>1</amount>
+			<particletype>5</particletype>
+			<fadeout>1</fadeout>
+			<fadein>1</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>10.0000</coneangle>
+				<amount>
+					<average>0.1000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>0.0000</coneangle>
+				<amount>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>1.2000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>50.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>0.0000</average>
+				<variance>0.0000</variance>
+			</appeartime>
+		</particle_definition>
+
+		<particle_definition>
+			<id>8</id>
+			<description>flame 3</description>
+			<amount>1</amount>
+			<particletype>5</particletype>
+			<fadeout>1</fadeout>
+			<fadein>1</fadein>
+			<transform_speed>1</transform_speed>
+			<transform_acceleration>1</transform_acceleration>
+			<speed>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>7.0000</coneangle>
+				<amount>
+					<average>0.1000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</speed>
+			<acceleration>
+				<angle1>0.0000</angle1>
+				<angle2>0.0000</angle2>
+				<coneangle>0.0000</coneangle>
+				<amount>
+					<average>0.0000</average>
+					<variance>0.0000</variance>
+				</amount>
+			</acceleration>
+			<lifetime>
+				<average>1.5000</average>
+				<variance>0.0000</variance>
+			</lifetime>
+			<size>
+				<average>30.0000</average>
+				<variance>0.0000</variance>
+			</size>
+			<appeartime>
+				<average>0.0000</average>
+				<variance>0.0000</variance>
+			</appeartime>
 		</particle_definition>
 
 	</effect>

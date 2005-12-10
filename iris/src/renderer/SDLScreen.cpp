@@ -89,7 +89,9 @@ int SDLScreen::Init (int width, int height, int bpp)
   if (nConfig::startfullscreen)
     videoFlags |= SDL_FULLSCREEN;
 
-  //videoFlags |= SDL_RESIZABLE;        /* Enable window resizing */
+#ifndef WIN32
+  videoFlags |= SDL_RESIZABLE;        /* Enable window resizing */
+#endif
 
   /* This checks to see if surfaces can be stored in memory */
   if (videoInfo->hw_available)
@@ -180,7 +182,7 @@ int SDLScreen::InitGL (GLvoid)
   glDepthFunc (GL_LESS);        // The Type Of Depth Test To Do
   glEnable (GL_DEPTH_TEST);     // Enables Depth Testing
   glShadeModel (GL_SMOOTH);     // Enables Smooth Color Shading
-
+  
   glMatrixMode (GL_PROJECTION);
   glEnable (GL_TEXTURE_2D);
 
@@ -195,32 +197,26 @@ int SDLScreen::InitGL (GLvoid)
 
 
   glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
-  //glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, LightPosition);
-// glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
+  glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, LightPosition);
+  glLightfv(GL_LIGHT0, GL_POSITION, LightPosition);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
-  glEnable(GL_LIGHT1); */
+  glEnable(GL_LIGHT1);
+*/
 
-//  GLuint filter; // Which Filter To Use
   GLuint fogMode[]= { GL_EXP, GL_EXP2, GL_LINEAR }; // Storage For Three Types Of Fog
   GLuint fogfilter= 2; // Which Fog To Use
-  GLfloat fogColor[4] = { 97.0f / 255.0f, 76.0f / 255.0f, 33.0f / 255.0f, 1.0 }; // darksun
-//  GLfloat fogColor[4] = { 132.0f / 255.0f, 92.0f / 255.0f, 82.0f / 255.0f, 1.0 }; // sunset
-//  GLfloat fogColor[4] = { 168.0f/255.0f, 168.0f/255.0f, 180.0f/255.0f , 1.0f }; // skybox
-
+  GLfloat fogColor[4] = { 168.0f/255.0f, 168.0f/255.0f, 180.0f/255.0f , 1.0f }; // skybox
   glEnable(GL_FOG);
   glClearColor(0.5f,0.5f,0.5f,1.0f); // We'll Clear To The Color Of The Fog
   glFogi(GL_FOG_MODE, fogMode[fogfilter]); // Fog Mode
   glFogfv(GL_FOG_COLOR, fogColor); // Set Fog Color
-  glFogf(GL_FOG_DENSITY, 0.35f); // 0.35f How Dense Will The Fog Be
+  glFogf(GL_FOG_DENSITY, 0.45f); // 0.35f How Dense Will The Fog Be
   glHint(GL_FOG_HINT, GL_DONT_CARE); // Fog Hint Value
-
   glMatrixMode (GL_MODELVIEW);
-
-  glHint (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
   glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable (GL_BLEND);
+  glEnable(GL_BLEND);
 
 //  glEnableClientState(GL_VERTEX_ARRAY);
 //  glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -228,7 +224,6 @@ int SDLScreen::InitGL (GLvoid)
 
   glAlphaFunc (GL_GREATER, 0.9);
   glEnable (GL_ALPHA_TEST);
-
   return (true);
 }
 
@@ -254,12 +249,13 @@ int SDLScreen::DrawGL (GLvoid)
 {
   if (!screen)
     return true;
+
+  //Display FPS
   DisplayFps ();
 
+  // Draw Screen
   glFinish ();
   SDL_GL_SwapBuffers ();
-//  glSwapBuffers();
-
   return (true);
 }
 
@@ -344,6 +340,7 @@ void SDLScreen::SetPerspective ()
   glLoadIdentity ();
 
   gluPerspective (45.0f, ratio, 1.0f, 100.0f);
+//SiENcE:  gluPerspective(45.f, 800.f / 600.f, 1.f, 60.0f);
 
   /* Make sure we're chaning the model view and not the projection */
   glMatrixMode (GL_MODELVIEW);

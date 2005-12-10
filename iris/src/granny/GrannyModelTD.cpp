@@ -89,16 +89,18 @@ void cGrannyModelTD::Render (int animid, int tick, float &curtime,
         model->left_hand_bone = left_hand_bone;
         model->right_hand_bone = right_hand_bone;
 
+//SiENcE
+//printf ("[lefthandbone_in %d]\n", left_hand_bone);
+//printf ("[righthandbone_in %d]\n", right_hand_bone);
+
         default_animation = new cGrannyAnimation ();
         default_animation->load (defaultanimname, basepath);
         default_animation->Assign (model);
       }
+
   assert (model);
 
-//   printf("%s\n", m_filename.c_str());
-
-  map < int, cGrannyAnimation * >::iterator anim_iter =
-    animations.find (animid);
+  map < int, cGrannyAnimation * >::iterator anim_iter =animations.find (animid);
 
   cGrannyAnimation *animation = default_animation;
 
@@ -128,9 +130,15 @@ void cGrannyModelTD::Render (int animid, int tick, float &curtime,
     glPushMatrix ();
 
   if ((hand == HAND_LEFT) && left_matrix)
-    glLoadMatrixf (left_matrix->matrix);
+  {
+     glLoadMatrixf (left_matrix->matrix);
+//printf ("[hand_left %d]\n", hand);
+  }
   if ((hand == HAND_RIGHT) && right_matrix)
+  {
     glLoadMatrixf (right_matrix->matrix);
+//printf ("[hand_right %d]\n", hand);
+  }
 
   model->Render (animation, curtime, character_light, r, g, b, alpha,
                  is_corpse);
@@ -138,16 +146,15 @@ void cGrannyModelTD::Render (int animid, int tick, float &curtime,
   if (hand != HAND_NONE)
     glPopMatrix ();
 
-
-
   if (hand == HAND_OWNER)
       {
         if (right_matrix)
           *right_matrix = animation->matrix_right_hand;
         if (left_matrix)
           *left_matrix = animation->matrix_left_hand;
-      }
 
+//printf ("[hand_in %d]\n", hand);
+      }
 }
 
 int cGrannyModelTD::Age (int tick)

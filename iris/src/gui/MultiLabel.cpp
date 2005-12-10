@@ -118,9 +118,7 @@ cMultiLabel::cMultiLabel (int x, int y, int width, int height, int scrollbar)
 
   _scrollbar = scrollbar;
   scrollbuts_created = false;
-
-
-
+  
   scrollup = NULL;
   scrolldown = NULL;
 
@@ -129,30 +127,19 @@ cMultiLabel::cMultiLabel (int x, int y, int width, int height, int scrollbar)
 
 cMultiLabel::~cMultiLabel ()
 {
-
-
   for(unsigned int i = 0; i < labels.size(); i++){
-     
      Label * l =  labels.at(i);
       //(if(labels.at(i))
-      
-      
-       delete l;
-      
-      
-      }
-
+      delete l;
+  }
    /*
    if(scrollup)
     delete scrollup;
    if(scrolldown)
     delete scrolldown; 
    */
-
    labels.clear();
-   
-   line.clear ();
-   
+   line.clear ();   
    lines.clear ();
 }
 
@@ -185,7 +172,8 @@ void cMultiLabel::Create ()
               /*
                  Don't know why, but this is necessary to render font style for the correct word
                */
-              Label *prelab =
+/*SiENcE: this couses chrashes
+			  Label *prelab =
                 new Label ((cur_x + x + xalign), cur_y + y,
                            comp.text.c_str (), 0, comp.font);
               if (comp.style)
@@ -198,12 +186,11 @@ void cMultiLabel::Create ()
                     prelab->SetStyle (0);
                   }
               delete prelab;
-
+*/
               label =
                 new Label ((cur_x + x + xalign), cur_y + y,
                            comp.text.c_str (), 0, comp.font);
-              //std::cout << "Label: " << check << " Text: " << comp.text.c_str () << std::endl;
-              //check++;
+
               if (comp.x_fix)
                 label->SetX (label->GetX () -
                              (comp.x_fix *
@@ -233,13 +220,10 @@ void cMultiLabel::Create ()
         cur_x = 0;
       }
   lines.clear ();
-
-
 }
 
 void cMultiLabel::Draw (GumpHandler * gumps)
 {
-
   Control::Draw (gumps);
 
   for (unsigned int i = 0; i < labels.size (); i++)
@@ -291,9 +275,7 @@ void cMultiLabel::Draw (GumpHandler * gumps)
                   }
               scrollbuts_created = true;
             }
-
       }
-
 }
 
 
@@ -320,16 +302,12 @@ void cMultiLabel::AddLabel (MultiLabelComponent component)
 
 void cMultiLabel::AddLine ()
 {
-
   lines.push_back (line);
   line.clear ();
 }
 
 void cMultiLabel::ScrollUp ()
 {
-
-
-
   for (unsigned int i = 0; i < labels.size (); i++)
       {
         Label *lab = labels.at (i);
@@ -339,22 +317,13 @@ void cMultiLabel::ScrollUp ()
 
         lab->SetY (lab->GetY () + lab->labelHeight ());
       }
-
 }
 
 void cMultiLabel::ScrollDown ()
 {
-
-
-
   for (unsigned int i = 0; i < labels.size (); i++)
       {
         Label *lab = labels.at (i);
-
-
-
         lab->SetY (lab->GetY () - lab->labelHeight ());
       }
-
-
 }

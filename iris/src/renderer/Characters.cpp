@@ -29,13 +29,12 @@
 #include "renderer/Camera.h"
 #include "irisgl.h"
 
-
-
-
 #include <cassert>
 #include "renderer/3D/Light3D.h"
 #include "granny/GrannyLoader.h"
 #include "loaders/HueLoader.h"
+
+#include "renderer/particles/ParticleEngine.h"
 
 using namespace std;
 
@@ -99,6 +98,7 @@ cCharacter::cCharacter ()
   m_damagemin = 0;
   m_tithings = 0;
 
+  particle_handler=0;
 
   m_corpse = false;
 
@@ -110,7 +110,7 @@ cCharacter::cCharacter ()
 
   m_warmode = false;
 
-        m_light = new cCharacterLight (1, 1, 1);      // default character size
+  m_light = new cCharacterLight (1, 1, 1);      // default character size
 }
 
 cCharacter::~cCharacter ()
@@ -179,7 +179,6 @@ cCharacterText::~cCharacterText ()
   delete element;
 
 }
-
 
 void cCharacterText::Draw (int x, int y)
 {
@@ -268,6 +267,10 @@ void cCharacter::Handle (float time_factor)
   bool two_handed = false;
   bool armed = true;
 
+  if(particle_handler)
+  {
+   pParticleEngine.UpdateParticlePosition(particle_handler, (float)m_x * 1.0f, (float)m_y * 1.0f, (float)m_z / 10.0f);
+  }
 
   int new_animtype = 4;         // stand
   bool mounted;
@@ -633,7 +636,8 @@ void cCharacter::DoAnimation (int animid, int repeat)
                 m_forceanim = 2;
                 break;
 
-              case 0x04:case 0x05:
+              case 0x04:
+              case 0x05:
                 m_forceanim = 4;
                 break;
               case 0x06:
@@ -985,6 +989,13 @@ cMount::cMount (Uint16 tileid)
         m_mounttype = 190;
         m_mountcathegory = 1;
         break;
+      case 0x3E92:
+        m_mounttype = 284;
+        m_mountcathegory = 1;
+        break;                  // MondainSteed01
+
+      default:
+        std::cout << "Mount TileID: " << tileid << endl;
       }
 }
 
@@ -998,4 +1009,11 @@ int cMount::GetMountAnimation (int animtype)
         return animtype + (10 + animoffset);
       }
   return 0;
+}
+
+void cCharacter::setParticle(Uint32 particle_id)
+{
+ if(particle_handler)
+  pParticleEngine.RemoveEffect(particle_handler);
+ particle_handler  =  particle_id;  
 }

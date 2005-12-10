@@ -23,7 +23,6 @@ var popup_y = 0;
 
 
 // POPUP STYLES
-
 const UO_DEFAULT = 0xa3c;
 const FRAMED_BLACK = 0x2436;
 const FRAMED_GRAY = 0xe10;
@@ -67,8 +66,8 @@ net_displaypopup(const count, const x, const y)
 
 handler_on_close_popup(const sender)
 {
-	//var close = 0;
-	/*
+	var close = 0;
+	
 	for(var i = 0; i < popup_count; i++)
 	{
 		control_close(popup_list[i]);
@@ -77,7 +76,7 @@ handler_on_close_popup(const sender)
 	}
 	resize popup_entries[1];
 	resize popup_tags[1];
-	popup_count=0;*/
+	popup_count=0;
 }
 
 
@@ -109,14 +108,16 @@ display_popup(var count)
 	resize popup_list[count];
 	resize popup_clicklist[count];
 
-	var container = gui_addcontainer(popup_x, popup_y, 185, (menu_margin * 2) + count * 25);
+//	var container = gui_addcontainer(popup_x, popup_y, 185, (menu_margin * 2) + count * 25);
+	var container = gui_addcontainer(popup_x, popup_y, 225, (menu_margin * 2) + count * 25);
 	control_setalpha(container, 0);
-	control_fade(container, menu_alpha, 600);
+	control_fade(container, menu_alpha, 500);
 	gui_setcontainer(container);
 	control_setflag (container, FLAG_CLOSABLE, 1);
 	control_sethandler(container, FUNC_ONCLOSE, "handler_on_close_popup");
 	var border = gui_addborder(0, 0, menu_model, 0);
-	control_setsize(border, 175, (menu_margin * 2) + count * 25);
+//	control_setsize(border, 175, (menu_margin * 2) + count * 25);
+	control_setsize(border, 215, (menu_margin * 2) + count * 25);
 
 	for(var i = 0; i < count; i ++)
 	{
@@ -126,8 +127,10 @@ display_popup(var count)
 
 		popup_clicklist[i] = gui_addgump(15, 15 + i * 25, (menu_model + 4));
 		popup_list[i] = gui_addlabel(15, 15 + i * 25, entry_string);
-		//var l = strLength(entry_string);
+
+		//var entrylen = strLength(entry_string);
 		//label_sethue(popup_list[i], 90);
+
 		control_setalpha(popup_clicklist[i], 0);
 		control_setsize(popup_clicklist[i], 155, 25);
 		control_settag(popup_list[i], 0, tag);
@@ -136,9 +139,14 @@ display_popup(var count)
 		control_sethandler(popup_clicklist[i], FUNC_ONMOUSEDOWN, "handler_on_popup_click");
 	}
 	gui_setcontainer();
-        active_popup = container;
+    active_popup = container;
 }
 
+
+/*
+ Index for Entrys come from cliloc.enu ...
+ Its maybe better to get also the names directly from there
+*/
 GetEntryString(var entry)
 {
 	var entrystr;
@@ -165,6 +173,9 @@ GetEntryString(var entry)
 		case 0x17EA: entrystr = "Open"; break;
 		case 0x17F3: entrystr = "Close"; break;
 		case 0x17F4: entrystr = "Use"; break;
+		case 0x1838: entrystr = "Auto Renew Inventory Insurance"; break;
+		case 0x1839: entrystr = "Toggle Item Insurance"; break;
+		case 0x183A: entrystr = "Cancel Renewing Inventory Insurance"; break;
 		default: entrystr = "Not Defined";
 	}
 	return entrystr;

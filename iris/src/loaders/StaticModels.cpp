@@ -257,7 +257,7 @@ cStaticModel::cStaticModel (ifstream * stream, Uint32 length, cStaticTextureLoad
 
   sGameModelFileHeader header;
 
-  particle_effect_info = NULL;;
+  particle_effect_info = NULL;
   light_source_info = NULL;
 
   this->texture_loader = texture_loader;
@@ -381,6 +381,7 @@ cStaticModel::cStaticModel (ifstream * stream, Uint32 length, cStaticTextureLoad
       }
 
   m_modelid = header.ModelID;
+
   for (index = 0; index < 4; index++)
     bounding_sphere[index] = header.bounding_sphere[index];
 
@@ -524,7 +525,7 @@ cStaticModel::~cStaticModel ()
   light_source_info = NULL;
 
   delete particle_effect_info;
-  particle_effect_info = NULL;;
+  particle_effect_info = NULL;
 
   free (m_vertieces);
   m_vertieces = NULL;

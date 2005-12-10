@@ -69,6 +69,10 @@ namespace nConfig
   int viewdistance = 8;
   int brightness = 5;
   int animationsmoothness = 25;
+  
+  int firstperson = 0;
+  int hideself = 0;
+  int roof_fade = 1;
 
 // Net related
   string server = "localhost";
@@ -267,8 +271,8 @@ namespace nConfig
       maxzoom = 0;
     if (maxangle < 10)
       maxangle = 10;
-    if (maxangle > 80)
-      maxangle = 80;
+    if (maxangle > 90) //mod
+      maxangle = 90;
 
     if (animationsmoothness < 10)
       animationsmoothness = 10;

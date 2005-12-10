@@ -170,13 +170,18 @@ int Renderer3D::Init (void)
 }
 
 
-void Renderer3D::LoadSkyboxTextures ()
+void Renderer3D::LoadSkyboxTextures (int map)
 {
+  for (int index = 0; index < 5; index++)
+      {
+       if(skyboxtextures[index])
+        delete skyboxtextures[index];
+      }   
   char skyboxset[50]; 
   string skyboxtemp = "./textures/skybox/skybox";
   string skyboxtype;
 
-  cMapInfoEntry * mapinfo_entry = pMapInfoLoader.GetMapInfo(0);
+  cMapInfoEntry * mapinfo_entry = pMapInfoLoader.GetMapInfo(map);
   if(!mapinfo_entry)
    THROWEXCEPTION ("unknown map!");
 
@@ -390,10 +395,11 @@ for(vertexId = 0; vertexId < vertexCount; vertexId++)
 
 int Renderer3D::RenderScene (void)
 {
-
   float fog_view_dist = (float) (view_distance - 2.5f) * 8 + pCamera.GetZoom();
   glFogf (GL_FOG_START, (float) fog_view_dist);
   glFogf (GL_FOG_END, (float) fog_view_dist + 8);
+
+//  printf ("Fogdistance_START: %i\n", (int) fog_view_dist);
 
   flush_vertex_buffer ();
 
@@ -461,7 +467,7 @@ int Renderer3D::RenderScene (void)
 
 
                   }
-              if (nConfig::perspective == 1)
+              if (nConfig::perspective == 1 && (!pCamera.forceRotation()))
 
                 pCamera.SetAngleZ (-player_character->angle () + 180);
 
@@ -480,7 +486,6 @@ int Renderer3D::RenderScene (void)
 
   SDLscreen->ClearZBuffer ();
 
-
   pCamera.PlaceGLMatrix ();
 
   pCamera.FetchMatrix ();
@@ -488,12 +493,25 @@ int Renderer3D::RenderScene (void)
   if (do_culling)
     ExtractFrustum ();
 
-
+  //check is only if you are in 1st person (roofs shouldn't fade out)
+  /*if(nConfig::roof_fade_time < 0)
+   nConfig::roof_fade_alpha = 255;
+  else
+   nConfig::roof_fade_alpha = 1;*/
+ 
   static int old_z = ROOF_NONE;
+  //static int force_fadein = 0;
+
   if (do_culling || (old_z == ROOF_WAIT))
       {
-        int z = GetRoofHeight ();
-
+        int z;// = GetRoofHeight ();
+        if(nConfig::roof_fade)
+         z = GetRoofHeight ();
+        else
+        {
+         z = ROOF_NONE;
+         //force_fadein = 1;
+        }
 
         if (z != old_z)
             {
@@ -535,23 +553,24 @@ int Renderer3D::RenderScene (void)
 
   RenderTerrain (do_culling);
   RenderDynamics (do_culling);
+
   if (drag_model)
     RenderDragModel ();
+
   render_vertex_buffer ();
   RenderWater (do_culling);
 
   // must be rendered last because of Char Shadows
   RenderCharacters (do_culling);
 
-//  does not work correct
-    pParticleEngine.Render ();
+  //  does not work correct
+  pParticleEngine.Render ();
 
   render_vertex_buffer_transparent ();
 
   glMatrixMode (GL_MODELVIEW_MATRIX);
 
-    pUOGUI.Draw ();
-
+  pUOGUI.Draw ();
   return SDLscreen->DrawGL ();
 }
 
@@ -562,6 +581,11 @@ void Renderer3D::RenderSkybox ()
     if (skyboxtextures[side])
         {
           glBindTexture (GL_TEXTURE_2D, skyboxtextures[side]->GetGLTex ());
+
+//Just a Test for correct Skybox ... GL_EXT Feature
+//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, /*0x812F */ GL_CLAMP_TO_EDGE); 
+//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, /*0x812F */ GL_CLAMP_TO_EDGE);
+
           glBegin (GL_QUADS);
           for (int vertex = 0; vertex <= 3; vertex++)
               {
@@ -709,6 +733,10 @@ void Renderer3D::RenderCharacters (bool do_culling)
   for (iter = characters->begin (); iter != characters->end (); iter++)
       {
         cCharacter *character = iter->second;
+        
+        if((character->id() == pClient->player_charid()) && nConfig::hideself)
+         continue;
+        
         if ((character->x () >= min_x) && (character->y () >= min_y)
             && (character->x () <= max_x) && (character->y () <= max_y))
             {
@@ -717,16 +745,22 @@ void Renderer3D::RenderCharacters (bool do_culling)
 
               float alpha = 1.0f;
               float scalex = 1.0f, scaley = 1.0f, scalez = 1.0f;
+              
+              scalex = pModelInfoLoader.getScaleFactor();
+              scaley = pModelInfoLoader.getScaleFactor();
+              scalez = pModelInfoLoader.getScaleFactor();
+              
               int defhue = 0, altbody = 0;
-                                 if(modelinfo)
-                                 {
-                                  scalex = modelinfo->scalex () / 10.0f;
-                                  scaley = modelinfo->scaley () / 10.0f;
-                                  scalez = modelinfo->scalez () / 10.0f;
-                                  alpha = modelinfo->alpha () / 255.0f;
-                                  defhue = modelinfo->defhue ();
-                                  altbody = modelinfo->alt_body ();
-                                 }
+              
+              if(modelinfo)
+              {
+               scalex = modelinfo->scalex ();
+               scaley = modelinfo->scaley ();
+               scalez = modelinfo->scalez ();
+               alpha = modelinfo->alpha () / 255.0f;
+               defhue = modelinfo->defhue ();
+               altbody = modelinfo->alt_body ();
+              }
 
               float matrix[16], invmatrix[16];
               glPushMatrix ();
@@ -745,7 +779,6 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                invmatrix);
 
               glPopMatrix ();
-
               glPushMatrix ();
 
               glTranslatef (character->fx () - dx, character->fy () - dy,
@@ -796,10 +829,12 @@ void Renderer3D::RenderCharacters (bool do_culling)
                     else
                       pHueLoader.GetRGBHue (character->hue (), colr, colg,
                                              colb);
-/*                                                if((pGame.GetPointedObj() == character->id()) || (pClient->GetEnemy() == character->id()))
-                                                        SDLscreen->SetHue((int) character->getHighlightColor());
-                                                else
-                                                        SDLscreen->SetHue(character->hue());*/
+/*
+                    if((pGame.GetPointedObj() == character->id()) || (pClient->GetEnemy() == character->id())) 
+                                              SDLscreen->SetHue((int) character->getHighlightColor());
+                                           else
+                                              SDLscreen->SetHue(character->hue());
+*/
 
                     if (defhue != 0)
                       pHueLoader.GetRGBHue (defhue, colr, colg, colb);
@@ -1086,6 +1121,8 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
           if (character)        // if character is nearer than found object
             if (lambda < distance)
                 {
+                  if(nConfig::hideself && character->id() == pClient->player_charid())
+                   return; 
                   *r_character = character;
                   return;
                 }
@@ -1101,9 +1138,7 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
 void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3],
                                     int *cursor_character)
 {
-
   // Obtain Cam Coords and PickRay
-
 
   float vecPickRayOrigin[3];
   float vecPickRayDir[3];
@@ -1203,7 +1238,9 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3],
                              distance = act_distance;
                              if (cursor_character)
                                  *cursor_character =  character->id();
-                        }*/
+                        }
+*/
+
 }
 
 void Renderer3D::AddDynamic (cDynamicObject * object)

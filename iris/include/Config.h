@@ -28,7 +28,10 @@ namespace	nConfig
 	extern int cursor, perspective, depthbuffer, maxzoom, maxangle;
         extern int viewdistance, brightness, animationsmoothness;
         extern int width_2d, height_2d;
-
+       
+       extern int firstperson;
+       extern int hideself;
+       extern int roof_fade;
 	// UO	
 	extern int startx, starty, startz;
         extern int aos;

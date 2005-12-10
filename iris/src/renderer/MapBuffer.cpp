@@ -80,7 +80,6 @@ void cMapbuffer::Add (cMapblock * block)
   root.insert (make_pair ((Uint32) x << 16 | y, block));
 }
 
-
 void cMapbuffer::FreeBuffer (int radius)
 {
   MapBuffer_t::iterator iter;

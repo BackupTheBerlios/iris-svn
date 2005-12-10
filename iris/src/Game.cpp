@@ -69,6 +69,9 @@
 #include "gui/GUIHandler.h"
 #include "gui/TextManager.h"
 
+#include "csl/CSLHandler.h"
+#include "Macros.h"
+
 using namespace std;
 
 extern SDLScreen *SDLscreen;
@@ -96,6 +99,9 @@ Game::Game()
 
 	drag_id = 0;
 	drag_model = 0;
+	
+	timer_func = "";
+    timer = 0;
 
 	m_click_mode = CLICK_NORMAL;
 
@@ -110,8 +116,8 @@ Game::Game()
 
 Game::~Game()
 {
-	//flo: schon in ui3.cpp definiert, doppelt gemoppelt - haelt aber besser. Beim zweiten Aufruf sollte sich da naemlich genau nichts tun :)
-	DeInit();
+	//SiENcE: not needed
+	//DeInit();
 }
 
 
@@ -139,15 +145,13 @@ void OnDeleteCharacter( cCharacter * character )
 
 void Game::Init (void)
 {
-// flo: wozu ? - der deinit wird doch vom iris.csl script gemeacht, beim logout
-// Nur zur Sicherheit :)
-// Wenn alles korrekt deinitialisiert ist, dann sollte das gar nichts tun....
-
+  //SiENcE: just to verify that everything is correct deinit; Logout is normally done via iris.csl script
   DeInit ();
-  
+
   pMapLoader = NULL;
   pGrannyLoader = NULL;
   pMultisLoader = NULL;
+
   pTextManager = NULL;
 
   try
@@ -158,6 +162,7 @@ void Game::Init (void)
 
     pCamera.Reset ();
     pTextManager = new cTextManager;
+
 
     CreateSinTable ();
 
@@ -224,7 +229,8 @@ void Game::InitRenderer (std::string mulpath)
 
   pMapLoader = NULL;
   pGrannyLoader = NULL;
-
+  pMacroLoader = NULL;
+  pMultisLoader = NULL;
 
       pDebug.Log ("    | -> mapinfo");
       pMapInfoLoader.Init ("xml/Maps.xml");
@@ -299,14 +305,22 @@ void Game::InitRenderer (std::string mulpath)
 
     pDebug.Log ("    | -> multis");
     pMultisLoader = new cMultisLoader (mulpath + "multi.mul", mulpath + "multi.idx");
+    
+    pDebug.Log("    | -> macros");
+    pMacroLoader = new MacroLoader();
 
   
 }
 
 void Game::DeInitRenderer (void)
 {
+  if (pMapLoader)
   delete pMapLoader;
   pMapLoader = NULL;
+  
+  if (pMacroLoader)
+  delete pMacroLoader;
+  pMacroLoader = NULL;
 
   pGroundTextureLoader.DeInit ();
   pArtLoader.DeInit ();
@@ -315,7 +329,7 @@ void Game::DeInitRenderer (void)
   pHueLoader.DeInit ();
 
   pTileDataLoader.DeInit ();
-  
+
   pMapbufferHandler.DeInit ();
   
   pTextureBuffer.Clear ();
@@ -323,8 +337,10 @@ void Game::DeInitRenderer (void)
 
   pVerdataLoader.DeInit ();
 
+  if (pGrannyLoader)
   delete pGrannyLoader;
   pGrannyLoader = NULL;
+
   pSkillLoader.DeInit ();
   pStaticModelLoader.DeInit ();
 
@@ -335,6 +351,7 @@ void Game::DeInitRenderer (void)
   pModelInfoLoader.DeInit ();
   pMapInfoLoader.DeInit ();
 
+  if (pMultisLoader)
   delete pMultisLoader;
   pMultisLoader = NULL;
 }
@@ -372,7 +389,17 @@ void Game::Handle( void )
 {
 	static int counter = 0;
 	int new_tick = SDL_GetTicks();
-
+    
+    if(timer && !timer_func.empty())
+    {
+  
+     if(new_tick >= timer){
+          pCSLHandler.ExecuteFunction((char*)timer_func.c_str());
+          timer = 0;
+          timer_func == "";
+         }
+    }
+    
 	float time = ( new_tick - counter ) / 1000.0;
 
 	if ( time > 1.0 )
@@ -441,8 +468,14 @@ void Game::HandleMouseMotion( SDL_MouseMotionEvent * event )
 			{
 				if ( ( !m_AOSToolTip ) && ( character || object ) )
 				{
+					if(character){
 					int count = character->aostooltips_count();
-					callback_OnAOSTooltip( character->id (), count, cursorx, cursory );
+					 callback_OnAOSTooltip( character->id (), count, cursorx, cursory );
+					}
+					if(object){
+					int count = object->aostooltips_count();
+					 callback_OnAOSTooltip( object->id, count, cursorx, cursory );
+					}
 					m_AOSToolTip = true;
 				}
 				else
@@ -720,28 +753,27 @@ void Game::MoveToMouse ()
   float angle = 0.0f;
 
   if (dx)
-      {
-        float m = (float) dy / (float) dx;
-        angle = atan (m) / 3.14159f * 180.0f;
-        if (dx < 0)
-          angle = 180.0f + angle;
-        if (angle < 0.0f)
-          angle += 360.0f;
-      }
+  {
+   float m = (float) dy / (float) dx;
+   angle = atan (m) / 3.14159f * 180.0f;
+   if (dx < 0)
+      angle = 180.0f + angle;
+   if (angle < 0.0f)
+      angle += 360.0f;
+  }
   else if (dy > 0)
     angle = 90.0f;
   else if (dy < 0)
     angle = 270.0f;
   angle += 22.5f;
 
-
   int dir = (int) ((angle + 90.0f) / 45.0f);
 
   if (dir > 7)
     dir -= 8;
-
-  pClient->Walk (dir | run_flag);
-
+  
+  if(nConfig::perspective == 0 && !pCamera.forceRotation())
+    pClient->Walk (dir | run_flag);
 }
 
 void Game::HandleDrag( int x, int y )
@@ -775,12 +807,9 @@ void Game::HandleDrag( int x, int y )
 void Game::DragCancel()
 {
 	drag_id = 0;
-
     pUOGUI.LoadDragCursor(0);
-
 	if ( pRenderer )
 		pRenderer->setDragModel(0);
-	
 	pUOGUI.SetDragging( false );
 }
 
@@ -950,4 +979,12 @@ void Game::DrawAOSTooltip( int id, int count, int x, int y )
 {
 	if ( callback_OnAOSTooltip )
 		callback_OnAOSTooltip( id, count, cursorx, cursory );
+}
+
+void Game::SetTimerFunction(std::string function_name, int time)
+{
+
+ timer_func = function_name;
+ timer = SDL_GetTicks() + time;
+
 }

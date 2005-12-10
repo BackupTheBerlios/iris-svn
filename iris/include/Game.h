@@ -48,6 +48,9 @@ private:	// Member variables
 	Uint32 cursor_character;
 	Uint32 cursor_object;
 	Uint32 m_cursorid;
+	
+	std::string timer_func;
+    int timer;
 
 	bool button_left;
 	bool button_right;
@@ -125,6 +128,8 @@ public:
    Uint32 GetPointedObj(){return pointed_obj;}
    void SendPickup(int id, int model, int count);
    void DrawAOSTooltip(int id, int count, int x, int y);
+   
+   void SetTimerFunction(std::string function_name, int time);
    
 protected:
    void (*callback_OnStatusDrag) (Uint32 charid, int mousex, int mousey);

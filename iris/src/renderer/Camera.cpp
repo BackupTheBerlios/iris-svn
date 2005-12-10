@@ -32,10 +32,16 @@
 using namespace std;
 
 Camera pCamera;
+int defmaxangle;
+int def_fadetime;
+int force_rotation;
 
 Camera::Camera ()
 {
   Reset ();
+  defmaxangle = nConfig::maxangle;
+  def_fadetime = nConfig::roof_fade_time;
+  force_rotation = false;
 }
 
 Camera::~Camera ()
@@ -91,8 +97,27 @@ void Camera::Rotate (float anglex, float angley, float anglez)
   this->angley += angley;
   this->anglez += anglez;
   camhaschanged = true;
-  if (this->anglex < 45 - nConfig::maxangle)
-    this->anglex = 45.0f - (float) nConfig::maxangle;
+  int amount = 0;
+  
+  if(nConfig::hideself)
+   amount = 120 - nConfig::maxangle;
+
+  
+  if (this->anglex < 45 - 80 && this->zoom <0.5f)
+   nConfig::roof_fade = 0;
+  else{
+       nConfig::firstperson = 0;
+       if(!nConfig::hideself)
+        nConfig::roof_fade = 1;
+      }
+   
+  if (this->anglex < 45 - (nConfig::maxangle + amount) ){
+    this->anglex = 45.0f - (float) (nConfig::maxangle + amount);
+    nConfig::firstperson = 1;
+  }
+ 
+   
+  
   if (this->anglex > 45.0f)
     this->anglex = 45.0f;
 }
@@ -278,11 +303,31 @@ void Camera::SetCameraState (struct CameraState state)
 void Camera::ChangeZoom (float value)
 {
   zoom += value;
+  
   if (zoom > nConfig::maxzoom)
     zoom = nConfig::maxzoom;
-  if (zoom < 0.0f)
-    zoom = 0.0f;
+    
+  float maxvalue = -5.0f;
+  
+  if(nConfig::firstperson){
+   //maxvalue = -5.0f;
+   if(zoom < 0.5)
+    nConfig::roof_fade=0;
+   else
+    nConfig::roof_fade=1; 
+  }
+
+  if (zoom < maxvalue)
+    zoom = maxvalue;
   camhaschanged = true;
+ 
+  if(zoom < -3.2f){
+   nConfig::hideself = 1;
+   nConfig::perspective = 1;
+   }
+  else
+   nConfig::hideself = 0;
+      
 }
 
 void Camera::CreatePickRay (int mousex, int mousey, float vecPickRayOrigin[3],
@@ -356,3 +401,15 @@ void Camera::FetchMatrix ()
   glGetFloatv (GL_PROJECTION_MATRIX, m_projection_matrix);
   glGetFloatv (GL_MODELVIEW_MATRIX, m_modelview_matrix);
 }
+
+
+void Camera::SetForceRotation(bool force)
+{
+  force_rotation=force;   
+}
+
+bool Camera::forceRotation()
+{
+  return force_rotation;   
+}
+

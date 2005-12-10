@@ -1,5 +1,5 @@
 //
-// File: ModelInfoLoader.h
+// File: Macros.h
 // Created by: ArT-iX ArT-iX@libero.it
 //
 /*****
@@ -20,55 +20,55 @@
  *
  *****/
 
-#ifndef _MODELINFO_LOADER_
-#define _MODELINFO_LOADER_
+#ifndef _MACROS_
+#define _MACROS_
 
 #ifdef WIN32
 #include <windows.h>
 #endif
 
-#include "SDL/SDL.h"
+//#include "SDL/SDL.h"
 #include <string>
 #include <map>
+#include <vector>
+#include "SDL/sdl.h"
 
-class cModelInfoEntry
+#define PARAMETERTYPE_STRING 1;
+#define PARAMETERTYPE_INTEGER 2;
+
+struct m_Parameter
 {
-   private:
-     int m_id;
-     float m_scalex;
-     float m_scaley;
-     float m_scalez;
-     int m_alpha;
-     int m_defhue;
-     int m_alt_body;
-   public:
-      cModelInfoEntry (int id, float scalex, float scaley, float scalez, int alpha, int defhue, int alt_body);
-      int id ();
-      float scalex ();
-      float scaley ();
-      float scalez ();
-      int alpha ();
-      int defhue ();
-      int alt_body ();   
+ int type;
+ std::string str_value;
+ int int_value;    
 };
 
-class cModelInfoLoader
+
+struct MacroEntry
+{
+
+ int id;
+ //std::string name;
+ SDLKey key;
+ SDLMod keymod;
+ std::string script_function;
+ std::vector<m_Parameter*> parameters;
+};
+
+class MacroLoader
 {
  private:
-     std::map<int, cModelInfoEntry *> model_infos;
-     float m_scale_factor;
+     //std::map<int, MacroEntry*> macros;
+     std::multimap<int, MacroEntry*> macros;
+     SDLKey getkey_byname(std::string keyname);
  public:
-  cModelInfoLoader();
-  ~cModelInfoLoader();
-
-  void Init (std::string filename);
-  void DeInit ();
-  
-  float getScaleFactor();
-  
-  cModelInfoEntry * GetModelEntry(int id);   
+  MacroLoader();
+  ~MacroLoader();     
+  MacroEntry * GetMacro(int id);
+  int GetEntriesCount(int id);
+  MacroEntry * GetMultiMacro(int id, int index); 
 };
 
-extern cModelInfoLoader pModelInfoLoader;
+extern MacroLoader * pMacroLoader;
 
 #endif

@@ -100,6 +100,14 @@ private:
 	bool in_game;
     
     Uint32 last_footstep_sound; // time (in ticks) of last footstep sound
+    
+        Uint32 last_object;
+        Uint32 last_target;
+        Uint32 last_attack;
+        
+        int last_spell;
+        int last_skill;
+        std::string m_wait_for_target;
 
 	std::vector <struct sWalkStackEntry> walk_stack;
 	std::vector <cLoginListEntry *> login_char_list;
@@ -154,6 +162,7 @@ private:
     void Act_AOSTooltip(cPacket * packet);
     void Act_CharDeath(cPacket * packet);
     void Act_Time(cPacket * packet);
+    void Act_ParticleEffect(cPacket * packet);
   
     int GetZPositionForWalk(int destx, int desty, int srcz);
 	
@@ -213,7 +222,7 @@ public:
    Uint16 GetPopupEntry(int index);
    Uint16 GetPopupTag(int index);
    
-
+   void toggleRunMode();
 
    bool Walk_Simple (Uint8 action);
    bool Walk(Uint8 direction);
@@ -271,7 +280,14 @@ public:
    void buy();
    void sell(Uint32 id);
 
-  Uint32 GetEnemy();   
+  Uint32 GetEnemy();
+  
+  Uint32 lastObject(){return last_object;}
+  Uint32 lastTarget(){return last_target;}
+  int lastSpell(){return last_spell;}
+  int lastSkill(){return last_skill;}
+  int lastAttack(){return last_attack;}
+  void wait_for_target(std::string func){m_wait_for_target = func;} 
 
 protected:
 

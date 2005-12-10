@@ -36,7 +36,8 @@ using namespace std;
 
 cMapInfoLoader pMapInfoLoader;
 
-cMapInfoEntry::cMapInfoEntry (int id, int width, int height, std::string name, std::string skybox, int base_id)
+cMapInfoEntry::cMapInfoEntry (int id, int width, int height, std::string name, std::string skybox, int base_id,
+                              int r, int g, int b)
 {
       m_id = id;
       m_width = width;
@@ -44,6 +45,9 @@ cMapInfoEntry::cMapInfoEntry (int id, int width, int height, std::string name, s
       m_name = name;
       m_skybox = skybox;
       m_base_id = base_id;
+      m_fog_r = r;
+      m_fog_g = g;
+      m_fog_b = b;
 }
 
 int cMapInfoEntry::id ()
@@ -74,6 +78,21 @@ std::string cMapInfoEntry::name ()
 std::string cMapInfoEntry::skybox ()
 {
     return m_skybox;
+}
+
+int cMapInfoEntry::fog_r()
+{
+    return m_fog_r;
+}
+
+int cMapInfoEntry::fog_g()
+{
+    return m_fog_g;
+}
+
+int cMapInfoEntry::fog_b()
+{
+    return m_fog_b;
 }
 
 
@@ -120,11 +139,22 @@ void cMapInfoLoader::Init (std::string filename)
           std::string skybox = map_node->findString("SKYBOX");
           
           int base_id = -1;
-           if ((value = map_node->findNode("BASE_ID")))
+          
+          if ((value = map_node->findNode("BASE_ID")))
 				base_id = value->asInteger();
+		  int r=255, g=255, b=255;
+          	
+		  if((value = map_node->findNode("FOG_COLOR")))
+          {
+           
+           value->lookupAttribute("red", r);
+           value->lookupAttribute("blue", b);
+           value->lookupAttribute("green", g); 
+                 
+          }	
 
       
-           cMapInfoEntry * map_entry = new cMapInfoEntry (id, width, height, name, skybox, base_id);
+           cMapInfoEntry * map_entry = new cMapInfoEntry (id, width, height, name, skybox, base_id,r,g,b);
            maps.insert(make_pair(id, map_entry));
              idx++;
        }

@@ -1,0 +1,426 @@
+# Project: Ultima Iris
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = obj/Ultima_Iris_private.res
+OBJ  = obj/Buffer.o obj/Config.o obj/Debug.o obj/Exception.o obj/Game.o obj/Geometry.o obj/SDLEvent.o obj/ui3.o obj/xml.o obj/grannyfile.o obj/GrannyLoader.o obj/GrannyModelAOS.o obj/GrannyModelTD.o obj/GrannyStream.o obj/GrannyTextures.o obj/grnanim.o obj/grnbones.o obj/grnboneties.o obj/grnitemlist.o obj/grnmatrix.o obj/grnmeshes.o obj/grnobjects.o obj/grntextchunk.o obj/grntextureinfos.o obj/grntextures.o obj/grnunhandled.o obj/Border.o obj/Button.o obj/Checkbox.o obj/Container.o obj/Control.o obj/GUIHandler.o obj/Gump.o obj/GumpDialog.o obj/Image.o obj/ImageArt.o obj/InputField.o obj/ItemContainer.o obj/Label.o obj/Paperdoll.o obj/RadioButton.o obj/Stack.o obj/Textbox.o obj/TextManager.o obj/ArtLoader.o obj/FontLoader.o obj/GroundTextures.o obj/GumpLoader.o obj/HueLoader.o obj/PaperdollBuilder.o obj/SkillLoader.o obj/SoundLoader.o obj/StaticModelLoader.o obj/StaticModels.o obj/StaticTextureLoader.o obj/StitchinLoader.o obj/StreamLoader.o obj/TileDataBuffer.o obj/TileDataLoader.o obj/UOMap.o obj/VerdataLoader.o obj/btree.o obj/Client.o obj/Packet.o obj/unicode.o obj/uo_huffman.o obj/Bitmask.o obj/Camera.o obj/Characters.o obj/DynamicObjects.o obj/Fade.o obj/MapBlock.o obj/MapBuffer.o obj/Renderer.o obj/SDLScreen.o obj/StaticObjects.o obj/Texture.o obj/TextureBuffer.o obj/CharacterLight.o obj/Light3D.o obj/LightNodes.o obj/MapBlock3D.o obj/MapBuffer3D.o obj/MotiveBasedLight.o obj/Renderer3D.o obj/SceneMaker.o obj/Music.o obj/SoundMixer.o obj/CSLHandler.o obj/Block.o obj/Compile.o obj/Function.o obj/Input.o obj/Instruct.o obj/Interprt.o obj/Library.o obj/Parametr.o obj/Utility.o obj/Variable.o obj/ZAsync.o obj/ZCsl.o obj/ZDate.o obj/ZDynLink.o obj/ZExcept.o obj/ZFile.o obj/ZPlatfrm.o obj/ZProcess.o obj/ZProfile.o obj/ZPtrlist.o obj/ZResrce.o obj/ZSql.o obj/ZString.o obj/ZTrace.o obj/LightNodeEnvironment.o obj/MotiveBasedGroundLight.o obj/iris_endian.o obj/StaticModelRaster.o obj/ShaderMatrixBlock.o obj/ClilocLoader.o obj/string_utils.o obj/ModelInfoLoader.o obj/MusicListLoader.o obj/ParticleEngine.o obj/ParticleHandler.o obj/ParticleLoader.o obj/ParticleTextures.o obj/MultiLabel.o obj/HTMLGumpParser.o obj/CSLForm.o obj/MapInfo.o obj/MultisLoader.o obj/Macros.o $(RES)
+LINKOBJ  = obj/Buffer.o obj/Config.o obj/Debug.o obj/Exception.o obj/Game.o obj/Geometry.o obj/SDLEvent.o obj/ui3.o obj/xml.o obj/grannyfile.o obj/GrannyLoader.o obj/GrannyModelAOS.o obj/GrannyModelTD.o obj/GrannyStream.o obj/GrannyTextures.o obj/grnanim.o obj/grnbones.o obj/grnboneties.o obj/grnitemlist.o obj/grnmatrix.o obj/grnmeshes.o obj/grnobjects.o obj/grntextchunk.o obj/grntextureinfos.o obj/grntextures.o obj/grnunhandled.o obj/Border.o obj/Button.o obj/Checkbox.o obj/Container.o obj/Control.o obj/GUIHandler.o obj/Gump.o obj/GumpDialog.o obj/Image.o obj/ImageArt.o obj/InputField.o obj/ItemContainer.o obj/Label.o obj/Paperdoll.o obj/RadioButton.o obj/Stack.o obj/Textbox.o obj/TextManager.o obj/ArtLoader.o obj/FontLoader.o obj/GroundTextures.o obj/GumpLoader.o obj/HueLoader.o obj/PaperdollBuilder.o obj/SkillLoader.o obj/SoundLoader.o obj/StaticModelLoader.o obj/StaticModels.o obj/StaticTextureLoader.o obj/StitchinLoader.o obj/StreamLoader.o obj/TileDataBuffer.o obj/TileDataLoader.o obj/UOMap.o obj/VerdataLoader.o obj/btree.o obj/Client.o obj/Packet.o obj/unicode.o obj/uo_huffman.o obj/Bitmask.o obj/Camera.o obj/Characters.o obj/DynamicObjects.o obj/Fade.o obj/MapBlock.o obj/MapBuffer.o obj/Renderer.o obj/SDLScreen.o obj/StaticObjects.o obj/Texture.o obj/TextureBuffer.o obj/CharacterLight.o obj/Light3D.o obj/LightNodes.o obj/MapBlock3D.o obj/MapBuffer3D.o obj/MotiveBasedLight.o obj/Renderer3D.o obj/SceneMaker.o obj/Music.o obj/SoundMixer.o obj/CSLHandler.o obj/Block.o obj/Compile.o obj/Function.o obj/Input.o obj/Instruct.o obj/Interprt.o obj/Library.o obj/Parametr.o obj/Utility.o obj/Variable.o obj/ZAsync.o obj/ZCsl.o obj/ZDate.o obj/ZDynLink.o obj/ZExcept.o obj/ZFile.o obj/ZPlatfrm.o obj/ZProcess.o obj/ZProfile.o obj/ZPtrlist.o obj/ZResrce.o obj/ZSql.o obj/ZString.o obj/ZTrace.o obj/LightNodeEnvironment.o obj/MotiveBasedGroundLight.o obj/iris_endian.o obj/StaticModelRaster.o obj/ShaderMatrixBlock.o obj/ClilocLoader.o obj/string_utils.o obj/ModelInfoLoader.o obj/MusicListLoader.o obj/ParticleEngine.o obj/ParticleHandler.o obj/ParticleLoader.o obj/ParticleTextures.o obj/MultiLabel.o obj/HTMLGumpParser.o obj/CSLForm.o obj/MapInfo.o obj/MultisLoader.o obj/Macros.o $(RES)
+LIBS =  -L"lib" -lopengl32 -lglu32 -lwsock32 libs/libSDL.a libs/libSDLmain.a libs/SDL_image.lib libs/SDL_mixer.lib libs/SDL_net.lib libs/SDL_ttf.lib libs/smpeg.lib  
+INCS =  -I"include"  -I"../include"  -I"libs"  -I"../include/csl"  -I"libs/smpeg" 
+CXXINCS =  -I"lib/gcc/mingw32/3.4.2/include"  -I"include/c++/3.4.2/backward"  -I"include/c++/3.4.2/mingw32"  -I"include/c++/3.4.2"  -I"include"  -I"../include"  -I"libs"  -I"../include/csl"  -I"libs/smpeg" 
+BIN  = bin/Iris.exe
+CXXFLAGS = $(CXXINCS)   -fexceptions -O3
+CFLAGS = $(INCS)   -fexceptions -O3
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before bin/Iris.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "bin\Iris.exe" $(LIBS)
+
+obj/Buffer.o: ../src/Buffer.cpp
+	$(CPP) -c ../src/Buffer.cpp -o obj/Buffer.o $(CXXFLAGS)
+
+obj/Config.o: ../src/Config.cpp
+	$(CPP) -c ../src/Config.cpp -o obj/Config.o $(CXXFLAGS)
+
+obj/Debug.o: ../src/Debug.cpp
+	$(CPP) -c ../src/Debug.cpp -o obj/Debug.o $(CXXFLAGS)
+
+obj/Exception.o: ../src/Exception.cpp
+	$(CPP) -c ../src/Exception.cpp -o obj/Exception.o $(CXXFLAGS)
+
+obj/Game.o: ../src/Game.cpp
+	$(CPP) -c ../src/Game.cpp -o obj/Game.o $(CXXFLAGS)
+
+obj/Geometry.o: ../src/Geometry.cpp
+	$(CPP) -c ../src/Geometry.cpp -o obj/Geometry.o $(CXXFLAGS)
+
+obj/SDLEvent.o: ../src/SDLEvent.cpp
+	$(CPP) -c ../src/SDLEvent.cpp -o obj/SDLEvent.o $(CXXFLAGS)
+
+obj/ui3.o: ../src/ui3.cpp
+	$(CPP) -c ../src/ui3.cpp -o obj/ui3.o $(CXXFLAGS)
+
+obj/xml.o: ../src/xml.cpp
+	$(CPP) -c ../src/xml.cpp -o obj/xml.o $(CXXFLAGS)
+
+obj/grannyfile.o: ../src/granny/grannyfile.cpp
+	$(CPP) -c ../src/granny/grannyfile.cpp -o obj/grannyfile.o $(CXXFLAGS)
+
+obj/GrannyLoader.o: ../src/granny/GrannyLoader.cpp
+	$(CPP) -c ../src/granny/GrannyLoader.cpp -o obj/GrannyLoader.o $(CXXFLAGS)
+
+obj/GrannyModelAOS.o: ../src/granny/GrannyModelAOS.cpp
+	$(CPP) -c ../src/granny/GrannyModelAOS.cpp -o obj/GrannyModelAOS.o $(CXXFLAGS)
+
+obj/GrannyModelTD.o: ../src/granny/GrannyModelTD.cpp
+	$(CPP) -c ../src/granny/GrannyModelTD.cpp -o obj/GrannyModelTD.o $(CXXFLAGS)
+
+obj/GrannyStream.o: ../src/granny/GrannyStream.cpp
+	$(CPP) -c ../src/granny/GrannyStream.cpp -o obj/GrannyStream.o $(CXXFLAGS)
+
+obj/GrannyTextures.o: ../src/granny/GrannyTextures.cpp
+	$(CPP) -c ../src/granny/GrannyTextures.cpp -o obj/GrannyTextures.o $(CXXFLAGS)
+
+obj/grnanim.o: ../src/granny/grnanim.cpp
+	$(CPP) -c ../src/granny/grnanim.cpp -o obj/grnanim.o $(CXXFLAGS)
+
+obj/grnbones.o: ../src/granny/grnbones.cpp
+	$(CPP) -c ../src/granny/grnbones.cpp -o obj/grnbones.o $(CXXFLAGS)
+
+obj/grnboneties.o: ../src/granny/grnboneties.cpp
+	$(CPP) -c ../src/granny/grnboneties.cpp -o obj/grnboneties.o $(CXXFLAGS)
+
+obj/grnitemlist.o: ../src/granny/grnitemlist.cpp
+	$(CPP) -c ../src/granny/grnitemlist.cpp -o obj/grnitemlist.o $(CXXFLAGS)
+
+obj/grnmatrix.o: ../src/granny/grnmatrix.cpp
+	$(CPP) -c ../src/granny/grnmatrix.cpp -o obj/grnmatrix.o $(CXXFLAGS)
+
+obj/grnmeshes.o: ../src/granny/grnmeshes.cpp
+	$(CPP) -c ../src/granny/grnmeshes.cpp -o obj/grnmeshes.o $(CXXFLAGS)
+
+obj/grnobjects.o: ../src/granny/grnobjects.cpp
+	$(CPP) -c ../src/granny/grnobjects.cpp -o obj/grnobjects.o $(CXXFLAGS)
+
+obj/grntextchunk.o: ../src/granny/grntextchunk.cpp
+	$(CPP) -c ../src/granny/grntextchunk.cpp -o obj/grntextchunk.o $(CXXFLAGS)
+
+obj/grntextureinfos.o: ../src/granny/grntextureinfos.cpp
+	$(CPP) -c ../src/granny/grntextureinfos.cpp -o obj/grntextureinfos.o $(CXXFLAGS)
+
+obj/grntextures.o: ../src/granny/grntextures.cpp
+	$(CPP) -c ../src/granny/grntextures.cpp -o obj/grntextures.o $(CXXFLAGS)
+
+obj/grnunhandled.o: ../src/granny/grnunhandled.cpp
+	$(CPP) -c ../src/granny/grnunhandled.cpp -o obj/grnunhandled.o $(CXXFLAGS)
+
+obj/Border.o: ../src/gui/Border.cpp
+	$(CPP) -c ../src/gui/Border.cpp -o obj/Border.o $(CXXFLAGS)
+
+obj/Button.o: ../src/gui/Button.cpp
+	$(CPP) -c ../src/gui/Button.cpp -o obj/Button.o $(CXXFLAGS)
+
+obj/Checkbox.o: ../src/gui/Checkbox.cpp
+	$(CPP) -c ../src/gui/Checkbox.cpp -o obj/Checkbox.o $(CXXFLAGS)
+
+obj/Container.o: ../src/gui/Container.cpp
+	$(CPP) -c ../src/gui/Container.cpp -o obj/Container.o $(CXXFLAGS)
+
+obj/Control.o: ../src/gui/Control.cpp
+	$(CPP) -c ../src/gui/Control.cpp -o obj/Control.o $(CXXFLAGS)
+
+obj/GUIHandler.o: ../src/gui/GUIHandler.cpp
+	$(CPP) -c ../src/gui/GUIHandler.cpp -o obj/GUIHandler.o $(CXXFLAGS)
+
+obj/Gump.o: ../src/gui/Gump.cpp
+	$(CPP) -c ../src/gui/Gump.cpp -o obj/Gump.o $(CXXFLAGS)
+
+obj/GumpDialog.o: ../src/gui/GumpDialog.cpp
+	$(CPP) -c ../src/gui/GumpDialog.cpp -o obj/GumpDialog.o $(CXXFLAGS)
+
+obj/Image.o: ../src/gui/Image.cpp
+	$(CPP) -c ../src/gui/Image.cpp -o obj/Image.o $(CXXFLAGS)
+
+obj/ImageArt.o: ../src/gui/ImageArt.cpp
+	$(CPP) -c ../src/gui/ImageArt.cpp -o obj/ImageArt.o $(CXXFLAGS)
+
+obj/InputField.o: ../src/gui/InputField.cpp
+	$(CPP) -c ../src/gui/InputField.cpp -o obj/InputField.o $(CXXFLAGS)
+
+obj/ItemContainer.o: ../src/gui/ItemContainer.cpp
+	$(CPP) -c ../src/gui/ItemContainer.cpp -o obj/ItemContainer.o $(CXXFLAGS)
+
+obj/Label.o: ../src/gui/Label.cpp
+	$(CPP) -c ../src/gui/Label.cpp -o obj/Label.o $(CXXFLAGS)
+
+obj/Paperdoll.o: ../src/gui/Paperdoll.cpp
+	$(CPP) -c ../src/gui/Paperdoll.cpp -o obj/Paperdoll.o $(CXXFLAGS)
+
+obj/RadioButton.o: ../src/gui/RadioButton.cpp
+	$(CPP) -c ../src/gui/RadioButton.cpp -o obj/RadioButton.o $(CXXFLAGS)
+
+obj/Stack.o: ../src/gui/Stack.cpp
+	$(CPP) -c ../src/gui/Stack.cpp -o obj/Stack.o $(CXXFLAGS)
+
+obj/Textbox.o: ../src/gui/Textbox.cpp
+	$(CPP) -c ../src/gui/Textbox.cpp -o obj/Textbox.o $(CXXFLAGS)
+
+obj/TextManager.o: ../src/gui/TextManager.cpp
+	$(CPP) -c ../src/gui/TextManager.cpp -o obj/TextManager.o $(CXXFLAGS)
+
+obj/ArtLoader.o: ../src/loaders/ArtLoader.cpp
+	$(CPP) -c ../src/loaders/ArtLoader.cpp -o obj/ArtLoader.o $(CXXFLAGS)
+
+obj/FontLoader.o: ../src/loaders/FontLoader.cpp
+	$(CPP) -c ../src/loaders/FontLoader.cpp -o obj/FontLoader.o $(CXXFLAGS)
+
+obj/GroundTextures.o: ../src/loaders/GroundTextures.cpp
+	$(CPP) -c ../src/loaders/GroundTextures.cpp -o obj/GroundTextures.o $(CXXFLAGS)
+
+obj/GumpLoader.o: ../src/loaders/GumpLoader.cpp
+	$(CPP) -c ../src/loaders/GumpLoader.cpp -o obj/GumpLoader.o $(CXXFLAGS)
+
+obj/HueLoader.o: ../src/loaders/HueLoader.cpp
+	$(CPP) -c ../src/loaders/HueLoader.cpp -o obj/HueLoader.o $(CXXFLAGS)
+
+obj/PaperdollBuilder.o: ../src/loaders/PaperdollBuilder.cpp
+	$(CPP) -c ../src/loaders/PaperdollBuilder.cpp -o obj/PaperdollBuilder.o $(CXXFLAGS)
+
+obj/SkillLoader.o: ../src/loaders/SkillLoader.cpp
+	$(CPP) -c ../src/loaders/SkillLoader.cpp -o obj/SkillLoader.o $(CXXFLAGS)
+
+obj/SoundLoader.o: ../src/loaders/SoundLoader.cpp
+	$(CPP) -c ../src/loaders/SoundLoader.cpp -o obj/SoundLoader.o $(CXXFLAGS)
+
+obj/StaticModelLoader.o: ../src/loaders/StaticModelLoader.cpp
+	$(CPP) -c ../src/loaders/StaticModelLoader.cpp -o obj/StaticModelLoader.o $(CXXFLAGS)
+
+obj/StaticModels.o: ../src/loaders/StaticModels.cpp
+	$(CPP) -c ../src/loaders/StaticModels.cpp -o obj/StaticModels.o $(CXXFLAGS)
+
+obj/StaticTextureLoader.o: ../src/loaders/StaticTextureLoader.cpp
+	$(CPP) -c ../src/loaders/StaticTextureLoader.cpp -o obj/StaticTextureLoader.o $(CXXFLAGS)
+
+obj/StitchinLoader.o: ../src/loaders/StitchinLoader.cpp
+	$(CPP) -c ../src/loaders/StitchinLoader.cpp -o obj/StitchinLoader.o $(CXXFLAGS)
+
+obj/StreamLoader.o: ../src/loaders/StreamLoader.cpp
+	$(CPP) -c ../src/loaders/StreamLoader.cpp -o obj/StreamLoader.o $(CXXFLAGS)
+
+obj/TileDataBuffer.o: ../src/loaders/TileDataBuffer.cpp
+	$(CPP) -c ../src/loaders/TileDataBuffer.cpp -o obj/TileDataBuffer.o $(CXXFLAGS)
+
+obj/TileDataLoader.o: ../src/loaders/TileDataLoader.cpp
+	$(CPP) -c ../src/loaders/TileDataLoader.cpp -o obj/TileDataLoader.o $(CXXFLAGS)
+
+obj/UOMap.o: ../src/loaders/UOMap.cpp
+	$(CPP) -c ../src/loaders/UOMap.cpp -o obj/UOMap.o $(CXXFLAGS)
+
+obj/VerdataLoader.o: ../src/loaders/VerdataLoader.cpp
+	$(CPP) -c ../src/loaders/VerdataLoader.cpp -o obj/VerdataLoader.o $(CXXFLAGS)
+
+obj/btree.o: ../src/net/btree.cpp
+	$(CPP) -c ../src/net/btree.cpp -o obj/btree.o $(CXXFLAGS)
+
+obj/Client.o: ../src/net/Client.cpp
+	$(CPP) -c ../src/net/Client.cpp -o obj/Client.o $(CXXFLAGS)
+
+obj/Packet.o: ../src/net/Packet.cpp
+	$(CPP) -c ../src/net/Packet.cpp -o obj/Packet.o $(CXXFLAGS)
+
+obj/unicode.o: ../src/net/unicode.cpp
+	$(CPP) -c ../src/net/unicode.cpp -o obj/unicode.o $(CXXFLAGS)
+
+obj/uo_huffman.o: ../src/net/uo_huffman.cpp
+	$(CPP) -c ../src/net/uo_huffman.cpp -o obj/uo_huffman.o $(CXXFLAGS)
+
+obj/Bitmask.o: ../src/renderer/Bitmask.cpp
+	$(CPP) -c ../src/renderer/Bitmask.cpp -o obj/Bitmask.o $(CXXFLAGS)
+
+obj/Camera.o: ../src/renderer/Camera.cpp
+	$(CPP) -c ../src/renderer/Camera.cpp -o obj/Camera.o $(CXXFLAGS)
+
+obj/Characters.o: ../src/renderer/Characters.cpp
+	$(CPP) -c ../src/renderer/Characters.cpp -o obj/Characters.o $(CXXFLAGS)
+
+obj/DynamicObjects.o: ../src/renderer/DynamicObjects.cpp
+	$(CPP) -c ../src/renderer/DynamicObjects.cpp -o obj/DynamicObjects.o $(CXXFLAGS)
+
+obj/Fade.o: ../src/renderer/Fade.cpp
+	$(CPP) -c ../src/renderer/Fade.cpp -o obj/Fade.o $(CXXFLAGS)
+
+obj/MapBlock.o: ../src/renderer/MapBlock.cpp
+	$(CPP) -c ../src/renderer/MapBlock.cpp -o obj/MapBlock.o $(CXXFLAGS)
+
+obj/MapBuffer.o: ../src/renderer/MapBuffer.cpp
+	$(CPP) -c ../src/renderer/MapBuffer.cpp -o obj/MapBuffer.o $(CXXFLAGS)
+
+obj/Renderer.o: ../src/renderer/Renderer.cpp
+	$(CPP) -c ../src/renderer/Renderer.cpp -o obj/Renderer.o $(CXXFLAGS)
+
+obj/SDLScreen.o: ../src/renderer/SDLScreen.cpp
+	$(CPP) -c ../src/renderer/SDLScreen.cpp -o obj/SDLScreen.o $(CXXFLAGS)
+
+obj/StaticObjects.o: ../src/renderer/StaticObjects.cpp
+	$(CPP) -c ../src/renderer/StaticObjects.cpp -o obj/StaticObjects.o $(CXXFLAGS)
+
+obj/Texture.o: ../src/renderer/Texture.cpp
+	$(CPP) -c ../src/renderer/Texture.cpp -o obj/Texture.o $(CXXFLAGS)
+
+obj/TextureBuffer.o: ../src/renderer/TextureBuffer.cpp
+	$(CPP) -c ../src/renderer/TextureBuffer.cpp -o obj/TextureBuffer.o $(CXXFLAGS)
+
+obj/CharacterLight.o: ../src/renderer/3D/CharacterLight.cpp
+	$(CPP) -c ../src/renderer/3D/CharacterLight.cpp -o obj/CharacterLight.o $(CXXFLAGS)
+
+obj/Light3D.o: ../src/renderer/3D/Light3D.cpp
+	$(CPP) -c ../src/renderer/3D/Light3D.cpp -o obj/Light3D.o $(CXXFLAGS)
+
+obj/LightNodes.o: ../src/renderer/3D/LightNodes.cpp
+	$(CPP) -c ../src/renderer/3D/LightNodes.cpp -o obj/LightNodes.o $(CXXFLAGS)
+
+obj/MapBlock3D.o: ../src/renderer/3D/MapBlock3D.cpp
+	$(CPP) -c ../src/renderer/3D/MapBlock3D.cpp -o obj/MapBlock3D.o $(CXXFLAGS)
+
+obj/MapBuffer3D.o: ../src/renderer/3D/MapBuffer3D.cpp
+	$(CPP) -c ../src/renderer/3D/MapBuffer3D.cpp -o obj/MapBuffer3D.o $(CXXFLAGS)
+
+obj/MotiveBasedLight.o: ../src/renderer/3D/MotiveBasedLight.cpp
+	$(CPP) -c ../src/renderer/3D/MotiveBasedLight.cpp -o obj/MotiveBasedLight.o $(CXXFLAGS)
+
+obj/Renderer3D.o: ../src/renderer/3D/Renderer3D.cpp
+	$(CPP) -c ../src/renderer/3D/Renderer3D.cpp -o obj/Renderer3D.o $(CXXFLAGS)
+
+obj/SceneMaker.o: ../src/renderer/3D/SceneMaker.cpp
+	$(CPP) -c ../src/renderer/3D/SceneMaker.cpp -o obj/SceneMaker.o $(CXXFLAGS)
+
+obj/Music.o: ../src/sound/Music.cpp
+	$(CPP) -c ../src/sound/Music.cpp -o obj/Music.o $(CXXFLAGS)
+
+obj/SoundMixer.o: ../src/sound/SoundMixer.cpp
+	$(CPP) -c ../src/sound/SoundMixer.cpp -o obj/SoundMixer.o $(CXXFLAGS)
+
+obj/CSLHandler.o: ../src/csl/CSLHandler.cpp
+	$(CPP) -c ../src/csl/CSLHandler.cpp -o obj/CSLHandler.o $(CXXFLAGS)
+
+obj/Block.o: ../src/csl/Block.cpp
+	$(CPP) -c ../src/csl/Block.cpp -o obj/Block.o $(CXXFLAGS)
+
+obj/Compile.o: ../src/csl/Compile.cpp
+	$(CPP) -c ../src/csl/Compile.cpp -o obj/Compile.o $(CXXFLAGS)
+
+obj/Function.o: ../src/csl/Function.cpp
+	$(CPP) -c ../src/csl/Function.cpp -o obj/Function.o $(CXXFLAGS)
+
+obj/Input.o: ../src/csl/Input.cpp
+	$(CPP) -c ../src/csl/Input.cpp -o obj/Input.o $(CXXFLAGS)
+
+obj/Instruct.o: ../src/csl/Instruct.cpp
+	$(CPP) -c ../src/csl/Instruct.cpp -o obj/Instruct.o $(CXXFLAGS)
+
+obj/Interprt.o: ../src/csl/Interprt.cpp
+	$(CPP) -c ../src/csl/Interprt.cpp -o obj/Interprt.o $(CXXFLAGS)
+
+obj/Library.o: ../src/csl/Library.cpp
+	$(CPP) -c ../src/csl/Library.cpp -o obj/Library.o $(CXXFLAGS)
+
+obj/Parametr.o: ../src/csl/Parametr.cpp
+	$(CPP) -c ../src/csl/Parametr.cpp -o obj/Parametr.o $(CXXFLAGS)
+
+obj/Utility.o: ../src/csl/Utility.cpp
+	$(CPP) -c ../src/csl/Utility.cpp -o obj/Utility.o $(CXXFLAGS)
+
+obj/Variable.o: ../src/csl/Variable.cpp
+	$(CPP) -c ../src/csl/Variable.cpp -o obj/Variable.o $(CXXFLAGS)
+
+obj/ZAsync.o: ../src/csl/ZAsync.cpp
+	$(CPP) -c ../src/csl/ZAsync.cpp -o obj/ZAsync.o $(CXXFLAGS)
+
+obj/ZCsl.o: ../src/csl/ZCsl.cpp
+	$(CPP) -c ../src/csl/ZCsl.cpp -o obj/ZCsl.o $(CXXFLAGS)
+
+obj/ZDate.o: ../src/csl/ZDate.cpp
+	$(CPP) -c ../src/csl/ZDate.cpp -o obj/ZDate.o $(CXXFLAGS)
+
+obj/ZDynLink.o: ../src/csl/ZDynLink.cpp
+	$(CPP) -c ../src/csl/ZDynLink.cpp -o obj/ZDynLink.o $(CXXFLAGS)
+
+obj/ZExcept.o: ../src/csl/ZExcept.cpp
+	$(CPP) -c ../src/csl/ZExcept.cpp -o obj/ZExcept.o $(CXXFLAGS)
+
+obj/ZFile.o: ../src/csl/ZFile.cpp
+	$(CPP) -c ../src/csl/ZFile.cpp -o obj/ZFile.o $(CXXFLAGS)
+
+obj/ZPlatfrm.o: ../src/csl/ZPlatfrm.cpp
+	$(CPP) -c ../src/csl/ZPlatfrm.cpp -o obj/ZPlatfrm.o $(CXXFLAGS)
+
+obj/ZProcess.o: ../src/csl/ZProcess.cpp
+	$(CPP) -c ../src/csl/ZProcess.cpp -o obj/ZProcess.o $(CXXFLAGS)
+
+obj/ZProfile.o: ../src/csl/ZProfile.cpp
+	$(CPP) -c ../src/csl/ZProfile.cpp -o obj/ZProfile.o $(CXXFLAGS)
+
+obj/ZPtrlist.o: ../src/csl/ZPtrlist.cpp
+	$(CPP) -c ../src/csl/ZPtrlist.cpp -o obj/ZPtrlist.o $(CXXFLAGS)
+
+obj/ZResrce.o: ../src/csl/ZResrce.cpp
+	$(CPP) -c ../src/csl/ZResrce.cpp -o obj/ZResrce.o $(CXXFLAGS)
+
+obj/ZSql.o: ../src/csl/ZSql.cpp
+	$(CPP) -c ../src/csl/ZSql.cpp -o obj/ZSql.o $(CXXFLAGS)
+
+obj/ZString.o: ../src/csl/ZString.cpp
+	$(CPP) -c ../src/csl/ZString.cpp -o obj/ZString.o $(CXXFLAGS)
+
+obj/ZTrace.o: ../src/csl/ZTrace.cpp
+	$(CPP) -c ../src/csl/ZTrace.cpp -o obj/ZTrace.o $(CXXFLAGS)
+
+obj/LightNodeEnvironment.o: ../src/renderer/3D/LightNodeEnvironment.cpp
+	$(CPP) -c ../src/renderer/3D/LightNodeEnvironment.cpp -o obj/LightNodeEnvironment.o $(CXXFLAGS)
+
+obj/MotiveBasedGroundLight.o: ../src/renderer/3D/MotiveBasedGroundLight.cpp
+	$(CPP) -c ../src/renderer/3D/MotiveBasedGroundLight.cpp -o obj/MotiveBasedGroundLight.o $(CXXFLAGS)
+
+obj/iris_endian.o: ../src/iris_endian.cpp
+	$(CPP) -c ../src/iris_endian.cpp -o obj/iris_endian.o $(CXXFLAGS)
+
+obj/StaticModelRaster.o: ../src/loaders/StaticModelRaster.cpp
+	$(CPP) -c ../src/loaders/StaticModelRaster.cpp -o obj/StaticModelRaster.o $(CXXFLAGS)
+
+obj/ShaderMatrixBlock.o: ../src/renderer/3D/ShaderMatrixBlock.cpp
+	$(CPP) -c ../src/renderer/3D/ShaderMatrixBlock.cpp -o obj/ShaderMatrixBlock.o $(CXXFLAGS)
+
+obj/ClilocLoader.o: ../src/loaders/ClilocLoader.cpp
+	$(CPP) -c ../src/loaders/ClilocLoader.cpp -o obj/ClilocLoader.o $(CXXFLAGS)
+
+obj/string_utils.o: ../src/string_utils.cpp
+	$(CPP) -c ../src/string_utils.cpp -o obj/string_utils.o $(CXXFLAGS)
+
+obj/ModelInfoLoader.o: ../src/loaders/ModelInfoLoader.cpp
+	$(CPP) -c ../src/loaders/ModelInfoLoader.cpp -o obj/ModelInfoLoader.o $(CXXFLAGS)
+
+obj/MusicListLoader.o: ../src/sound/MusicListLoader.cpp
+	$(CPP) -c ../src/sound/MusicListLoader.cpp -o obj/MusicListLoader.o $(CXXFLAGS)
+
+obj/ParticleEngine.o: ../src/renderer/particles/ParticleEngine.cpp
+	$(CPP) -c ../src/renderer/particles/ParticleEngine.cpp -o obj/ParticleEngine.o $(CXXFLAGS)
+
+obj/ParticleHandler.o: ../src/renderer/particles/ParticleHandler.cpp
+	$(CPP) -c ../src/renderer/particles/ParticleHandler.cpp -o obj/ParticleHandler.o $(CXXFLAGS)
+
+obj/ParticleLoader.o: ../src/renderer/particles/ParticleLoader.cpp
+	$(CPP) -c ../src/renderer/particles/ParticleLoader.cpp -o obj/ParticleLoader.o $(CXXFLAGS)
+
+obj/ParticleTextures.o: ../src/renderer/particles/ParticleTextures.cpp
+	$(CPP) -c ../src/renderer/particles/ParticleTextures.cpp -o obj/ParticleTextures.o $(CXXFLAGS)
+
+obj/MultiLabel.o: ../src/gui/MultiLabel.cpp
+	$(CPP) -c ../src/gui/MultiLabel.cpp -o obj/MultiLabel.o $(CXXFLAGS)
+
+obj/HTMLGumpParser.o: ../src/gui/HTMLGumpParser.cpp
+	$(CPP) -c ../src/gui/HTMLGumpParser.cpp -o obj/HTMLGumpParser.o $(CXXFLAGS)
+
+obj/CSLForm.o: ../src/csl/CSLForm.cpp
+	$(CPP) -c ../src/csl/CSLForm.cpp -o obj/CSLForm.o $(CXXFLAGS)
+
+obj/MapInfo.o: ../src/loaders/MapInfo.cpp
+	$(CPP) -c ../src/loaders/MapInfo.cpp -o obj/MapInfo.o $(CXXFLAGS)
+
+obj/MultisLoader.o: ../src/loaders/MultisLoader.cpp
+	$(CPP) -c ../src/loaders/MultisLoader.cpp -o obj/MultisLoader.o $(CXXFLAGS)
+
+obj/Macros.o: ../src/Macros.cpp
+	$(CPP) -c ../src/Macros.cpp -o obj/Macros.o $(CXXFLAGS)
+
+obj/Ultima_Iris_private.res: Ultima_Iris_private.rc 
+	$(WINDRES) -i Ultima_Iris_private.rc --input-format=rc -o obj/Ultima_Iris_private.res -O coff 

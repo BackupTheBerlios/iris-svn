@@ -35,6 +35,10 @@ cGrannyModelAOS::cGrannyModelAOS (std::string basepath,
   m_animset = 0;
   this->basepath = basepath;
   defaultanimname = defaultanim;
+
+  left_hand_bone = -1;
+  right_hand_bone = -1;
+  hand = HAND_NONE;
 }
 
 cGrannyModelAOS::~cGrannyModelAOS ()

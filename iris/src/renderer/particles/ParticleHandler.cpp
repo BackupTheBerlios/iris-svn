@@ -148,6 +148,11 @@ namespace Particle
   cParticleHandler::cParticleHandler (cEffectDefinition * definition, float x,
                                       float y, float z)
   {
+    m_moving = false;
+    dest_x = 0.0f;
+    dest_y = 0.0f;
+    dest_z = 0.0f;
+                                      
     m_texture = NULL;
     m_texturewidth = 256;
     m_textureheight = 256;
@@ -206,6 +211,24 @@ namespace Particle
     if (time_fac >= 1.0f)
       time_fac = 1.0f;
     m_last_time = currenttick;
+    
+    if(m_moving)
+    {
+     if(m_x < dest_x)
+      m_x+=0.5f;
+     if(m_x > dest_x)
+      m_x-=0.5f;
+     if(m_y < dest_y)
+      m_y+=0.5f;
+     if(m_y > dest_y)
+      m_y-=0.5f;
+     if(m_z < dest_z)
+      m_z+=0.5f;
+     if(m_z > dest_z)
+      m_z-=0.5f;     
+}
+    if(m_x == dest_x && m_y==dest_y && m_z == dest_z)
+     Stop();
 
     std::list < cParticle * >::iterator iter;   // Handle particles
     for (iter = particles.begin (); iter != particles.end (); iter++)
@@ -352,5 +375,32 @@ namespace Particle
 		delete m_texture;
 	m_texture = texture;
 } */
+
+void cParticleHandler::setX(float x)
+{
+  m_x = x;   
+}
+
+void cParticleHandler::setY(float y)
+{
+  m_y = y;   
+}
+
+void cParticleHandler::setZ(float z)
+{
+  m_z = z;   
+}
+
+void cParticleHandler::setMoving(bool mov)
+{
+ m_moving = mov;     
+}
+
+void cParticleHandler::setDestination(float d_x, float d_y, float d_z)
+{
+ dest_x = d_x;
+ dest_y = d_y;
+ dest_z = d_z;
+}
 
 }

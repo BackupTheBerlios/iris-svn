@@ -165,6 +165,8 @@ private:
 	Uint16 m_damagemax;
 	Uint16 m_damagemin;
 	Uint32 m_tithings;
+	Uint32 particle_handler;
+	
 	
 	int m_animtype;
         bool m_warmode;
@@ -302,6 +304,7 @@ public:
 	Uint16 maxdamage() {return m_damagemax;}
 	Uint16 mindamage() {return m_damagemin;}
 	Uint32 tithings() {return m_tithings;}
+	void setParticle(Uint32 particle_id);
 	
     int animtype () { 
 		if (SDL_GetTicks() > anim_smooth_time)

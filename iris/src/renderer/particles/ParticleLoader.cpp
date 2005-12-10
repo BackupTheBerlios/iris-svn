@@ -340,7 +340,8 @@ namespace Particle
     m_time = node->findInteger ("time");
     m_appeartype = node->findInteger ("appeartype");
     m_texturename = node->findString ("texture");
-
+    m_id = node->findInteger("effect_id");
+    
     XML::Node * subnode;
 
     int index = 0;
@@ -505,5 +506,15 @@ Particle::cEffectDefinition * cParticleLoader::getEffect (std::string name)
   if (iter != effects.end ())
     return iter->second;
   else
+    return NULL;
+}
+
+Particle::cEffectDefinition * cParticleLoader::getEffect(Uint32 effectid)
+{
+  std::map < std::string, Particle::cEffectDefinition * >::iterator iter;
+  for(iter = effects.begin(); iter!=effects.end();iter++)
+  if (iter->second->id() == effectid)
+    return iter->second;
+  //else
     return NULL;
 }

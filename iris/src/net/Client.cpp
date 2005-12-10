@@ -38,6 +38,8 @@
 #include "gui/ImageArt.h"
 #include "gui/MultiLabel.h"
 #include "gui/HTMLGumpParser.h"
+#include "gui/Checkbox.h"
+#include "gui/RadioButton.h"
 #include "loaders/ClilocLoader.h"
 #include "loaders/MapInfo.h"
 #include "loaders/UOMap.h"
@@ -48,6 +50,7 @@
 #include "loaders/MultisLoader.h"
 #include "renderer/3D/MapBlock3D.h"
 #include "renderer/3D/MapBuffer3D.h"
+#include "renderer/Renderer.h"
 
 #include "Config.h"
 #include "Debug.h"
@@ -58,6 +61,10 @@
 #include <time.h>
 #include <cassert>
 
+#include "csl/CSLHandler.h"
+#include "Game.h"
+
+#include "renderer/particles/ParticleEngine.h"
 
 using namespace std;
 
@@ -77,6 +84,7 @@ bool buy_opening = false;
 Uint32 vendor_id = 0;
 Uint32 trade_1 = 0;
 Uint32 trade_2 = 0;
+int runflag=0;
 
 
 int HandleGumpDialogEvent (Control * contr)
@@ -272,6 +280,23 @@ cClient::cClient (void (*error_callback) (unsigned int error))
   m_popupy = 0;
   enemy = 0;
   last_footstep_sound = 0;
+  
+  last_spell = 0;
+  last_object = 0;
+  /* TODO (ArTiX#1#): Add checks for UOX3 */
+        
+  last_target = 0;
+  last_skill = 0;
+  last_attack = 0;
+  m_wait_for_target = "";
+
+  cMapInfoEntry * actualmap = pMapInfoLoader.GetMapInfo(0);
+
+  if(actualmap)
+  {
+   GLfloat fogColor[4] = {(float) actualmap->fog_r() / 255.0f, (float) actualmap->fog_g() / 255.0f,(float) actualmap->fog_b() / 255.0f, 1.0 };
+   glFogfv(GL_FOG_COLOR, fogColor);
+  }
 
   callback_OnGameStart = NULL;
   callback_OnTeleport = NULL;
@@ -676,6 +701,9 @@ void cClient::OnData (void *data, unsigned int len)
             case PCK_Ping:
               Send (packet);
               break;
+            case PCK_ParticleEffect:
+              Act_ParticleEffect(packet);
+              break;   
             case PCK_Time:
 // disabled, because only tested on RunUO
 //              Act_Time(packet);
@@ -1250,6 +1278,7 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
   if (nConfig::is_pol)
       {
         iter2 = objlist->end ();
+        iter2--;
         iter3 = objlist->begin ();
         i = -1;
       }
@@ -2001,6 +2030,9 @@ void cClient::Act_Target (cPacket * packet)
   Uint32 type = packet->packet.Target.m_type;
   if (callback_OnTarget)
     callback_OnTarget (id, type);
+  if(!m_wait_for_target.empty())
+	 pCSLHandler.ExecuteFunction((char*)m_wait_for_target.c_str());
+	m_wait_for_target.clear();  
 }
 
 void cClient::Act_Paperdoll (cPacket * packet)
@@ -2241,6 +2273,7 @@ Send Gump Menu Dialog (Variable # of bytes)
 
   for (it = cmds_list.begin (); it != cmds_list.end (); it++)
       {
+        //SiENcE: params has false value in it, don't know why
 
         stringstream stream;
         string command;
@@ -2277,23 +2310,22 @@ Send Gump Menu Dialog (Variable # of bytes)
             }
         else if (command == "text")
             {
-              Label *label = new Label (params[0], params[1],
-                                        texts_vector[params[3]].c_str ());
-              label->setHue (params[2]);
+	      Label *label = new Label (params[0], params[1],
+                                        texts_vector[params[3]].c_str (), params[2]);
+//              label->setHue (params[2]);
               control = label;
 
             }
         else if (command == "croppedtext")
             {
-              Label *label = new Label (params[0], params[1],
-                                        texts_vector[params[5]].c_str ());
               int hue = params[4];
               if (hue == 0)
-                hue = 1;
-              label->setHue (hue);
-              label->Crop (params[2], params[3]);
-              control = label;
+              hue = 1;
+	      Label *label = new Label (params[0], params[1],
+                                        texts_vector[params[5]].c_str (), hue);
 
+	      label->Crop (params[2], params[3]);
+              control = label;
             }
         else if (command == "gumppic")
             {
@@ -2310,7 +2342,7 @@ Send Gump Menu Dialog (Variable # of bytes)
 
             
             }
-            /* TODO (ArTiX#1#): temporarily disabled to fix some ugly bugs */
+/* TODO (ArTiX#1#): temporarily disabled to fix some ugly bugs */
 //Artix fix removed -- startline
         else if (command == "htmlgump")
             {
@@ -2427,19 +2459,20 @@ Send Gump Menu Dialog (Variable # of bytes)
             }
         else if (command == "checkbox")
             {
-
-/*            Checkbox *checkbox = new Checkbox(params[0], params[1], params[2], params[3]);
+/*
+            Checkbox *checkbox = new Checkbox(params[0], params[1], params[2], params[3]);
             if (params[4]) checkbox->SetChecked(true);
-            control = checkbox;*/
-
-              /* TODO: idnr */
+            control = checkbox;
+*/
             }
         else if (command == "radio")
             {
-/*            RadioButton *radio = new RadioButton(params[0], params[1], params[2], params[3]);
+/*
+            RadioButton *radio = new RadioButton(params[0], params[1], params[2], params[3]);
             if (params[4]) radio->SetChecked(true);
             radio->SetPage(target_page);
-            control = radio;*/
+            control = radio;
+*/
 
             }
         else
@@ -2578,6 +2611,13 @@ void cClient::Act_SubCommands (cPacket * packet)
 	
 		  pMapLoader = new UOMapLoader((char*) mul_map.c_str(), (char*) mul_statics.c_str(), (char*) mul_staidx.c_str(), (int)mapID);
 		  actual_map = mapID;
+
+		  Renderer * renderer = pGame.GetRenderer();
+
+		  renderer->LoadSkyboxTextures (actual_map);
+		  GLfloat fogColor[4] = {(float) mapinfo_entry->fog_r() / 255.0f, (float) mapinfo_entry->fog_g() / 255.0f,(float) mapinfo_entry->fog_b() / 255.0f, 1.0 };
+		  glFogfv(GL_FOG_COLOR, fogColor);
+		  
 		  break;
 		}
       case 0x14:
@@ -2890,6 +2930,8 @@ void cClient::Send_DoubleClick (Uint32 id)
   packet.AddByte (PCK_DClick);
   packet.AddDword (id);
   Send (&packet);
+  
+  last_object = id;
 }
 
 void cClient::Send_Click (Uint32 id)
@@ -2914,57 +2956,116 @@ void cClient::Send_Warmode (Uint32 mode)
   Send (&packet);
 }
 
-void cClient::Send_Action (int type, int mode)
+void cClient::Send_Action(int type, int mode)
 {
-  cPacket packet;
-  packet.FillPacket (PCK_DoAction);
+	cPacket packet;
+	packet.FillPacket (PCK_DoAction);
+	
+  	char buf[20];
+  
+  	switch (type) {
+	   case ACTIONTYPE_SKILL:{
 
-  char buf[20];
+        
+        int buflen;
+        
+        if(mode>9)
+         buflen = 4;
+        else
+         buflen = 5;
+         
+        char buf2[20];
+         sprintf(buf, "%i 0", mode);
+         buf2[buflen] = 0;
+         
+		sprintf(buf, "%i 0", mode);
 
-  switch (type)
-      {
-      case ACTIONTYPE_SKILL:
-        sprintf (buf, "%i 0", mode);
-        packet.packet.DoAction.m_type = 0x24;
-        packet.packet.DoAction.m_len = strlen (buf) + 5;
-        strcpy (&packet.packet.DoAction.m_name, buf);
-        break;
-      case ACTIONTYPE_SPELL:
-        sprintf (buf, "%i", mode);
-        packet.packet.DoAction.m_type = 0x56;
-        packet.packet.DoAction.m_len = strlen (buf) + 5;
-        strcpy (&packet.packet.DoAction.m_name, buf);
-        break;
-      case ACTIONTYPE_OPENDOOR:
-        packet.packet.DoAction.m_type = 0x58;
-        packet.packet.DoAction.m_len = 6;
-        packet.packet.DoAction.m_name = 0;
-        break;
-      case ACTIONTYPE_BOW:
-        packet.packet.DoAction.m_type = 0xc7;
-        packet.packet.DoAction.m_len = 3 + 5;
-        strcpy (&packet.packet.DoAction.m_name, "bow");
-        break;
-      case ACTIONTYPE_SALUTE:
-        packet.packet.DoAction.m_type = 0xc7;
-        packet.packet.DoAction.m_len = 6 + 5;
-        strcpy (&packet.packet.DoAction.m_name, "salute");
-        break;
-      default:
+		cPacket pck;
+		pck.AddByte(0x12);
+		pck.AddWord(4+buflen);
+		pck.AddByte(0x24);
+		pck.AddData(&buf, buflen-1);
+		pck.AddByte(0);
+		
+		Send(&pck);
+		last_skill = mode;
+		break;}
+	   case ACTIONTYPE_SPELL:{
+		sprintf(buf, "%i", mode);
+		packet.packet.DoAction.m_type = 0x56;
+		packet.packet.DoAction.m_len = strlen(buf) + 4;
+		strcpy(&packet.packet.DoAction.m_name, buf);
+		break;}
+	   case ACTIONTYPE_OPENDOOR:{
+
+       
+	        cPacket p;
+	        p.AddByte(0x12);
+	        p.AddWord(5);
+	        p.AddByte(0x58);
+	        p.AddByte(0);
+	        Send(&p);
+	        
+	        return;
+		break;}
+	   case ACTIONTYPE_BOW:{
+		//packet.packet.DoAction.m_type = 0xc7;
+		//packet.packet.DoAction.m_len = 3 + 5;
+		//strcpy(&packet.packet.DoAction.m_name, "bow");
+		
+		char buf3[20];
+         sprintf(buf3, "bow", mode);
+         buf3[3] = 0;
+         
+	    cPacket p;
+        p.AddByte(0x12);
+        p.AddWord(8);
+        p.AddByte(0xc7);
+        p.AddData(&buf3, 4);
+        
+        Send(&p);
         return;
-
-      }
-
-  Send (&packet);
-
+        
+        break;}
+	   case ACTIONTYPE_SALUTE:{
+		//packet.packet.DoAction.m_type = 0xc7;
+		//packet.packet.DoAction.m_len = 6 + 5;
+		//strcpy(&packet.packet.DoAction.m_name, "salute");
+		
+			
+		char buf3[20];
+         sprintf(buf3, "salute", mode);
+         buf3[6] = 0;
+         
+	    cPacket p;
+        p.AddByte(0x12);
+        p.AddWord(11);
+        p.AddByte(0xc7);
+        p.AddData(&buf3, 7);
+        
+        Send(&p);
+        return;
+        
+		break;}
+	   default:
+		return;
+         
+        }
+  
+        Send(&packet);
+	
 }
+
 
 void cClient::Send_AttackRequest (Uint32 id)
 {
+  last_attack = id;
   cPacket packet;
   packet.AddByte (PCK_Attack);
   packet.AddDword (id);
   Send (&packet);
+  
+  
 }
 
 void cClient::Send_SkillLock (Uint32 skill, Uint32 lock)
@@ -3033,12 +3134,15 @@ void cClient::Send_ItemEquipReq (Uint32 itemid, Uint32 charid, Uint16 model)
 
 void cClient::Send_Target (Uint32 cursorid, Uint32 targetid)
 {
+  
   cPacket packet;
   packet.FillPacket (PCK_Target);
   packet.packet.Target.m_type = 0x00;
   packet.packet.Target.m_cursorID = cursorid;
   packet.packet.Target.m_clickedID = targetid;
   Send (&packet);
+  
+  last_target = targetid;
 }
 
 void cClient::Send_MenuChoice (Uint32 dialogid, Uint16 menuid, Uint16 index,
@@ -3263,6 +3367,13 @@ cCharacter *cClient::player_character ()
 bool cClient::Walk_Simple (Uint8 action)
 {
   int direction;
+  
+  if(runflag==0x80)
+   walk_direction |= 0x80;
+  else
+  if(walk_direction & 0x80)
+   walk_direction ^= 0x80; 
+   
   switch (action)
       {
       case WALK_RIGHT:
@@ -3410,6 +3521,8 @@ void cClient::CastSpell (int spellid)
   packet.AddWord (0x02);
   packet.AddWord (spellid);
   Send (&packet);
+  
+  last_spell = spellid;
 }
 
 Uint32 cClient::GetEnemy ()
@@ -3420,3 +3533,77 @@ Uint32 cClient::GetEnemy ()
  
   return enemy;
 }
+
+void cClient::toggleRunMode()
+{
+ (runflag==0)?runflag=0x80:runflag=0;     
+}
+
+void cClient::Act_ParticleEffect(cPacket * packet)
+{
+ packet->SetPosition (1);
+
+ //preamble    
+ Uint8 type = packet->GetByte();
+ Uint32 source_serial = packet->GetDword();
+ Uint32 dest_serial = packet->GetDword();
+ Uint16 model = packet->GetWord();
+ Uint16 x = packet->GetWord();
+ Uint16 y = packet->GetWord();
+ Uint8  z = packet->GetByte(); 
+ Uint16 x2 = packet->GetWord();
+ Uint16 y2 = packet->GetWord();
+ Uint8  z2 = packet->GetByte();
+ Uint8  speed = packet->GetByte();
+ Uint8  duration = packet->GetByte();    //loop
+ Uint16 unkn = packet->GetWord();        //hue
+ Uint8  fixed_dir = packet->GetByte();   //oneDir
+ Uint8  explode = packet->GetByte();
+ Uint32  hue = packet->GetDword();       //?
+ Uint32  mode = packet->GetDword();
+
+ //particle effect
+    Uint16 particle_id = packet->GetWord();
+    Uint16 explode_id = packet->GetWord();
+    Uint16 mov_id = packet->GetWord();
+    Uint32 itemid = packet->GetDword();
+    Uint8 layer = packet->GetByte();
+    Uint16 unk = packet->GetWord();
+
+ //char idstr[2];
+ //idstr[1] = 0;
+ //sprintf(idstr, "%i", (int) type);
+ 
+ std::cout << "Particle: type=" << (int)type << ", ID=" << particle_id << endl;
+ 
+ switch(type)
+ {
+  case 2:{ //xyz particle
+     std::cout << "Stationary particle" << endl;
+     std::cout << "Z: " << (int)z << endl;
+     pParticleEngine.AddEffect(particle_id, (float)x * 1.0f, (float)y * 1.0f, (float)z / 10.0f);
+     break;
+     }
+  case 3:{
+     std::cout << "On player particle" << endl;
+     
+     cCharacter *character = NULL;
+     character = pCharacterList.Get (source_serial);
+     if(!character)
+      break;
+      std::cout << "Z: " << (int)character->z() << endl;
+     Uint32 p_id = pParticleEngine.AddEffect(particle_id, (float)character->x() * 1.0f, (float)character->y() * 1.0f, (float)character->z() * 1.0f);
+     character->setParticle(p_id);
+     break;  
+   }  
+  case 0: {
+       std::cout << "Moving FX: " << endl;
+       pParticleEngine.AddMovingEffect(particle_id, (float) x * 1.0f, (float) y * 1.0f, (float)z/10.0f, (float) x2 * 1.0f, (float) y2 * 1.0f, (float)z2/10.0f);
+       break;
+       }
+  case 1: break;                       
+ }
+}
+
+
+

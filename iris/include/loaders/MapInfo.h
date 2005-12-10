@@ -39,6 +39,9 @@ class cMapInfoEntry
         std::string m_name;
         std::string m_skybox;
         int m_base_id;
+        int m_fog_r;
+        int m_fog_g;
+        int m_fog_b;
     public:
        int id ();
        int width ();
@@ -46,8 +49,12 @@ class cMapInfoEntry
        int base_id ();
        std::string name ();
        std::string skybox ();
-    
-       cMapInfoEntry (int id, int width, int height, std::string name, std::string skybox, int base_id);
+       
+       int fog_r();
+       int fog_g();
+       int fog_b();
+       
+       cMapInfoEntry (int id, int width, int height, std::string name, std::string skybox, int base_id, int r, int g, int b);
 };
 
 class cMapInfoLoader

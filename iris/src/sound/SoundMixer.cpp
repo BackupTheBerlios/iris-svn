@@ -38,7 +38,6 @@ SoundMix::SoundMix ()
 
 SoundMix::~SoundMix ()
 {
-  //Quit();
   SDL_QuitSubSystem (SDL_INIT_AUDIO);
 }
 
@@ -51,7 +50,7 @@ void SoundMix::Init ()
   else
       stereo_channels = 1;
   // start SDL with audio support
-  if (SDL_InitSubSystem (SDL_INIT_AUDIO) == -1)
+  if (SDL_InitSubSystem (SDL_INIT_AUDIO) != 0)
       {
         pDebug.Log ("Initializing SDL Audio failed...", __FILE__, __LINE__,
                     LEVEL_ERROR);
@@ -61,7 +60,7 @@ void SoundMix::Init ()
   else if
     (Mix_OpenAudio
      (nConfig::frequency, MIX_DEFAULT_FORMAT, stereo_channels,
-      nConfig::chunksize) == -1)
+      nConfig::chunksize) < 0)
       {
         pDebug.Log ("Open SDL Audio failed...", __FILE__, __LINE__,
                     LEVEL_ERROR);

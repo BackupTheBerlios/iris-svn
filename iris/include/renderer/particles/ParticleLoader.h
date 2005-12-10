@@ -163,6 +163,7 @@ namespace Particle
             std::vector <cParticleDefinition *> particles;
             std::map <Uint32, cParticleTypeDefinition *> types;
             std::string m_texturename;
+            Uint32 m_id;
         public:
            cEffectDefinition (XML::Node * node); 
            ~cEffectDefinition ();
@@ -175,6 +176,7 @@ namespace Particle
            cParticleTypeDefinition * getType (Uint32 id);
            
            std::string texture_name ();
+           Uint32 id(){return m_id;}
     };
 }
     
@@ -191,6 +193,7 @@ class cParticleLoader
     void DeInit ();
     
     Particle::cEffectDefinition * getEffect (std::string name);
+    Particle::cEffectDefinition * getEffect (Uint32 effectid);
     Particle::cParticleTextureManager * texture_manager ();
 };
 

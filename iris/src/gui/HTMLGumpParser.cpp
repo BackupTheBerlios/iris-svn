@@ -47,12 +47,12 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
   MultiLabelComponent component;
   std::string text = "";
 
-  int i = 0;
-  //int apices = 0;
   char apices[2];
   apices[0] = 34;
   apices[1] = 0;
+
   int f_apices = html_text.find(string(apices), 0);
+
   while(f_apices != std::string::npos)
   {
    html_text.erase(f_apices);
@@ -60,26 +60,20 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
     break;
    f_apices = html_text.find(string(apices), f_apices);
   }
-   // a href=aaa
-  //apices = html_text.find(
-  //pDebug.Log ("STR1:");
-  //pDebug.Log (html_text.c_str ());
+
+//pDebug.Log (html_text.c_str ());
+
   char *tags = (char *) html_text.c_str ();
-  //pDebug.Log (tags);
 
   /* TODO (ArTiX#1#): Check for memory leaks into char* */
-  
-
   char *tag = strtok (tags, "<>");
 
   while (tag != NULL)
       {
         words.push_back (string (tag));
-//        printf ("Tag: %s\n", tag);
-
+//printf ("Tag: %s\n", tag);
         tag = strtok (NULL, "<>");
       }
-
 
   int line = 0;
   int center = 0;
@@ -90,7 +84,6 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
   component.text = "";
   component.href = "";
   component.alignment = 0;
-
 
   char hexbuffer[33];
   hexbuffer[32] = 0;
@@ -122,11 +115,13 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
   bool closetag = false;
 
 
-  for (int i = 0; i < words.size (); i++)
-      {
-        if (words.at (i).empty ())
-          continue;
+//  for (int i = 0; i < words.size (); i++)
+  int i=0;
 
+  while( (closetag==false) && (i < words.size ()) )
+  {
+	  if (words.at (i).empty ())
+          continue;
 
         if (words.at (i) == "CENTER" || words.at (i) == "DIV ALIGN=CENTER"
             || words.at (i) == "center" || words.at (i) == "div align=center")
@@ -324,7 +319,11 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
               component.text += words.at (i);
               //label->AddLabel(component);
             }
+
+		//increase Tagposition
+		i++;
       }
+
   //if(!closetag){
   //label->AddLabel(component);
   //label->AddLine();}
@@ -335,12 +334,7 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
         component.text.clear ();
       }
   label->AddLine ();
-/*
-  if (tags)
-   delete[] tags;
-  if (tag)
-   delete[] tag;
-*/
+
   return true;
 }
 

@@ -79,6 +79,9 @@ class cParticleHandler
   
     void AddParticle(cParticle * particle);
     void ClearParticles();
+    
+    bool m_moving;
+    float dest_x, dest_y, dest_z;
   
   public:
     cParticleHandler (cEffectDefinition * definition, float x, float y, float z);
@@ -87,6 +90,12 @@ class cParticleHandler
     
     void Start ();
     void Stop ();
+    
+    void setX(float x);
+    void setY(float y);
+    void setZ(float z);
+    void setMoving(bool mov);
+    void setDestination(float d_x, float d_y, float d_z);
     
     void Render (int dx, int dy);
     

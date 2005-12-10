@@ -1,3 +1,35 @@
+24.10.2005:
+Changes by Artix & SiENcE
+	-Particles for some Spells and Statics added
+	-new ML models added to granny_aos.xml
+	-global scale factor for granny models in ModelsInfo.xml
+	-Individual scale factor changed from INT to FLOAT, because of SE and ML scale factors
+	-Macro support for Iris + Switchable skybox/fog color
+	-Auto roof fade in first person and while camera/zoom changes
+	-Config::maxangle raisen to 90 (formerly 80)
+	-right+left mouse rotate camera (and rotates character while moving,only in  perspective1)
+	-improved 1st person macros
+	-cursor doesn't move when camera rotates by right+left
+	-down cursor (arrow key) rotates character to the opposite direction
+	-toggle run mode macro (F7)
+	-right mouse move (UO style) works only in perspective 0
+	-fog color switches just after the first map change
+	-Hue bugs fixed
+	-HTMLGumpRenderer improved
+	-several CSL Script changes
+	-new Help Gump
+	-minor bug fixes on some Gumps
+
+	Bug fixed:
+	-objects are now clickable when in 1st person
+	-fixed a serious bug with aostooltips (seg fault with object tooltips)
+	-fixed fog color for iris start
+	-fixed serious bug in buy item with Pol emulator (seg fault)
+
+	TODO:
+	-csl api to add/edit macros.xml (example: gui interface in paperdoll->options)
+	-MAKEFILE Update for GCC/Linux
+
 27.07.2005:
 Changes by SiENcE (Florian Fischer)
 	-external Skybox support added, look into xml/Maps.xml

@@ -70,6 +70,8 @@ public:
    virtual void DelDynamic (cDynamicObject * object);
    virtual void AddCharacter (cCharacter * character) { return; }
    virtual void DelCharacter (cCharacter * character) { return; }
+   virtual void LoadSkyboxTextures(int map=0) { return; }
+
 
    void SetRenderFlag(int flag, int value);
    int GetRenderFlag(int flag);

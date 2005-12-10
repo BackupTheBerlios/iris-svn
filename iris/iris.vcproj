@@ -163,6 +163,9 @@ imm32.lib smpeg.lib"
 				RelativePath=".\src\iris_endian.cpp">
 			</File>
 			<File
+				RelativePath=".\src\Macros.cpp">
+			</File>
+			<File
 				RelativePath=".\src\SDLEvent.cpp">
 			</File>
 			<File

@@ -33,14 +33,16 @@ using namespace std;
 
 cModelInfoLoader pModelInfoLoader;
 
-cModelInfoEntry::cModelInfoEntry (int id, int scalex, int scaley, int scalez, int alpha, int defhue, int alt_body)
+cModelInfoEntry::cModelInfoEntry (int id, float scalex, float scaley, float scalez, int alpha, int defhue, int alt_body)
 {
       m_id = id;
       m_scalex = scalex;
       m_scaley = scaley;
+      m_scalez = scalez;
       m_alpha = alpha;
       m_defhue = defhue;
       m_alt_body = alt_body;
+      
 }
 
 int cModelInfoEntry::id ()
@@ -48,17 +50,17 @@ int cModelInfoEntry::id ()
     return m_id;
 }
 
-int cModelInfoEntry::scalex ()
+float cModelInfoEntry::scalex ()
 {
     return m_scalex;
 }
 
-int cModelInfoEntry::scaley ()
+float cModelInfoEntry::scaley ()
 {
     return m_scaley;
 }
 
-int cModelInfoEntry::scalez ()
+float cModelInfoEntry::scalez ()
 {
     return m_scalez;
 }
@@ -82,6 +84,7 @@ int cModelInfoEntry::alt_body ()
 
 cModelInfoLoader::cModelInfoLoader ()
 {
+ m_scale_factor = 1.0f;
 }
 
 cModelInfoLoader::~cModelInfoLoader()
@@ -92,7 +95,7 @@ cModelInfoLoader::~cModelInfoLoader()
 void cModelInfoLoader::Init (std::string filename)
 {
   XML::Parser parser;
-  XML::Node * models, *document;
+  XML::Node * models, *document, *s_factor;;
 
   try
   {
@@ -112,13 +115,16 @@ void cModelInfoLoader::Init (std::string filename)
 
   XML::Node * model_node, *value;
 
+  if((s_factor = models->findNode("SCALE_FACTOR")))
+   m_scale_factor = s_factor->asFloat();
+
   int idx = 0;
 
   while ((model_node = models->findNode ("MODEL", idx)))
       {
-        int scalex = 10;
-        int scaley = 10;
-        int scalez = 10;
+        float scalex = 1.0f;
+        float scaley = 1.0f;
+        float scalez = 1.0f;
         int alpha = 255;
         int defhue = 0;
         int altbody = 0;
@@ -127,18 +133,20 @@ void cModelInfoLoader::Init (std::string filename)
         Uint32 id = (value != NULL) ? value->asInteger () : 0;
 
         if ((value = model_node->findNode ("SCALE_X")))
-          scalex = value->asInteger ();
+          scalex = value->asFloat ();
         if ((value = model_node->findNode ("SCALE_Y")))
-          scaley = value->asInteger ();
+          scaley = value->asFloat ();
         if ((value = model_node->findNode ("SCALE_Z")))
-          scalez = value->asInteger ();
+          scalez = value->asFloat ();
         if ((value = model_node->findNode ("ALPHA")))
           alpha = value->asInteger ();
         if ((value = model_node->findNode ("DEFAULT_HUE")))
           defhue = value->asInteger ();
         if ((value = model_node->findNode ("ALT_BODY")))
           altbody = value->asInteger ();
-
+        
+        
+        
         cModelInfoEntry *modelinfo = new cModelInfoEntry (id, scalex, scaley, scalez, alpha, defhue, altbody);
         model_infos.insert (make_pair ((int) id, modelinfo));
         idx++;
@@ -163,4 +171,7 @@ void cModelInfoLoader::DeInit ()
   model_infos.clear();  
 }
 
-
+float cModelInfoLoader::getScaleFactor()
+{
+ return m_scale_factor;   
+}

@@ -34,6 +34,8 @@
 #include "Game.h"
 #include <cassert>
 #include "Config.h"
+#include "Macros.h"
+#include "csl/CSLHandler.h"
 
 using namespace std;
 
@@ -98,19 +100,19 @@ void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
   gui_message msg;
   switch (event.type)
       {
+/*
       case SDL_ACTIVEEVENT:
-        /* Something's happend with our focus
-         * If we lost focus or we are iconified, we
-         * shouldn't draw the screen
-         */
-        //if ( event.active.gain == 0 )
-        //isActive = false;
-        //else
-        //isActive = TRUE;
+        //Something's happend with our focus
+        //If we lost focus or we are iconified, we
+        //shouldn't draw the screen
+        if ( event.active.gain == 0 )
+           isActive = false;
+        else
+            isActive = TRUE;
         break;
+*/
       case SDL_VIDEORESIZE:
-        /* handle resize event */
-
+        // handle resize event
 #ifndef WIN32
         // Do not reinitialize window in Win32
         SDLscreen->screen = SDL_SetVideoMode (event.resize.w,
@@ -124,7 +126,6 @@ void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
               exit (1);
             };
 #endif
-
         SDLscreen->ResizeWindow (event.resize.w, event.resize.h);
         break;
       case SDL_KEYDOWN:
@@ -208,6 +209,25 @@ void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
 void SDLEvent::HandleKeyPress (SDL_keysym * keysym)
 {
   gui_message msg;
+  MacroEntry * entry = pMacroLoader->GetMacro((int)keysym->sym);
+  if(entry/* && (SDL_GetModState() == entry->keymod)*/)
+  {
+   if(SDL_GetModState() == entry->keymod)
+     HandleMacro(entry);
+   else
+   {
+     int macrocount = pMacroLoader->GetEntriesCount((int)keysym->sym);
+     if( macrocount>1 )
+     {
+        for(int i = 0; i < macrocount; i++)
+        {
+           entry = pMacroLoader->GetMultiMacro((int)keysym->sym, i);
+           if(entry && entry->keymod == SDL_GetModState())
+              HandleMacro(entry);
+        }
+     }
+   }
+  }
 
   msg.keypressed.type = MESSAGE_KEYPRESSED;
   msg.keypressed.key = keysym->unicode & 0xFF;
@@ -247,14 +267,12 @@ void SDLEvent::HandleKeyPress (SDL_keysym * keysym)
   /* F1 key was pressed this toggles fullscreen mode - does not work under windows currently */
 
 #ifndef WIN32
-
   if (keys[SDLK_F1] == SDL_PRESSED)
     SDLscreen->ToggleFullScreen ();
 
   if (keys[SDLK_F12] == SDL_PRESSED)
     SDLscreen->ScreenSave ();
 #endif
-
 }
 
 void SDLEvent::HandleMovement (void)
@@ -298,20 +316,28 @@ void SDLEvent::HandleMovement (void)
 //      pCamera.Move(factor);
 
         if (keys[SDLK_DOWN] == SDL_PRESSED)
-          pCamera.Move (-factor);
+          //pCamera.Move (-factor);
+           {
+            int dir =  pClient->player_character()->direction();
+            (dir >= 4)?dir-=4:dir+=4;
+                  pClient->Walk (dir);       
+           }
 
 }
 
 void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
 {
-
+  Uint8 *keys;
+  keys = SDL_GetKeyState (NULL);
+  
   if (!event)
       {
         pDebug.Log ("Null event pointer in SDLEvent::HandleMouseMotion",
                     __FILE__, __LINE__, LEVEL_WARNING);
         return;
       }
-
+      
+   if(!pCamera.forceRotation())
     pUOGUI.SetCursorPos (event->x, event->y);
 
   pGame.UpdateDragMode (event->x, event->y);
@@ -334,15 +360,37 @@ void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
 
         if ((event->state & (SDL_BUTTON (2) | SDL_BUTTON (3))))
             {
-              if (SDL_GetModState () & KMOD_LSHIFT)
+              /*if (SDL_GetModState () & KMOD_LSHIFT)
                   {
                     pCamera.Rotate (0.0f, 0.0f, -event->xrel / 3.0f);
                     pCamera.ChangeZoom (event->yrel * 0.05f);
                   }
               else if (SDL_GetModState () & (KMOD_RSHIFT))
                 pCamera.Rotate (event->yrel / 3.0f, 0.0f,
+                                 -event->xrel / 3.0f);*/
+                                 
+                
+            if(event->state & SDL_BUTTON (1)){                 
+                pCamera.Rotate (event->yrel / 3.0f, 0.0f,
                                  -event->xrel / 3.0f);
+                pCamera.SetForceRotation(true); 
+                } 
+                
+                float amount= pCamera.GetAngleZ() - -pClient->player_character ()->angle ();
+                  
+                if (keys[SDLK_UP] == SDL_PRESSED && nConfig::perspective==1){
+                  int wdirection=WALK_FORWARD;
+                  if(amount > 215)
+                   wdirection = WALK_LEFT;
+                  else if (amount < 145)
+                   wdirection = WALK_RIGHT;
+                  if(wdirection == WALK_LEFT ||  wdirection == WALK_RIGHT)
+                  pGame.Walk_Simple (wdirection); 
+                  }                            
             }
+
+        if (!(event->state & (SDL_BUTTON (2) | SDL_BUTTON (3))))
+         pCamera.SetForceRotation(false);  
 
 
 
@@ -359,3 +407,108 @@ void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
       }
 
 }
+
+void SDLEvent::HandleMacro(MacroEntry * entry)
+{
+
+      char integers[4][15];
+     
+      //std::vector<char*> ints;
+      int numints = 0;
+      std::vector<char*> strs;
+      
+      
+      if(entry->parameters.size() == 4)
+      {
+        for(int i = 0; i < 4; i++)
+        {
+         
+         if(entry->parameters.at(i)->type == 2)
+         {
+           sprintf(integers[i- strs.size()], "%d", entry->parameters.at(i)->int_value);
+           numints++;
+         }
+        else if(entry->parameters.at(i)->type == 1)
+         strs.push_back((char*)entry->parameters.at(i)->str_value.c_str());
+        }
+        
+        if(numints == 4)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],integers[2],integers[3]);
+        else if(numints == 3)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],integers[2],strs.at(0));
+        else if(numints == 2)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],strs.at(0),strs.at(1));
+        else if(numints == 1)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], strs.at(0),strs.at(1),strs.at(2));
+        else if(numints == 0)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), strs.at(0),strs.at(1),strs.at(2), strs.at(3)); 
+      }
+       else if(entry->parameters.size() == 3)
+      {
+        for(int i = 0; i < 3; i++)
+        {
+         if(entry->parameters.at(i)->type == 2)
+         {
+           sprintf(integers[i - strs.size()], "%d", entry->parameters.at(i)->int_value);
+           numints++;
+         }
+        else if(entry->parameters.at(i)->type == 1)
+         strs.push_back((char*)entry->parameters.at(i)->str_value.c_str());
+        }
+        
+  
+        if(numints == 3)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],integers[2]);
+        else if(numints == 2)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],strs.at(0));
+        else if(numints == 1)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], strs.at(0),strs.at(1));
+        else if(numints == 0)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), strs.at(0),strs.at(1),strs.at(2)); 
+      }
+      else if(entry->parameters.size() == 2)
+      {
+        for(int i = 0; i < 2; i++)
+        {
+         if(entry->parameters.at(i)->type == 2)
+         { 
+           sprintf(integers[i - strs.size()], "%d", entry->parameters.at(i)->int_value);
+          
+           numints++;
+         }
+        else if(entry->parameters.at(i)->type == 1)
+         strs.push_back((char*)entry->parameters.at(i)->str_value.c_str());
+        }
+        
+        if(numints == 2)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1]);
+        else if(numints == 1)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], strs.at(0));
+        else if(numints == 0)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), strs.at(0),strs.at(1)); 
+      }
+      else if(entry->parameters.size() == 1)
+      {
+      
+         if(entry->parameters.at(0)->type == 2)
+         {
+           sprintf(integers[0], "%d", entry->parameters.at(0)->int_value);
+           numints++;
+         }
+        else if(entry->parameters.at(0)->type == 1)
+         strs.push_back((char*)entry->parameters.at(0)->str_value.c_str());
+      
+      
+        if(numints == 1)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0]);
+        else if(numints == 0)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), strs.at(0)); 
+      }
+        else if(entry->parameters.size() == 0)
+         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str());
+       
+    strs.clear();
+    numints = 0;
+
+}
+

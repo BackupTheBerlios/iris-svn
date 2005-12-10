@@ -48,7 +48,12 @@ class cParticleEngine
     void Render();
     
     Uint32 AddEffect (cStaticModelParticleEffectInfo * effect_info, float x, float y, float z);
+    Uint32 AddEffect (Uint32 effect_id, float x, float y, float z);
+    Uint32 AddMovingEffect (Uint32 effect_id, float x, float y, float z, float x2, float y2, float z2);
+    
     void RemoveEffect (Uint32 id);
+    
+    void UpdateParticlePosition(Uint32 id, float newx, float newy, float newz);
 };
 
 extern cParticleEngine pParticleEngine;

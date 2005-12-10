@@ -309,7 +309,7 @@ ZString api_gui_addform (ZCsl* aCsl)
 				password = passwd_node->asBool();
 			}
 			
-			if (type=="label") {
+			if (type == "label") {
 				if (align=="center") {
 					label_align=1;
 					left += width / 2;
@@ -320,25 +320,24 @@ ZString api_gui_addform (ZCsl* aCsl)
 					//top  += height;
 				}
 
-				Label* label = new Label(left, top, text.c_str());
-
+				Label* label = new Label(left, top, text.c_str(), hue, font);
+/*SiENcE:
 				if (font >= 0) label->setFont(font);
 				if (hue >= 0) label->setHue(hue);
+*/
 				if (label_align >= 0) label->setAlign(label_align);
-				
-				control = label;
-			} else {
-				font = font < 0 ? 3 : font;
-				hue = hue < 0 ? 0 : hue;
-				
-				InputField * input = new InputField(left,top,width,height, text.c_str(), hue, font, password ? 42 : 0);
-				input->OnKeyPress(on_keypressedhandler);
-				if (!onkeypressed.empty())
-					input->SetScriptFunction(FUNC_ONKEYPRESSED, (char*)onkeypressed.c_str());
-				
-
-				control = input;
-			}
+					control = label;
+				}
+				else
+				{
+					font = font < 0 ? 3 : font;
+					hue = hue < 0 ? 0 : hue;
+					InputField * input = new InputField(left,top,width,height, text.c_str(), hue, font, password ? 42 : 0);
+					input->OnKeyPress(on_keypressedhandler);
+					if (!onkeypressed.empty())
+						input->SetScriptFunction(FUNC_ONKEYPRESSED, (char*)onkeypressed.c_str());
+					control = input;
+				}
 		}
 
 		if (!control) continue;

@@ -44,9 +44,10 @@ void CreateSinTable (void)
 {
   for (int p = 0; p < 32; p++)
     for (int x = 0; x < 9; x++)
-      water_sin_table[p][x] = sin ((x / 4.0f + p / 16.0f) * 3.14159f);
-
+      //water_sin_table[p][x] = sin ((x / 4.0f + p / 16.0f) * 3.14159f);
+      water_sin_table[p][x] = sin ((x / 2.0f + p / 16.0f) * 3.14159f);
 }
+
 
 void VectorCrossProduct (float *V1, float *V2, float *result)
 {
@@ -793,7 +794,7 @@ void cMatrix::RotationMatrix (cVector axis, float angle)    // Creates a rotatio
   V[i] = axis.field (i);
 
   float c = cos (angle);
-  float c1 = 1 - c;
+  float c1 = 1.0f - c;
   float s = sin (angle);
 
   m_fields[0][0] = V[0] * V[0] * c1 + c;

@@ -26,6 +26,7 @@
 #include "Config.h"
 #include "irisgl.h"
 #include <cassert>
+#include "Debug.h"
 
 // Library Includes
 #include <vector>
@@ -71,6 +72,9 @@ void cTextElement::setText (const char *text, unsigned short hueId,
 
 //SiENcE: seems to be incorrect
 //          hueId = SDLscreen->GetDefaultHue (fontId);
+//printf (text);
+//printf ("[hueId %d]\n", hueId);
+//if (hueId == 1152) hueId = 0;
 
         setTextTTF (text, hueId, ttf_font);
         //if(_style)
@@ -174,7 +178,6 @@ void cTextElement::setText (const char *text, unsigned short hueId,
                     pixels[(yOffset + y) * width + (xOffset + x)] = color;
                   }
             }
-
         xOffset += font->chars[c].width;
       }
 
@@ -193,7 +196,7 @@ void cTextElement::setText (const char *text, unsigned short hueId,
   p = item;
 }
 
-/*!
+/*
 	This method encapsulates the creation of a text element.
 */
 cTextElement::cTextElement (const char *text, unsigned short hueId,

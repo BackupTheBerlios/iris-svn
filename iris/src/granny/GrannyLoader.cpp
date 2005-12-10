@@ -309,17 +309,18 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
           animset = value->asInteger ();
         if ((value = char_node->findNode ("PREFIX")))
           prefix = to_lower (value->asString ());
+
         if ((value = char_node->findNode ("LEFT_HAND_BONE")))
             {
               left_hand_bone = value->asInteger ();
               hand = HAND_OWNER;
-
             }
         if ((value = char_node->findNode ("RIGHT_HAND_BONE")))
             {
               right_hand_bone = value->asInteger ();
               hand = HAND_OWNER;
             }
+
         if ((value = char_node->findNode ("HAND")))
             {
               if (value->asString () == "left")
@@ -331,8 +332,12 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
         Uint16 assign = 0;
         if ((value = char_node->findNode ("ASSIGN")))
           assign = value->asInteger ();
-        id |= assign << 16;
 
+        //SiENcE: if female id-1000, to show female clothes
+        // (i dont know why it needs a subtract of 1000!, ids are correct)
+        if (assign == 401) id=id-1000;
+
+        id |= assign << 16;      
         iter = animsets.find (animset);
 
         if (id && (iter != animsets.end ()))
@@ -368,10 +373,26 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
         std::string filename = "", default_anim = "";
         int animset = -1;
 
+        int left_hand_bone = -1;
+        int right_hand_bone = -1;
+        int hand = HAND_NONE;
+
         value = char_node->findNode ("ID");
         Uint32 id = (value != NULL) ? value->asInteger () : 0;
         if ((value = char_node->findNode ("ANIMSET")))
           animset = value->asInteger ();
+
+        if ((value = char_node->findNode ("LEFT_HAND_BONE")))
+            {
+              left_hand_bone = value->asInteger ();
+              hand = HAND_OWNER;
+            }
+        if ((value = char_node->findNode ("RIGHT_HAND_BONE")))
+            {
+              right_hand_bone = value->asInteger ();
+              hand = HAND_OWNER;
+            }
+
         Uint16 assign = 0;
         if ((value = char_node->findNode ("ASSIGN")))
           assign = value->asInteger ();
@@ -384,6 +405,10 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
               assert (iter->second);
               cGrannyModelAOS *model =
                 new cGrannyModelAOS (tex_basepath, iter->second->defaultanim);
+
+              model->SetHandBones (left_hand_bone, right_hand_bone);
+              model->SetHand (hand);
+
               model->SetAnimset (animset);
               for (int i = 0; AOSBodyInfo[i].id != 0; i++)
                   {

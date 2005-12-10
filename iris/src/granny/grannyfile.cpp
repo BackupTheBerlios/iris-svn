@@ -202,6 +202,9 @@ void cGrannyFile::mainChunk ()
             case 0xCA5E0103:
               object.load (stream);
               break;
+            
+            //SiENcE:  Chunk is new to ML/SE Models maybe Texture: case 0xca5e0100
+
             default:
               hex (cerr);
               cerr << "Unknown GRN Chunk: " << chunk << endl;
@@ -213,18 +216,7 @@ void cGrannyFile::mainChunk ()
 bool cGrannyFile::loadTexture (const char *basepath)
 {
   std::string filename;
-//    filename = basepath;
-//    //filename += getTextureName();
-  //filename += ".tga";
 
-  // Try to load our Texture
-/*	texture = new Texture;
-	if( !texture->LoadFromFile( filename.c_str() ) )
-	{
-		delete texture;
-		texture = 0;
-		return false;
-	}*/
   if (texture && pGrannyTextureLoader)
     pGrannyTextureLoader->FreeTexture (m_texfilename);
 
@@ -239,8 +231,6 @@ bool cGrannyFile::loadTexture (const char *basepath)
 
 void calculateBoneRests (Bone * bone)
 {
-
-
   float X, Y, Z, x, y, z, w;
   X = bone->translate.points[0];
   Y = bone->translate.points[1];
@@ -460,6 +450,8 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
                     int v_x = (int) (vertex[0] * 2.0f + 1.0f);
                     int v_y = (int) (vertex[1] * 2.0f + 1.0f);
                     int v_z = (int) (vertex[2] * 1.0f); */
+
+
                     Point & p = imesh->normals[i];
                     character_light->CalcColor (0, 0, 0, p.points,
                                                 color_array + i * 3);
@@ -575,6 +567,7 @@ void cGrannyAnimation::Assign (cGrannyFile * model)
         dword id = boneTies.boneObjects[animId - 1];
         dword textId = getValue (id, anmNm);
         std::string boneStr = findID (textId);
+
         for (unsigned int j = 0; j < boneStr.length (); j++)
           boneStr[j] = tolower (boneStr[j]);
 

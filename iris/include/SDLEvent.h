@@ -28,6 +28,7 @@
 #define _SDLEVENT_H_
 
 #include "SDL/SDL.h"
+#include "Macros.h"
 
 class SDLEvent
 {
@@ -43,6 +44,8 @@ private:
   unsigned int last_click;
   int clickdown_x, clickdown_y;
   bool dragging;
+  
+  void HandleMacro(MacroEntry * entry);
 
 public:
     SDLEvent ();

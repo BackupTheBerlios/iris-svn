@@ -42,12 +42,16 @@ var skill_bar[3];
 var gender = 0;
 var gender_gump;
 
+var location = 0;
 var name = "";
 var name_input;
+
 var hair_list;
 var hair;
 var facial_hair;
-var location = 0;
+
+var hair_list_open = 0;
+var facial_hair_list_open = 0;
 
 /*
 -------------------------------------------------------------------------------------------------
@@ -71,6 +75,7 @@ display_connecting();
 display_charlist();
 display_neterror(const message);
 display_serverlist();
+display_list(const y, const type);
 
 /*
 -------------------------------------------------------------------------------------------------
@@ -650,18 +655,44 @@ handler_on_change_gender (const sender)
 
 handler_on_hair_style (const sender)
 {
-//control_close(hair_list);
-//display_list(240, 1);
+	if(hair_list_open==1){
+		control_close(hair_list);
+		hair_list_open=0;
+	}
+	else
+	{
+		if(facial_hair_list_open==1)
+		{
+			control_close(hair_list);
+			facial_hair_list_open=0;
+		}
+
+		display_list(240, 1);
+		hair_list_open=1;
+	}
 }
 
 handler_on_facial_hair_style (const sender)
 {
+	if(facial_hair_list_open==1){
+		control_close(hair_list);
+		facial_hair_list_open=0;
+	}
+	else
+	{
+		if(hair_list_open==1){
+			control_close(hair_list);
+			hair_list_open=0;
+		}
 
+		display_list(240, 0);
+		facial_hair_list_open=1;
+	}
 }
 
 handler_on_change_hair (const sender)
 {
-label_settext (sender, "1");
+	label_settext (sender, "1");
 }
 
 /*

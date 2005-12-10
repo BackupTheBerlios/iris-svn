@@ -53,12 +53,15 @@
 
 #include "loaders/GumpLoader.h"
 #include "loaders/SkillLoader.h"
+#include "renderer/Camera.h"
 
 #include "net/Client.h"
 
 #include "Config.h"
 #include "include.h"
 #include "sound/SoundMixer.h"
+
+
 
 int gamestate = GAMESTATE_MENU;
 
@@ -797,6 +800,155 @@ static ZString api_gui_setdefaultfocus (ZCsl * aCsl)
         Control *control = pUOGUI.GetControl (id);
         pUOGUI.SetDefaultFocus (control);
   return "0";
+}
+
+
+
+static ZString api_net_lastobj(ZCsl * aCsl)
+{
+
+  if(pClient)
+   return ZString(pClient->lastObject());
+  return "-1"; 
+
+}
+
+static ZString api_net_lasttarget(ZCsl * aCsl)
+{
+
+  if(pClient)
+   return ZString(pClient->lastTarget());
+  return "-1"; 
+
+}
+
+static ZString api_net_lastskill(ZCsl * aCsl)
+{
+
+  if(pClient)
+   return ZString(pClient->lastSkill());
+  return "-1"; 
+
+}
+
+static ZString api_net_lastspell(ZCsl * aCsl)
+{
+
+  if(pClient)
+   return ZString(pClient->lastSpell());
+  return "-1"; 
+
+}
+
+static ZString api_net_lastattack(ZCsl * aCsl)
+{
+
+  if(pClient)
+   pClient->Send_AttackRequest(pClient->lastAttack());
+   return "0";
+
+}
+
+static ZString api_net_sendtarget(ZCsl * aCsl)
+{
+  int id = aCsl->get("id").asInt();
+  
+  if(pClient)
+   pClient->Send_Target(pGame.cursorid(), (Uint32)id);
+  pGame.click_mode(CLICK_NORMAL);
+  return "0"; 
+
+}
+
+static ZString api_net_waittarget(ZCsl* aCsl)
+{
+if(pClient){string fname = string(aCsl->get("funcname").buffer());
+ std::cout << "fname: " << fname << std::endl;
+ pClient->wait_for_target(fname);}
+
+ 
+ return "0";
+}
+
+static ZString api_game_settimer(ZCsl* aCsl)
+{
+
+ string func = string(aCsl->get("func").buffer());
+ pGame.SetTimerFunction(func, aCsl->get("time").asInt());
+ 
+ return "0";
+}
+
+static ZString api_camera_move(ZCsl* aCsl)
+{
+int dir = aCsl->get("dir").asInt();
+int amount = aCsl->get("amount").asInt();
+//if(pCamera){
+    switch(dir)
+    {
+    case 0: pCamera.Rotate(-(amount / 3.0f), 0.0f, -0 / 3.0f); break; // down
+    case 1: pCamera.Rotate((amount / 3.0f), 0.0f, -0 / 3.0f);break; // up
+    case 2: pCamera.Rotate(0.0f, 0.0f, -(amount / 3.0f));break;//left
+    case 3: pCamera.Rotate(0.0f, 0.0f, (amount / 3.0f));break;
+    default: break;
+    }
+
+//}
+
+ 
+ return "0";
+}
+
+static ZString api_camera_zoom(ZCsl* aCsl)
+{
+int dir = aCsl->get("type").asInt();
+int amount = aCsl->get("amount").asInt();
+//if(pCamera){
+    switch(dir){
+    case 0:  pCamera.ChangeZoom(-amount * 0.05f); break; // in
+    case 1: pCamera.ChangeZoom(amount * 0.05f);break; // out
+
+    default: break;
+    }
+
+//}
+
+ 
+ return "0";
+}
+
+
+static ZString api_net_togglerun(ZCsl* aCsl)
+{
+
+ if(pClient)
+  pClient->toggleRunMode();
+ return "0"; 
+}
+
+static ZString api_camera_firstperson(ZCsl* aCsl)
+{
+//if(!pCamera)
+ //return "-1";
+ int selfview = aCsl->get("selfview").asInt();
+   float actualzoom = pCamera.GetZoom();
+   float angle_x = pCamera.GetAngleX();
+   pCamera.ChangeZoom(-actualzoom);
+   if(!nConfig::hideself)
+    pCamera.Rotate(-45.0f, 0.0f, -0 / 3.0f);
+ 
+           
+           if(selfview)
+            pCamera.ChangeZoom(-3.4);
+
+ return "0";
+}
+
+static ZString api_camera_reset(ZCsl * aCsl)
+{
+       pCamera.Reset();
+       nConfig::hideself=0;
+       return "0";
 }
 
 static ZString api_gui_translate (ZCsl * aCsl)
@@ -1769,7 +1921,6 @@ static ZString api_quit (ZCsl * aCsl)
   return "-1";
 }
 
-
 static ZString api_config_getvalue (ZCsl * aCsl)
 {
   switch (aCsl->get ("id").asInt ())
@@ -1804,6 +1955,10 @@ static ZString api_config_getvalue (ZCsl * aCsl)
         return ZString (nConfig::aos);
       case 21:
         return ZString (nConfig::speech_hue);
+      case 22:
+         return ZString (nConfig::roof_fade_time);
+       case 23:
+         return ZString (nConfig::roof_fade);     
       default:
         return "0";
       }
@@ -1822,16 +1977,21 @@ static ZString api_config_setvalue (ZCsl * aCsl)
       case 5:
         nConfig::server = aCsl->get ("value").buffer ();
         break;
+      case 10:  
+       nConfig::perspective = aCsl->get ("value").asInt ();break; 
       case 17:
         nConfig::brightness = aCsl->get ("value").asInt ();
         break;
       case 21:
         nConfig::speech_hue = aCsl->get ("value").asInt ();
         break;
+      case 22:
+        nConfig::roof_fade_time = aCsl->get ("value").asInt ();
+      case 23:
+        nConfig::roof_fade = aCsl->get ("value").asInt (); break;      
       }
   return "0";
 }
-
 
 static ZString api_net_getserverlist (ZCsl * aCsl)
 {
@@ -2987,6 +3147,11 @@ void CSLHandler::InitAPI (void)
     csl->addFunc (module, "button_getdestinationpage (const id)",
                   api_button_getdestpage);
 
+    csl->addFunc (module, "camera_move (const dir, const amount)",
+                  api_camera_move);
+    csl->addFunc (module, "camera_zoom (const type, const amount)",
+                  api_camera_zoom);
+    csl->addFunc (module, "camera_firstperson (const selfview)", api_camera_firstperson);
 
     csl->addFunc (module,
                   "textbox_addmessage(const id, const message, const timeout, [const hue])",
@@ -3155,6 +3320,16 @@ void CSLHandler::InitAPI (void)
                   api_net_sendpickup);
     csl->addFunc (module, "net_getaostooltip (const id, const index)",
                   api_net_getaostooltip);
+                  
+    csl->addFunc(module, "net_lastobject ()", api_net_lastobj);
+    csl->addFunc(module, "net_lasttarget ()", api_net_lasttarget);
+    csl->addFunc(module, "net_sendtarget (const id)", api_net_sendtarget);
+    csl->addFunc(module, "net_lastskill ()", api_net_lastskill);
+    csl->addFunc(module, "net_lastspell ()", api_net_lastspell);
+    csl->addFunc(module, "net_waitfortarget(const funcname)", api_net_waittarget);
+    csl->addFunc(module, "net_lastattack ()", api_net_lastattack);
+    csl->addFunc (module, "game_settimer(const time, const func)",
+                  api_game_settimer);              
 
     csl->addFunc (module, "char_gethighlighthue (const id)",
                   api_char_gethighlight);
@@ -3168,6 +3343,9 @@ void CSLHandler::InitAPI (void)
     csl->addFunc (module,
                   "char_getskill(const id, const skillid, [var & name, var & unmodified, var & skillcap, var & skilllock, var & skill_button ])",
                   api_char_getskill);
+    csl->addFunc (module, "net_toggle_runmode()",
+                  api_net_togglerun);
+                                              
     csl->addFunc (module,
                   "char_addtext (const id, const text, [ const timeout , const hue])",
                   api_char_addtext);
@@ -3201,7 +3379,9 @@ void CSLHandler::InitAPI (void)
                   api_utils_rightshift);
     csl->addFunc (module, "utils_bit_leftshift(const a, const b)",
                   api_utils_leftshift);
-
+    
+    // added in 0.8 Artix
+    csl->addFunc (module, "camera_reset()", api_camera_reset);
   }
   catch (const ZException & err)
   {

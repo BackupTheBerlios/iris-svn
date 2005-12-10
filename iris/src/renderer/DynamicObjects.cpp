@@ -313,8 +313,15 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
   result = Add (id);
   assert (result);
   result->id = id;
+
   result->type = DYNAMICTYPE_WORLD;
   result->model = model;
+
+//SiENcE: just for debugging
+//char msg[128];
+//sprintf (msg, "ModelID: %i\n", model);
+//printf(msg);
+
   result->x = x;
 
   result->y = y;
@@ -324,7 +331,6 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
   result->dye = dye;
   result->direction = direction;
   result->flag = flag;
-
 
         cStaticModel *static_model = pStaticModelLoader.getModel (model);
         if (static_model)
@@ -344,7 +350,9 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
 
               std::list < cLight3D * >static_light_list =
                 pLightManager.static_light_list ();
+
               std::list < cLight3D * >::iterator light_iter;
+
               for (light_iter = static_light_list.begin ();
                    light_iter != static_light_list.end (); light_iter++)
                 if ((*light_iter)->light_in_block (blockx, blocky))
@@ -353,17 +361,17 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
                     }
 
               if (static_model->GetParticleEffectInfo ())
+              {
+                printf("Effect");
                 result->SetParticleEffectHandle (pParticleEngine.
                                                  AddEffect (static_model->
                                                             GetParticleEffectInfo
-                                                            (), x, y,
-                                                            z * 0.1f));
-
+                                                            (), x, y, z * 0.1f));
+              }
       }
 
   if (callback_OnAdd)
     callback_OnAdd (result);
-
   return result;
 }
 

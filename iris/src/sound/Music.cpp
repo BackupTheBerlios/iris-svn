@@ -240,7 +240,7 @@ int Music::PlayMusic (int id, int format, int volume)
                music = Mix_LoadMUS (file.c_str ());
       }
 
-      if (!music) {
+      if(music == NULL) {
         pDebug.Log ("PlayMusic() can not load file", __FILE__, __LINE__,
                     LEVEL_WARNING);
         // this might be a critical error...
