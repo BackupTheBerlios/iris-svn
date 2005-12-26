@@ -76,7 +76,7 @@
 	</NET>
 		
 	<UO>
-		<MULPATH>data/wine/AoS/</MULPATH>
+		<MULPATH>d:\games\uo</MULPATH>
 		<AOS>1</AOS>
 		<POPUP_MENU>1</POPUP_MENU>
         
@@ -89,8 +89,8 @@
 	</UO>
         
 	<SOUND>
-		<MUSIC>1</MUSIC>
-		<SOUND>1</SOUND>
+		<MUSIC>0</MUSIC>
+		<SOUND>0</SOUND>
 		<STEREO>1</STEREO>
 		<FREQUENCY>22050</FREQUENCY>
 		<CHUNKSIZE>4096</CHUNKSIZE>
