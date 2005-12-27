@@ -114,7 +114,7 @@ Renderer3D::~Renderer3D ()
 int Renderer3D::Init (void)
 {
   tex_water = new Texture;
-  tex_water->LoadFromFileWithTransparency ("./textures/water1.jpg", 200);
+  tex_water->LoadFromFileWithTransparency ("./textures/water1.png", 200);
 
   tex_char_shadow = new Texture;
   tex_char_shadow->LoadFromFile ("./textures/char_shadow.png");

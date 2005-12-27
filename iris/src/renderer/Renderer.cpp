@@ -195,14 +195,22 @@ void Renderer::AdjustCameraZ ()
 void Renderer::ClearStaticFaders ()
 {
   list < cFader * >::iterator iter;
+
+  if (iter != static_faders.end())
+  {
   for (iter = static_faders.begin (); iter != static_faders.end (); iter++)
     delete *iter;
+  }
+
   static_faders.clear ();
 }
 
 void Renderer::HandleStaticFaders ()
 {
   list < cFader * >::iterator iter;
+
+  if (iter != static_faders.end())
+  {
   for (iter = static_faders.begin (); iter != static_faders.end (); iter++)
       {
         (*iter)->Handle ();
@@ -214,6 +222,7 @@ void Renderer::HandleStaticFaders ()
               iter = static_faders.begin ();
             }
       }
+  }
 }
 
 void Renderer::setDragModel (Uint16 drag_model, int x, int y, int z)

@@ -8,6 +8,7 @@ Bitmask.cpp \
 Border.cpp \
 btree.cpp \
 Buffer.cpp \
+Macros.cpp \
 Button.cpp \
 Camera.cpp \
 Characters.cpp \

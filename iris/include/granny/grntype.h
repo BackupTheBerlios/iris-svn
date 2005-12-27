@@ -19,6 +19,9 @@
 #ifndef __GRNTYPE_H__
 #define __GRNTYPE_H__
 
+#include <memory.h>
+#include <math.h>
+
 typedef unsigned char byte;
 typedef unsigned short word;
 typedef unsigned long dword;
@@ -26,18 +29,34 @@ typedef unsigned long dword;
 
 class Point
 {
-	public:
-		Point() {for (int i=0;i<4;i++) points[i]=0.0f;}
-		~Point() {}
-		float points[4];
+public:
+	Point()  { memset(points,0,sizeof(points)); }
+	Point(const Point& p) { memcpy(points, p.points, sizeof(points)); }
+	Point(float x, float y, float z, float w=0.0f) { points[0]=x;points[1]=y;points[2]=z;points[3]=w; }
+	~Point() {}
+	Point& operator+=(const Point &p) { points[0]+=p.points[0];points[1]+=p.points[1];points[2]+=p.points[2];points[3]+=p.points[3]; return *this; }
+	Point& operator*=(float v) { points[0]*=v;points[1]*=v;points[2]*=v; return *this; }
+	Point& operator/=(float v) { points[0]/=v;points[1]/=v;points[2]/=v; return *this; }
+	Point  operator*(float v) { Point p(*this); return p*=v; }
+	Point  operator/(float v) { Point p(*this); return p/=v; }
+	bool operator==(const Point& p) { return memcpy(points,p.points,sizeof(points))==0; }
+	float points[4];
+	float length() { return sqrtf(points[0]*points[0] + points[1]*points[1] + points[2]*points[2]); }
+
+	Point& normalize()
+	{
+		float len = length();
+		if (len == 0.0f) return *this;
+		return *this/=len;
+	}
 };
 
 class gPolygon
 {
-	public:
-		gPolygon() {}
-		~gPolygon() {}
-		dword nodes[6];
+public:
+	gPolygon() {}
+	~gPolygon() {}
+	dword nodes[6];
 };
 
 #endif

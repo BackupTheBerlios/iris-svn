@@ -186,7 +186,8 @@ std::string cClilocLoader::GetMessageWithArguments (int id, int args_num,
                   }
             }
         ret_msg += word;
-       delete[] newstr;
+        // HARKON: why delete?
+        //delete[] newstr;
       }
 
 

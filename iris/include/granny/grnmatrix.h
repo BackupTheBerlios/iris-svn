@@ -24,15 +24,29 @@
 class GrnMatrix
 {
 public:
-  GrnMatrix();
-  GrnMatrix(float *m);
-  ~GrnMatrix();
-	void operator*=(const GrnMatrix &m);
+	GrnMatrix();
+	GrnMatrix(float *m);
+	~GrnMatrix();
+	GrnMatrix& operator*=(const GrnMatrix &m);
 	Point operator*(const Point &v);
-	void operator=(const GrnMatrix &m);
-	float &operator[](int i);
+	GrnMatrix& operator=(const GrnMatrix &m);
+	float &operator[](int i) { return matrix[i]; }
+	bool operator==(const GrnMatrix &m) { return memcmp(matrix,m.matrix,sizeof(matrix)) == 0; }
 	void invert();
+	Point getRotationDegrees() const;
+	Point getRotationRadians() const;
+	Point getTranslation() const;
+	void setTranslation(const Point &v);
+	void setQuaternion(const Point &q) { setTransform(q, Point(0,0,0)); }
+	void setTransform(const Point &quaternion, const Point &translation);
+	void setRotationRadians(const Point& rotation);
+	void setRotationDegrees(Point rotation);
+	void setIdentity();
+	void setScale(const Point &scale);
 	float matrix[16];
 };
 
+Point QuaternionToEuler(Point p);
+Point RadToDeg(Point p);
+Point DegToRad(Point p);
 #endif

@@ -243,13 +243,17 @@ void cCharacter::RenderText ()
       }
 
   std::list < class cCharacterText * >::iterator iter;
-  for (iter = text_list.begin (); iter != text_list.end (); iter++)
+
+  if (iter != text_list.end())
+  {
+   for (iter = text_list.begin (); iter != text_list.end (); iter++)
     if ((*iter)->done ())
         {
           delete *iter;
           text_list.erase (iter);
           iter = text_list.begin ();
         }
+  }
 }
 
 void cCharacter::MoveTo (float x, float y, float z)
@@ -444,14 +448,16 @@ void cCharacter::ClearSkills ()
   for (iter = m_skills.begin (); iter != m_skills.end (); iter++)
     delete iter->second;
   m_skills.clear ();
-
 }
 
 void cCharacter::ClearText (void)
 {
   std::list < class cCharacterText * >::iterator iter;
-  for (iter = text_list.begin (); iter != text_list.end (); iter++)
+  if (iter != text_list.end())
+  {
+   for (iter = text_list.begin (); iter != text_list.end (); iter++)
     delete *iter;
+  }
   text_list.clear ();
 }
 

@@ -26,7 +26,12 @@
 #define NODE_TOLERANCE 0.01
 #define QUADS_PER_NODE 24
 
-#define PI 3.14159f
+const float PI = 3.14159f;
+//! Constant for converting bettween degrees and radiants.
+const double GRAD_PI = 180.0 / 3.1415926535897932384626433832795;
+const float ROUNDING_ERROR = 0.0001f;
+//! Constant for converting bettween degrees and radiants.
+const double GRAD_PI2 = 3.1415926535897932384626433832795 / 180.0;
 
 #define QUADFLAG_BACKFACE 1
 #define QUADFLAG_TRIANGLE 2
@@ -68,3 +73,4 @@ extern int VIEWDISTANCE;
 #define ROOF_WAIT 1001
 
 #endif //_INCLUDE_H_
+

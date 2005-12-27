@@ -25,14 +25,15 @@
 
 class Bone
 {
-	public:
-		Bone();
-		~Bone();
-		dword parent,id;
-		Point translate;
-		Point quaternion;
-		GrnMatrix matrix,curMatrix;
-		std::vector< class Bone * > children;
+public:
+	Bone();
+	~Bone();
+	dword parent,id;
+	Point translate;
+	Point quaternion;
+	GrnMatrix matrix,curMatrix;
+	std::vector< class Bone * > children;
+	std::string name;
 };
 
 class Bones
