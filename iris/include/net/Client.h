@@ -145,6 +145,7 @@ private:
 	void Act_Target(cPacket * packet);
 	void Act_MenuItems(cPacket * packet);
 	void Act_GumpDialog(cPacket * packet);
+	void Act_MapDisplay(cPacket * packet);
 	void Act_Paperdoll(cPacket * packet);
 	void Act_AttackOK(cPacket * packet);
 	void Act_Dye(cPacket * packet);

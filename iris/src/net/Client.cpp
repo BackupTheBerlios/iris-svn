@@ -703,11 +703,15 @@ void cClient::OnData (void *data, unsigned int len)
               break;
             case PCK_ParticleEffect:
               Act_ParticleEffect(packet);
+              break;
+            case PCK_MapDisplay:
+              Act_MapDisplay(packet);
               break;   
             case PCK_Time:
-// disabled, because only tested on RunUO
-//              Act_Time(packet);
-//              break;
+            // disabled, because only tested on RunUO
+            //              Act_Time(packet);
+            //              break;
+
             /* ToDo Packets :) */
             /* Ignore following packets */
             case PCK_EffectUpdate:
@@ -1031,13 +1035,10 @@ void cClient::Act_Char (cPacket * packet)
   Uint16 skin = packet->GetWord () & 32767;
   Uint8 status = packet->GetByte ();
   Uint8 notoriety = packet->GetByte ();
-  //printf("Char (id:%x, model:%d, pos:%d/%d/%i)\n", id, model, x, y, z);
   Uint32 itemID;
-
 
   if (id == player_char)
     walk_direction = direction;
-
 
         cCharacter *character = pCharacterList.Add (id, x, y, z, model);
         character->setDirection (direction);
@@ -1091,7 +1092,6 @@ void cClient::Act_SpeakUnicode (cPacket * packet)
   char name[31];
   name[30] = 0;
   memcpy (name, &packet->packet.SpeakUnicode.m_name, 30);
-
 
   if (callback_OnSpeech)
     callback_OnSpeech (uni.m_charBuf, name,
@@ -1248,8 +1248,6 @@ void cClient::Act_View (cPacket * packet)
 
 void cClient::Act_VendOpenBuy (cPacket * packet)
 {
-
- 
   packet->SetPosition (3);
   Uint32 inventory_id = packet->GetDword ();
   Uint8 item_count = packet->GetByte ();
@@ -2493,6 +2491,49 @@ Send Gump Menu Dialog (Variable # of bytes)
       }
   dialog->SetCurrentPage (1);
   pUOGUI.AddControl (dialog);
+}
+
+void cClient::Act_MapDisplay (cPacket * packet)
+{
+/*
+Map message [0x90] (19 bytes)
+BYTE cmd
+BYTE[4] key used
+BYTE[2] gump art id (0x139D)
+BYTE[2] upper left x location
+BYTE[2] upper left y location
+BYTE[2] lower right x location
+BYTE[2] lower right y location
+BYTE[2] gump width in pixels
+BYTE[2] gump height in pixels
+*/
+  packet->SetPosition (1);
+  Uint32 mapkey = packet->GetDword ();
+  Uint16 gumpid = packet->GetWord ();
+
+  Uint16 up_left_x = packet->GetWord ();
+  Uint16 up_left_y = packet->GetWord ();
+
+  Uint16 lo_right_x = packet->GetWord ();
+  Uint16 lo_right_y = packet->GetWord ();
+
+  Uint16 gump_x = packet->GetWord ();
+  Uint16 gump_y = packet->GetWord ();
+
+  printf ("Currently not supported - [MapDialog (Key: %d, GumpID: %d, Upper Left(%d, %d), Lower Right(%d, %d), Gumpwidth(%d, %d))]\n",
+          mapkey, gumpid, up_left_x, up_left_y, lo_right_x, lo_right_y, gump_x, gump_y);
+/*
+  Container *dialog = new Container ();
+
+  dialog->SetSize (gump_x, gump_y);
+  dialog->SetPosition (up_left_x, up_left_y);
+  dialog->SetFlags (GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE);
+  dialog->SetGumpID ((int) gumpid);
+//  dialog->SetPlayerID ((int) id);
+
+  dialog->SetCurrentPage (1);
+  pUOGUI.AddControl (dialog);
+*/
 }
 
 void cClient::Act_PlayMusic (cPacket * packet)

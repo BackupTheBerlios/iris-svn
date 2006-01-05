@@ -210,7 +210,7 @@ int SDLScreen::InitGL (GLvoid)
   glEnable(GL_FOG);
   glClearColor(0.5f,0.5f,0.5f,1.0f); // We'll Clear To The Color Of The Fog
   glFogi(GL_FOG_MODE, fogMode[fogfilter]); // Fog Mode
-  glFogfv(GL_FOG_COLOR, fogColor); // Set Fog Color
+//  glFogfv(GL_FOG_COLOR, fogColor); // Set Fog Color
   glFogf(GL_FOG_DENSITY, 0.45f); // 0.35f How Dense Will The Fog Be
   glHint(GL_FOG_HINT, GL_DONT_CARE); // Fog Hint Value
   glMatrixMode (GL_MODELVIEW);
