@@ -50,53 +50,48 @@ void cHueLoader::Init (std::string filename)
 
   unsigned int i = 0;
 
-  // Read as many hues as we can
-  while (!huefile.eof ())
+      // Read as many hues as we can
+      while (!huefile.eof ())
       {
         huefile.seekg (4, std::ios::cur);
 
         for (unsigned int j = 0; j < 8; ++j)
+        {
+            unsigned short hueId = i * 8 + j;
+            
+            stHue hue;
+
+            // 32 Color Values
+            for (unsigned int k = 0; k < 32; ++k)
             {
-              unsigned short hueId = i * 8 + j;
-
-              stHue hue;
-
-              // 32 Color Values
-              for (unsigned int k = 0; k < 32; ++k)
-                  {
-                    unsigned short color15;
-
-                    huefile.read ((char *) &color15, 2);
-                    color15 = IRIS_SwapU16 (color15);
-
-                    // Swap Bytes to 32 bits
-                    hue.colors[k] = color15to32 (color15);
-                  }
-
-              // Two other bytes, tablestart and tableend
-              unsigned short tableStart, tableEnd;
-
-              huefile.read ((char *) &tableStart, 2);
-              huefile.read ((char *) &tableEnd, 2);
-              tableStart = IRIS_SwapU16 (tableStart);
-              tableEnd = IRIS_SwapU16 (tableEnd);
-
-              hue.tableEnd = color15to32 (tableEnd);
-              hue.tableStart = color15to32 (tableStart);
-
-              hues.insert (std::make_pair (hueId, hue));
-
-              // Skip the Name
-              huefile.seekg (20, std::ios::cur);
+                unsigned short color15;
+                huefile.read ((char *) &color15, 2);
+                color15 = IRIS_SwapU16 (color15);
+                
+                // Swap Bytes to 32 bits
+                hue.colors[k] = color15to32 (color15);
             }
 
+            // Two other bytes, tablestart and tableend
+            unsigned short tableStart, tableEnd;
+
+            huefile.read ((char *) &tableStart, 2);
+            huefile.read ((char *) &tableEnd, 2);
+            tableStart = IRIS_SwapU16 (tableStart);
+            tableEnd = IRIS_SwapU16 (tableEnd);
+
+            hue.tableEnd = color15to32 (tableEnd);
+            hue.tableStart = color15to32 (tableStart);
+
+            hues.insert (std::make_pair (hueId, hue));
+
+            // Skip the Name
+            huefile.seekg (20, std::ios::cur);
+        }
         i++;
-
       }
-
-  huefile.close ();
-
-  return;
+      huefile.close ();
+      return;
 }
 
 void cHueLoader::DeInit ()

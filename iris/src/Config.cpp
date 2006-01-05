@@ -52,7 +52,7 @@ struct ParserData
 namespace nConfig
 {
 
-  string version = "0.8.0";
+  string version = "0.8.5";
 
 // Screen related
   int width = 640;

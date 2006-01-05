@@ -42,7 +42,7 @@ class cModelEntry
      int m_anim;
      unsigned int m_defhue;
      std::string m_name;
-     int * coverlist;
+	int coverlist[13];
      std::vector<int> removelist;
      std::map<int, int> replacelist;
      

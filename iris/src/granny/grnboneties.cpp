@@ -23,6 +23,7 @@
 #include <iostream>
 #include <cassert>
 
+
 using namespace std;
 
 BoneTie::BoneTie ()
@@ -39,6 +40,7 @@ BoneTies::BoneTies ()
 
 BoneTies::~BoneTies ()
 {
+	for_each(boneties.begin(),boneties.end(),my_delete<BoneTie*>);
 }
 
 void BoneTies::load (cGrannyStream * file, dword boneOffset, dword baseOffset,
@@ -52,7 +54,7 @@ void BoneTies::load (cGrannyStream * file, dword boneOffset, dword baseOffset,
     float f;
   } fd;
   dword oldPos;
-  BoneTie *bonetie;
+	BoneTie *bonetie=NULL;
   for (unsigned int i = 0; i < peers;)
       {
         dword chunk = file->readDword ();

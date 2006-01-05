@@ -68,7 +68,8 @@ public:
 
 	int left_hand_bone;
 	int right_hand_bone;
-
+	int master_bone;
+	
 	float * color_array;
 
 	bool loadTexture( const char *basepath );
@@ -93,7 +94,6 @@ public:
 	virtual cDeformedArray * getDeformed (int index) { return NULL; }
 	virtual void addDeformed (cDeformedArray * deformed, int index) { delete deformed; }
 
-	int getMasterBoneID() { return m_masterBoneID; }
 	int getBoneID(const char *name);
 protected:
 	void initBone();
@@ -106,7 +106,7 @@ protected:
 	bool m_initialized;
 	std::string m_texfilename;
 	int m_id;
-	int m_masterBoneID;
+
 };
 
 class cGrannyAnimation : public cGrannyFile

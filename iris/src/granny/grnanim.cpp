@@ -25,7 +25,7 @@
 
 using namespace std;
 
-BoneAnim::BoneAnim ()
+BoneAnim::BoneAnim() : id(0), length(0), numTranslates(0), numQuaternions(0), numUnknowns(0)
 {
 }
 
@@ -75,35 +75,34 @@ void BoneAnim::load (cGrannyStream * file, dword offset, dword baseOffset,
         unknownTimeline.push_back (fd.f);
       };
 
+	Point point;
+
   for (i = 0; i < numTranslates; i++)
       {
-        Point *point = new Point ();
         for (int x = 0; x < 3; x++)
             {
               fd.d = file->readDword ();
-              point->points[x] = fd.f;
+			point.points[x]=fd.f;
             };
-        translates.push_back (*point);
+		translates.push_back(point);
       };
   for (i = 0; i < numQuaternions; i++)
       {
-        Point *point = new Point ();
         for (int x = 0; x < 4; x++)
             {
               fd.d = file->readDword ();
-              point->points[x] = fd.f;
+			point.points[x]=fd.f;
             };
-        quaternions.push_back (*point);
+		quaternions.push_back(point);
       };
   for (i = 0; i < numUnknowns; i++)
       {
-        Point *point = new Point ();
         for (int x = 0; x < 3; x++)
             {
               fd.d = file->readDword ();
-              point->points[x] = fd.f;
+			point.points[x]=fd.f;
             };
-        unknowns.push_back (*point);
+		unknowns.push_back(point);
       };
   file->seekg (oldPos);
 }

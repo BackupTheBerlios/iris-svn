@@ -46,7 +46,7 @@ cGrannyTextureEntry::cGrannyTextureEntry (Texture * texture)
 
 cGrannyTextureEntry::~cGrannyTextureEntry ()
 {
-  if (m_ref_count > 0)
+  if (m_ref_count > 1)
       {
         pDebug.
           Log ("Freeing referenced Granny Texture (probably causes crash!!)",
@@ -64,12 +64,14 @@ int cGrannyTextureEntry::ref_count ()
 
 void cGrannyTextureEntry::inc_ref_count ()
 {
-  m_ref_count--;
+	//m_ref_count --;
+	m_ref_count++;
 }
 
 void cGrannyTextureEntry::dec_ref_count ()
 {
-  m_ref_count++;
+  //m_ref_count ++;
+  m_ref_count--;
   if (m_ref_count < 0)
       {
         pDebug.Log ("Granny Texture RefCount < 0", __FILE__, __LINE__,

@@ -39,6 +39,8 @@ Bones::Bones ()
 
 Bones::~Bones ()
 {
+	for_each(bones.begin(),bones.end(),my_delete<Bone*>);
+	bones.clear();
 }
 
 void Bones::load (cGrannyStream * file, dword boneOffset, dword baseOffset,

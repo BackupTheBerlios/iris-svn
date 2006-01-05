@@ -70,7 +70,7 @@ public:
 				delete cache[i];
 		}
 
-		delete cache;
+		delete [] cache; cache = NULL;
 
 		cachesize = elements;
 		cache = new C*[ elements ];
@@ -79,6 +79,7 @@ public:
 
 	Cache()
 	{
+		_autofree = false;
 		_maxsize = 1;
 
 		cachesize = 0;
@@ -95,9 +96,11 @@ public:
 			for( unsigned int i = 0; i < cachesize; ++i )
 				delete cache[i];
 		}
+		
+		delete [] cache; cache = NULL;
 	}
 
-	void setAutofree( bool data ) { _autofree = true; }
+	void setAutofree( bool autofree ) { _autofree = autofree; }
 	bool autofree() const { return _autofree; }
 
   void Clear ()

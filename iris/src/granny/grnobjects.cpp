@@ -60,6 +60,8 @@ Objects::Objects ()
 
 Objects::~Objects ()
 {
+	for_each(objects.begin(),objects.end(),my_delete<Object*>);
+	objects.clear();
 }
 
 //static dword objNum=1;

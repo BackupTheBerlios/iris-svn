@@ -39,7 +39,7 @@ cGrannyFile::cGrannyFile ()
 	left_hand_bone = -1;
 	right_hand_bone = -1;
 	color_array = NULL;
-	m_masterBoneID = -1;
+	master_bone = -1;
 }
 
 cGrannyFile::~cGrannyFile ()
@@ -66,6 +66,8 @@ bool isMasterName(const char *str)
 	return ismaster;
 }
 
+// assing bone name, find master bone 
+//  - bone.id -> bone.ojbptr -> bone.obj -> textid -> textchunk -> bone.name
 void cGrannyFile::initBone()
 {
 	if (!m_initialized) return;
@@ -76,30 +78,50 @@ void cGrannyFile::initBone()
 
 	dword lodNm = findString("__ObjectName");
 
-	m_masterBoneID = -1;
+	int temp_lhand_bone = -1, temp_rhand_bone = -1;
+	master_bone = left_hand_bone = right_hand_bone = -1;
 
 	for (int i = 0; i < bones.size(); i++) {
 		Bone* bone = bones[i];
-		// bonetie.boneObjPtr: bone.id 와 boneObj 를 연결
+		// bonetie.boneObjPtr: connect bone.id to boneObj
 		dword objptr = boneObjPtrs[bone->id];
-		// bonetie.boneObjects: bone.id 와 textchunk(bone name) 를 연결
+		// bonetie.boneObjects: connect bone.id to textchunk(bone name)
 		dword obj = boneObjects[objptr-1];
 		// objects.getValue(obj-1,key); objects[obj]->getValue(key);
 		dword textid = getValue(obj,lodNm);
+		// assign bone name
 		bone->name = findID(textid);
 
-		if (isMasterName(bone->name.c_str()) && m_masterBoneID < 0)
-			m_masterBoneID = bone->id;
+		const char *s = bone->name.c_str();
+		if (isMasterName(s) && master_bone == -1)
+			master_bone = bone->id;
+		else if (_stricmp(s, "CP_Grasp_Rhand") == 0)
+			right_hand_bone  = bone->id;
+		else if (_stricmp(s, "CP_Grasp_Lhand") == 0)
+			left_hand_bone  = bone->id;
+		else if (_stricmp(s, "Bip01 L Hand") == 0)
+			temp_lhand_bone = bone->id;
+		else if (_stricmp(s, "Bip01 R Hand") == 0)
+			temp_rhand_bone = bone->id;
 	}
+
+#if 1
+	// td anim, some aos anim(id 73) has not cp_grasp_ bone, we use hane bone.
+	if (!nConfig::aos || left_hand_bone  == -1) 
+		left_hand_bone  = temp_lhand_bone;
+	if (!nConfig::aos || right_hand_bone == -1) 
+		right_hand_bone = temp_rhand_bone;
+#endif
 }
 
 int cGrannyFile::getBoneID(const char *name)
 {
 	if (!m_initialized) return -1;
 
-	if (isMasterName(name)) return m_masterBoneID;
-
 	std::vector<Bone *> &bones = getBones().bones;
+
+	if (isMasterName(name)) 
+		return master_bone;
 
 	for (int i = 0; i < bones.size(); i++) {
 		Bone* bone = bones[i];
@@ -303,8 +325,6 @@ void calculateBoneRests (Bone * bone)
 	bone->curMatrix = matrix;
 	bone->curMatrix *= bone->matrix;
 
-	//bone->curQuaternion = bone->quaternion;
-	//bone->curTranslate = bone->translate;
 
 	vector < Bone * >::iterator ibone;
 	for (ibone = bone->children.begin ();
@@ -335,9 +355,7 @@ cDeformedArray *cGrannyFile::createDeformed (cGrannyFile * animation,
 {
 	cDeformedArray *deformed = NULL;
 
-	//Meshes &meshes = getMeshes();
 	Bones & bones = getBones ();
-	//Textures &textures = getTextures();
 	BoneTies & boneTies = getTies ();
 
 	glPushMatrix ();
@@ -535,6 +553,8 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
 			glEnable (GL_ALPHA_TEST);
 		glEnd ();
 
+		//glBindTexture( GL_TEXTURE_2D, 0 );
+
 		if (!animation)
 			delete deformed;
 	}
@@ -561,10 +581,8 @@ cGrannyAnimation::~cGrannyAnimation ()
 
 void cGrannyAnimation::Assign (cGrannyFile * model)
 {
-	if (!initialized() || !model->initialized())
+	if (!initialized() || !model || !model->initialized())
 		return;
-
-//	m_assignModel = model;
 
 	left_hand_bone = model->left_hand_bone;
 	right_hand_bone = model->right_hand_bone;
@@ -577,9 +595,6 @@ void cGrannyAnimation::Assign (cGrannyFile * model)
 	dword anmNm = findString("__ObjectName");
 	dword lodNm = model->findString("__ObjectName");
 
-	/*delete [] m_animBones;
-	m_animBones = new dword[100];
-	memset(m_animBones, 0xff, sizeof(dword)*100);*/
 	m_animBones.assign(model->getBones().bones.size(), (dword)-1);
 
 	// for each animation bone
@@ -600,56 +615,7 @@ void cGrannyAnimation::Assign (cGrannyFile * model)
 
 	m_length = object.getAnimLength();
 }
-/*
-void cGrannyAnimation::Assign (cGrannyFile * model)
-{
-	if (!initialized () || !model->initialized ())
-		return;
 
-	left_hand_bone = model->left_hand_bone;
-	right_hand_bone = model->right_hand_bone;
-
-	BoneTies & boneTies = getTies ();
-	BoneTies & boneLodTies = model->getTies ();
-	Animations & anims = getAnimations ();
-
-	vector < BoneAnim >::iterator ibn;
-	dword anmNm = findString ("__ObjectName");
-	dword lodNm = model->findString ("__ObjectName");
-
-	animBones = new dword[100];
-	for (int i = 0; i < 100; i++)
-		animBones[i] = (dword)-1;
-
-	dword abone = 0;
-	for (ibn = anims.bones.begin (); ibn != anims.bones.end (); ibn++, abone++)
-	{
-		dword boneId;
-		dword animId = ibn->id;
-		dword id = boneTies.boneObjects[animId - 1];
-		dword textId = getValue (id, anmNm);
-		std::string boneStr = findID (textId);
-
-		for (unsigned int j = 0; j < boneStr.length (); j++)
-			boneStr[j] = tolower (boneStr[j]);
-
-		if (boneStr.find ("mesh") != boneStr.npos
-			|| boneStr.find ("master") != boneStr.npos)
-			boneId = abone;
-		else
-		{
-			textId = model->findString (boneStr);
-			dword obj = model->findValue (lodNm, textId);
-			id = boneLodTies.findID (obj);
-			boneId = boneLodTies.findBone (id);
-		}
-
-		animBones[boneId] = abone;
-	}
-
-	m_length = object.getAnimLength ();
-}
-*/
 
 
 void cGrannyAnimation::getSkeleton (Bone * bone, float &curTime)
@@ -661,6 +627,7 @@ void cGrannyAnimation::getSkeleton (Bone * bone, float &curTime)
 	if (m_animBones.empty() || !bone)
 		return;
 
+#if 0
 	if ((left_hand_bone != -1) && ((int) bone->id == left_hand_bone))
 	{
 		glPushMatrix ();
@@ -680,6 +647,7 @@ void cGrannyAnimation::getSkeleton (Bone * bone, float &curTime)
 		glGetFloatv (GL_MODELVIEW_MATRIX, matrix_right_hand.matrix);
 		glPopMatrix ();
 	}
+#endif
 
 	rid = mid = 0;
 	if ((m_animBones[bone->id] == (dword)-1))
@@ -731,14 +699,16 @@ void cGrannyAnimation::getSkeleton (Bone * bone, float &curTime)
 
 		matrix.setTransform(q, t);
 
-//		bone->curQuaternion = q;
-	//	bone->curTranslate = t;
-
 		glMultMatrixf (matrix.matrix);
 		glGetFloatv (GL_MODELVIEW_MATRIX, matrix.matrix);
 		bone->curMatrix = matrix;
 		bone->curMatrix *= bone->matrix;
 
+		if ((left_hand_bone  != -1) && ((int) bone->id == left_hand_bone))
+			matrix_left_hand = matrix;
+
+		if ((right_hand_bone != -1) && ((int) bone->id == right_hand_bone))
+			matrix_right_hand = matrix;
 	}
 
 
@@ -782,7 +752,7 @@ cDeformedArray::cDeformedArray (int size)
 
 cDeformedArray::~cDeformedArray ()
 {
-	delete (m_data);
+	delete [] m_data;
 }
 
 

@@ -86,8 +86,9 @@ void cGrannyModelTD::Render (int animid, int tick, float &curtime,
       {
         model = new cGrannyFile ();
         model->load (m_filename, basepath);
-        model->left_hand_bone = left_hand_bone;
-        model->right_hand_bone = right_hand_bone;
+        //grannyfile::initbone() do search hand bone.
+        //model->left_hand_bone = left_hand_bone;
+        //model->right_hand_bone = right_hand_bone;
 
 //SiENcE
 //printf ("[lefthandbone_in %d]\n", left_hand_bone);
@@ -164,6 +165,8 @@ int cGrannyModelTD::Age (int tick)
 
 void cGrannyModelTD::Free ()
 {
+	delete default_animation; default_animation = NULL;
+
   map < int, cGrannyAnimation * >::iterator iter;
   for (iter = animations.begin (); iter != animations.end (); iter++)
     delete iter->second;

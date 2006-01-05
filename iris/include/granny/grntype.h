@@ -19,6 +19,7 @@
 #ifndef __GRNTYPE_H__
 #define __GRNTYPE_H__
 
+#include <algorithm>
 #include <memory.h>
 #include <math.h>
 
@@ -58,5 +59,8 @@ public:
 	~gPolygon() {}
 	dword nodes[6];
 };
+
+template <class T>
+void my_delete(T& v) { delete v; v = NULL; }
 
 #endif

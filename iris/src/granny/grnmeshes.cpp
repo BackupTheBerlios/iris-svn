@@ -108,13 +108,13 @@ void Mesh::loadPoints (cGrannyStream * file)
   file->seekg (pointOffset);
   for (unsigned int i = 0; i < (normalOffset - pointOffset) / 12; i++)
       {
-        Point *point = new Point ();
+		Point point;
         for (int x = 0; x < 3; x++)
             {
               fd.d = file->readDword ();
-              point->points[x] = fd.f;
+			point.points[x]=fd.f;
             }
-        points.push_back (*point);
+        points.push_back (point);
       }
   file->seekg (oldPos);
 }
@@ -132,13 +132,13 @@ void Mesh::loadNormals (cGrannyStream * file)
   file->seekg (normalOffset);
   for (unsigned int i = 0; i < (textureOffset - normalOffset) / 12; i++)
       {
-        Point *point = new Point ();
+		Point point;
         for (int x = 0; x < 3; x++)
             {
               fd.d = file->readDword ();
-              point->points[x] = fd.f;
+			point.points[x]=fd.f;
             }
-        normals.push_back (*point);
+        normals.push_back (point);
       }
   file->seekg (oldPos);
 }
@@ -160,14 +160,14 @@ void Mesh::loadTextureMap (cGrannyStream * file)
                                           //unknown
   for (unsigned int i = 0; i < (weightOffset - (textureOffset + 4)) / 12; i++)
       {
-        Point *point = new Point ();
+		Point point;
         for (int x = 0; x < 2; x++)
             {
               fd.d = file->readDword ();
-              point->points[x] = fd.f;
+			point.points[x]=fd.f;
             }
         fd.d = file->readDword ();  //unknown
-        textureMap.push_back (*point);
+        textureMap.push_back (point);
       }
   file->seekg (oldPos);
 }
@@ -191,14 +191,14 @@ void Mesh::loadWeights (cGrannyStream * file)
   for (unsigned int i = 0; i < size; i++)
       {
         dword numBones = file->readDword ();
-        BoneWeight *boneWeight = new BoneWeight ();
+		BoneWeight boneWeight;
         for (unsigned int x = 0; x < numBones; x++)
             {
               dword bone = file->readDword ();
               fd.d = file->readDword ();
-              boneWeight->addWeight (bone, fd.f);
+			boneWeight.addWeight(bone,fd.f);
             }
-        weights.push_back (*boneWeight);
+		weights.push_back(boneWeight);
       }
   file->seekg (oldPos);
 }
@@ -211,10 +211,10 @@ void Mesh::loadPolygons (cGrannyStream * file)
   file->seekg (polygonOffset);
   for (unsigned int i = 0; i < (meshIDOffset - polygonOffset) / 24; i++)
       {
-        gPolygon *polygon = new gPolygon ();
+		gPolygon polygon;
         for (int x = 0; x < 6; x++)
-          polygon->nodes[x] = file->readDword ();
-        polygons.push_back (*polygon);
+			polygon.nodes[x]=file->readDword();
+		polygons.push_back(polygon);
       }
   file->seekg (oldPos);
 }
@@ -237,13 +237,12 @@ void Meshes::load (cGrannyStream * file, dword meshOffset, dword baseOffset,
         dword chunk = file->readDword ();
         dword offset = file->readDword ();
         dword children = file->readDword ();
-        Mesh *mesh;
+		Mesh mesh;
         switch (chunk)
             {
             case 0xCA5E0601:
-              mesh = new Mesh ();
-              mesh->load (file, offset, baseOffset, children);
-              meshes.push_back (*mesh);
+				mesh.load(file,offset,baseOffset,children);
+				meshes.push_back(mesh);
               break;
             default:
               hex (cerr);

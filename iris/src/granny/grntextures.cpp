@@ -72,24 +72,24 @@ void Textures::load (cGrannyStream * file, dword tOffset, dword baseOffset,
                   {
                     for (x = 0; x < numPolys; x++)
                         {
-                          gPolygon *polygon = new gPolygon ();
-                          polygon->nodes[0] = file->readDword ();
+                          gPolygon polygon;
+						  polygon.nodes[0]=file->readDword();
                           for (int p = 1; p < 4; p++)
                               {
                                 file->readDword ();
-                                polygon->nodes[p] = file->readDword ();
+								polygon.nodes[p]=file->readDword();
                               }
-                          polygons.push_back (*polygon);
+                          polygons.push_back (polygon);
                         }
 
                   }
               else
                 for (x = 0; x < numPolys; x++)
                     {
-                      gPolygon *polygon = new gPolygon ();
+					gPolygon polygon;
                       for (int p = 0; p < 4; p++)
-                        polygon->nodes[p] = file->readDword ();
-                      polygons.push_back (*polygon);
+						polygon.nodes[p]=file->readDword();
+					polygons.push_back(polygon);
                     }
 
               file->seekg (oldPos);

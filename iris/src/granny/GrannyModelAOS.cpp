@@ -39,6 +39,8 @@ cGrannyModelAOS::cGrannyModelAOS (std::string basepath,
   left_hand_bone = -1;
   right_hand_bone = -1;
   hand = HAND_NONE;
+  
+  bodyparts.assign(13,0);
 }
 
 cGrannyModelAOS::~cGrannyModelAOS ()
@@ -59,11 +61,13 @@ void cGrannyModelAOS::Render (int animid, int tick, float &curtime,
 
         assert (iter->second);
 
-        if (bodyparts.size () >= (unsigned int) iter->first);
-        if (bodyparts.at (iter->first) == 0)
-          iter->second->Render (animid, tick, curtime, left_matrix,
-                                right_matrix, character_light, r, g, b, alpha,
-                                is_corpse);
+		// id 3 is hands part, we need hands matrix for weapon attachment.
+		int id = iter->first;
+		if (bodyparts.size () > (unsigned int) id)
+		if (bodyparts.at (id) == 0)
+			iter->second->Render(animid, tick, curtime, 
+				id==3 ? left_matrix: NULL, id==3 ? right_matrix : NULL, 
+				character_light, r, g, b, alpha, is_corpse);
       }
 }
 
@@ -91,6 +95,9 @@ void cGrannyModelAOS::AddModel (int id, std::string filename)
 {
   cGrannyModelTD *model =
     new cGrannyModelTD (filename, basepath, defaultanimname);
+
+	if (id == 3) // HANDS Part
+		model->SetHand(hand);
   models.insert (make_pair (id, model));
 }
 

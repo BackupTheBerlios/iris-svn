@@ -85,7 +85,7 @@ void TextureInfos::load (cGrannyStream * file, dword texOffset,
                          dword baseOffset, dword peers)
 {
   //dword oldPos;
-  TextureInfo *texture;
+	TextureInfo texture;
   for (unsigned int i = 0; i < peers;)
       {
         dword chunk = file->readDword ();
@@ -94,9 +94,9 @@ void TextureInfos::load (cGrannyStream * file, dword texOffset,
         switch (chunk)
             {
             case 0xCA5E0301:   //Texture
-              texture = new TextureInfo ();
-              texture->load (file, offset, baseOffset, children);
-              textures.push_back (*texture);
+				
+				texture.load(file,offset,baseOffset,children);
+				textures.push_back(texture);
               break;
             default:
               hex (cerr);

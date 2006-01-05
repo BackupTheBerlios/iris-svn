@@ -29,6 +29,7 @@
 #include <iostream>
 #include <string_utils.h>
 
+
 using namespace std;
 
 cStitchinLoader pStitchinLoader;
@@ -37,9 +38,10 @@ cModelEntry::cModelEntry (int id, int *clist, std::vector < int >rlist,
                           std::map < int, int >replist)
 {
   m_id = id;
-  coverlist = new int[13];
-  for (int i = 0; i < 13; i++)
-    coverlist[i] = clist[i];
+//	coverlist = new int[13];
+//	for (int i = 0; i < 13; i++)
+//		coverlist[i] = clist[i];
+	memcpy(coverlist, clist, sizeof(coverlist));
   removelist = rlist;
   replacelist = replist;
 }
@@ -183,6 +185,13 @@ void cStitchinLoader::Init (std::string modelfilename, std::string stitchindeffi
             }
         else if ((firstword == "#") && (splitline.at (1) == "enddef"))
             {
+			// HARKON: delete duplicate entry
+			std::map <int, cModelEntry *>::iterator iter = models.find(actual_id);
+			if (iter != models.end()) 
+			{
+				delete iter->second;
+				models.erase(iter);
+			}
 
               models.
                 insert (make_pair
