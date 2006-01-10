@@ -307,10 +307,10 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
 {
   cDynamicObject *result = Get (id);
   // much more better with that check!
-  if(result && result->x == x && result->y == y && result->z == z)
-     return result;
+  if(!(result && result->x == x && result->y == y && result->z == z))
+    result = Add (id);
 
-  result = Add (id);
+  //result = Add (id);
   assert (result);
   result->id = id;
 

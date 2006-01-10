@@ -109,6 +109,86 @@ int HandleGumpDialogEvent (Control * contr)
   return -1;
 }
 
+Uint16 CheckIfBoat(Uint16 modelID)
+{
+ Uint16 new_modid; 
+ if((modelID >= 0x4000) && (modelID < 0x4022))
+ {
+  pDebug.Log("BOAT!!!!!");
+  switch(modelID)
+  {
+   case 0x4000: new_modid = 16093; break;
+   case 0x4001: new_modid = 15962; break;
+   case 0x4002: new_modid = 16098; break;
+   case 0x4003: new_modid = 15980; break;
+   default: new_modid = modelID;
+  }
+  return new_modid;
+ }
+ else
+ {return modelID;}
+}
+
+
+bool IsInBoat(int posx, int posy)
+{
+ dynamiclist_t * dynamics = pDynamicObjectList.GetList();
+  	dynamiclist_t::iterator iter;
+
+  	for (iter = dynamics->begin(); iter != dynamics->end(); iter++) 
+    {
+     cDynamicObject * object = iter->second;
+      switch (object->model)
+         {
+          case 16093:
+          case 16098: 
+             if(((posx >= object->x - 2) && (posx <= object->x + 2)) && ((posy >= object->y - 3) && (posy <= object->y + 3)) )      
+              {
+               return true;
+              }
+                   break;
+          case 15962:
+          case 15980: 
+             if(((posx >= object->x - 3) && (posx <= object->x + 3)) && ((posy >= object->y - 2) && (posy <= object->y + 2)) )      
+              {
+              return true;
+              }     
+                   break;
+         }
+    }
+    return false;
+}
+
+Sint8 CheckBoatZ(int posx, int posy)
+{
+ dynamiclist_t * dynamics = pDynamicObjectList.GetList();
+  	dynamiclist_t::iterator iter;
+
+  	for (iter = dynamics->begin(); iter != dynamics->end(); iter++) 
+    {
+     cDynamicObject * object = iter->second;
+      switch (object->model)
+         {
+          case 16093:
+          case 16098: 
+             if(((posx >= object->x - 2) && (posx <= object->x + 2)) && ((posy >= object->y - 3) && (posy <= object->y + 3)) )      
+              {
+               return object->z;
+              }
+                   break;
+          case 15962:
+          case 15980: 
+             if(((posx >= object->x - 3) && (posx <= object->x + 3)) && ((posy >= object->y - 2) && (posy <= object->y + 2)) )      
+              {
+              return object->z;
+              }     
+                   break;
+         }
+    }
+    return 0;
+}
+
+
 
 Uint16 GetHighlightColor (Uint8 flag)
 {
@@ -1163,6 +1243,7 @@ void cClient::Act_Put (cPacket * packet)
   packet->SetPosition (3);
   Uint32 id = packet->GetDword ();
   Uint16 model = packet->GetWord ();
+  model = CheckIfBoat(model);
   Uint16 itemcount = 0;
   if (id & 0x80000000)
     itemcount = packet->GetWord ();
@@ -1194,7 +1275,7 @@ void cClient::Act_Put (cPacket * packet)
               character->setAsCorpse ();
       }
 
-     if (model>=MULTI_ID && pMultisLoader->MultiExists(model)
+     if ((model>=MULTI_ID + 100) && pMultisLoader->MultiExists(model)
 			 && !pDynamicObjectList.Get(id))
      {
         stMultiList* MultiList = pMultisLoader->GetMulti(model);
@@ -1226,10 +1307,16 @@ void cClient::Act_View (cPacket * packet)
                                (Uint16) packet->packet.View.m_y,
                                (Sint8) packet->packet.View.m_z,
                                (Uint16) packet->packet.View.m_bodyType);
-        character->setDirection ((Uint8) packet->packet.View.m_dir);
-        character->setPosition ((Uint16) packet->packet.View.m_x,
+        //character->setDirection ((Uint8) packet->packet.View.m_dir);
+        character->RotateTo((Uint8) packet->packet.View.m_dir);
+        if(IsInBoat(packet->packet.View.m_x, packet->packet.View.m_y))
+         character->setPosition ((Uint16) packet->packet.View.m_x,
                                 (Uint16) packet->packet.View.m_y,
-                                (Sint8) packet->packet.View.m_z);
+                                CheckBoatZ(packet->packet.View.m_x, packet->packet.View.m_y) + 10);
+        else
+         character->setPosition ((Uint16) packet->packet.View.m_x,
+                                (Uint16) packet->packet.View.m_y,
+                                (Sint8) packet->packet.View.m_z);                        
 
         walk_stack.clear ();
         walk_sequence = 0;
@@ -2888,6 +2975,8 @@ bool cClient::Send_Walk (Uint8 direction)
       }
 
   int new_z = GetZPositionForWalk (entry.x, entry.y, entry.z);
+  if(IsInBoat(entry.x, entry.y))
+   new_z=CheckBoatZ(entry.x, entry.y) + 10;
   if (new_z == 255)
     return false;
 

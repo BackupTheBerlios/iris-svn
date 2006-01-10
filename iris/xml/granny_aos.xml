@@ -688,7 +688,12 @@
 
 		<ANIMATION>
 			<FILE>Models/Humans/H_female_CombatAdvance_2H_01.grn</FILE>
-			<TYPE>walkinattackposition</TYPE>
+			<TYPE>walkinattackpositiontwohanded</TYPE>
+		</ANIMATION>
+
+		<ANIMATION>
+			<FILE>Models/Humans/H_feMale_CombatAdvance_1H_01.grn</FILE>
+			<TYPE>walkinattackpositiononehanded</TYPE>
 		</ANIMATION>
 
 		<ANIMATION>
