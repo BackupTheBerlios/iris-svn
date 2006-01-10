@@ -2,6 +2,7 @@
 Changes by Artix & SiENcE
 	-Boat handling added for POL (not RunUO ready yet, because RunUO uses speech.mul)
 	-Female Granny Animations fixed (granny_aos.xml)
+        -bugfix strdup, strcasecmp (Client.h, grannyfile.cpp)
 
 6.10.2006
 Changes by SiENcE
