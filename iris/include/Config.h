@@ -20,6 +20,9 @@
 #include "include.h"
 #include <string>
 
+#define _stricmp strcasecmp
+#define _strdup strdup
+
 namespace	nConfig
 {
         extern std::string version;

@@ -53,9 +53,20 @@ cGrannyFile::~cGrannyFile ()
 		free (color_array);
 }
 
+char *strlower(char *s) 
+{ 
+int offset = ((int)'A')-((int)'a'); 
+for(int i=0; s[i]; i++) { 
+if( (s[i]>='A') && (s[i]<='Z') ) 
+s[i] -= offset; 
+} 
+return s; 
+}
+
 bool isMasterName(const char *str)
 {
-	char *s = _strlwr(_strdup(str));
+//	char *s = _strlwr(_strdup(str));
+    char *s = strlower(strdup(str)); 
 	bool ismaster = false;
 
 	if (strstr(s, "master") || strstr(s, "mesh"))	
