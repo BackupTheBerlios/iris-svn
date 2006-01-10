@@ -1,3 +1,19 @@
+9.10.2006
+Changes by Artix & SiENcE
+	-Boat handling added for POL (not RunUO ready yet, because RunUO uses speech.mul)
+	-Female Granny Animations fixed (granny_aos.xml)
+
+6.10.2006
+Changes by SiENcE
+	-Map-Fogfix
+	-Map-Networkpacket added to Client.cpp
+
+6.10.2006
+Changes by Harkon & SiENcE
+	-some Granny Animations bugfixed
+	-Weapon on the ground - bugfixed
+	-Several Memory leaks bugfixed
+
 24.10.2005:
 Changes by Artix & SiENcE
 	-Particles for some Spells and Statics added
