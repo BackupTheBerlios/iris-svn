@@ -20,8 +20,8 @@
  *
  *****/
 
-#ifndef __CLILOC__LOADER__
-#define __CLILOC__LOADER__
+#ifndef __SPEECH__LOADER__
+#define __SPEECH__LOADER__
 
 #include <iostream>
 
@@ -39,22 +39,25 @@
 
 using namespace std;
 
-class cClilocLoader
+typedef std::map < std::string, Uint16> speech_language;
+
+class cSpeechLoader
 {
   public:
-      cClilocLoader ();
-      ~cClilocLoader();
+      cSpeechLoader ();
+      ~cSpeechLoader();
 
       void Init (std::string path);
       void DeInit ();
       
-      std::string GetMessage(int id);
-      std::string GetMessageWithArguments(int id, int args_num, vector<std::string> &args);
+      Uint16 GetID(std::string keyword);
+      std::vector <Uint16> GetIDs(std::string keyword);
+      
   private:
-      std::map <int, std::string> cliloc_messages;
-	  bool load(std::string filename);
+      std::map < std::string, Uint16> m_keywords;
+      std::vector<speech_language> m_languages;
 };
 
-extern cClilocLoader pClilocLoader;
+extern cSpeechLoader pSpeechLoader;
 
 #endif

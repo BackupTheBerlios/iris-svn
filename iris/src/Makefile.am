@@ -15,6 +15,7 @@ Characters.cpp \
 Checkbox.cpp \
 Client.cpp\
 ClilocLoader.cpp \
+SpeechLoader.cpp \
 Config.cpp \
 Container.cpp \
 Control.cpp \

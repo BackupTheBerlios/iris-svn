@@ -49,6 +49,7 @@
 #include "loaders/VerdataLoader.h"
 #include "loaders/MultisLoader.h"
 #include "loaders/MapInfo.h"
+#include "loaders/SpeechLoader.h"
 
 #include "renderer/SDLScreen.h"
 #include "renderer/TextureBuffer.h"
@@ -305,6 +306,10 @@ void Game::InitRenderer (std::string mulpath)
 
     pDebug.Log ("    | -> multis");
     pMultisLoader = new cMultisLoader (mulpath + "multi.mul", mulpath + "multi.idx");
+    
+    pDebug.Log("     | -> speech");
+    pSpeechLoader.Init(mulpath);
+    std::cout <<"Bank word: " << pSpeechLoader.GetID("*bank*")<<std::endl;
     
     pDebug.Log("    | -> macros");
     pMacroLoader = new MacroLoader();

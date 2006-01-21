@@ -874,7 +874,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
 
                                       int *covers = modelentry->GetCovers ();
 
-
+/*
                                       for (int c = 0; c < 13; c++)
                                           {
                                             if (covers[c] == 1)
@@ -882,6 +882,14 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                                   bodyparts[c] = 1;
                                                 }
                                           }
+*/
+//SiENcE
+ for (int c = 0; c < 13; c++)
+{
+      bodyparts[c] = covers[c];
+}
+
+//SiENcE
 
                                       std::vector < int >rlist =
                                         modelentry->GetRemoveList ();

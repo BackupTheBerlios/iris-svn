@@ -1,7 +1,7 @@
 [Project]
 FileName=Ultima Iris.dev
 Name=Ultima Iris
-UnitCount=133
+UnitCount=134
 Type=1
 Ver=1
 ObjFiles=
@@ -1013,7 +1013,7 @@ BuildCmd=
 Major=0
 Minor=6
 Release=5
-Build=356
+Build=361
 LanguageID=1031
 CharsetID=1252
 CompanyName=Iris Team
@@ -1842,6 +1842,16 @@ BuildCmd=
 
 [Unit50]
 FileName=..\src\loaders\PaperdollBuilder.cpp
+CompileCpp=1
+Folder=loaders
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit134]
+FileName=..\src\loaders\SpeechLoader.cpp
 CompileCpp=1
 Folder=loaders
 Compile=1

@@ -34,7 +34,7 @@ Open=0
 Top=0
 CursorCol=1
 CursorRow=50
-TopLine=50
+TopLine=38
 LeftChar=1
 [Editor_5]
 Open=0
@@ -397,9 +397,9 @@ LeftChar=1
 
 [Editor_62]
 Open=0
-Top=0CursorCol=15
-CursorRow=2496
-TopLine=2500
+Top=0CursorCol=1
+CursorRow=3070
+TopLine=3037
 LeftChar=1
 
 [Editor_63]
@@ -543,9 +543,9 @@ LeftChar=1
 
 [Editor_84]
 Open=0
-Top=0CursorCol=38
-CursorRow=184
-TopLine=166
+Top=0CursorCol=3
+CursorRow=885
+TopLine=865
 LeftChar=1
 
 [Editor_85]

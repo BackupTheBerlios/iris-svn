@@ -1165,6 +1165,9 @@ imm32.lib smpeg.lib"
 				RelativePath=".\src\loaders\SoundLoader.cpp">
 			</File>
 			<File
+				RelativePath=".\src\loaders\SpeechLoader.cpp">
+			</File>
+			<File
 				RelativePath=".\src\loaders\StaticModelLoader.cpp">
 			</File>
 			<File

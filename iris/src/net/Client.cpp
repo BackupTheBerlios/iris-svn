@@ -48,6 +48,7 @@
 
 #include "loaders/TileDataLoader.h"
 #include "loaders/MultisLoader.h"
+#include "loaders/SpeechLoader.h"
 #include "renderer/3D/MapBlock3D.h"
 #include "renderer/3D/MapBuffer3D.h"
 #include "renderer/Renderer.h"
@@ -2322,6 +2323,7 @@ Send Gump Menu Dialog (Variable # of bytes)
   Uint16 txt_lines = packet->GetWord ();
   vector < string > texts_vector (txt_lines);
 
+/*
   Uint16 line_len = 0;
   for (int i = 0; i < txt_lines; i++)
       {
@@ -2341,6 +2343,30 @@ Send Gump Menu Dialog (Variable # of bytes)
         else
           texts_vector[i] = string(" ");
       }
+*/
+ Uint16 line_len = 0;
+ for (int i = 0; i < txt_lines; i++)
+ {
+  line_len = packet->GetWord ();    //get length of line
+ 
+  if(line_len>0)
+  {
+   char *line = new char[line_len * 2]; 
+   packet->GetData (line, line_len * 2);    
+   //HARKON: bug fixed - ansi len : line_len*2, unicode len: line_len
+   //cUnicode unistring((NCHAR*) line,line_len * 2); 
+   cUnicode unistring((NCHAR*) line,line_len);  
+   
+ 
+  if(strlen(unistring.m_charBuf) > 0)
+    texts_vector[i] = string(unistring.m_charBuf); 
+   else
+    texts_vector[i] = string(" ");
+   delete[]line;
+  }
+  else
+   texts_vector[i] = string(" ");
+ }
 
   Container *dialog = new Container ();
 
@@ -2794,21 +2820,21 @@ void cClient::Act_SubCommands (cPacket * packet)
           Uint32 listID = packet->GetDword ();
           cCharacter *mob = NULL;
           cDynamicObject *obj = NULL;
-           mob = pCharacterList.Get (objserial);
-           obj = pDynamicObjectList.Get (objserial);
+          mob = pCharacterList.Get (objserial);
+          obj = pDynamicObjectList.Get (objserial);
 
           bool found = false;
-             if(mob)
-             {
-             if(listID == mob->AOSTooltipID())
-             return;
-             }
+          if(mob)
+          {
+           if(listID == mob->AOSTooltipID())
+           return;
+          }
 
-             if(obj)
-             {
-             if(listID == obj->AOSTooltipID())
-             return;
-             } 
+          if(obj)
+          {
+           if(listID == obj->AOSTooltipID())
+           return;
+          } 
 
           cPacket pck;
           pck.AddByte (0xBf);
@@ -2817,7 +2843,20 @@ void cClient::Act_SubCommands (cPacket * packet)
           pck.AddDword (objserial);
           Send (&pck);
           break;
+        } 
+        //Harkon's packet addition
+        case 0x22:
+        {
+             //Damage Packet
+             packet->GetByte();  // 1
+             Uint32 id = packet->GetDword(); // id
+             Uint8 damage = packet->GetByte();  // damage amount
+             //printf("id:0x%x, damage: %d\n", id, damage);
+             char buf[10];
+             callback_OnSpeech(itoa(damage,buf,10), "", id, 0x35);
+             break;
         }
+
       }
 }
 
@@ -3003,6 +3042,7 @@ bool cClient::Send_Walk (Uint8 direction)
 
 }
 
+/*
 void cClient::Send_Speech (std::string text, Uint8 mode)
 {
   cPacket packet;
@@ -3016,7 +3056,90 @@ void cClient::Send_Speech (std::string text, Uint8 mode)
   packet.AddWord (3);
   packet.AddData ((void *) text.c_str (), text.size ());
   Send (&packet.packet, text.size () + 9);
+}
+*/
 
+
+void cClient::Send_Speech (std::string text, Uint8 mode)
+{
+ 
+  std::vector<Uint16> keywords;
+  
+
+  Uint16 count = 0;
+  
+  keywords=pSpeechLoader.GetIDs(text);
+  count = keywords.size();
+  //std::cout << "KeyWord Count: " << count << std::endl;
+  cPacket packet;
+
+  if(count>0){
+              
+  int keyw_size=2;
+  for(int k=0;k<count;k++)
+  {
+   if((k&1)==0)
+    keyw_size+=1;
+   else                        
+    keyw_size+=2;
+  }
+  
+  packet.AddByte(0xAD);
+  packet.AddWord(12+ keyw_size + text.size() + 1);
+  packet.AddByte(count>0?0xC0:0);
+  packet.AddWord(nConfig::speech_hue);
+  packet.AddWord(0);
+  packet.AddDword(0x49544100);
+
+
+
+ 
+  packet.AddWord((count << 4) | ((keywords.at(0) & 0xF000) >> 8));
+  for(int i = 0; i < count; i++)
+  {
+ 
+
+   if((i & 1)==0){
+    Uint8 word =  (Uint8) keywords.at(i);    
+    packet.AddByte(word);
+   } 
+   else 
+   {
+    Uint16 nextword;    
+    
+    if(i==count-1)
+     nextword=0;
+    else
+     nextword= keywords.at(i+1); 
+     
+    Uint16 word = keywords.at(i);
+    word <<= 4;
+    word |= (nextword  & 0xF000);
+     packet.AddWord(word);
+   }
+   
+}
+
+
+packet.AddData((void*) text.c_str(), text.size());
+packet.AddByte(0);
+
+Send(&packet);  
+ }
+ else{
+   
+  //cPacket packet;
+  packet.Clear ();
+  packet.FillPacket (PCK_Talk);
+  packet.SetLength (1);
+  packet.AddWord (text.size () + 9);
+  packet.AddByte (mode);
+  //packet.AddWord(100);
+  packet.AddWord (nConfig::speech_hue);
+  packet.AddWord (3);
+  packet.AddData ((void *) text.c_str (), text.size ());
+  Send (&packet.packet, text.size () + 9);
+ }
 }
 
 
