@@ -1,5 +1,5 @@
 //
-// File: ClilocLoader.cpp
+// File: SpeechLoader.cpp
 // Created by: ArT-iX ArT-iX@libero.it
 // 12.06.2005 modified by SiENcE
 //            -added support for all Cliloc Strings for non-english Languages 
