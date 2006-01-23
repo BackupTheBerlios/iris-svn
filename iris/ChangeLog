@@ -1,4 +1,19 @@
-9.10.2006
+23.10.2006
+Changes by SiENcE
+	-SpeechLoader.cpp header changed 
+
+21.10.2006
+Changes by Artix & SiENcE
+	-Speech.mul support added (SpeechLoader.cpp)
+	-boat handling works now also for RunUO (Artix)
+	-Damage Info-Paket added (Harkon)
+	-minor Gump bugfixes
+
+11.10.2006
+Changes by SiENcE
+	-SDL bug fixed
+
+10.10.2006
 Changes by Artix & SiENcE
 	-Boat handling added for POL (not RunUO ready yet, because RunUO uses speech.mul)
 	-Female Granny Animations fixed (granny_aos.xml)
