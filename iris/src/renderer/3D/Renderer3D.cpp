@@ -849,14 +849,13 @@ void Renderer3D::RenderCharacters (bool do_culling)
                     std::vector < int >removelist;
                     std::map < int, int >replacelist;
                     std::map < int, int >::iterator iter;
+
                     if ((nConfig::aos)
                         && (character->body () == 400
                             || character->body () == 401))
                         {
 
-                          std::vector < int >bodyparts;
-                          for (int bp = 0; bp < 13; bp++)
-                            bodyparts.push_back (0);
+                          std::vector < int >bodyparts(13,0);
 
                           for (int layer = 0; layer < 25; layer++)
                               {
@@ -874,30 +873,20 @@ void Renderer3D::RenderCharacters (bool do_culling)
 
                                       int *covers = modelentry->GetCovers ();
 
-/*
                                       for (int c = 0; c < 13; c++)
-                                          {
-                                            if (covers[c] == 1)
-                                                {
-                                                  bodyparts[c] = 1;
-                                                }
-                                          }
-*/
-//SiENcE
- for (int c = 0; c < 13; c++)
-{
-      bodyparts[c] = covers[c];
-}
-
-//SiENcE
+                                      {
+                                       if (covers[c] == 1)
+                                       {
+                                        bodyparts[c] = 1;
+                                       }
+                                      }
 
                                       std::vector < int >rlist =
                                         modelentry->GetRemoveList ();
 
                                       for (unsigned int r = 0; r < rlist.size (); r++)
                                           {
-                                            removelist.push_back (rlist.
-                                                                  at (r));
+                                            removelist.push_back (rlist.at(r));
                                           }
                                       std::map < int, int >replist =
                                         modelentry->GetReplaceList ();
@@ -911,7 +900,12 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                           }
                                     }
                               }
-                          pGrannyLoader->Render (body, anim_type, curtime,
+
+                              //Harkon: 
+                              //always render hands for recal hands matrix
+                              bodyparts[3] = 0;
+
+                              pGrannyLoader->Render (body, anim_type, curtime,
                                                  light, colr, colg, colb,
                                                  alpha, bodyparts,
                                                  &left_matrix, &right_matrix,
@@ -935,8 +929,6 @@ void Renderer3D::RenderCharacters (bool do_culling)
                     glMultMatrixf (left_matrix.matrix);
                     glGetFloatv (GL_MODELVIEW_MATRIX, left_matrix.matrix);
                     glPopMatrix ();
-
-
 
                     for (int layer = 0; layer < 25; layer++)
                         {
