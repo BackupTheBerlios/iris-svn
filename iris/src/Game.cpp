@@ -295,9 +295,9 @@ void Game::InitRenderer (std::string mulpath)
         
     if(nConfig::clilocs)  {
         pDebug.Log ("    | -> clilocs");
-
-        pClilocLoader.Init (mulpath);
-        }
+        if (!pClilocLoader.Init (mulpath))
+           pDebug.Log ("Clilocs loader Error");
+    }
   
     
 

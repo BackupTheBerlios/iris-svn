@@ -87,10 +87,9 @@ int main (int argc, char **args)
           pSoundMix->Init ();
 
           pMusicListLoader = new cMusicListLoader ();
+
           if (nConfig::music)
-              {
-                pSoundMix->PlayMusic (8, nConfig::mp3, nConfig::musicvolume);     //
-              }
+                pSoundMix->PlayMusic (8, nConfig::mp3, nConfig::musicvolume);
         }
     else
       pSoundMix = NULL;
@@ -101,10 +100,9 @@ int main (int argc, char **args)
     pCSLHandler.InitAPI ();
 
     std::string script_path = nConfig::scriptpath;
+
     if (script_path == "root")
-        {
           script_path = "script/iris.csl";
-        }
     else
       script_path = "script/" + script_path + "/iris.csl";
 

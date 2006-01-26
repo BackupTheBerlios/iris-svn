@@ -405,12 +405,14 @@
 		<SCALE_Z>0.00035</SCALE_Z>
 	</MODEL>										
  	<!-- MondainSteed01 -->
+	<!--
 	<MODEL>
 		<ID>284</ID>
 		<SCALE_X>0.035</SCALE_X>
 		<SCALE_Y>0.035</SCALE_Y>
 		<SCALE_Z>0.035</SCALE_Z>
 	</MODEL>
+	-->
  	<!-- ReaperForm -->
 	<MODEL>
 		<ID>285</ID>

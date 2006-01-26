@@ -5,11 +5,11 @@
 #define ULTIMA_IRIS_PRIVATE_H
 
 /* VERSION DEFINITIONS */
-#define VER_STRING	"0.6.5.361"
+#define VER_STRING	"0.6.5.390"
 #define VER_MAJOR	0
 #define VER_MINOR	6
 #define VER_RELEASE	5
-#define VER_BUILD	361
+#define VER_BUILD	390
 #define COMPANY_NAME	"Iris Team"
 #define FILE_VERSION	""
 #define FILE_DESCRIPTION	"Developed using the Dev-C++ IDE"

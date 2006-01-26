@@ -86,84 +86,100 @@ cClilocLoader::~cClilocLoader ()
 }
 
 
-bool cClilocLoader::load(std::string filename)
+bool cClilocLoader::Init(std::string path)
 {
-	std::ifstream clilocfile;
+     std::ifstream clilocfile;
+     
+     std::string default_language = "enu";
+     std::string filename = path + "cliloc." + default_language;
+     
+     std::string language = nConfig::cliloc_lang;
+     std::string filename_custom = path + "cliloc." + language;
+     
+     clilocfile.open (filename.c_str (), std::ios::in | std::ios::binary);
+     
+     if (!clilocfile.is_open ())
+     {
+      pDebug.Log ("Warning: Couldn't open cliloc file");
+      clilocfile.close ();
+      nConfig::clilocs = 0;
+      return false;
+     }
+     
+     clilocfile.seekg (0, std::ios::end);
+     int filelen = clilocfile.tellg ();
+     clilocfile.seekg (0, std::ios::beg);
+     
+     int index;
+     Uint16 msglen;
+     std::string message = "";
+     char unknown[6];
+     char buf[1000];
+     
+     std::vector<byte> msg;
+     std::vector< Unicode2Bytes > output;
+     
+     clilocfile.read (unknown, 6);
+     
+     while (clilocfile.tellg () < filelen)
+     {
+      clilocfile.read ((char *) &index, 4);
+      clilocfile.read (unknown, 1);
+      clilocfile.read ((char *) &msglen, 2);
 
-	clilocfile.open (filename.c_str (), std::ios::in | std::ios::binary);
+      msg.resize(msglen+1);
+      clilocfile.read ((char*)&msg[0], msglen);
+      msg[msglen] = 0;
+      output.clear();
+      UTF8Decode2BytesUnicode(msg, output);
+      wcstombs(buf, (wchar_t*)&output[0], 1000);
+      message = buf;
 
-	if (!clilocfile.is_open ())
-	{
-		pDebug.Log ("Warning: Couldn't open cliloc file");
-		clilocfile.close ();
-		nConfig::clilocs = 0;
-		return false;
-	}
-
-	clilocfile.seekg (0, std::ios::end);
-	int filelen = clilocfile.tellg ();
-	clilocfile.seekg (0, std::ios::beg);
-
-	int index;
-	Uint16 msglen;
-	//char *msg = NULL;
-	std::string message = "";
-	char unknown[6];
-
-	char buf[1000];
-
-	std::vector<byte> msg;
-	std::vector< Unicode2Bytes > output;
-
-	clilocfile.read (unknown, 6);
-
-	while (clilocfile.tellg () < filelen)
-	{
-		clilocfile.read ((char *) &index, 4);
-		clilocfile.read (unknown, 1);
-		clilocfile.read ((char *) &msglen, 2);
-		
-		msg.resize(msglen+1);
-		clilocfile.read ((char*)&msg[0], msglen);
-		//msg = new char[msglen + 1];
-		//clilocfile.read ((char *) msg, msglen);
-		msg[msglen] = 0;
-
-		output.clear();
-		UTF8Decode2BytesUnicode(msg, output);
-		wcstombs(buf, (wchar_t*)&output[0], 1000);
-
-		//message = std::string ((char*)&msg[0]);
-		//message = std::string (msg);
-		message = buf;
-
-		cliloc_messages.insert (make_pair (index, message));
-
-		//delete msg;
-	}
-	clilocfile.close ();
-
-	return true;
-}
-
-void cClilocLoader::Init (std::string path)
-{
-
-	std::string default_language = "enu";
-	std::string filename = path + "cliloc." + default_language;
-
-	std::string language = nConfig::cliloc_lang;
-	std::string filename_custom = path + "cliloc." + language;
-	
-	if (!load(filename_custom))
-	{
-		load(filename);
-	}
+      cliloc_messages.insert (make_pair (index, message));
+     }
+     
+     clilocfile.close ();
+     
+     if ( language!=default_language )
+     {
+      clilocfile.open (filename_custom.c_str (), std::ios::in | std::ios::binary);
+      if (!clilocfile.is_open ())
+      {
+       pDebug.Log ("Warning: Couldn't open cliloc file");
+       clilocfile.close ();
+       nConfig::clilocs = 0;
+       return false;
+      }
+      
+      clilocfile.seekg (0, std::ios::end);
+      filelen = clilocfile.tellg ();
+      clilocfile.seekg (0, std::ios::beg);
+      clilocfile.read (unknown, 6);
+      
+      while (clilocfile.tellg () < filelen)
+      {
+       clilocfile.read ((char *) &index, 4);
+       clilocfile.read (unknown, 1);
+       clilocfile.read ((char *) &msglen, 2);
+       
+       msg.resize(msglen+1);
+       clilocfile.read ((char*)&msg[0], msglen);
+       msg[msglen] = 0;
+       output.clear();
+       UTF8Decode2BytesUnicode(msg, output);
+       wcstombs(buf, (wchar_t*)&output[0], 1000);
+       message = buf;
+       
+       cliloc_messages[index] = message;
+      }
+      clilocfile.close ();
+     }
+     return true;
 }
 
 void cClilocLoader::DeInit ()
 {
-	cliloc_messages.clear();
+     cliloc_messages.clear();
 }
 
 std::string cClilocLoader::GetMessage (int id)

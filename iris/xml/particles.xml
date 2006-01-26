@@ -2426,69 +2426,6 @@ Lightning	- StartEffectID: 9021 EndEffectID: no
 	</effect>
 
 	<effect>
-		<texture>skull.png</texture>
-		<description>uotd skulls</description>
-		<name>skulls</name>
-		<appeartype>1</appeartype>
-		<time>100</time>
-		<particletype_definition>
-			<id>1</id>
-			<description>skull1</description>
-			<texcoord_x>0</texcoord_x>
-			<texcoord_y>0</texcoord_y>
-			<texcoord_w>128</texcoord_w>
-			<texcoord_h>128</texcoord_h>
-		</particletype_definition>
-
-		<particle_definition>
-			<id>1</id>
-			<description>New Particle</description>
-			<amount>5</amount>
-			<particletype>1</particletype>
-			<fadeout>1</fadeout>
-			<fadein>0</fadein>
-			<transform_speed>1</transform_speed>
-			<transform_acceleration>0</transform_acceleration>
-			<speed>
-				<angle1>10.0000</angle1>
-				<angle2>0.0000</angle2>
-				<coneangle>180.0000</coneangle>
-				<amount>
-					<average>1.0000</average>
-					<variance>0.8000</variance>
-				</amount>
-			</speed>
-			<acceleration>
-				<angle1>0.0000</angle1>
-				<angle2>0.0000</angle2>
-				<coneangle>10.0000</coneangle>
-				<amount>
-					<average>0.8000</average>
-					<variance>0.0000</variance>
-				</amount>
-			</acceleration>
-			<lifetime>
-				<average>30.5000</average>
-				<variance>1.5000</variance>
-			</lifetime>
-			<size>
-				<average>500.0000</average>
-				<variance>100.0000</variance>
-			</size>
-			<appeartime>
-				<average>50.0000</average>
-				<variance>50.0000</variance>
-			</appeartime>
-			<emission>
-				<type>rotation</type>
-				<angle1>90.0000</angle1>
-				<angle2>90.0000</angle2>
-			</emission>
-		</particle_definition>
-
-	</effect>
-
-	<effect>
 		<texture>fire.png</texture>
 		<description>FlameLong Effect</description>
 		<name>fireLong</name>

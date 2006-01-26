@@ -2853,7 +2853,10 @@ void cClient::Act_SubCommands (cPacket * packet)
              Uint8 damage = packet->GetByte();  // damage amount
              //printf("id:0x%x, damage: %d\n", id, damage);
              char buf[10];
-             callback_OnSpeech(itoa(damage,buf,10), "", id, 0x35);
+
+             sprintf(buf, "%d", damage); 
+             callback_OnSpeech(buf, "", id, 0x35);
+//             callback_OnSpeech(itoa(damage,buf,10), "", id, 0x35);
              break;
         }
 

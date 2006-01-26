@@ -45,14 +45,14 @@ class cClilocLoader
       cClilocLoader ();
       ~cClilocLoader();
 
-      void Init (std::string path);
+      bool Init (std::string path);
       void DeInit ();
       
       std::string GetMessage(int id);
       std::string GetMessageWithArguments(int id, int args_num, vector<std::string> &args);
+
   private:
       std::map <int, std::string> cliloc_messages;
-	  bool load(std::string filename);
 };
 
 extern cClilocLoader pClilocLoader;
