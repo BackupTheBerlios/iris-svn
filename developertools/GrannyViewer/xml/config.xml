@@ -1,0 +1,9 @@
+<!--
+	Ultima Iris Configuration File
+-->
+<CONFIG>
+    <UO>
+		<MULPATH>j:/uotd/</MULPATH>
+		<AOS>1</AOS>
+	</UO>
+</CONFIG>
