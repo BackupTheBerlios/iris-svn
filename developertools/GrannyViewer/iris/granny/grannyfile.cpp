@@ -470,11 +470,10 @@ void cGrannyFile::load( std::string filename, std::string basepath )
 
 	glPopMatrix();
 
-	initBone();
-
-	makeVertexArray();
-
 	printRaw();
+
+	initBone();
+	makeVertexArray();
 
 	freeChunk(); // free 5KB ?
 }

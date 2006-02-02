@@ -1,4 +1,4 @@
-Iris GrannyViewer 0.4.0 Copyright (C) 2004 harkon ^ Iris Team
+Iris GrannyViewer 0.4.0.1 Copyright (C) 2004 harkon ^ Iris Team
 -----------------------------------------------------------------------
 
 This Application is a Granny (*.grn) viewer for Ultima Online 3D Char Models.
@@ -15,11 +15,12 @@ SMD model restriction:
  - weapon attatchment bone name is CP_Grasp_Lhand & CP_Grasp_Rhand.
  - compare edited models vs original models(hlsdk2.2_org/*)
 
-0.4.0: supprt smd import. vertex array render. 
-0.3.1: weapon bug fixed.
-0.3.0: aos model support.
-0.2.3: update bone drawing. log info. etc.
-0.2.2: Zoom Buttons added ... to zoom out Models that aren't displayed with the right value.
+0.4.0.1: log bug fixed. (thx SiENcE)
+0.4.0.0: supprt smd import. vertex array render. 
+0.3.1.0: weapon bug fixed.
+0.3.0.0: aos model support.
+0.2.3.0: update bone drawing. log info. etc.
+0.2.2.0: Zoom Buttons added ... to zoom out Models that aren't displayed with the right value.
 
 For Bugreports, suggestions, comments, please visit:
 

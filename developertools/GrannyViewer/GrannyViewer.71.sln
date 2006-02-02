@@ -1,12 +1,4 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iris", "..\iris\iris.71.vcproj", "{C0FA7401-BFFF-4F5C-9F61-9F5437179816}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "runuo", "..\..\runuo\RunUO-1.0.0-Source\runuo.csproj", "{2D86B195-DDC9-46D5-889A-16915C5F5EE1}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GrannyViewer", "GrannyViewer.71.vcproj", "{0BB89474-0DE4-4536-8966-65C95B32E4A9}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -20,11 +12,6 @@ Global
 		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{C0FA7401-BFFF-4F5C-9F61-9F5437179816}.Debug.ActiveCfg = Debug|Win32
-		{C0FA7401-BFFF-4F5C-9F61-9F5437179816}.Release.ActiveCfg = Release|Win32
-		{C0FA7401-BFFF-4F5C-9F61-9F5437179816}.Release.Build.0 = Release|Win32
-		{2D86B195-DDC9-46D5-889A-16915C5F5EE1}.Debug.ActiveCfg = Debug|.NET
-		{2D86B195-DDC9-46D5-889A-16915C5F5EE1}.Release.ActiveCfg = Release|.NET
 		{0BB89474-0DE4-4536-8966-65C95B32E4A9}.Debug.ActiveCfg = Debug|Win32
 		{0BB89474-0DE4-4536-8966-65C95B32E4A9}.Debug.Build.0 = Debug|Win32
 		{0BB89474-0DE4-4536-8966-65C95B32E4A9}.Release.ActiveCfg = Release|Win32
