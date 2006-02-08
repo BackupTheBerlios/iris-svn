@@ -200,6 +200,7 @@ public:
    void Send_DeleteChar(Uint32 id);
    bool Send_Walk(Uint8 direction);
    void Send_Speech(std::string text, Uint8 mode = 0);
+   void Send_SpeechUNICODE(std::string text, Uint8 mode = 0);
    void Send_CharName(Uint32 id, std::string name);
    void Send_StatusRequest(Uint32 id, Uint8 mode = 0);
    void Send_Dye(Uint32 id, Uint16 model, Uint16 color);

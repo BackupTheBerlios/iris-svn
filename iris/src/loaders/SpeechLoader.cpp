@@ -92,13 +92,10 @@ void cSpeechLoader::Init (std::string path)
         s_keyword = std::string (c_keyword);
         delete c_keyword;
         //std::cout << "ID: " << index << " WORD: " << s_keyword << "   len: " << keywordlen << std::endl;
-        pDebug.Log(s_keyword.c_str());
+        //pDebug.Log(s_keyword.c_str());
         m_keywords.insert (make_pair ( s_keyword, index));
   }
   Speechfile.close ();
-  
-
-
 }
 
 void cSpeechLoader::DeInit ()
@@ -134,7 +131,5 @@ std::vector<Uint16> cSpeechLoader::GetIDs (std::string keyword)
   return result;
   
  //return 0xFFFF;
-  
 }
-
 

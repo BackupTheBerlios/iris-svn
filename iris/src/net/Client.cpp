@@ -2423,7 +2423,7 @@ Send Gump Menu Dialog (Variable # of bytes)
             {
 	      Label *label = new Label (params[0], params[1],
                                         texts_vector[params[3]].c_str (), params[2]);
-//              label->setHue (params[2]);
+              label->setHue (params[2]);  //mayb cause some errors
               control = label;
 
             }
@@ -3145,6 +3145,22 @@ Send(&packet);
  }
 }
 
+void cClient::Send_SpeechUNICODE(std::string text, Uint8 mode)
+{
+	cUnicode unicode((char*)text.c_str());
+
+	cPacket packet;
+	packet.Clear();	
+	packet.FillPacket(PCK_TalkUNICODE);					// ID 0xAD
+	packet.SetLength(1);
+	packet.AddWord(unicode.m_unicodeLen + 12);			// Size of Packet
+	packet.AddByte(mode);								// Mode (0=say,2=emote,8=whipser,9=yell)
+	packet.AddWord(100);								// Text Color
+	packet.AddWord(3);									// Font
+	packet.AddData((void*)nConfig::cliloc_lang.c_str(), 4);					// Language, "ENU", "DEA", "DEU", "KOR" ...	
+	packet.AddData((void *)unicode.m_unicodeBuf, unicode.m_unicodeLen); // Text
+	Send(&packet.packet, unicode.m_unicodeLen + 12);
+}
 
 void cClient::Send_CharName (Uint32 id, std::string name)
 {
