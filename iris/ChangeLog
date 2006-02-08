@@ -1,38 +1,46 @@
-25.10.2006
+8.02.2006
+Changes by Harkon & SiENcE
+	-ClilocLoader.cpp temp. fixed
+	-HTMLGumpParser.cpp infinite loop fixed
+	-Client.cpp function Send_SpeechUNICODE added
+
+	-SpeechLoader.cpp debuglog disabled
+
+25.01.2006
 Changes by SiENcE
 	-ClilocLoader fixed
 
-24.10.2006
+24.01.2006
 Changes by SiENcE
 	-Gloves and Hands are rendered together (we need to find a better way to detect hands or gloves)
 
-23.10.2006
+23.01.2006
 Changes by SiENcE
 	-SpeechLoader.cpp header changed 
 
-21.10.2006
+21.01.2006
 Changes by Artix & SiENcE
 	-Speech.mul support added (SpeechLoader.cpp)
 	-boat handling works now also for RunUO (Artix)
 	-Damage Info-Paket added (Harkon)
 	-minor Gump bugfixes
 
-11.10.2006
+11.01.2006
 Changes by SiENcE
 	-SDL bug fixed
 
-10.10.2006
+10.01.2006
 Changes by Artix & SiENcE
 	-Boat handling added for POL (not RunUO ready yet, because RunUO uses speech.mul)
 	-Female Granny Animations fixed (granny_aos.xml)
         -bugfix strdup, strcasecmp (Client.h, grannyfile.cpp)
 
-6.10.2006
+06.01.2006
 Changes by SiENcE
 	-Map-Fogfix
 	-Map-Networkpacket added to Client.cpp
 
-6.10.2006
+06.01.2006
 Changes by Harkon & SiENcE
 	-some Granny Animations bugfixed
 	-Weapon on the ground - bugfixed
