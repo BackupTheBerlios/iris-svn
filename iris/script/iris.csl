@@ -908,12 +908,13 @@ display_player_paperdoll(var charid)
 	var paperdollid = control_getid("paperdoll");
 	paperdoll_refresh(paperdollid, charid);
 	
+	war_peace_button = control_getid("peace");
+
+	//If in Warmode -> Display War Button
 	if(warmode == 1) {
-		//war
-		var button = control_getid("peace");
-		button_setgump(button, 0, 0x7e8);
-		button_setgump(button, 1, 0x7ea);
-		button_setgump(button, 2, 0x7e9);
+		button_setgump(war_peace_button, 0, 0x7e8);
+		button_setgump(war_peace_button, 1, 0x7ea);
+		button_setgump(war_peace_button, 2, 0x7e9);
 	}
 	
 	var label = control_getid("status_name");
