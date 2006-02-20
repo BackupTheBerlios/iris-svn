@@ -19,6 +19,10 @@
 #ifndef  __SOUNDMIX_H__
 #define __SOUNDMIX_H__
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
 
 #include <string>
 #include "SDL/SDL.h"

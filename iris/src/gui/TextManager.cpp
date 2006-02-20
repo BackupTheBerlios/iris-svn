@@ -26,7 +26,7 @@
 #include "Config.h"
 #include "irisgl.h"
 #include <cassert>
-#include "Debug.h"
+#include "Logger.h"
 
 // Library Includes
 #include <vector>
@@ -235,8 +235,8 @@ void cTextElement::draw (int x, int y, unsigned int width,
   glBindTexture (GL_TEXTURE_2D, p->texture->GetGLTex ());
   glBegin (GL_QUADS);
 
-  int y1 = nConfig::height - 1 - (y);
-  int y2 = nConfig::height - 1 - (y + height);
+  int y1 = Config::GetHeight() - 1 - (y);
+  int y2 = Config::GetHeight() - 1 - (y + height);
 
   // NOTE: _width is the *real* width of the visible characters
   // while p->width is the width of the texture (including alpha parts)

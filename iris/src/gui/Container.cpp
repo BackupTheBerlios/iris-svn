@@ -21,7 +21,7 @@
  *****/
 
 #include "gui/Container.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 
 using namespace std;
@@ -69,7 +69,7 @@ int Container::HandleMessage (gui_message * msg)
 
   if (!msg)
       {
-        pDebug.Log ("NULL msg in Container::HandleMessage(gui_message *)",
+        Logger::WriteLine ("NULL msg in Container::HandleMessage(gui_message *)",
                     __FILE__, __LINE__, LEVEL_ERROR);
         return (false);
       }

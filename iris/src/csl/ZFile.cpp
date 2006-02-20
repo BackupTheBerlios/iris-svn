@@ -23,7 +23,9 @@
  * with this program; if not, write to IBK at info@ibk-software.ch.
  */
 
+#ifndef ZC_BUILDING_ZBASE
 #define ZC_BUILDING_ZBASE
+#endif
 
 #include <ZFile.hpp>
 #include <ZTrace.hpp>

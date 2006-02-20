@@ -26,7 +26,9 @@
  * with this program; if not, write to IBK at info@ibk-software.ch.
  */
 
+#ifndef ZC_BUILDING_ZCSL
 #define ZC_BUILDING_ZCSL
+#endif
 
 #include <stdio.h>
 #include <ZCsl.hpp>

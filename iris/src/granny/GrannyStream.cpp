@@ -24,7 +24,7 @@
 
 #include "iris_endian.h"
 #include "granny/GrannyStream.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <cassert>
 
 using namespace std;
@@ -64,7 +64,7 @@ bool cGrannyStream::seekg (Uint32 pos)
       }
   else
       {
-        pDebug.Log ("GrannyStream::seekg: file corrupt? (" + m_filename +
+        Logger::WriteLine ("GrannyStream::seekg: file corrupt? (" + m_filename +
                     ")");
         return false;
       }
@@ -87,7 +87,7 @@ bool cGrannyStream::read (char *data, Uint32 count)
   else
       {
         memset (data, 0, count);
-        pDebug.Log ("GrannyStream::read: file corrupt? (" + m_filename + ")");
+        Logger::WriteLine ("GrannyStream::read: file corrupt? (" + m_filename + ")");
         return false;
       }
 }
@@ -109,7 +109,7 @@ Uint32 cGrannyStream::readDword ()
 #endif
 
       }
-  pDebug.Log ("GrannyStream::readDword: file corrupt? (" + m_filename + ")");
+  Logger::WriteLine ("GrannyStream::readDword: file corrupt? (" + m_filename + ")");
   return 0;
 }
 
@@ -122,7 +122,7 @@ void cGrannyStream::get (char &value)
       }
   else
       {
-        pDebug.Log ("GrannyStream::get: file corrupt? (" + m_filename + ")");
+        Logger::WriteLine ("GrannyStream::get: file corrupt? (" + m_filename + ")");
         value = 0;
       }
 }

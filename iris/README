@@ -1,4 +1,4 @@
-Iris 0.80, Copyright (C) 2003 Alexander Oster
+Iris 0.86, Copyright (C) 2003 Alexander Oster
 _____________________________________________
 
 Iris is a free 3D Client for the popular Massive Multiplayer Role Playing Game Ultima Online. The current Iris version works with the Ultima Online expansions Third Dawn, Age of Shadows, Samurai Empire and M.Legacy!
@@ -90,11 +90,15 @@ Core Team:
 			Location: Germany (Berlin)
 			Website: http://www.seabeams.de
 
+	Harkon -
+			Coder
+			Location: Korea
+
 Team:
 -----
 Programming:
-	Darkstorm, Harkon, Blobba, Soulburner, Gigi
-	netzzwerg, x.diablo, tharsade
+	Darkstorm, Blobba, Soulburner, Gigi
+	netzzwerg, x.diablo, tharsade, The Gangster (Nuno Ramiro)
 
 3D-Design:
 	Stygius, Alamar
@@ -115,5 +119,5 @@ Huffman encryption - http://injection.sourceforge.net
 SDL, SDL_ttf, SDL_mixer, SDL_net, SDL_image - http://www.libsdl.org
 
 
-(c)^Iris Team
+SiENcE^(c)^Iris Team
 

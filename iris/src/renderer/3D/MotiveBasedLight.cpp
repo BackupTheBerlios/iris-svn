@@ -24,7 +24,7 @@
 #include <iostream>
 #include "renderer/3D/MotiveBasedLight.h"
 #include "Geometry.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Exception.h"
 #include "include.h"
 #include "Config.h"

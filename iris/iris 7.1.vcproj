@@ -43,7 +43,7 @@ imm32.lib smpeg.lib"
 				AdditionalLibraryDirectories=""
 				IgnoreAllDefaultLibraries="FALSE"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/iris.pdb"
+				ProgramDatabaseFile="$(OutDir)/iris 7.1.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
@@ -148,9 +148,6 @@ imm32.lib smpeg.lib"
 				RelativePath=".\src\csl\CSLHandler.cpp">
 			</File>
 			<File
-				RelativePath=".\src\Debug.cpp">
-			</File>
-			<File
 				RelativePath=".\src\Exception.cpp">
 			</File>
 			<File
@@ -161,6 +158,9 @@ imm32.lib smpeg.lib"
 			</File>
 			<File
 				RelativePath=".\src\iris_endian.cpp">
+			</File>
+			<File
+				RelativePath=".\src\Logger.cpp">
 			</File>
 			<File
 				RelativePath=".\src\Macros.cpp">
@@ -186,13 +186,13 @@ imm32.lib smpeg.lib"
 				RelativePath=".\include\Cache.h">
 			</File>
 			<File
+				RelativePath=".\include\Common.h">
+			</File>
+			<File
 				RelativePath=".\include\Config.h">
 			</File>
 			<File
 				RelativePath=".\include\csl\CSLHandler.h">
-			</File>
-			<File
-				RelativePath=".\include\Debug.h">
 			</File>
 			<File
 				RelativePath=".\include\Game.h">
@@ -202,6 +202,9 @@ imm32.lib smpeg.lib"
 			</File>
 			<File
 				RelativePath=".\include\include.h">
+			</File>
+			<File
+				RelativePath=".\include\Logger.h">
 			</File>
 			<File
 				RelativePath=".\include\loaders\MultisLoader.h">
@@ -1168,6 +1171,9 @@ imm32.lib smpeg.lib"
 				RelativePath=".\src\loaders\SpeechLoader.cpp">
 			</File>
 			<File
+				RelativePath=".\include\loaders\SpeechLoader.h">
+			</File>
+			<File
 				RelativePath=".\src\loaders\StaticModelLoader.cpp">
 			</File>
 			<File
@@ -1195,6 +1201,9 @@ imm32.lib smpeg.lib"
 				RelativePath=".\src\loaders\UOMap.cpp">
 			</File>
 			<File
+				RelativePath=".\include\loaders\UOMap.h">
+			</File>
+			<File
 				RelativePath=".\src\loaders\VerdataLoader.cpp">
 			</File>
 		</Filter>
@@ -1215,7 +1224,7 @@ imm32.lib smpeg.lib"
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\src\ui3.cpp">
+			RelativePath=".\src\main.cpp">
 		</File>
 	</Files>
 	<Globals>

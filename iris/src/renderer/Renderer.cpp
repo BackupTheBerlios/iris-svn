@@ -37,7 +37,7 @@
 
 #include "include.h"
 #include "Config.h"
-#include "Debug.h"
+#include "Logger.h"
 
 #include "Geometry.h"
 
@@ -51,7 +51,7 @@ extern SDLScreen *SDLscreen;
 Renderer::Renderer ()
 {
 	flags = 0;
-	view_distance = nConfig::viewdistance;
+	view_distance = Config::GetViewDistance();
 	m_lightlevel = 1.0f;
 	drag_model = 0;
 }
@@ -75,7 +75,7 @@ void Renderer::SetRenderFlag (int flag, int value)
 		break;
 
 	default:
-		pDebug.Log ("Unknown Flag in Game::SetRenderFlag(int, int)", __FILE__,
+		Logger::WriteLine ("Unknown Flag in Game::SetRenderFlag(int, int)", __FILE__,
 			__LINE__, LEVEL_ERROR);
 	}
 }

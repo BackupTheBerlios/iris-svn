@@ -19,6 +19,9 @@
 #ifndef __GRN_H__
 #define __GRN_H__
 
+#define _stricmp strcasecmp
+#define _strdup strdup
+
 #include <string>
 #include "grnitemlist.h"
 #include "grnmatrix.h"

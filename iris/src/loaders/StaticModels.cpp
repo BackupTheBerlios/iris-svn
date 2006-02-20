@@ -24,7 +24,7 @@
 #include "iris_endian.h"
 #include "loaders/StaticModels.h"
 #include "loaders/StaticTextureLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Exception.h"
 #include "Geometry.h"
 #include "uotype.h"

@@ -25,7 +25,7 @@
 #include "loaders/GroundTextures.h"
 #include "loaders/StaticModelLoader.h"
 #include "loaders/ArtLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 
 using namespace std;

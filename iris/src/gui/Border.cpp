@@ -22,7 +22,7 @@
 
 
 #include "gui/Border.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "loaders/GumpLoader.h"
 

@@ -24,7 +24,7 @@
 #include "loaders/PaperdollBuilder.h"
 #include "loaders/GumpLoader.h"
 #include "loaders/HueLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "uotype.h"
 #include <string.h>
 #include <iostream>

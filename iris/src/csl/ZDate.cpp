@@ -23,7 +23,9 @@
  * with this program; if not, write to IBK at info@ibk-software.ch.
  */
 
+#ifndef ZC_BUILDING_ZBASE
 #define ZC_BUILDING_ZBASE
+#endif
 
 #include <time.h>
 #include <stdio.h>
@@ -118,7 +120,7 @@ ZExport (int) ZDateTime::dayOfWeek () const
 {
   ZFUNCTRACE_DEVELOP ("ZDateTime::dayOfWeek() const");
   long tt (asSeconds ());
-  struct tm *t2 = localtime (&tt);
+  struct tm *t2 = localtime( (const time_t *)&tt );
   if (t2->tm_wday == 0)
     return sunday;
   else
@@ -129,7 +131,7 @@ ZExport (int) ZDateTime::dayOfYear () const
 {
   ZFUNCTRACE_DEVELOP ("ZDateTime::dayOfYear() const");
   long tt (asSeconds ());
-  struct tm *t2 = localtime (&tt);
+  struct tm *t2 = localtime( (const time_t *)&tt );
   return t2->tm_yday + 1;
 }                               // dayOfYear
 
@@ -279,7 +281,7 @@ long ZDateTime::asSeconds () const
 void ZDateTime::fromSeconds (long aSeconds)
 {
   ZFUNCTRACE_DEVELOP ("ZDateTime::fromSeconds(long aSeconds)");
-  struct tm *t = localtime (&aSeconds);
+  struct tm *t = localtime( (const time_t *)&aSeconds );
   iYear = t->tm_year + 1900;
   iMonth = t->tm_mon + 1;
   iDay = t->tm_mday;

@@ -30,7 +30,7 @@
 #include <stdlib.h>
 
 //#include "common.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <cassert>
 #include "net/uo_huffman.h"
 

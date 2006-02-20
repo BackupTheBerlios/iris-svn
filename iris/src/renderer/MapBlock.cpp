@@ -23,7 +23,7 @@
 
 #include <iostream>
 #include "renderer/MapBlock.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "include.h"
 #include "math.h"
 #include "Config.h"

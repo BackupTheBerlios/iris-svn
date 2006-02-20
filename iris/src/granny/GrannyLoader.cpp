@@ -28,7 +28,7 @@
 #include "granny/GrannyTextures.h"
 
 #include "Config.h"
-#include "Debug.h"
+#include "Logger.h"
 
 #include "xml.h"
 
@@ -234,7 +234,7 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 	}
 	catch (...)
 	{
-		pDebug.Log ("Couldn't load Granny Definitions");
+		Logger::WriteLine ("Couldn't load Granny Definitions");
 		return;
 	}
 
@@ -358,7 +358,7 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 			//models.erase(id);
 			if (models.find(id)!=models.end()) 
 			{
-				//pDebug.Log("Warning: duplicated model id : %d", id);
+				//Logger::WriteLine("Warning: duplicated model id : %d", id);
 				delete models.find(id)->second;
 				models.erase(id);
 			}
@@ -367,7 +367,7 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 		}
 		else
 		{
-			pDebug.Log ("Warning: Invalid Granny Definition");
+			Logger::WriteLine ("Warning: Invalid Granny Definition");
 		}
 
 		idx++;
@@ -433,7 +433,7 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 			//models.erase(id);
 			if (models.find(id)!=models.end()) 
 			{
-				//pDebug.Log("Warning: duplicated model id : %d\n", id);
+				//Logger::WriteLine("Warning: duplicated model id : %d\n", id);
 				delete models.find(id)->second;
 				models.erase(id);
 			}
@@ -442,7 +442,7 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 		}
 		else
 		{
-			pDebug.Log ("Warning: Invalid Granny AOS Definition");
+			Logger::WriteLine ("Warning: Invalid Granny AOS Definition");
 		}
 
 		idx++;
@@ -507,7 +507,7 @@ void cGrannyLoader::Render (Uint32 id, Uint32 type, float &curtime,
 	if (iter != models.end ())
 	{
 		assert (iter->second);
-		if ((nConfig::aos) && (id == 400 || id == 401))
+		if ((Config::GetAOS()) && (id == 400 || id == 401))
 		{
 			cGrannyModelAOS *model =
 				dynamic_cast < cGrannyModelAOS * >(iter->second);

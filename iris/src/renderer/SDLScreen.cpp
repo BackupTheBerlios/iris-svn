@@ -53,8 +53,8 @@ SDLScreen::SDLScreen ()
   ratio = 1.0f;
   light_factor = 1.0f;
   screen = NULL;
-  Init (nConfig::width, nConfig::height, nConfig::bpp);
-  ResizeWindow (nConfig::width, nConfig::height);
+  Init ( Config::GetWidth(), Config::GetHeight(), Config::GetBPP() );
+  ResizeWindow ( Config::GetWidth(), Config::GetHeight() );
   InitGL ();
 }
 
@@ -86,7 +86,7 @@ int SDLScreen::Init (int width, int height, int bpp)
   /* the flags to pass to SDL_SetVideoMode */
   videoFlags = SDL_OPENGL;      /* Enable OpenGL in SDL */
   videoFlags |= SDL_HWPALETTE;  /* Store the palette in hardware */
-  if (nConfig::startfullscreen)
+  if ( Config::GetStartFullScreen() )
     videoFlags |= SDL_FULLSCREEN;
 
 #ifndef WIN32
@@ -104,8 +104,8 @@ int SDLScreen::Init (int width, int height, int bpp)
       };
 
   /* Sets up OpenGL double buffering */
-  SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, 1);
-  SDL_GL_SetAttribute (SDL_GL_DEPTH_SIZE, nConfig::depthbuffer);
+  SDL_GL_SetAttribute ( SDL_GL_DOUBLEBUFFER, 1 );
+  SDL_GL_SetAttribute ( SDL_GL_DEPTH_SIZE, Config::GetDepthBuffer() );
 
   // Set name of application
   SDL_WM_SetCaption ("Iris", NULL);
@@ -135,7 +135,7 @@ int SDLScreen::Init (int width, int height, int bpp)
 
   SDL_EnableUNICODE (1);
 
-  if (nConfig::cursor == 1)
+  if ( Config::GetCursor() == 1 )
     SDL_ShowCursor (SDL_DISABLE);
 
   return true;
@@ -435,7 +435,7 @@ void SDLScreen::SetLight (float factor)
   
   glLightfv(GL_LIGHT0, GL_AMBIENT, light);
   light_factor = factor * 1.5f;
-  light_factor += nConfig::brightness * 0.1f;
+  light_factor += Config::GetBrightness() * 0.1f;
   if (light_factor > 1.5f)
   	light_factor = 1.5f; 
         

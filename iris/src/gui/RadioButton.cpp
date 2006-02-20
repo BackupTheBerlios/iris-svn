@@ -23,7 +23,7 @@
 #include "gui/RadioButton.h"
 #include "gui/Checkbox.h"
 #include "gui/Container.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "gui/GUIHandler.h"
 using namespace std;
@@ -67,7 +67,7 @@ int RadioButton::HandleMessage (gui_message * msg)
 {
   if (!msg)
       {
-        pDebug.Log ("NULL msg in RadioButton::HandleMessage(gui_message *)",
+        Logger::WriteLine ("NULL msg in RadioButton::HandleMessage(gui_message *)",
                     __FILE__, __LINE__, LEVEL_ERROR);
         return false;
       }

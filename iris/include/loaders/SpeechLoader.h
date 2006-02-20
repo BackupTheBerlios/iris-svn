@@ -23,6 +23,7 @@
 #ifndef __SPEECH__LOADER__
 #define __SPEECH__LOADER__
 
+#include "SDL/SDL.h"
 #include <iostream>
 
 #include <fstream>

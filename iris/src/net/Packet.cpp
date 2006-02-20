@@ -43,7 +43,7 @@ void InitTables ()
   memset (packet_lens, 0, 256);
   packet_lens[PCK_Create] = 0x68;
   packet_lens[PCK_Disconnect] = 0x05;
-  if (nConfig::is_sphere)
+  if ( Config::GetIsSphere() )
     packet_lens[PCK_Walk] = 0x03;
   else
     packet_lens[PCK_Walk] = 0x07;
@@ -150,7 +150,7 @@ void InitTables ()
   packet_lens[PCK_UnkSimped] = 0x15;
   packet_lens[PCK_UnkAddLSScript] = 0x00;
 
-  if (nConfig::is_sphere)
+  if ( Config::GetIsSphere() )
     packet_lens[PCK_Options] = 0x04;
   else
     packet_lens[PCK_Options] = 0x05;
@@ -237,7 +237,7 @@ void InitTables ()
   packet_lens[PCK_ChatEnable] = 0x03;
   packet_lens[PCK_Arrow] = 0x06;
   packet_lens[PCK_MailMsg] = 0x09;
-  if (nConfig::is_sphere55R)
+  if ( Config::GetIsSphere55R() )
     packet_lens[PCK_Season] = 0x02;
   else
     packet_lens[PCK_Season] = 0x03;

@@ -23,7 +23,10 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to IBK at info@ibk-software.ch.
  */
+
+#ifndef ZC_BUILDING_ZBASE
 #define ZC_BUILDING_ZBASE
+#endif
 
 #include <ZExcept.hpp>
 

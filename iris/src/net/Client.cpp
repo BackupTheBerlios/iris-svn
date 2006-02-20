@@ -54,7 +54,7 @@
 #include "renderer/Renderer.h"
 
 #include "Config.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Exception.h"
 #include "net/unicode.h"
 
@@ -63,7 +63,6 @@
 #include <cassert>
 
 #include "csl/CSLHandler.h"
-#include "Game.h"
 
 #include "renderer/particles/ParticleEngine.h"
 
@@ -99,13 +98,13 @@ int HandleGumpDialogEvent (Control * contr)
         int retval = (Uint32) bt->GetReturnMsg ();
         pClient->SendGumpDialogRet (gump_id, player_id, retval);
         pUOGUI.CloseWindow (dlg->GetID ());
-        pDebug.Log ("CLOSE");
+        Logger::WriteLine ("CLOSE");
       }
   else if (bt->IsPageSelector ())
       {
         dlg->SetCurrentPage (bt->GetDestinationPage ());
-        pDebug.Log ("PAGE");
-        pDebug.Log ("UFF");
+        Logger::WriteLine ("PAGE");
+        Logger::WriteLine ("UFF");
       }
   return -1;
 }
@@ -115,7 +114,7 @@ Uint16 CheckIfBoat(Uint16 modelID)
  Uint16 new_modid; 
  if((modelID >= 0x4000) && (modelID < 0x4022))
  {
-  pDebug.Log("BOAT!!!!!");
+  Logger::WriteLine("BOAT!!!!!");
   switch(modelID)
   {
    case 0x4000: new_modid = 16093; break;
@@ -413,27 +412,26 @@ cClient::cClient (void (*error_callback) (unsigned int error))
     player_position[i] = 0;
 
 
-  printf ("Connecting to %s:%d\n", (char *) nConfig::server.c_str (),
-          nConfig::serverport);
-  Connect ((char *) nConfig::server.c_str (), nConfig::serverport);
+  printf ("Connecting to %s:%d\n", (char *) Config::GetServer().c_str (),
+          Config::GetServerPort());
+  Connect ( (char *)Config::GetServer().c_str (), Config::GetServerPort() );
   if (!connected)
       {
-        pDebug.Log ("NET | Could not Connect");
+        Logger::WriteLine ("NET | Could not Connect");
         return;
       }
 
-  unsigned int sign = nConfig::client_key;
+  unsigned int sign = Config::GetClientKey();
   Send (&sign, 4);
 
   cPacket packet;
   packet.FillPacket (PCK_ServersReq);
-  strncpy (packet.packet.LoginRequest.m_username, nConfig::login.c_str (),
+  strncpy (packet.packet.LoginRequest.m_username, Config::GetLogin().c_str (),
            29);
-  strncpy (packet.packet.LoginRequest.m_password, nConfig::password.c_str (),
+  strncpy (packet.packet.LoginRequest.m_password, Config::GetPassword().c_str (),
            29);
   packet.packet.LoginRequest.m_unknown = 1;
   Send (&packet);
-
 }
 
 cClient::~cClient ()
@@ -466,7 +464,7 @@ bool cClient::Connect (char *address, Uint16 port)
 
   if (SDLNet_ResolveHost (&ip, address, port) == -1)
       {
-        pDebug.Log ("SDLNet_ResolveHost: " + string (SDLNet_GetError ()));
+        Logger::WriteLine ("SDLNet_ResolveHost: " + string (SDLNet_GetError ()));
         if (callback_OnNetError)
           callback_OnNetError (NETERROR_UNKNOWNHOST);
         return false;
@@ -475,7 +473,7 @@ bool cClient::Connect (char *address, Uint16 port)
   socketset = SDLNet_AllocSocketSet (1);
   if (!socketset)
       {
-        pDebug.Log ("SDLNet_AllocSocketSet: " + string (SDLNet_GetError ()));
+        Logger::WriteLine ("SDLNet_AllocSocketSet: " + string (SDLNet_GetError ()));
         if (callback_OnNetError)
           callback_OnNetError (NETERROR_SOCKET);
         return false;
@@ -486,7 +484,7 @@ bool cClient::Connect (char *address, Uint16 port)
       {
         if (callback_OnNetError)
           callback_OnNetError (NETERROR_NOCONNECTION);
-        pDebug.Log ("SDLNet_TCP_Open: " + string (SDLNet_GetError ()));
+        Logger::WriteLine ("SDLNet_TCP_Open: " + string (SDLNet_GetError ()));
         SDLNet_FreeSocketSet (socketset);
         return false;
       }
@@ -496,7 +494,7 @@ bool cClient::Connect (char *address, Uint16 port)
       {
         if (callback_OnNetError)
           callback_OnNetError (NETERROR_SOCKET);
-        pDebug.Log ("SDLNet_AddSocket: " + string (SDLNet_GetError ()));
+        Logger::WriteLine ("SDLNet_AddSocket: " + string (SDLNet_GetError ()));
         SDLNet_FreeSocketSet (socketset);
         SDLNet_TCP_Close (socket);
         return false;
@@ -539,7 +537,7 @@ void cClient::Poll ()
 
         if (numready == -1)
             {
-              pDebug.Log ("SDLNet_CheckSockets: " +
+              Logger::WriteLine ("SDLNet_CheckSockets: " +
                           string (SDLNet_GetError ()));
               return;
             }
@@ -549,7 +547,7 @@ void cClient::Poll ()
               len = SDLNet_TCP_Recv (socket, packet + poll_pos, MAX_PACKET_LEN);
               if (len <= 0 )
               {
-                pDebug.Log ("SDLNet_TCP_Recv: " + string (SDLNet_GetError ()));
+                Logger::WriteLine ("SDLNet_TCP_Recv: " + string (SDLNet_GetError ()));
                 return;
               }
               if (len > 0)
@@ -607,7 +605,7 @@ void cClient::OnData (void *data, unsigned int len)
   }
 
   if (len + data_buffer_pos > MAX_PACKET_LEN) {
-              pDebug.Log ("NET | Buffer overflow");
+              Logger::WriteLine ("NET | Buffer overflow");
               data_buffer_pos = 0;
     }
   
@@ -628,7 +626,7 @@ void cClient::OnData (void *data, unsigned int len)
         if (packet_len <= 0)
             {
               delete packet;
-              pDebug.Log ("NET | Warning: lost packet stream");
+              Logger::WriteLine ("NET | Warning: lost packet stream");
 /*              printf
                 ("    Len: %d Needed Len: %d Cmd: %x (Last Packet: %x)\n",
                  len, -packet_len, 0, last_packet);
@@ -842,7 +840,7 @@ void cClient::Send (void *data, Uint32 len)
 
   if (result != (int) len)
       {
-        pDebug.Log ("SDLNet_TCP_Send: " + string (SDLNet_GetError ()));
+        Logger::WriteLine ("SDLNet_TCP_Send: " + string (SDLNet_GetError ()));
         socket = NULL;
       }
 }
@@ -893,7 +891,7 @@ void cClient::Act_SecureTrade (cPacket * packet)
         Uint32 id = packet->GetDword ();
         Uint32 check1 = packet->GetDword ();
         Uint32 check2 = packet->GetDword ();
-        if (nConfig::is_pol)
+        if ( Config::GetIsPol() )
           Uint8 terminator = packet->GetByte ();
         if (callback_OnTradeCheck)
           callback_OnTradeCheck (check1, check2, 0);
@@ -942,7 +940,7 @@ void cClient::Act_BadLog (cPacket * packet)
 
   char msg[128];
   sprintf (msg, "Login Denied: %i\n", pack->LogBad.m_code);
-  pDebug.Log (msg);
+  Logger::WriteLine (msg);
 
   switch (pack->LogBad.m_code)
       {
@@ -974,7 +972,7 @@ void cClient::Act_ClientState (cPacket * packet)
 
   char msg[128];
   sprintf (msg, "World entering Error: %i\n", pack->ClientState.m_type);
-  pDebug.Log (msg);
+  Logger::WriteLine (msg);
 
   switch (pack->ClientState.m_type)
       {
@@ -1022,27 +1020,27 @@ void cClient::Act_Relay (cPacket * packet)
 
   decompress = true;
 
-  if (!nConfig::is_runuo)
+  if ( !Config::GetIsRunUO() )
       {
         Disconnect ();
 
 
         if (ip == 0xffffffff )
-          connip = (char *) nConfig::server.c_str ();
+          connip = (char *) Config::GetServer().c_str ();
         else
           connip = ipstring;
         if (!port)
-          port = nConfig::serverport;
+          port = Config::GetServerPort();
         Connect (connip, port);
         if (!connected)
             {
               if (callback_OnNetError)
                 callback_OnNetError (NETERROR_NOCONNECTION);
-              pDebug.Log ("NET | Could not Reconnect");
+              Logger::WriteLine ("NET | Could not Reconnect");
               return;
             }
 
-        unsigned int sign = nConfig::client_key;
+        unsigned int sign = Config::GetClientKey();
         Send (&sign, 4);
       }
 
@@ -1182,7 +1180,7 @@ void cClient::Act_SpeakUnicode (cPacket * packet)
 
 void cClient::Act_SpeakTable (cPacket * packet)
 {
-  if (!nConfig::clilocs)
+  if ( !Config::GetClilocs() )
     return;
   packet->SetPosition (1);
   Uint16 len = packet->GetWord ();
@@ -1229,7 +1227,7 @@ void cClient::Act_SpeakTable (cPacket * packet)
     pClilocLoader.GetMessageWithArguments ((int) msg, (int) arglist.size (),
                                             arglist);
 
-  pDebug.Log (message.c_str ());
+  Logger::WriteLine (message.c_str ());
   if (callback_OnSpeech)
     callback_OnSpeech (message.c_str (), name, (Uint32) id, hue);
 
@@ -1361,7 +1359,7 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
   bool found = false;
 
   signed int i;
-  if (nConfig::is_pol)
+  if ( Config::GetIsPol() )
       {
         iter2 = objlist->end ();
         iter2--;
@@ -1423,7 +1421,7 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
                         }
                   }
             }
-            if (nConfig::is_pol)
+            if ( Config::GetIsPol() )
           iter--;
         else
           iter++;
@@ -1434,7 +1432,7 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
 void cClient::Act_VendOpenSell (cPacket * packet)
 {
 
-  pDebug.Log ("Vendor SELL");
+  Logger::WriteLine ("Vendor SELL");
   packet->SetPosition (3);
   Uint32 inventory_id = packet->GetDword ();
   Uint16 item_count = packet->GetWord ();
@@ -1549,10 +1547,10 @@ void cClient::Act_Start (cPacket * packet)
         player_position[2] = (Sint8) packet->packet.Start.m_z;
         walk_direction = (Uint8) packet->packet.Start.m_dir;
 
-  if (nConfig::client_version != "none")
+  if ( Config::GetClientVersion() != "none")
       {
 
-        std::string vers = nConfig::client_version;
+        std::string vers = Config::GetClientVersion();
         cPacket pckt;
         pckt.AddByte (0xBD);
         pckt.AddWord (4 + vers.size ());
@@ -1560,7 +1558,7 @@ void cClient::Act_Start (cPacket * packet)
         pckt.AddByte (0);
         Send (&pckt);
         std::string message = "Client identificated as: " + vers;
-        pDebug.Log ((char *) message.c_str ());
+        Logger::WriteLine ((char *) message.c_str ());
       }
 }
 
@@ -1586,7 +1584,7 @@ void cClient::Act_WalkAck (cPacket * packet)
                     player_position[2] = entry.z;
                   }
 
-        if (nConfig::footsteps)
+        if ( Config::GetFootSteps() )
             {
               int footsteps_snd = 300;
 
@@ -2186,9 +2184,9 @@ void cClient::Act_Dye (cPacket * packet)
 
 void cClient::Act_AOSTooltip (cPacket * packet)
 {
-  if (!nConfig::aostooltips)
+  if (!Config::GetAOSToolTips())
     return;
-  if (!nConfig::clilocs)
+  if ( !Config::GetClilocs() )
     return;
   packet->SetPosition (5);
   Uint32 id = packet->GetDword ();
@@ -2468,7 +2466,7 @@ Send Gump Menu Dialog (Variable # of bytes)
             }
         else if (command == "xmfhtmlgump")
             {
-              if (!nConfig::clilocs)
+              if ( !Config::GetClilocs() )
                 continue;
               cMultiLabel *label =
                 new cMultiLabel (params[0], params[1], params[2], params[3],
@@ -2481,7 +2479,7 @@ Send Gump Menu Dialog (Variable # of bytes)
             }
         else if (command == "xmfhtmlgumpcolor")
             {
-              if (!nConfig::clilocs)
+              if ( !Config::GetClilocs() )
                 continue;
               cMultiLabel *label =
                 new cMultiLabel (params[0], params[1], params[2], params[3],
@@ -2653,9 +2651,9 @@ void cClient::Act_PlayMusic (cPacket * packet)
 {
   packet->SetPosition (1);
   Uint16 id = packet->GetWord ();
-  if (nConfig::music)
+  if ( Config::GetMusic() )
       {
-        pSoundMix->PlayMusic ((int) id, nConfig::mp3, nConfig::musicvolume);
+        pSoundMix->PlayMusic ((int) id, Config::GetMP3(), Config::GetMusicVolume() );
       }
 }
 
@@ -2740,7 +2738,7 @@ void cClient::Act_SubCommands (cPacket * packet)
 		  Uint8 mapID = packet->GetByte();
 		  if(actual_map == mapID)
 		  break;
-		  pDebug.Log("CHANGE MAP");
+		  Logger::WriteLine("CHANGE MAP");
 
 		  if(pMapLoader)
 			delete pMapLoader;
@@ -2759,14 +2757,14 @@ void cClient::Act_SubCommands (cPacket * packet)
 		  mapstr[1] = 0;
 		  sprintf(mapstr, "%i", (int) mapID);
 		  std::cout << "Map changed from : "<< actual_map << " to: " << mapstr << std::endl;
-		  string mul_map = nConfig::mulpath+"map" + string(mapstr) + ".mul";
-		  string mul_statics = nConfig::mulpath+"statics" + string(mapstr) + ".mul";
-		  string mul_staidx = nConfig::mulpath+"staidx" + string(mapstr) + ".mul";
+		  string mul_map = Config::GetMulPath() + "map" + string(mapstr) + ".mul";
+		  string mul_statics = Config::GetMulPath() + "statics" + string(mapstr) + ".mul";
+		  string mul_staidx = Config::GetMulPath() + "staidx" + string(mapstr) + ".mul";
 	
 		  pMapLoader = new UOMapLoader((char*) mul_map.c_str(), (char*) mul_statics.c_str(), (char*) mul_staidx.c_str(), (int)mapID);
 		  actual_map = mapID;
 
-		  Renderer * renderer = pGame.GetRenderer();
+		  Renderer * renderer = Game::GetInstance()->GetRenderer();
 
 		  renderer->LoadSkyboxTextures (actual_map);
 		  GLfloat fogColor[4] = {(float) mapinfo_entry->fog_r() / 255.0f, (float) mapinfo_entry->fog_g() / 255.0f,(float) mapinfo_entry->fog_b() / 255.0f, 1.0 };
@@ -2776,7 +2774,7 @@ void cClient::Act_SubCommands (cPacket * packet)
 		}
       case 0x14:
         {
-          pDebug.Log ("DISPLAY POPUP");
+          Logger::WriteLine ("DISPLAY POPUP");
           popup_entries.clear ();
           popup_tags.clear ();
           Uint16 unkn = packet->GetWord ();
@@ -2798,7 +2796,7 @@ void cClient::Act_SubCommands (cPacket * packet)
         }
       case 0x1B:
         {                       // AoS spellbooks
-          pDebug.Log ("AOS SPELLBOOK");
+          Logger::WriteLine ("AOS SPELLBOOK");
           Uint16 unkn1 = packet->GetWord ();
           Uint32 SpellBookSerial = packet->GetDword ();
           Uint16 SpellBookModel = packet->GetWord ();
@@ -2890,8 +2888,8 @@ void cClient::Send_RequestChars (Uint32 account)
   cPacket packet;
   packet.FillPacket (PCK_CharListReq);
   packet.packet.CharListReq.m_account = account;
-  strncpy (packet.packet.CharListReq.m_username, nConfig::login.c_str (), 29);
-  strncpy (packet.packet.CharListReq.m_password, nConfig::password.c_str (),
+  strncpy (packet.packet.CharListReq.m_username, Config::GetLogin().c_str (), 29);
+  strncpy (packet.packet.CharListReq.m_password, Config::GetPassword().c_str (),
            29);
   Send (&packet);
 }
@@ -2918,8 +2916,8 @@ void cClient::Send_SelectChar (Uint32 index)
   packet.packet.CharPlay.m_edededed = 0xedededed;
   packet.packet.CharPlay.m_ip = 0;
   packet.packet.CharPlay.m_slot = (Uint8) index;
-  strncpy (packet.packet.CharPlay.m_username, nConfig::login.c_str (), 29);
-  strncpy (packet.packet.CharPlay.m_password, nConfig::password.c_str (), 29);
+  strncpy (packet.packet.CharPlay.m_username, Config::GetLogin().c_str (), 29);
+  strncpy (packet.packet.CharPlay.m_password, Config::GetPassword().c_str (), 29);
   Send (&packet);
   ClearLoginLists ();
 
@@ -3090,7 +3088,7 @@ void cClient::Send_Speech (std::string text, Uint8 mode)
   packet.AddByte(0xAD);
   packet.AddWord(12+ keyw_size + text.size() + 1);
   packet.AddByte(count>0?0xC0:0);
-  packet.AddWord(nConfig::speech_hue);
+  packet.AddWord( Config::GetSpeechHue() );
   packet.AddWord(0);
   packet.AddDword(0x49544100);
 
@@ -3138,7 +3136,7 @@ Send(&packet);
   packet.AddWord (text.size () + 9);
   packet.AddByte (mode);
   //packet.AddWord(100);
-  packet.AddWord (nConfig::speech_hue);
+  packet.AddWord ( Config::GetSpeechHue() );
   packet.AddWord (3);
   packet.AddData ((void *) text.c_str (), text.size ());
   Send (&packet.packet, text.size () + 9);
@@ -3157,7 +3155,7 @@ void cClient::Send_SpeechUNICODE(std::string text, Uint8 mode)
 	packet.AddByte(mode);								// Mode (0=say,2=emote,8=whipser,9=yell)
 	packet.AddWord(100);								// Text Color
 	packet.AddWord(3);									// Font
-	packet.AddData((void*)nConfig::cliloc_lang.c_str(), 4);					// Language, "ENU", "DEA", "DEU", "KOR" ...	
+	packet.AddData((void*)Config::GetClilocLang().c_str(), 4);					// Language, "ENU", "DEA", "DEU", "KOR" ...	
 	packet.AddData((void *)unicode.m_unicodeBuf, unicode.m_unicodeLen); // Text
 	Send(&packet.packet, unicode.m_unicodeLen + 12);
 }
@@ -3800,7 +3798,7 @@ void cClient::CastSpell (int spellid)
 Uint32 cClient::GetEnemy ()
 {
   
-  if(nConfig::is_uox3 && (enemy == 0))
+  if ( Config::GetIsUox3() && (enemy == 0))
    return 0xFFFFFFFF;
  
   return enemy;

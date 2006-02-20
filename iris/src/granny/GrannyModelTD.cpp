@@ -23,7 +23,7 @@
 
 
 #include "granny/GrannyModelTD.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <cassert>
 
 using namespace std;

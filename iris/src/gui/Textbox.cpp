@@ -21,7 +21,7 @@
  *****/
 
 #include "gui/Textbox.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 
 using namespace std;

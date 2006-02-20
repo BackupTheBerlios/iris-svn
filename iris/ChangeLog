@@ -1,9 +1,104 @@
+19.02.2006
+Changes by SiENcE (Florian Fischer)
+	granny_aos.xml
+	- Male & Female Elf model added
+
+	ModelsInfo.xml
+	- Male & Female Elf Model definitions added
+
+19.02.2006
+Changes by Nuno Ramiro
+	- Config.h/.cpp was not ISO, it is now.
+	- Grannyfile.cpp was not ISo, it is now.
+	- Small changes under loading.
+	- New Solution for Visual 2005 (2003 is kept under other name)
+	- Small change under CSL wasn't working with VS 2005
+	- Fixes to compile under Linux
+
+18.02.2006
+Changes by Nuno Ramiro
+	- Some changes to Game.cpp / Game.h.
+	- Fixed some bugs with the other changes.
+
+17.02.2006
+Changes by Nuno Ramiro
+	- Rebuilt Config class, it is now a static class with it's variables. (Should be faster and fixed also memory leaks)
+	- Made sure Config class was beeing displayed properly under doxygen documentation.
+
+16.02.2006
+Changes by Nuno Ramiro
+	- Reworking Config class (rebuilding it)
+
+	--> Removed cal3d was doing nothing, if we need it later we will add.
+	--> Added Doxygen.h.
+	--> Removed Debug.h and Debug.cpp
+	--> Created a new Logger.h and Logger.cpp (should be faster).
+
+	UOMap.cpp
+	- Removed #include <fstream>
+	- Removed #include <stdlib.h>
+	- Removed #include <cstring>
+	- Removed #include "Debug.h"
+	- Removed #include "iris_endian.h"
+	- Removed #include <iostream>
+	- Removed #include "loaders/MapInfo.h"
+	- Removed #include "Exception.h"
+	- Removed #include "Config.h"
+	- Renamed mapstream, staticstream, staidxstream to m_...
+	- Made m_mapstream, m_staticstream, m_staidxstream = NULL under destructor
+	- Removed using namespace std;
+
+	UOMap.h
+	- Removed #include <windows.h>
+	- Added #include "loaders/MapInfo.h"
+	- Added #include "Exception.h"
+	- Renamed mapstream, staticstream, staidxstream to m_...
+	- Renamed width and height to m_iWidth/m_iHeight
+
+	ui3.cpp --> Renamed to main.cpp
+	- Removed using namespace std;
+	- Removed #include <iostream>
+	- Removed #include "gui/Image.h"
+	- Removed #include "net/Client.h"
+	- Removed #include "uotype.h"
+	- Removed all those lines initializing Debug replaced with pDebug.Init();
+
+	SoundMixer.h
+	- Added #include <windows.h>
+
+	SpeechLoader.h
+	- Added #include "SDL/SDL.h"
+
+	Config.cpp
+	- Removed using namespace std;
+	- Removed #include <string>
+	- Removed #include "Debug.h"
+	- Removed #include "Exception.h"
+	- Removed #include "xml.h"
+	- Removed #include "renderer/SDLScreen.h"
+	- Removed struct ParserData
+	- Removed #define's
+	- Added Config class source.
+
+	Config.h
+	- Added #include "Exception.h"
+	- Added #include "xml.h"
+	- Added #include "renderer/SDLScreen.h"
+	- Added struct ParserData
+	- Added enum DataType
+	- Added Config class.
+	- Made enum start at 0.
+	- Added struct FontInfo
+
+	Logger.cpp
+	- Tested and fixed lastest bugs
+
 10.02.2006
-Changes by SiENcE
+Changes by SiENcE (Florian Fischer)
 	- script/Iris.csl -> Paperdoll Warmode Button fixed
 
 8.02.2006
-Changes by Harkon & SiENcE
+Changes by Harkon & SiENcE (Florian Fischer)
 	-ClilocLoader.cpp temp. fixed
 	-HTMLGumpParser.cpp infinite loop fixed
 	-Client.cpp function Send_SpeechUNICODE added
@@ -11,47 +106,47 @@ Changes by Harkon & SiENcE
 	-SpeechLoader.cpp debuglog disabled
 
 25.01.2006
-Changes by SiENcE
+Changes by SiENcE (Florian Fischer)
 	-ClilocLoader fixed
 
 24.01.2006
-Changes by SiENcE
+Changes by SiENcE (Florian Fischer)
 	-Gloves and Hands are rendered together (we need to find a better way to detect hands or gloves)
 
 23.01.2006
-Changes by SiENcE
+Changes by SiENcE (Florian Fischer)
 	-SpeechLoader.cpp header changed 
 
 21.01.2006
-Changes by Artix & SiENcE
+Changes by Artix & SiENcE (Florian Fischer)
 	-Speech.mul support added (SpeechLoader.cpp)
 	-boat handling works now also for RunUO (Artix)
 	-Damage Info-Paket added (Harkon)
 	-minor Gump bugfixes
 
 11.01.2006
-Changes by SiENcE
+Changes by SiENcE (Florian Fischer)
 	-SDL bug fixed
 
 10.01.2006
-Changes by Artix & SiENcE
+Changes by Artix & SiENcE (Florian Fischer)
 	-Boat handling added for POL (not RunUO ready yet, because RunUO uses speech.mul)
 	-Female Granny Animations fixed (granny_aos.xml)
         -bugfix strdup, strcasecmp (Client.h, grannyfile.cpp)
 
 06.01.2006
-Changes by SiENcE
+Changes by SiENcE (Florian Fischer)
 	-Map-Fogfix
 	-Map-Networkpacket added to Client.cpp
 
 06.01.2006
-Changes by Harkon & SiENcE
+Changes by Harkon & SiENcE (Florian Fischer)
 	-some Granny Animations bugfixed
 	-Weapon on the ground - bugfixed
 	-Several Memory leaks bugfixed
 
 24.10.2005:
-Changes by Artix & SiENcE
+Changes by Artix & SiENcE (Florian Fischer)
 	-Particles for some Spells and Statics added
 	-new ML models added to granny_aos.xml
 	-global scale factor for granny models in ModelsInfo.xml

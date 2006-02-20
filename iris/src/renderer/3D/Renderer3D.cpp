@@ -50,7 +50,7 @@
 
 #include "include.h"
 #include "Config.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Game.h"
 
 #include "Geometry.h"
@@ -105,10 +105,12 @@ Renderer3D::Renderer3D ()
     skyboxtextures[index] = NULL;
   tex_char_shadow = NULL;
   tex_water = NULL;
+  m_kGame = Game::GetInstance();
 }
 
 Renderer3D::~Renderer3D ()
 {
+	m_kGame = NULL;
 }
 
 int Renderer3D::Init (void)
@@ -467,7 +469,7 @@ int Renderer3D::RenderScene (void)
 
 
                   }
-              if (nConfig::perspective == 1 && (!pCamera.forceRotation()))
+              if (Config::GetPerspective() == 1 && (!pCamera.forceRotation()))
 
                 pCamera.SetAngleZ (-player_character->angle () + 180);
 
@@ -505,7 +507,7 @@ int Renderer3D::RenderScene (void)
   if (do_culling || (old_z == ROOF_WAIT))
       {
         int z;// = GetRoofHeight ();
-        if(nConfig::roof_fade)
+        if ( Config::GetRoofFade() )
          z = GetRoofHeight ();
         else
         {
@@ -524,8 +526,8 @@ int Renderer3D::RenderScene (void)
               else
                   {
                     cFader *fader =
-                      new cFader (255.0f, nConfig::roof_fade_alpha,
-                                  nConfig::roof_fade_time);
+						new cFader (255.0f, Config::GetRoofFadeAlpha(),
+						Config::GetRoofFadeTime() );
                     fader->Start ();
                     int count = SetFader (z, 255, fader, false);
                     if (count)
@@ -534,11 +536,11 @@ int Renderer3D::RenderScene (void)
                       delete fader;
 
                     fader =
-                      new cFader (nConfig::roof_fade_alpha, 255.0f,
-                                  nConfig::roof_fade_time);
+                      new cFader ( Config::GetRoofFadeAlpha(), 255.0f,
+					  Config::GetRoofFadeTime() );
                     fader->Start ();
                     count =
-                      SetFader (z, nConfig::roof_fade_alpha, fader, true);
+                      SetFader (z, Config::GetRoofFadeAlpha(), fader, true);
                     if (count)
                       static_faders.push_back (fader);
                     else
@@ -734,7 +736,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
       {
         cCharacter *character = iter->second;
         
-        if((character->id() == pClient->player_charid()) && nConfig::hideself)
+		if((character->id() == pClient->player_charid()) && Config::GetHideSelf() )
          continue;
         
         if ((character->x () >= min_x) && (character->y () >= min_y)
@@ -821,7 +823,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                         || character->body () == 403)
                       alpha = 0.4f;
 
-                    if ((pGame.GetPointedObj () == character->id ())
+                    if ((m_kGame->GetPointedObj () == character->id ())
                         || (pClient->GetEnemy () == character->id ()))
                       pHueLoader.GetRGBHue ((int) character->
                                              getHighlightColor (), colr, colg,
@@ -830,7 +832,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                       pHueLoader.GetRGBHue (character->hue (), colr, colg,
                                              colb);
 /*
-                    if((pGame.GetPointedObj() == character->id()) || (pClient->GetEnemy() == character->id())) 
+                    if((m_kGame->GetPointedObj() == character->id()) || (pClient->GetEnemy() == character->id())) 
                                               SDLscreen->SetHue((int) character->getHighlightColor());
                                            else
                                               SDLscreen->SetHue(character->hue());
@@ -850,7 +852,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                     std::map < int, int >replacelist;
                     std::map < int, int >::iterator iter;
 
-                    if ((nConfig::aos)
+					if ((Config::GetAOS())
                         && (character->body () == 400
                             || character->body () == 401))
                         {
@@ -936,7 +938,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                             character->GetEquip (layer);
                           if (equip)
                               {
-                                if ((pGame.GetPointedObj () ==
+                                if ((m_kGame->GetPointedObj () ==
                                      character->id ())
                                     || (pClient->GetEnemy () ==
                                         character->id ()))
@@ -948,7 +950,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                                          colg, colb);
                                 int anim = equip->anim ();
 
-                                if ((nConfig::aos)
+                                if ((Config::GetAOS())
                                     && (character->body () == 400
                                         || character->body () == 401))
                                     {
@@ -1006,7 +1008,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                         {
                           mount = new cMount (mounttile->model ());
                           mountmodel = mount->GetMountType ();
-                          if ((pGame.GetPointedObj () == character->id ())
+                          if ((m_kGame->GetPointedObj () == character->id ())
                               || (pClient->GetEnemy () == character->id ()))
                             pHueLoader.GetRGBHue ((int) character->
                                                    getHighlightColor (), colr,
@@ -1121,7 +1123,7 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
           if (character)        // if character is nearer than found object
             if (lambda < distance)
                 {
-                  if(nConfig::hideself && character->id() == pClient->player_charid())
+                  if ( Config::GetHideSelf() && character->id() == pClient->player_charid())
                    return; 
                   *r_character = character;
                   return;

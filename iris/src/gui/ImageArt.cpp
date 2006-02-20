@@ -22,7 +22,7 @@
 
 #include "loaders/ArtLoader.h"
 #include "gui/ImageArt.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "renderer/TextureBuffer.h"
 
@@ -87,9 +87,9 @@ void ImageArt::Draw (GumpHandler * gumps)
 
         if (texture)
             {
-//pDebug.Log("TEXTURE OK");
+//Logger::WriteLine("TEXTURE OK");
               if ((!GetWidth ()) || (!GetHeight ()))
-                  {             //pDebug.Log("TEXTURE RESIZE OK");
+                  {             //Logger::WriteLine("TEXTURE RESIZE OK");
                     SetSize (texture->GetRealWidth (),
                              texture->GetRealHeight ());
                   }

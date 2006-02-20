@@ -26,7 +26,7 @@
 #include "renderer/particles/ParticleEngine.h"
 #include "renderer/Camera.h"
 #include "include.h"
-#include "Debug.h"
+#include "Logger.h"
 
 using namespace std;
 
@@ -106,7 +106,7 @@ Uint32 cParticleEngine::AddEffect (cStaticModelParticleEffectInfo *
             }
         else
             {
-              pDebug.Log ("Warning: Effect not found: " +
+              Logger::WriteLine ("Warning: Effect not found: " +
                           effect_info->name ());
             }
 
@@ -137,7 +137,7 @@ Uint32 cParticleEngine::AddEffect (Uint32 effect_id, float x, float y, float z)
             }
         else
             {
-              //pDebug.Log ("Warning: Effect not found: " +
+              //Logger::WriteLine ("Warning: Effect not found: " +
                 //          effect_info->name ());
                std::cout << "Warning: Effect not found: " << effect_id << endl; 
             }
@@ -171,7 +171,7 @@ Uint32 cParticleEngine::AddMovingEffect(Uint32 effect_id, float x, float y, floa
             }
         else
             {
-              //pDebug.Log ("Warning: Effect not found: " +
+              //Logger::WriteLine ("Warning: Effect not found: " +
                 //          effect_info->name ());
                std::cout << "Warning: Effect not found: " << effect_id << endl; 
             }

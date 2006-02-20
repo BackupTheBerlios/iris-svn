@@ -22,7 +22,7 @@
 
 #include "gui/Paperdoll.h"
 #include "loaders/PaperdollBuilder.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include <cassert>
 

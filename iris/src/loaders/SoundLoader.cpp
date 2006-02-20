@@ -19,7 +19,7 @@
 #include "iris_endian.h"
 #include <iostream>
 #include <fstream>
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "loaders/SoundLoader.h"
 #include <string>
@@ -76,7 +76,7 @@ int SoundLoader::SoundInit (std::string mulPath)
   IndexFile.open (indexpath.c_str (), std::ios::in | std::ios::binary);
   if (!IndexFile.is_open ())
       {
-        pDebug.Log ("Couldn't open soundidx.mul in SoundLoader::SoundInit();",
+        Logger::WriteLine ("Couldn't open soundidx.mul in SoundLoader::SoundInit();",
                     __FILE__, __LINE__, LEVEL_ERROR);
         return false;
         IndexFile.close ();
@@ -108,7 +108,7 @@ int SoundLoader::SoundInit (std::string mulPath)
 
   if (!SoundFile.is_open ())
       {
-        pDebug.Log ("Couldn't open sound.mul in SoundLoader::SoundInit();",
+        Logger::WriteLine ("Couldn't open sound.mul in SoundLoader::SoundInit();",
                     __FILE__, __LINE__, LEVEL_ERROR);
         return false;
         SoundFile.close ();
@@ -124,7 +124,7 @@ Mix_Chunk *SoundLoader::Load (int index)
 
   if (index < 0 || index > indx)
       {
-        //pDebug.Log( "Error client tried to load a nonexisting sound in SoundLoader::SoundLoad();", __FILE__, __LINE__, LEVEL_ERROR );
+        //Logger::WriteLine( "Error client tried to load a nonexisting sound in SoundLoader::SoundLoad();", __FILE__, __LINE__, LEVEL_ERROR );
         wave_chunk = NULL;
         return wave_chunk;
       };

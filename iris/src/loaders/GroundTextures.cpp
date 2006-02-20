@@ -23,7 +23,7 @@
 
 #include "iris_endian.h"
 #include "loaders/GroundTextures.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Exception.h"
 #include "uotype.h"
 #include "xml.h"

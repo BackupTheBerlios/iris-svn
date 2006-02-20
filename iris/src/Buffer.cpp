@@ -22,7 +22,7 @@
 
 
 #include "Buffer.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Exception.h"
 #include <iostream>
 #include <stdlib.h>

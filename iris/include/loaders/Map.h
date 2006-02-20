@@ -32,9 +32,9 @@ class MapLoader
 {
 public:
    virtual void	LoadMapBlock( int x, int y, MulBlock * block ) = 0;
-   virtual struct staticinfo * LoadStatics(int x, int y, int &len) = 0;
+   virtual struct staticinfo *LoadStatics(int x, int y, int &len) = 0;
 };
 
-extern MapLoader * pMapLoader;
+extern MapLoader *pMapLoader;
 
 #endif //_MAP_H_

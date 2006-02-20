@@ -24,7 +24,7 @@
 #include "iris_endian.h"
 #include "loaders/ArtLoader.h"
 #include "loaders/VerdataLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Exception.h"
 #include "uotype.h"
 #include <string.h>
@@ -59,7 +59,7 @@ void cArtLoader::Init (std::string filename, std::string indexname)
   if (!artfile->is_open ())
       {
         errstr += filename;
-        pDebug.Log ((char *) errstr.c_str (), __FILE__, __LINE__,
+        Logger::WriteLine ((char *) errstr.c_str (), __FILE__, __LINE__,
                     LEVEL_ERROR);
         delete artfile;
         delete artindex;
@@ -71,7 +71,7 @@ void cArtLoader::Init (std::string filename, std::string indexname)
   if (!artindex->is_open ())
       {
         errstr += indexname;
-        pDebug.Log ((char *) errstr.c_str (), __FILE__, __LINE__,
+        Logger::WriteLine ((char *) errstr.c_str (), __FILE__, __LINE__,
                     LEVEL_ERROR);
         delete artfile;
         delete artindex;

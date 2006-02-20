@@ -25,7 +25,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "loaders/ClilocLoader.h"
 #include "net/unicode.h"
@@ -95,16 +95,16 @@ bool cClilocLoader::Init(std::string path)
 	std::string default_language = "enu";
 	std::string filename = path + "cliloc." + default_language;
 
-	std::string language = nConfig::cliloc_lang;
+	std::string language = Config::GetClilocLang();
 	std::string filename_custom = path + "cliloc." + language;
 
 	clilocfile.open (filename.c_str (), std::ios::in | std::ios::binary);
 
 	if (!clilocfile.is_open ())
 	{
-		pDebug.Log ("Warning: Couldn't open cliloc file");
+		Logger::WriteLine ("Warning: Couldn't open cliloc file");
 		clilocfile.close ();
-		nConfig::clilocs = 0;
+		Config::SetClilocs( 0 );
 		return false;
 	}
 
@@ -156,9 +156,9 @@ bool cClilocLoader::Init(std::string path)
 		clilocfile.open (filename_custom.c_str (), std::ios::in | std::ios::binary);
 		if (!clilocfile.is_open ())
 		{
-			pDebug.Log ("Warning: Couldn't open cliloc file");
+			Logger::WriteLine ("Warning: Couldn't open cliloc file");
 			clilocfile.close ();
-			nConfig::clilocs = 0;
+			Config::SetClilocs( 0 );
 			return false;
 		}
 

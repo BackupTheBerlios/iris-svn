@@ -23,7 +23,7 @@
 
 #include "iris_endian.h"
 #include "loaders/TileDataLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Exception.h"
 #include <string.h>
 #include <iostream>

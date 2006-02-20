@@ -23,7 +23,7 @@
 
 #include "renderer/3D/MapBuffer3D.h"
 #include "renderer/3D/MapBlock3D.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "include.h"
 #include "renderer/Camera.h"
@@ -55,7 +55,7 @@ cMapblock *cMapbuffer3D::CreateBlock (int x, int y)
         block->Generate (environment);
 
         if (m_roof_z != ROOF_NONE)
-          block->SetAlpha (m_roof_z, nConfig::roof_fade_alpha, false);
+          block->SetAlpha (m_roof_z, Config::GetRoofFadeAlpha(), false);
       }
 
   return block;

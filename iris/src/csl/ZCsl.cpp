@@ -25,7 +25,10 @@
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to IBK at info@ibk-software.ch.
  */
+
+#ifndef ZC_BUILDING_ZCSL
 #define ZC_BUILDING_ZCSL
+#endif
 
 #include <stdlib.h>
 #include <stdarg.h>

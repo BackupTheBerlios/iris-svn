@@ -25,7 +25,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "loaders/SpeechLoader.h"
 #include "string_utils.h"
@@ -45,18 +45,17 @@ cSpeechLoader::~cSpeechLoader ()
 
 void cSpeechLoader::Init (std::string path)
 {
-  std::ifstream Speechfile;
+	std::ifstream Speechfile;
 
-
-  std::string filename = path + "Speech.mul";
-  std::cout << "Speech file: " << filename << std::endl;
+	std::string filename = path + "Speech.mul";
+	std::cout << "\t| -> Speech file: " << filename << std::endl;
 
 
   Speechfile.open (filename.c_str (), std::ios::in | std::ios::binary);
 
   if (!Speechfile.is_open ())
       {
-        pDebug.Log ("Warning: Couldn't open Speech file");
+        Logger::WriteLine ("\t| -> Warning: Couldn't open Speech file");
         Speechfile.close ();
         //nConfig::Speech_mul = 0;
         return;
@@ -92,7 +91,7 @@ void cSpeechLoader::Init (std::string path)
         s_keyword = std::string (c_keyword);
         delete c_keyword;
         //std::cout << "ID: " << index << " WORD: " << s_keyword << "   len: " << keywordlen << std::endl;
-        //pDebug.Log(s_keyword.c_str());
+        //Logger::WriteLine(s_keyword.c_str());
         m_keywords.insert (make_pair ( s_keyword, index));
   }
   Speechfile.close ();

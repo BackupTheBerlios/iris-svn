@@ -23,7 +23,7 @@
 
 #include "renderer/MapBuffer.h"
 #include <assert.h>
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "Exception.h"
 #include "include.h"
@@ -128,7 +128,7 @@ void cMapbuffer::UpdateAlpha ()
           iter->second->SetAlpha (-255, 255, false);
           if (m_roof_z != ROOF_NONE)
 
-            iter->second->SetAlpha (m_roof_z, nConfig::roof_fade_alpha,
+            iter->second->SetAlpha (m_roof_z, Config::GetRoofFadeAlpha(),
                                     false);
         }
 }

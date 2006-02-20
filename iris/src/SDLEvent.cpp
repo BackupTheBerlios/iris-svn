@@ -28,7 +28,7 @@
 #include "renderer/Camera.h"
 #include "net/Client.h"
 #include "gui/GUIHandler.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <math.h>
 #include "Config.h"
 #include "Game.h"
@@ -71,7 +71,7 @@ void SDLEvent::PollEvent ()
   if (last_click)
     if ((currenttime - last_click) >= CLICK_TIME)
         {
-          pGame.HandleClick (lastx, lasty, lastbutton, false);
+          Game::GetInstance()->HandleClick (lastx, lasty, lastbutton, false);
 //      printf("Single Click!\n");
           last_click = 0;
         }
@@ -117,7 +117,7 @@ void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
         // Do not reinitialize window in Win32
         SDLscreen->screen = SDL_SetVideoMode (event.resize.w,
                                               event.resize.h,
-                                              nConfig::bpp,
+                                              Config::GetBPP(),
                                               SDLscreen->videoFlags);
         if (!SDLscreen->screen)
             {
@@ -155,7 +155,7 @@ void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
               msg.type = MESSAGE_MOUSEUP;
               pUOGUI.SetDragging (false);
               dragging = false;
-              if (pGame.CheckDragDrop (event.button.x, event.button.y))
+              if (Game::GetInstance()->CheckDragDrop (event.button.x, event.button.y))
                 break;
             }
         msg.mouseevent.x = event.button.x - pUOGUI.GetX ();
@@ -165,7 +165,7 @@ void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
             {
               if (event.type == SDL_MOUSEBUTTONUP)
                   {
-                    pGame.HandleMouseUp (event.button.x, event.button.y,
+                    Game::GetInstance()->HandleMouseUp (event.button.x, event.button.y,
                                          event.button.button);
                     if (!last_click)
                         {
@@ -178,7 +178,7 @@ void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
                         {
                           if ((currenttime - last_click) < CLICK_TIME)
                               {
-                                pGame.HandleClick (lastx, lasty,
+                                Game::GetInstance()->HandleClick (lastx, lasty,
                                                    event.button.button, true);
                                 //printf("Double Click!\n");
                               }
@@ -187,7 +187,7 @@ void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
                   }
               else
                   {
-                    pGame.HandleMouseDown (event.button.x, event.button.y,
+                    Game::GetInstance()->HandleMouseDown (event.button.x, event.button.y,
                                            event.button.button);
                     clickdown_x = event.button.x;
                     clickdown_y = event.button.y;
@@ -252,7 +252,7 @@ void SDLEvent::HandleKeyPress (SDL_keysym * keysym)
   if (keys[SDLK_ESCAPE] == SDL_PRESSED)
     quit = true;
 
-  Renderer *pRenderer = pGame.GetRenderer ();
+  Renderer *pRenderer = Game::GetInstance()->GetRenderer ();
   if (keys[SDLK_a] == SDL_PRESSED && pRenderer)
       {
         pRenderer->FadeStatics (50, 1000);
@@ -263,7 +263,7 @@ void SDLEvent::HandleKeyPress (SDL_keysym * keysym)
         pRenderer->FadeStatics (255, 1000);
       }
 
-  pGame.OnKeyPress (keysym);
+  Game::GetInstance()->OnKeyPress (keysym);
   /* F1 key was pressed this toggles fullscreen mode - does not work under windows currently */
 
 #ifndef WIN32
@@ -303,16 +303,16 @@ void SDLEvent::HandleMovement (void)
 
         if (keys[SDLK_LEFT] == SDL_PRESSED)
             {
-              pGame.Walk_Simple (WALK_LEFT);
+              Game::GetInstance()->Walk_Simple (WALK_LEFT);
             }
 //      pCamera.Rotate(0.0, 0.0, 8.0 * factor);
 
         if (keys[SDLK_RIGHT] == SDL_PRESSED)
-          pGame.Walk_Simple (WALK_RIGHT);
+          Game::GetInstance()->Walk_Simple (WALK_RIGHT);
 //      pCamera.Rotate(0.0, 0.0, -8.0 * factor);
 
         if (keys[SDLK_UP] == SDL_PRESSED)
-          pGame.Walk_Simple (WALK_FORWARD);
+          Game::GetInstance()->Walk_Simple (WALK_FORWARD);
 //      pCamera.Move(factor);
 
         if (keys[SDLK_DOWN] == SDL_PRESSED)
@@ -332,7 +332,7 @@ void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
   
   if (!event)
       {
-        pDebug.Log ("Null event pointer in SDLEvent::HandleMouseMotion",
+        Logger::WriteLine ("Null event pointer in SDLEvent::HandleMouseMotion",
                     __FILE__, __LINE__, LEVEL_WARNING);
         return;
       }
@@ -340,7 +340,7 @@ void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
    if(!pCamera.forceRotation())
     pUOGUI.SetCursorPos (event->x, event->y);
 
-  pGame.UpdateDragMode (event->x, event->y);
+  Game::GetInstance()->UpdateDragMode (event->x, event->y);
 
   gui_message msg;
 
@@ -378,14 +378,14 @@ void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
                 
                 float amount= pCamera.GetAngleZ() - -pClient->player_character ()->angle ();
                   
-                if (keys[SDLK_UP] == SDL_PRESSED && nConfig::perspective==1){
+                if (keys[SDLK_UP] == SDL_PRESSED && Config::GetPerspective() == 1 ){
                   int wdirection=WALK_FORWARD;
                   if(amount > 215)
                    wdirection = WALK_LEFT;
                   else if (amount < 145)
                    wdirection = WALK_RIGHT;
                   if(wdirection == WALK_LEFT ||  wdirection == WALK_RIGHT)
-                  pGame.Walk_Simple (wdirection); 
+                  Game::GetInstance()->Walk_Simple (wdirection); 
                   }                            
             }
 
@@ -399,10 +399,10 @@ void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
           if ((abs (clickdown_x - event->x) > 10)
               && (abs (clickdown_y - event->y) > 10) && !dragging)
               {
-                pGame.HandleDrag (clickdown_x, clickdown_y);
+                Game::GetInstance()->HandleDrag (clickdown_x, clickdown_y);
                 dragging = true;
               }
-        pGame.HandleMouseMotion (event);
+        Game::GetInstance()->HandleMouseMotion (event);
 
       }
 

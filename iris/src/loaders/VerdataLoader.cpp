@@ -23,7 +23,7 @@
 
 #include "iris_endian.h"
 #include "loaders/VerdataLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "uotype.h"
 #include <string.h>
 #include <iostream>
@@ -55,7 +55,7 @@ void cVerdataLoader::Init (std::string filename)
   if (!verdatafile->is_open ())
       {
         errstr += filename;
-        pDebug.Log ((char *) errstr.c_str (), __FILE__, __LINE__,
+        Logger::WriteLine ((char *) errstr.c_str (), __FILE__, __LINE__,
                     LEVEL_ERROR);
         delete verdatafile;
         verdatafile = NULL;

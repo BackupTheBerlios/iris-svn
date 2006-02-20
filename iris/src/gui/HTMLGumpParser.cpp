@@ -23,7 +23,7 @@
 #include "gui/HTMLGumpParser.h"
 #include "gui/MultiLabel.h"
 #include "loaders/HueLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "string_utils.h"
 #include "iris_endian.h"
 #include <cstdlib>
@@ -62,7 +62,7 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
 		f_apices = html_text.find(string(apices), f_apices);
 	}
 
-	//pDebug.Log (html_text.c_str ());
+	//Logger::WriteLine (html_text.c_str ());
 
 	char *tags = strdup(html_text.c_str ());
 

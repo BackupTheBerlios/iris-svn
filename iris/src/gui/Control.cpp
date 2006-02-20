@@ -22,7 +22,7 @@
 
 #include "gui/Control.h"
 #include "gui/Container.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "loaders/GumpLoader.h"
 #include "loaders/HueLoader.h"
@@ -251,7 +251,7 @@ int Control::HandleMessage (gui_message * msg)
 
   if (!msg)
       {
-        pDebug.Log ("NULL msg in Control::HandleMessage(gui_message *)",
+        Logger::WriteLine ("NULL msg in Control::HandleMessage(gui_message *)",
                     __FILE__, __LINE__, LEVEL_ERROR);
         return (false);
       }
@@ -355,8 +355,8 @@ void Control::DrawRectHued (int x, int y, int width, int height,
 
   glBegin (GL_QUADS);
 
-  int y1 = nConfig::height - 1 - (y);
-  int y2 = nConfig::height - 1 - (y + height);
+  int y1 = Config::GetHeight() - 1 - (y);
+  int y2 = Config::GetHeight() - 1 - (y + height);
 
   int x1 = x;
   int x2 = x + width;
@@ -412,8 +412,8 @@ void Control::DrawRect (int x, int y, int width, int height,
 
   glBegin (GL_QUADS);
 
-  int y1 = nConfig::height - 1 - (y);
-  int y2 = nConfig::height - 1 - (y + height);
+  int y1 = Config::GetHeight() - 1 - (y);
+  int y2 = Config::GetHeight() - 1 - (y + height);
 
   int x1 = x;
   int x2 = x + width;

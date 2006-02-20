@@ -56,7 +56,7 @@ am_ui3_OBJECTS = ArtLoader.$(OBJEXT) Bitmask.$(OBJEXT) \
 	Button.$(OBJEXT) Camera.$(OBJEXT) Characters.$(OBJEXT) \
 	Checkbox.$(OBJEXT) Client.$(OBJEXT) ClilocLoader.$(OBJEXT) \
 	Config.$(OBJEXT) Container.$(OBJEXT) Control.$(OBJEXT) \
-	CSLHandler.$(OBJEXT) Debug.$(OBJEXT) DynamicObjects.$(OBJEXT) \
+	CSLHandler.$(OBJEXT) Logger.$(OBJEXT) DynamicObjects.$(OBJEXT) \
 	Exception.$(OBJEXT) Fade.$(OBJEXT) FontLoader.$(OBJEXT) \
 	Game.$(OBJEXT) Geometry.$(OBJEXT) grannyfile.$(OBJEXT) \
 	GrannyLoader.$(OBJEXT) GrannyModelAOS.$(OBJEXT) \
@@ -89,7 +89,7 @@ am_ui3_OBJECTS = ArtLoader.$(OBJEXT) Bitmask.$(OBJEXT) \
 	string_utils.$(OBJEXT) Textbox.$(OBJEXT) TextManager.$(OBJEXT) \
 	Texture.$(OBJEXT) TextureBuffer.$(OBJEXT) \
 	TileDataBuffer.$(OBJEXT) TileDataLoader.$(OBJEXT) \
-	ui3.$(OBJEXT) unicode.$(OBJEXT) UOMap.$(OBJEXT) \
+	main.$(OBJEXT) unicode.$(OBJEXT) UOMap.$(OBJEXT) \
 	uo_huffman.$(OBJEXT) VerdataLoader.$(OBJEXT) xml.$(OBJEXT) \
 	Block.$(OBJEXT) Compile.$(OBJEXT) Function.$(OBJEXT) \
 	Input.$(OBJEXT) Instruct.$(OBJEXT) Interprt.$(OBJEXT) \
@@ -102,9 +102,7 @@ am_ui3_OBJECTS = ArtLoader.$(OBJEXT) Bitmask.$(OBJEXT) \
 	ZTrace.$(OBJEXT) StaticObjects.$(OBJEXT) \
 	CharacterLight.$(OBJEXT) LightNodes.$(OBJEXT) \
 	LightNodeEnvironment.$(OBJEXT) iris_endian.$(OBJEXT) \
-	cal3d_animation.$(OBJEXT) animation_action.$(OBJEXT) \
 	animation_cycle.$(OBJEXT) bone.$(OBJEXT) \
-	buffersource.$(OBJEXT) cal3d_wrapper.$(OBJEXT) \
 	coreanimation.$(OBJEXT) corebone.$(OBJEXT) \
 	corekeyframe.$(OBJEXT) corematerial.$(OBJEXT) \
 	coremesh.$(OBJEXT) coremodel.$(OBJEXT) \
@@ -114,7 +112,6 @@ am_ui3_OBJECTS = ArtLoader.$(OBJEXT) Bitmask.$(OBJEXT) \
 	loader.$(OBJEXT) matrix.$(OBJEXT) mesh.$(OBJEXT) \
 	mixer.$(OBJEXT) model.$(OBJEXT) morphtargetmixer.$(OBJEXT) \
 	physique.$(OBJEXT) platform.$(OBJEXT) quaternion.$(OBJEXT) \
-	cal3d_renderer.$(OBJEXT) saver.$(OBJEXT) skeleton.$(OBJEXT) \
 	springsystem.$(OBJEXT) streamsource.$(OBJEXT) \
 	submesh.$(OBJEXT) tinystr.$(OBJEXT) tinyxml.$(OBJEXT) \
 	tinyxmlerror.$(OBJEXT) tinyxmlparser.$(OBJEXT) \
@@ -134,7 +131,7 @@ DIST_SOURCES = $(ui3_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-VPATH = loaders renderer gui csl net granny sound renderer/3D renderer/2D cal3d renderer/particles
+VPATH = loaders renderer gui csl net granny sound renderer/3D renderer/2D renderer/particles
 ACLOCAL = @ACLOCAL@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
@@ -250,7 +247,7 @@ Config.cpp \
 Container.cpp \
 Control.cpp \
 CSLHandler.cpp \
-Debug.cpp \
+Logger.cpp \
 DynamicObjects.cpp \
 Exception.cpp \
 Fade.cpp\
@@ -330,7 +327,7 @@ Texture.cpp \
 TextureBuffer.cpp \
 TileDataBuffer.cpp \
 TileDataLoader.cpp \
-ui3.cpp \
+main.cpp \
 unicode.cpp \
 UOMap.cpp \
 uo_huffman.cpp \
@@ -366,12 +363,10 @@ CharacterLight.cpp \
 LightNodes.cpp \
 LightNodeEnvironment.cpp \
 iris_endian.cpp \
-cal3d_animation.cpp \
 animation_action.cpp \
 animation_cycle.cpp \
 bone.cpp \
 buffersource.cpp \
-cal3d_wrapper.cpp \
 coreanimation.cpp \
 corebone.cpp \
 corekeyframe.cpp \
@@ -394,8 +389,6 @@ morphtargetmixer.cpp \
 physique.cpp \
 platform.cpp \
 quaternion.cpp \
-cal3d_renderer.cpp \
-saver.cpp \
 skeleton.cpp \
 springsystem.cpp \
 streamsource.cpp \
@@ -491,7 +484,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Container.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Control.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Debug.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Logger.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DynamicObjects.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Exception.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Fade.Po@am__quote@
@@ -591,9 +584,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bone.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/btree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/buffersource.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cal3d_animation.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cal3d_renderer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cal3d_wrapper.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/coreanimation.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/corebone.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/corekeyframe.Po@am__quote@
@@ -629,7 +619,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/physique.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/platform.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quaternion.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/saver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/skeleton.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/springsystem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/streamsource.Po@am__quote@
@@ -639,7 +628,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxml.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlerror.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tinyxmlparser.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui3.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unicode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/uo_huffman.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vector.Po@am__quote@

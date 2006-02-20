@@ -18,7 +18,7 @@
 
 
 #include <stdio.h>
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "sound/Music.h"
 #include "sound/MusicListLoader.h"
@@ -48,7 +48,7 @@ Music::~Music ()
       } 
 
   // MIDI doesn't fade nor does it turn MusicPlaying off when it completes 
-  if (Mix_PlayingMusic() && !nConfig::mp3) { 
+  if ( Mix_PlayingMusic() && !Config::GetMP3() ) { 
     // force music to end 
     Mix_HaltMusic(); 
   } 
@@ -65,12 +65,12 @@ int Music::Config ()
 
 int Music::PlayMusic (std::string name, int volume)
 {
-  std::string file = nConfig::mulpath;
+  std::string file = Config::GetMulPath();
 
   if (!volume)
-    volume = nConfig::musicvolume;
+    volume = Config::GetMusicVolume();
 
-  if (nConfig::mp3)
+  if ( Config::GetMP3() )
       {
         file += "music/digital/" + name;
 #ifdef WIN32
@@ -83,7 +83,7 @@ int Music::PlayMusic (std::string name, int volume)
 
         char *error = SMPEG_error (mpeg);
 
-        pDebug.Log (error);
+        Logger::WriteLine (error);
         assert (mpeg);
         assert (info.has_audio);
 
@@ -127,7 +127,7 @@ int Music::PlayMusic (std::string name, int volume)
       anymore */
       Mix_FreeMusic(music);
       music = NULL;
-      pDebug.Log (file.c_str ());
+      Logger::WriteLine (file.c_str ());
 
       if(music == NULL) {
                music = Mix_LoadMUS (file.c_str ());
@@ -135,17 +135,17 @@ int Music::PlayMusic (std::string name, int volume)
 
       if (!music)
       {
-        pDebug.Log ("PlayMusic() can not load file", __FILE__, __LINE__,
+        Logger::WriteLine ("\t| -> PlayMusic() can not load file", __FILE__, __LINE__,
                     LEVEL_WARNING);
         // this might be a critical error...
-        nConfig::music = 0;
+        Config::SetMusic( 0 );
         return false;
       }
       if (Mix_FadeInMusic (music, -1, 3000) == -1)
       {
         printf ("Mix_FadeInMusic: %s\n", Mix_GetError ());
         // well, there's no music, but most games don't break without music...
-        nConfig::music = 0;
+        Config::SetMusic( 0 );
         return false;
       }
       return true;
@@ -159,7 +159,7 @@ int Music::PlayMusic (int id, int format, int volume)
   std::string midipath = pMusicListLoader->midipath ();
 
   if (!volume)
-    volume = nConfig::musicvolume;
+    volume = Config::GetMusicVolume();
 
   std::string name = pMusicListLoader->GetMusic (id, format);
   if(name == "")
@@ -169,7 +169,7 @@ int Music::PlayMusic (int id, int format, int volume)
 
   if (name.empty ())
       {
-        pDebug.Log ("Wrong musicfile name");
+        Logger::WriteLine ("\t| -> Wrong musicfile name");
         return 0;
       }
 
@@ -180,7 +180,7 @@ int Music::PlayMusic (int id, int format, int volume)
 #ifdef WIN32
         if (mpeg)
             {
-              pDebug.Log ("PLAYING");
+              Logger::WriteLine ("PLAYING");
               SMPEG_stop (mpeg);
               SMPEG_delete (mpeg);
             }
@@ -189,8 +189,12 @@ int Music::PlayMusic (int id, int format, int volume)
         char *error = SMPEG_error (mpeg);
 
         if (error != NULL)
-          return 0;
-        pDebug.Log (error);
+		{
+			Logger::Write( "\t| -> " );
+			Logger::WriteLine( error );
+
+			return 0;
+		}
 
         assert (mpeg);
         assert (info.has_audio);
@@ -221,36 +225,36 @@ int Music::PlayMusic (int id, int format, int volume)
       else
       {
         file = midipath + name;
-        //pDebug.Log(file.c_str());
+        //Logger::WriteLine(file.c_str());
       }
       while (!Mix_FadeOutMusic (100) && Mix_PlayingMusic ()) {
         // wait for any fades to complete
         SDL_Delay (100);
       }
      // MIDI doesn't fade nor does it turn MusicPlaying off when it completes 
-     if (Mix_PlayingMusic() && !nConfig::mp3) {
+     if ( Mix_PlayingMusic() && !Config::GetMP3() ) {
          // force music to end
          Mix_HaltMusic(); 
          Mix_FreeMusic (music);
          music = NULL;
       } 
-      pDebug.Log (file.c_str ());
+      Logger::WriteLine (file.c_str ());
 
       if(music == NULL) {
                music = Mix_LoadMUS (file.c_str ());
       }
 
       if(music == NULL) {
-        pDebug.Log ("PlayMusic() can not load file", __FILE__, __LINE__,
+        Logger::WriteLine ("PlayMusic() can not load file", __FILE__, __LINE__,
                     LEVEL_WARNING);
         // this might be a critical error...
-        nConfig::music = 0;
+        Config::SetMusic( 0 );
         return false;
       }
       if (Mix_FadeInMusic (music, -1, 3000) == -1) {
         printf ("Mix_FadeInMusic: %s\n", Mix_GetError ());
         // well, there's no music, but most games don't break without music...
-        nConfig::music = 0;
+        Config::SetMusic( 0 );
         return false;
       }
       return true;

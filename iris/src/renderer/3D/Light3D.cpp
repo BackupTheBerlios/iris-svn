@@ -25,7 +25,7 @@
 #include "renderer/3D/Light3D.h"
 #include "renderer/3D/SceneMaker.h"
 #include "Geometry.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Exception.h"
 #include "include.h"
 #include "Config.h"

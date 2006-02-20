@@ -24,7 +24,7 @@
 #include "gui/Button.h"
 #include "gui/Container.h"
 #include "gui/InputField.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "loaders/ArtLoader.h"
 #include "renderer/Characters.h"
@@ -199,7 +199,7 @@ void GUIHandler::Draw (void)    //Uint16 hue)
   glPushMatrix ();
 
   glLoadIdentity ();
-  glOrtho (0, nConfig::width, 0, nConfig::height, -1, 1);
+  glOrtho (0, Config::GetWidth(), 0, Config::GetHeight(), -1, 1);
 
   glMatrixMode (GL_MODELVIEW);
   glPushMatrix ();
@@ -219,7 +219,7 @@ void GUIHandler::Draw (void)    //Uint16 hue)
       {
         glLoadIdentity ();
         glTranslatef (cursorx - drag_cursor->GetRealWidth (),
-                      nConfig::height - 1 - (cursory -
+                      Config::GetHeight() - 1 - (cursory -
                                              drag_cursor->GetRealHeight ()),
                       0.0f);
         glBindTexture (GL_TEXTURE_2D, drag_cursor->GetGLTex ());
@@ -236,11 +236,11 @@ void GUIHandler::Draw (void)    //Uint16 hue)
         glEnd ();
       }
 
-  if (nConfig::cursor == 1)
+  if ( Config::GetCursor() == 1 )
       {
         int cursor_id = 2;
-        if ((pGame.click_mode () == CLICK_TARGET_ID)
-            || (pGame.click_mode () == CLICK_TARGET_XYZ))
+        if ((Game::GetInstance()->click_mode () == CLICK_TARGET_ID)
+            || (Game::GetInstance()->click_mode () == CLICK_TARGET_XYZ))
             {                   //std::cout << "Clickmode Target" << endl;
               cursor_id = 3;
             }
@@ -249,7 +249,7 @@ void GUIHandler::Draw (void)    //Uint16 hue)
         if (tex_cursors[cursor_id])
             {
               glLoadIdentity ();
-              glTranslatef (cursorx, nConfig::height - 1 - cursory, 0.0f);
+              glTranslatef (cursorx, Config::GetHeight() - 1 - cursory, 0.0f);
               glBindTexture (GL_TEXTURE_2D,
                              tex_cursors[cursor_id]->GetGLTex ());
               glBegin (GL_QUADS);
@@ -443,7 +443,7 @@ void GUIHandler::SetDefaultFocus (Control * control)
   }
   catch (...)
   {
-    pDebug.Log ("Exception in GUIHandler::SetDefaultFocus(Control *)",
+    Logger::WriteLine ("Exception in GUIHandler::SetDefaultFocus(Control *)",
                 __FILE__, __LINE__, LEVEL_ERROR);
     return;
   }
@@ -497,7 +497,7 @@ Control *GUIHandler::GetNext (void)
   }
   catch (...)
   {
-    pDebug.Log ("Exception in GUIHandler::GetNext(void)", __FILE__, __LINE__,
+    Logger::WriteLine ("Exception in GUIHandler::GetNext(void)", __FILE__, __LINE__,
                 LEVEL_ERROR);
     return NULL;
   }

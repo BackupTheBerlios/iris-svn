@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <cassert>
 
-#include "Debug.h"
+#include "Logger.h"
 
 #include <csl/ZExcept.hpp>
 

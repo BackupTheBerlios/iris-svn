@@ -20,7 +20,7 @@
 #include <iostream>
 #include "SDL/SDL.h"
 #include "SDL/SDL_mixer.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "sound/SoundMixer.h"
 #include "loaders/SoundLoader.h"
@@ -45,49 +45,48 @@ void SoundMix::Init ()
 {
   int stereo_channels = MIX_DEFAULT_CHANNELS;
 
-  if (nConfig::stereo == 1)
+  if ( Config::GetStereo() == 1)
      stereo_channels = 2;
   else
       stereo_channels = 1;
   // start SDL with audio support
   if (SDL_InitSubSystem (SDL_INIT_AUDIO) != 0)
       {
-        pDebug.Log ("Initializing SDL Audio failed...", __FILE__, __LINE__,
-                    LEVEL_ERROR);
-        nConfig::music = false;
-        nConfig::sound = false;
+        Logger::WriteLine( "Initializing SDL Audio failed...", __FILE__, __LINE__, LEVEL_ERROR );
+        Config::SetMusic( false );
+        Config::SetSound( false );
       }
   else if
     (Mix_OpenAudio
-     (nConfig::frequency, MIX_DEFAULT_FORMAT, stereo_channels,
-      nConfig::chunksize) < 0)
+     ( Config::GetFrequency(), MIX_DEFAULT_FORMAT, stereo_channels,
+      Config::GetChunkSize()) < 0)
       {
-        pDebug.Log ("Open SDL Audio failed...", __FILE__, __LINE__,
+        Logger::WriteLine ("Open SDL Audio failed...", __FILE__, __LINE__,
                     LEVEL_ERROR);
-        nConfig::music = false;
-        nConfig::sound = false;
+        Config::SetMusic( false );
+        Config::SetSound( false );
       };
 
   std::cout << "Starting sound system...\n";
-  if (nConfig::music)
+  if ( Config::GetMusic() )
       {
         std::cout << "->Enabling music support....\n";
-        MusicVolume (nConfig::musicvolume);
-        //Mix_VolumeMusic(nConfig::musicvolume);
+        MusicVolume ( Config::GetMusicVolume() );
+        //Mix_VolumeMusic( Config::GetMusicVolume() );
       }
   else
     std::cout << "->Music support disabled....\n";
 
-  if (nConfig::sound)
+  if ( Config::GetSound() )
       {
-        if (SoundInit (nConfig::mulpath))
+        if (SoundInit ( Config::GetMulPath() ))
             {
               // allocate mixing channels
               std::cout << "->Enabling sound support....\n";
             }
         else
           std::cout << "->Sound support disabled....\n";
-        nConfig::sound = 0;
+        Config::SetSound( 0 );
       }
 }
 
@@ -111,7 +110,7 @@ void
 
   if (wave)
       {
-        int volume = (int) ((1.0f - (dist * 0.05f)) * nConfig::soundvolume);  // Set Volume
+        int volume = (int) ((1.0f - (dist * 0.05f)) * Config::GetSoundVolume() );  // Set Volume
         if (volume <= 5)
           volume = 5;
         Mix_VolumeChunk (wave, volume);

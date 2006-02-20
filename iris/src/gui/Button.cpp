@@ -22,7 +22,7 @@
 
 #include "gui/Button.h"
 #include "gui/Container.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include <cassert>
 

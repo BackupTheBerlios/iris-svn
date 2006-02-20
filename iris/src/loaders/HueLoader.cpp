@@ -19,7 +19,7 @@
 
 #include "iris_endian.h"
 #include "loaders/HueLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "Exception.h"
 #include "uotype.h"

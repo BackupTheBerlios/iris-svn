@@ -27,26 +27,30 @@
 #include <windows.h>
 #endif
 
+#include "Game.h"
 #include "SDL/SDL.h"
 #include "Control.h"
 #include <map>
 #include "renderer/Texture.h"
 #include "renderer/DynamicObjects.h"
 
-class cItemContainerEntry {
-   public:
-      cItemContainerEntry(Uint32 id, Uint16 model, int x, int y, Uint16 hue);
-      ~cItemContainerEntry();
-      Texture * texture () { return m_texture; }
-      int x() { return m_x; }
-      int y() { return m_y; }
-      Uint32 id() { return m_id; }
-      Uint16 model() { return m_model; }
-   private:
-      Texture * m_texture;
-      int m_x, m_y;
-      Uint32 m_id;
-      Uint16 m_model;
+class cItemContainerEntry
+{
+public:
+	cItemContainerEntry(Uint32 id, Uint16 model, int x, int y, Uint16 hue);
+	~cItemContainerEntry();
+
+	Texture *texture () { return m_texture; }
+	int x() { return m_x; }
+	int y() { return m_y; }
+	Uint32 id() { return m_id; }
+	Uint16 model() { return m_model; }
+
+private:
+	Texture * m_texture;
+	int m_x, m_y;
+	Uint32 m_id;
+	Uint16 m_model;
 };
 
 

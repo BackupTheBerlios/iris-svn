@@ -21,7 +21,7 @@
  *****/
 
 #include "gui/Checkbox.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 
 using namespace std;
@@ -67,7 +67,7 @@ void Checkbox::SetGump (int type, int gump)
       {
         char errorStr[512];
         sprintf (errorStr, "Illegal Checkbox state: %d", type);
-        pDebug.Log (errorStr, __FILE__, __LINE__, LEVEL_ERROR);
+        Logger::WriteLine (errorStr, __FILE__, __LINE__, LEVEL_ERROR);
       }
 }
 
@@ -107,7 +107,7 @@ int Checkbox::HandleMessage (gui_message * msg)
 {
   if (!msg)
       {
-        pDebug.Log ("NULL msg in Checkbox::HandleMessage(gui_message *)",
+        Logger::WriteLine ("NULL msg in Checkbox::HandleMessage(gui_message *)",
                     __FILE__, __LINE__, LEVEL_ERROR);
         return false;
       }

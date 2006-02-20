@@ -21,7 +21,7 @@
 #include "granny/grannyfile.h"
 #include "granny/GrannyTextures.h"
 #include "Config.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <iostream>
 #include <cassert>
 
@@ -118,9 +118,9 @@ void cGrannyFile::initBone()
 
 #if 1
 	// td anim, some aos anim(id 73) has not cp_grasp_ bone, we use hane bone.
-	if (!nConfig::aos || left_hand_bone  == -1) 
+	if ( !Config::GetAOS() || left_hand_bone  == -1 ) 
 		left_hand_bone  = temp_lhand_bone;
-	if (!nConfig::aos || right_hand_bone == -1) 
+	if (!Config::GetAOS() || right_hand_bone == -1) 
 		right_hand_bone = temp_rhand_bone;
 #endif
 }
@@ -154,7 +154,7 @@ void cGrannyFile::load (std::string filename, std::string basepath)
 
 	if (!file->is_open ())
 	{
-		pDebug.Log ("Error: File not found: " + filename);
+		Logger::WriteLine ("Error: File not found: " + filename);
 		return;
 	}
 

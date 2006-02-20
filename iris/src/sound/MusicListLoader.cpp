@@ -24,7 +24,7 @@
 #include "sound/MusicListLoader.h"
 
 #include "Config.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <iostream>
 #include "xml.h"
 #include <cassert>
@@ -39,7 +39,7 @@ cMusicListLoader::cMusicListLoader ()
   XML::Parser parser;
   XML::Node * musics, *document;
 
-  std::string file = nConfig::mulpath;
+  std::string file = Config::GetMulPath();
 
   m_mp3path = file + "music/digital/";
   m_midipath = file + "music/";
@@ -56,7 +56,7 @@ cMusicListLoader::cMusicListLoader ()
   }
   catch (...)
   {
-    pDebug.Log ("Couldn't load MusicList");
+    Logger::WriteLine ("Couldn't load MusicList");
     return;
   }
 

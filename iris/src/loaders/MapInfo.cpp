@@ -24,7 +24,7 @@
 #include "loaders/MapInfo.h"
 
 #include "Config.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <iostream>
 #include "xml.h"
 

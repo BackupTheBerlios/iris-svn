@@ -22,7 +22,7 @@
 
 
 #include "granny/GrannyTextures.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <cassert>
 
 using namespace std;
@@ -48,8 +48,7 @@ cGrannyTextureEntry::~cGrannyTextureEntry ()
 {
   if (m_ref_count > 1)
       {
-        pDebug.
-          Log ("Freeing referenced Granny Texture (probably causes crash!!)",
+		  Logger::WriteLine("Freeing referenced Granny Texture (probably causes crash!!)",
                __FILE__, __LINE__, LEVEL_WARNING);
       }
 
@@ -74,7 +73,7 @@ void cGrannyTextureEntry::dec_ref_count ()
   m_ref_count--;
   if (m_ref_count < 0)
       {
-        pDebug.Log ("Granny Texture RefCount < 0", __FILE__, __LINE__,
+        Logger::WriteLine ("Granny Texture RefCount < 0", __FILE__, __LINE__,
                     LEVEL_WARNING);
       }
 }
@@ -148,8 +147,8 @@ void cGrannyTextureLoader::FreeTexture (std::string filename)
       }
   else
       {
-/*     pDebug.Log(filename);
-     pDebug.Log("Unknown Granny Texture Reference", __FILE__, __LINE__,
+/*     Logger::WriteLine(filename);
+     Logger::WriteLine("Unknown Granny Texture Reference", __FILE__, __LINE__,
          LEVEL_WARNING); */
       }
 }

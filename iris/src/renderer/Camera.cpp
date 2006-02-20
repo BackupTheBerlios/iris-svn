@@ -39,8 +39,8 @@ int force_rotation;
 Camera::Camera ()
 {
   Reset ();
-  defmaxangle = nConfig::maxangle;
-  def_fadetime = nConfig::roof_fade_time;
+  defmaxangle = Config::GetMaxAngle();
+  def_fadetime = Config::GetRoofFadeTime();
   force_rotation = false;
 }
 
@@ -99,21 +99,21 @@ void Camera::Rotate (float anglex, float angley, float anglez)
   camhaschanged = true;
   int amount = 0;
   
-  if(nConfig::hideself)
-   amount = 120 - nConfig::maxangle;
+  if ( Config::GetHideSelf() )
+   amount = 120 - Config::GetMaxAngle();
 
   
   if (this->anglex < 45 - 80 && this->zoom <0.5f)
-   nConfig::roof_fade = 0;
+   Config::SetRoofFade( 0 );
   else{
-       nConfig::firstperson = 0;
-       if(!nConfig::hideself)
-        nConfig::roof_fade = 1;
+       Config::SetFirstPerson( 0 );
+       if( !Config::GetHideSelf() )
+        Config::SetRoofFade( 1 );
       }
    
-  if (this->anglex < 45 - (nConfig::maxangle + amount) ){
-    this->anglex = 45.0f - (float) (nConfig::maxangle + amount);
-    nConfig::firstperson = 1;
+  if (this->anglex < 45 - ( Config::GetMaxAngle() + amount) ){
+    this->anglex = 45.0f - (float) ( Config::GetMaxAngle() + amount );
+    Config::SetFirstPerson( 1 );
   }
  
    
@@ -304,17 +304,17 @@ void Camera::ChangeZoom (float value)
 {
   zoom += value;
   
-  if (zoom > nConfig::maxzoom)
-    zoom = nConfig::maxzoom;
+  if ( zoom > Config::GetMaxZoom() )
+    zoom = Config::GetMaxZoom();
     
   float maxvalue = -5.0f;
   
-  if(nConfig::firstperson){
+  if ( Config::GetFirstPerson() ){
    //maxvalue = -5.0f;
    if(zoom < 0.5)
-    nConfig::roof_fade=0;
+    Config::SetRoofFade( 0 );
    else
-    nConfig::roof_fade=1; 
+    Config::SetRoofFade( 1 );
   }
 
   if (zoom < maxvalue)
@@ -322,11 +322,11 @@ void Camera::ChangeZoom (float value)
   camhaschanged = true;
  
   if(zoom < -3.2f){
-   nConfig::hideself = 1;
-   nConfig::perspective = 1;
+   Config::SetHideSelf( 1 );
+   Config::SetPerspective( 1 );
    }
   else
-   nConfig::hideself = 0;
+   Config::SetHideSelf( 0 );
       
 }
 
@@ -340,8 +340,8 @@ void Camera::CreatePickRay (int mousex, int mousey, float vecPickRayOrigin[3],
 
   glGetFloatv (GL_PROJECTION_MATRIX, projmatrix);
 
-  vecTemp[0] = (((2.0f * mousex) / nConfig::width) - 1) / projmatrix[0];
-  vecTemp[1] = -(((2.0f * mousey) / nConfig::height) - 1) / projmatrix[5];
+  vecTemp[0] = (((2.0f * mousex) / Config::GetWidth() ) - 1) / projmatrix[0];
+  vecTemp[1] = -(((2.0f * mousey) / Config::GetHeight() ) - 1) / projmatrix[5];
   vecTemp[2] = -1.0f;
 
 // Matrix stuff
@@ -389,8 +389,8 @@ void Camera::GetRenderCoords (float vecP[3], int &x, int &y)
   float fx = vecTemp3[0] / vecTemp3[3];
   float fy = vecTemp3[1] / vecTemp3[3];
 
-  x = (int) ((fx + 1.0f) * nConfig::width * 0.5f);
-  y = (int) ((-fy + 1.0f) * nConfig::height * 0.5f);
+  x = (int) ((fx + 1.0f) * Config::GetWidth() * 0.5f);
+  y = (int) ((-fy + 1.0f) * Config::GetHeight() * 0.5f);
   //Vec3TransformCoord(vecTemp, projmatrix, vecTemp2);
 //        glPopMatrix();
 }

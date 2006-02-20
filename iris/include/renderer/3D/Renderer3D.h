@@ -27,6 +27,7 @@
 #include <windows.h>
 #endif
 
+#include "Game.h"
 #include "renderer/Texture.h"
 #include "renderer/Camera.h"
 
@@ -58,6 +59,7 @@
 class Renderer3D : public Renderer
 {
 protected:
+	Game *m_kGame;
 	void RenderTerrain (bool do_culling);
 	void RenderWater (bool do_culling);
 	void RenderSkybox ();

@@ -23,7 +23,7 @@
 
 #include <iostream>
 #include "renderer/Texture.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "SDL/SDL_image.h"
 #include <cassert>
 
@@ -67,9 +67,7 @@ int Texture::LoadFromData (void *data, int width, int height,
 
   if ((bits_per_pixel != 24) && (bits_per_pixel != 32))
       {
-        pDebug.
-          Log
-          ("Wrong Pixelformat in Texture::LoadFromData(void *, int, int, int)",
+        Logger::WriteLine("Wrong Pixelformat in Texture::LoadFromData(void *, int, int, int)",
            __FILE__, __LINE__, LEVEL_ERROR);
         return (false);
       }
@@ -127,9 +125,7 @@ int Texture::LoadFromSurface (SDL_Surface * surface, int filter)
 {
   if (!surface)
       {
-        pDebug.
-          Log
-          ("NULL surface pointer in Texture::LoadFromSurface(SDL_Surface *)",
+        Logger::WriteLine("NULL surface pointer in Texture::LoadFromSurface(SDL_Surface *)",
            __FILE__, __LINE__, LEVEL_ERROR);
         return (false);
       }
@@ -138,8 +134,7 @@ int Texture::LoadFromSurface (SDL_Surface * surface, int filter)
       (surface->pixels, surface->w, surface->h, surface->format->BitsPerPixel,
        filter))
       {
-        pDebug.
-          Log ("call loadfromdata in Texture::LoadFromSurface(SDL_Surface *)",
+        Logger::WriteLine("call loadfromdata in Texture::LoadFromSurface(SDL_Surface *)",
                __FILE__, __LINE__, LEVEL_WARNING);
         return (false);
       }
@@ -157,7 +152,7 @@ int Texture::LoadFromFile (const char *filename)
       {
         char errorStr[512];
         sprintf (errorStr, "Error loading texture: %s", filename);
-        pDebug.Log (errorStr, __FILE__, __LINE__, LEVEL_ERROR);
+        Logger::WriteLine (errorStr, __FILE__, __LINE__, LEVEL_ERROR);
         return false;
       }
 
@@ -247,7 +242,7 @@ int Texture::LoadFromFileWithTransparency (const char *filename,
 
   if (!image)
       {
-        pDebug.Log ("Loading Image in Texture::LoadFromFile(char *)",
+        Logger::WriteLine ("Loading Image in Texture::LoadFromFile(char *)",
                     __FILE__, __LINE__, LEVEL_ERROR);
         return (false);
       }

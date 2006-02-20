@@ -24,7 +24,7 @@
 #include "gui/GUIHandler.h"
 #include "gui/Container.h"
 #include "gui/Control.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <iostream>
 
 int onscrollup (Control * contr)
@@ -35,7 +35,7 @@ int onscrollup (Control * contr)
       {
         control = pUOGUI.GetControl (contr->GetData (1));
         if (control->getType () != CONTROLTYPE_CONTAINER) {
-            pDebug.Log ("Invalid multilabel container cast in onscrolldown!!");
+            Logger::WriteLine ("Invalid multilabel container cast in onscrolldown!!");
             return -1;
         }
         Container *container = (Container *) control;
@@ -44,7 +44,7 @@ int onscrollup (Control * contr)
             {
               control = container->GetControl (contr->GetData (0));
               if (control->getType () != CONTROLTYPE_MULTILABEL) {
-                    pDebug.Log ("Invalid multilabel cast onscrolldown!!");
+                    Logger::WriteLine ("Invalid multilabel cast onscrolldown!!");
                     return -1;
               }
               mlabel = (cMultiLabel *) control;
@@ -54,7 +54,7 @@ int onscrollup (Control * contr)
   else  {
     control = pUOGUI.GetControl (contr->GetData (0));
               if (control->getType () != CONTROLTYPE_MULTILABEL) {
-                    pDebug.Log  ("Invalid multilabel cast onscrolldown!!");
+                    Logger::WriteLine  ("Invalid multilabel cast onscrolldown!!");
                     return -1;
               }
     mlabel = (cMultiLabel *) control;
@@ -75,7 +75,7 @@ int onscrolldown (Control * contr)
       {
         control = pUOGUI.GetControl (contr->GetData (1));
         if (control->getType () != CONTROLTYPE_CONTAINER) {
-            pDebug.Log  ("Invalid multilabel container cast in onscrolldown!!");
+            Logger::WriteLine  ("Invalid multilabel container cast in onscrolldown!!");
             return -1;
         }
         Container *container = (Container *) control;
@@ -84,7 +84,7 @@ int onscrolldown (Control * contr)
             {
               control = container->GetControl (contr->GetData (0));
               if (control->getType () != CONTROLTYPE_MULTILABEL) {
-                    pDebug.Log  ("Invalid multilabel cast onscrolldown!!");
+                    Logger::WriteLine  ("Invalid multilabel cast onscrolldown!!");
                     return -1;
               }
               mlabel = (cMultiLabel *) control;
@@ -94,7 +94,7 @@ int onscrolldown (Control * contr)
   else  {
     control = pUOGUI.GetControl (contr->GetData (0));
               if (control->getType () != CONTROLTYPE_MULTILABEL) {
-                    pDebug.Log  ("Invalid multilabel cast onscrolldown!!");
+                    Logger::WriteLine  ("Invalid multilabel cast onscrolldown!!");
                     return -1;
               }
     mlabel = (cMultiLabel *) control;

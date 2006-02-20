@@ -24,7 +24,7 @@
 #include "renderer/particles/ParticleTextures.h"
 #include "include.h"
 #include "Exception.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <cassert>
 
 using namespace std;

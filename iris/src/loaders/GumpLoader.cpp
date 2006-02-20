@@ -25,7 +25,7 @@
 #include "loaders/GumpLoader.h"
 #include "loaders/VerdataLoader.h"
 #include "Exception.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "uotype.h"
 #include <string.h>
 #include <iostream>

@@ -154,7 +154,7 @@ cDynamicObject *cDynamicObjectList::Add (Uint32 id)
 
   cDynamicObject *result = new cDynamicObject;
   if ((m_roof_z != ROOF_NONE) && (result->z >= m_roof_z))
-    result->alpha = nConfig::roof_fade_alpha;
+    result->alpha = Config::GetRoofFadeAlpha();
 
   dynamiclist.insert (std::make_pair (id, result));
   result->id = id;

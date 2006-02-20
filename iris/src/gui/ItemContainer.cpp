@@ -21,7 +21,7 @@
  *****/
 
 #include "gui/ItemContainer.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "Game.h"
 
@@ -153,12 +153,12 @@ int ItemContainer::HandleMessage (gui_message * msg)
         if (entry)
             {
               mouseover_id = entry->id ();
-              if (nConfig::aostooltips && !c_aostooltip)
+              if (Config::GetAOSToolTips() && !c_aostooltip)
                   {
                     cDynamicObject *obj =
                       pDynamicObjectList.Get (entry->id ());
                     int count = obj->aostooltips_count ();
-                    pGame.DrawAOSTooltip (entry->id (), count,
+					Game::GetInstance()->DrawAOSTooltip (entry->id (), count,
                                           msg->mousemotionevent.x,
                                           msg->mousemotionevent.y);
                     c_aostooltip = true;
@@ -167,8 +167,8 @@ int ItemContainer::HandleMessage (gui_message * msg)
         else
             {
               mouseover_id = 0;
-              if (nConfig::aostooltips && c_aostooltip)
-                pGame.DrawAOSTooltip (0, 0, 0, 0);
+              if (Config::GetAOSToolTips() && c_aostooltip)
+                Game::GetInstance()->DrawAOSTooltip (0, 0, 0, 0);
               c_aostooltip = false;
             }
         if ((abs (clickdown_x - msg->mousemotionevent.x) > 5) &&

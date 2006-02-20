@@ -1,4 +1,4 @@
-VPATH = loaders renderer gui csl net granny sound renderer/3D renderer/2D cal3d renderer/particles
+VPATH = loaders renderer gui csl net granny sound renderer/3D renderer/2D renderer/particles
 AM_CXXFLAGS=@CXXFLAGS@ -I../include -I../include/csl -Wall
 
 bin_PROGRAMS=ui3
@@ -20,7 +20,7 @@ Config.cpp \
 Container.cpp \
 Control.cpp \
 CSLHandler.cpp \
-Debug.cpp \
+Logger.cpp \
 DynamicObjects.cpp \
 Exception.cpp \
 Fade.cpp\
@@ -100,7 +100,7 @@ Texture.cpp \
 TextureBuffer.cpp \
 TileDataBuffer.cpp \
 TileDataLoader.cpp \
-ui3.cpp \
+main.cpp \
 unicode.cpp \
 UOMap.cpp \
 uo_huffman.cpp \
@@ -136,12 +136,10 @@ CharacterLight.cpp \
 LightNodes.cpp \
 LightNodeEnvironment.cpp \
 iris_endian.cpp \
-cal3d_animation.cpp \
 animation_action.cpp \
 animation_cycle.cpp \
 bone.cpp \
 buffersource.cpp \
-cal3d_wrapper.cpp \
 coreanimation.cpp \
 corebone.cpp \
 corekeyframe.cpp \
@@ -164,8 +162,6 @@ morphtargetmixer.cpp \
 physique.cpp \
 platform.cpp \
 quaternion.cpp \
-cal3d_renderer.cpp \
-saver.cpp \
 skeleton.cpp \
 springsystem.cpp \
 streamsource.cpp \

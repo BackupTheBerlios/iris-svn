@@ -35,6 +35,7 @@
 #include "Packet.h"
 #include "uo_huffman.h"
 #include "renderer/Characters.h"
+#include "Game.h"
 
 #define WALK_LEFT    0
 #define WALK_RIGHT   1

@@ -23,7 +23,7 @@
 
 #include <iostream>
 #include "renderer/3D/SceneMaker.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Exception.h"
 #include "include.h"
 #include "Config.h"

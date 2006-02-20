@@ -22,7 +22,7 @@
 
 #include "gui/Image.h"
 #include "loaders/GumpLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include <cassert>
 

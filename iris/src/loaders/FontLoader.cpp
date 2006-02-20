@@ -19,7 +19,7 @@
 
 #include "iris_endian.h"
 #include "loaders/FontLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "Config.h"
 #include "uotype.h"
 #include "Exception.h"

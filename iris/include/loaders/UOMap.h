@@ -23,40 +23,36 @@
 #ifndef _UOMAP_H_
 #define _UOMAP_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #include "SDL/SDL.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include "../uotype.h"
-#include "Map.h"
-#include "../Debug.h"
 
+#include "Map.h"
+#include "../uotype.h"
+#include "../Logger.h"
+#include "loaders/MapInfo.h"
+#include "Exception.h"
 
 #define UOMAP_MAP0  1
 #define UOMAP_MAP2  2
 
+
 class UOMapLoader : public MapLoader
 {
 private:
-	std::ifstream * mapstream;
-   std::ifstream * staticstream;
-   std::ifstream * staidxstream;
-   int width, height;
+	std::ifstream *m_mapstream;
+	std::ifstream *m_staticstream;
+	std::ifstream *m_staidxstream;
+	int m_iWidth, m_iHeight;
 
 
 public:
-   UOMapLoader (char * mapfile, char * staticfile, char * staidx, int type);
-   virtual ~UOMapLoader ();
+   UOMapLoader( char *mapfile, char *staticfile, char *staidx, int type );
+   virtual ~UOMapLoader();
 
    void	LoadMapBlock( int x, int y, MulBlock *block );
-   struct staticinfo * LoadStatics(int x, int y, int &len);
-
-
+   struct staticinfo *LoadStatics( int x, int y, int &len );
 };
-
 
 #endif //_MAP_H_

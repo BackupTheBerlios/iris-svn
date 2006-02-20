@@ -25,7 +25,7 @@
 #include "include.h"
 #include "stdlib.h"
 #include "Exception.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <cassert>
 #include <math.h>
 
@@ -255,7 +255,7 @@ namespace Particle
           if (definition)
             emissions.push_back (definition);
           else
-            pDebug.Log ("Warning: unknown emission type: " + type);
+            Logger::WriteLine ("Warning: unknown emission type: " + type);
           index++;
         }
   }
@@ -355,7 +355,7 @@ namespace Particle
                 types.insert (make_pair (id, typedefinition));
               }
           else
-            pDebug.Log ("Warning: duplicate definition of particletype");
+            Logger::WriteLine ("Warning: duplicate definition of particletype");
           index++;
         }
 
@@ -445,7 +445,7 @@ void cParticleLoader::Init (std::string filename)
     if (!collection)
         {
           delete document;
-          pDebug.Log ("could not find effect root node");
+          Logger::WriteLine ("could not find effect root node");
           return;
         }
   }
@@ -453,7 +453,7 @@ void cParticleLoader::Init (std::string filename)
 
   catch (...)
   {
-    pDebug.Log (string ("Couldn't parse ") + filename);
+    Logger::WriteLine (string ("Couldn't parse ") + filename);
     return;
   }
 
@@ -468,7 +468,7 @@ void cParticleLoader::Init (std::string filename)
               effects.insert (make_pair (name, effect));
             }
         else
-          pDebug.Log (string ("Warning: duplicate definition of effect") +
+          Logger::WriteLine (string ("Warning: duplicate definition of effect") +
                       name);
         index++;
       }

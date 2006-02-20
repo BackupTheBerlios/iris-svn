@@ -27,7 +27,7 @@
 #include <cstring>
 #include <cassert>
 
-#include "Debug.h"
+#include "Logger.h"
 
 #include <csl/ZExcept.hpp>
 
@@ -144,7 +144,7 @@ void net_handler_serverlist (int count)
   char buf[15];
   sprintf (buf, "%d", count);
   if (pCSLHandler.ExecuteFunction ("net_onserverlist", buf))
-    pDebug.Log ("No Server List Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Server List Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 }
 
@@ -153,17 +153,17 @@ void net_handler_charlist (int count)
   char buf[15];
   sprintf (buf, "%d", count);
   if (pCSLHandler.ExecuteFunction ("net_oncharlist", buf))
-    pDebug.Log ("No Char List Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Char List Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 }
 
 void net_handler_startgame (void)
 {
   if (pCSLHandler.ExecuteFunction ("net_startgame"))
-    pDebug.Log ("No Start Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Start Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
-  pGame.SetPause (false);
+  Game::GetInstance()->SetPause (false);
 
   return;
 }
@@ -171,7 +171,7 @@ void net_handler_startgame (void)
 void net_handler_offline (void)
 {
   if (pCSLHandler.ExecuteFunction ("net_offline"))
-    pDebug.Log ("No Offline Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Offline Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -183,7 +183,7 @@ void net_handler_error (unsigned int error)
   sprintf (buf, "%d", error);
 
   if (pCSLHandler.ExecuteFunction ("net_error", buf))
-    pDebug.Log ("No Neterror Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Neterror Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -196,7 +196,7 @@ void net_handler_lightlevel (unsigned int lightlevel)
   sprintf (buf, "%d", lightlevel);
 
   if (pCSLHandler.ExecuteFunction ("net_onlightlevel", buf))
-    pDebug.Log ("No Lightlevel Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Lightlevel Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -238,7 +238,7 @@ void net_paperdoll (unsigned int charid, const char *text, Uint8 flag)
   sprintf (buf2, "%d", flag);
 
   if (pCSLHandler.ExecuteFunction ("net_paperdoll", buf, (char *) text, buf2))
-    pDebug.Log ("No Paperdoll Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Paperdoll Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -252,7 +252,7 @@ void net_status (unsigned int charid, Uint8 flag)
   sprintf (buf2, "%d", flag);
 
   if (pCSLHandler.ExecuteFunction ("net_status", buf, buf2))
-    pDebug.Log ("No Status Info Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Status Info Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
   return;
@@ -269,7 +269,7 @@ void net_trade (Uint32 id1, Uint32 id2, char *name)
 
   if (pCSLHandler.
       ExecuteFunction ("net_tradestart", buf1, buf2, (char *) name))
-    pDebug.Log ("No Trade Window Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Trade Window Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
   return;
@@ -286,7 +286,7 @@ void net_tradecheck (Uint32 check1, Uint32 check2, int closewin)
   sprintf (buf3, "%d", closewin);
 
   if (pCSLHandler.ExecuteFunction ("net_tradecheck", buf1, buf2, buf3))
-    pDebug.Log ("No Trade Window Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Trade Window Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
   return;
@@ -312,7 +312,7 @@ void net_tradeadd (Uint16 model, Uint32 tradeid, Uint16 count, Uint16 hue,
   if (pCSLHandler.
       ExecuteFunctionPlus ("net_tradeadd", buf1, buf2, buf3, buf4, buf5,
                            buf6))
-    pDebug.Log ("No Trade Window Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Trade Window Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
   return;
@@ -326,7 +326,7 @@ void net_skill (unsigned int skillid, unsigned int skillvalue)
   sprintf (buf2, "%d", skillvalue);
 
   if (pCSLHandler.ExecuteFunction ("net_skills", buf, buf2))
-    pDebug.Log ("No Skill Change Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Skill Change Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
   return;
@@ -353,7 +353,7 @@ void net_spellbook (Uint32 serial, Uint16 model, Uint8 * circles)
       }
 
   if (pCSLHandler.ExecuteFunction ("net_spellbookdisplay", buf, buf2))
-    pDebug.Log ("No Spellbook Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Spellbook Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
 }
@@ -369,7 +369,7 @@ void net_statchange (unsigned int charid, unsigned int type,
   sprintf (buf4, "%d", maxvalue);
 
   if (pCSLHandler.ExecuteFunction ("net_statchange", buf, buf2, buf3, buf4))
-    pDebug.Log ("No Stat Change Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Stat Change Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
   return;
@@ -382,7 +382,7 @@ void net_opencontainer (unsigned int contid, unsigned int gumpid)
   sprintf (buf2, "%d", gumpid);
 
   if (pCSLHandler.ExecuteFunction ("net_opencontainer", buf, buf2))
-    pDebug.Log ("No Container Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Container Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -394,7 +394,7 @@ void net_containercontent (unsigned int contid)
   sprintf (buf, "%d", contid);
 
   if (pCSLHandler.ExecuteFunction ("net_containercontent", buf))
-    pDebug.Log ("No Container Content Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Container Content Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
   return;
@@ -413,7 +413,7 @@ void game_onstatusdrag (Uint32 charid, int mousex, int mousey)
   sprintf (buf3, "%d", mousey);
 
   if (pCSLHandler.ExecuteFunction ("net_onstatusdrag", buf, buf2, buf3))
-    pDebug.Log ("No Status Drag Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Status Drag Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
 }
@@ -433,7 +433,7 @@ void game_onaostooltip (Uint32 id, int count, int x, int y)
   sprintf (buf4, "%d", y);
 
   if (pCSLHandler.ExecuteFunction ("net_onaostooltip", buf, buf2, buf3, buf4))
-    pDebug.Log ("No Status Drag Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Status Drag Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 }
 
@@ -450,7 +450,7 @@ void game_ondynamicdrag (Uint32 id, Uint16 model, int count, int x, int y,
   if (pCSLHandler.
       ExecuteFunctionPlus ("net_ondynamicdrag", buf, buf2, buf3, buf4, buf5,
                            buf6))
-    pDebug.Log ("No  Dynamic Drag Handler - Please Check your Scripts",
+    Logger::WriteLine ("No  Dynamic Drag Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
 }
@@ -462,7 +462,7 @@ void net_warmodechange (unsigned int mode)
   bool war_mode = mode != 0x00;
   pUOGUI.setwarmode (war_mode);
   if (pCSLHandler.ExecuteFunction ("net_warmodechange", buf))
-    pDebug.Log ("No Warmode Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Warmode Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -474,7 +474,7 @@ void net_attackreply (unsigned int id)
   sprintf (buf, "%d", id);
 
   if (pCSLHandler.ExecuteFunction ("net_attackreply", buf))
-    pDebug.Log ("No Attack Reply Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Attack Reply Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
   return;
@@ -501,7 +501,7 @@ void net_buyadd (Uint32 id, int model, int count, Uint16 hue, Uint32 price,
       ExecuteFunctionPlus ("net_buywinadd", buf1, buf2, buf3, buf4, buf5,
                            (char *) name))
       {
-        pDebug.Log ("No Buy Window Add Handler - Please Check your Scripts",
+        Logger::WriteLine ("No Buy Window Add Handler - Please Check your Scripts",
                     __FILE__, __LINE__, LEVEL_WARNING);
 
         return;
@@ -515,7 +515,7 @@ void net_buy (Uint32 id)
   sprintf (buf, "%d", id);
 
   if (pCSLHandler.ExecuteFunction ("net_buywindow", buf))
-    pDebug.Log ("No Buy Window Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Buy Window Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -530,7 +530,7 @@ static ZString api_net_sendpickup (ZCsl * aCsl)
 
 
 
-  pGame.SendPickup (id, model, count);
+  Game::GetInstance()->SendPickup (id, model, count);
   return "";
 }
 
@@ -555,7 +555,7 @@ void net_selladd (Uint32 id, Uint16 model, Uint16 count, Uint16 hue,
       ExecuteFunctionPlus ("net_sellwinadd", buf1, buf2, buf3, buf4, buf5,
                            (char *) name))
       {
-        pDebug.Log ("No Sell Window Add Handler - Please Check your Scripts",
+        Logger::WriteLine ("No Sell Window Add Handler - Please Check your Scripts",
                     __FILE__, __LINE__, LEVEL_WARNING);
 
         return;
@@ -570,7 +570,7 @@ void net_sell (Uint32 id)
   sprintf (buf, "%d", id);
 
   if (pCSLHandler.ExecuteFunction ("net_sellwindow", buf))
-    pDebug.Log ("No Sell Window Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Sell Window Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_WARNING);
 
   return;
@@ -586,7 +586,7 @@ void net_handler_speech (const char *text, const char *speaker,
   if (pCSLHandler.
       ExecuteFunction ("net_speech", (char *) text, (char *) speaker, buf,
                        buf2))
-    pDebug.Log ("No Speech Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Speech Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -599,7 +599,7 @@ void net_dyewindow (unsigned int id, unsigned int model)
   sprintf (buf2, "%d", model);
 
   if (pCSLHandler.ExecuteFunction ("net_dyewindow", buf, buf2))
-    pDebug.Log ("No Dye Window Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Dye Window Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -615,7 +615,7 @@ void net_menuitems (unsigned int id, unsigned int context, unsigned int count,
   sprintf (buf3, "%d", count);
 
   if (pCSLHandler.ExecuteFunction ("net_menuitems", buf, buf2, buf3, name))
-    pDebug.Log ("No Menu Item Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Menu Item Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 
   return;
@@ -630,7 +630,7 @@ void net_displaypopup (int count, int x, int y)
   sprintf (buf2, "%d", x);
   sprintf (buf3, "%d", y);
   if (pCSLHandler.ExecuteFunction ("net_displaypopup", buf, buf2, buf3))
-    pDebug.Log ("No Popup Menu Handler - Please Check your Scripts", __FILE__,
+    Logger::WriteLine ("No Popup Menu Handler - Please Check your Scripts", __FILE__,
                 __LINE__, LEVEL_WARNING);
 }
 
@@ -678,7 +678,7 @@ void edit_handler_position_reply (int x, int y, int z)
   sprintf (buf1, "%d", z);
 
   if (pCSLHandler.ExecuteFunction ("net_error", buf1, buf2, buf3))
-    pDebug.Log ("No Position Reply Handler - Please Check your Scripts",
+    Logger::WriteLine ("No Position Reply Handler - Please Check your Scripts",
                 __FILE__, __LINE__, LEVEL_ERROR);
 
   return;
@@ -712,31 +712,31 @@ void api_addcontrol (Control * control)
 
 static ZString api_iris_log (ZCsl * aCsl)
 {
-  pDebug.Log ("CSL | " + string (aCsl->get ("text").buffer ()));
+  Logger::WriteLine ("CSL | " + string (aCsl->get ("text").buffer ()));
   return "";
 }
 
 static ZString api_iris_disconnect (ZCsl * aCsl)
 {
-  pGame.Disconnect ();
+  Game::GetInstance()->Disconnect ();
   return "";
 }
 
 static ZString api_iris_deinit (ZCsl * aCsl)
 {
-  pGame.DeInit ();
+  Game::GetInstance()->DeInit ();
   return "";
 }
 
 static ZString api_iris_init (ZCsl * aCsl)
 {
-  pGame.Init ();
+  Game::GetInstance()->Init ();
   return "";
 }
 
 static ZString api_iris_connect (ZCsl * aCsl)
 {
-  pGame.Connect (net_handler_error);
+  Game::GetInstance()->Connect (net_handler_error);
   pCSLHandler.InitNet ();
   return "";
 }
@@ -744,7 +744,7 @@ static ZString api_iris_connect (ZCsl * aCsl)
 static ZString api_iris_setlightlevel (ZCsl * aCsl)
 {
   int level = aCsl->get ("level").asInt ();
-  Renderer *renderer = pGame.GetRenderer ();
+  Renderer *renderer = Game::GetInstance()->GetRenderer ();
 
   if ((level < 0) || (level > 31) || !renderer)
     return "0";
@@ -854,8 +854,8 @@ static ZString api_net_sendtarget(ZCsl * aCsl)
   int id = aCsl->get("id").asInt();
   
   if(pClient)
-   pClient->Send_Target(pGame.cursorid(), (Uint32)id);
-  pGame.click_mode(CLICK_NORMAL);
+   pClient->Send_Target(Game::GetInstance()->cursorid(), (Uint32)id);
+  Game::GetInstance()->click_mode(CLICK_NORMAL);
   return "0"; 
 
 }
@@ -874,7 +874,7 @@ static ZString api_game_settimer(ZCsl* aCsl)
 {
 
  string func = string(aCsl->get("func").buffer());
- pGame.SetTimerFunction(func, aCsl->get("time").asInt());
+ Game::GetInstance()->SetTimerFunction(func, aCsl->get("time").asInt());
  
  return "0";
 }
@@ -934,7 +934,7 @@ static ZString api_camera_firstperson(ZCsl* aCsl)
    float actualzoom = pCamera.GetZoom();
    float angle_x = pCamera.GetAngleX();
    pCamera.ChangeZoom(-actualzoom);
-   if(!nConfig::hideself)
+   if( !Config::GetHideSelf() )
     pCamera.Rotate(-45.0f, 0.0f, -0 / 3.0f);
  
            
@@ -947,7 +947,7 @@ static ZString api_camera_firstperson(ZCsl* aCsl)
 static ZString api_camera_reset(ZCsl * aCsl)
 {
        pCamera.Reset();
-       nConfig::hideself=0;
+       Config::SetHideSelf( 0 );
        return "0";
 }
 
@@ -1926,39 +1926,39 @@ static ZString api_config_getvalue (ZCsl * aCsl)
   switch (aCsl->get ("id").asInt ())
       {
       case 0:
-        return ZString (nConfig::music);
+        return ZString ( Config::GetMusic() );
       case 1:
-        return ZString (nConfig::sound);
+        return ZString ( Config::GetSound() );
       case 2:
-        return ZString (nConfig::mp3);
+        return ZString ( Config::GetMP3() );
       case 3:
-        return ZString (nConfig::login.c_str ());
+        return ZString ( Config::GetLogin().c_str() );
       case 4:
-        return ZString (nConfig::password.c_str ());
+        return ZString ( Config::GetPassword().c_str() );
       case 5:
-        return ZString (nConfig::server.c_str ());
+        return ZString ( Config::GetServer().c_str() );
       case 6:
-        return ZString (nConfig::is_sphere);
+        return ZString ( Config::GetIsSphere() );
       case 10:
-        return ZString (nConfig::perspective);
+        return ZString ( Config::GetPerspective() );
       case 12:
-        return ZString (nConfig::viewdistance);
+        return ZString ( Config::GetViewDistance() );
       case 15:
-        return ZString (nConfig::width);
+        return ZString ( Config::GetWidth() );
       case 16:
-        return ZString (nConfig::height);
+        return ZString ( Config::GetHeight() );
       case 17:
-        return ZString (nConfig::brightness);
+        return ZString ( Config::GetBrightness() );
       case 19:
-        return ZString (nConfig::version.c_str ());
+        return ZString ( Config::GetVersion().c_str() );
       case 20:
-        return ZString (nConfig::aos);
+        return ZString ( Config::GetAOS() );
       case 21:
-        return ZString (nConfig::speech_hue);
+        return ZString ( Config::GetSpeechHue() );
       case 22:
-         return ZString (nConfig::roof_fade_time);
+         return ZString ( Config::GetRoofFadeTime() );
        case 23:
-         return ZString (nConfig::roof_fade);     
+         return ZString ( Config::GetRoofFade() );
       default:
         return "0";
       }
@@ -1969,26 +1969,28 @@ static ZString api_config_setvalue (ZCsl * aCsl)
   switch (aCsl->get ("id").asInt ())
       {
       case 3:
-        nConfig::login = aCsl->get ("value").buffer ();
+        Config::SetLogin( aCsl->get("value").buffer() );
         break;
       case 4:
-        nConfig::password = aCsl->get ("value").buffer ();
+        Config::SetPassword( aCsl->get("value").buffer() );
         break;
       case 5:
-        nConfig::server = aCsl->get ("value").buffer ();
+        Config::SetServer( aCsl->get("value").buffer() );
         break;
       case 10:  
-       nConfig::perspective = aCsl->get ("value").asInt ();break; 
+       Config::SetPerspective( aCsl->get("value").asInt() );
+	   break; 
       case 17:
-        nConfig::brightness = aCsl->get ("value").asInt ();
+        Config::SetBrightness( aCsl->get("value").asInt() );
         break;
       case 21:
-        nConfig::speech_hue = aCsl->get ("value").asInt ();
+        Config::SetSpeechHue( aCsl->get("value").asInt() );
         break;
       case 22:
-        nConfig::roof_fade_time = aCsl->get ("value").asInt ();
+        Config::SetRoofFadeTime( aCsl->get("value").asInt() );
       case 23:
-        nConfig::roof_fade = aCsl->get ("value").asInt (); break;      
+        Config::SetRoofFade( aCsl->get("value").asInt() );
+		break;      
       }
   return "0";
 }
@@ -2029,7 +2031,7 @@ static ZString api_net_selectserver (ZCsl * aCsl)
 {
   int id = aCsl->get ("id").asInt ();
 
-  if (nConfig::is_pol)
+  if ( Config::GetIsPol() )
     id = 1;
 
   if (pClient)
@@ -2223,7 +2225,7 @@ static ZString api_net_createchar (ZCsl * aCsl)
 	char buf[15];
 	sprintf(buf, "%d", errorid);
 	if (pCSLHandler.ExecuteFunction ("net_on_createchar_error", buf))
-	  pDebug.Log ("No Character Creation Error Handler - Please Check your Scripts", __FILE__, __LINE__, LEVEL_WARNING);
+	  Logger::WriteLine ("No Character Creation Error Handler - Please Check your Scripts", __FILE__, __LINE__, LEVEL_WARNING);
       }
   else
     pClient->Send_CreateChar(doll);
@@ -2746,19 +2748,19 @@ static ZString api_gui_addhtmllabel (ZCsl * aCsl)
   string htmltext = string (aCsl->get ("htmltext").buffer ());
   int scrollbar = aCsl->get ("scrollbar").asInt ();
 
-        pDebug.Log (htmltext.c_str ());
+        Logger::WriteLine (htmltext.c_str ());
 
         cMultiLabel *label = new cMultiLabel (x, y, width, height, scrollbar);
-        //pDebug.Log("CSL1");
+        //Logger::WriteLine("CSL1");
         cHTMLGumpParser parser;
-        //pDebug.Log("CSL2");
+        //Logger::WriteLine("CSL2");
         parser.Parse (htmltext, label);
         label->Create ();
-        //pDebug.Log("CSL3");
+        //Logger::WriteLine("CSL3");
         api_addcontrol (label);
-        //pDebug.Log("CSL4");
+        //Logger::WriteLine("CSL4");
         return ZString (label->GetID ());
-        //pDebug.Log("CSL5");
+        //Logger::WriteLine("CSL5");
 
 
 }
@@ -2937,7 +2939,7 @@ void CSLHandler::Init ()
 
   try
   {
-    pDebug.Log ("CSL | initializing...");
+    Logger::WriteLine ("CSL | Initializing...");
     csl = new ZCsl ();
     cslOk = zTrue;
 
@@ -2946,7 +2948,7 @@ void CSLHandler::Init ()
   catch (const ZException & err)
   {
     for (int i = 0; i < err.count (); i++)
-      pDebug.Log (err[i]);
+      Logger::WriteLine (err[i]);
     if (cslOk)
       delete csl;
     csl = NULL;
@@ -2970,7 +2972,7 @@ void CSLHandler::DeInit ()
         catch (const ZException & err)
         {
           for (int i = 0; i < err.count (); i++)
-            pDebug.Log (err[i]);
+            Logger::WriteLine (err[i]);
           if (cslOk)
             delete csl;
           cslOk = zFalse;
@@ -2989,7 +2991,7 @@ void CSLHandler::Load (char *filename)
   catch (const ZException & err)
   {
     for (int i = 0; i < err.count (); i++)
-      pDebug.Log (err[i]);
+      Logger::WriteLine (err[i]);
 //                cerr << err[i] << endl;
     if (cslOk)
       delete csl;
@@ -3020,7 +3022,7 @@ int CSLHandler::ExecuteFunction (char *funcname, char *p1, char *p2, char *p3,
   catch (const ZException & err)
   {
     for (int i = 0; i < err.count (); i++)
-      pDebug.Log (err[i]);
+      Logger::WriteLine (err[i]);
 //                cerr << err[i] << endl;
     return -1;
   }
@@ -3058,7 +3060,7 @@ int CSLHandler::ExecuteFunctionPlus (char *funcname, char *p1, char *p2,
   catch (const ZException & err)
   {
     for (int i = 0; i < err.count (); i++)
-      pDebug.Log (err[i]);
+      Logger::WriteLine (err[i]);
 //                cerr << err[i] << endl;
     return -1;
   }
@@ -3386,7 +3388,7 @@ void CSLHandler::InitAPI (void)
   catch (const ZException & err)
   {
     for (int i = 0; i < err.count (); i++)
-      pDebug.Log (err[i]);
+      Logger::WriteLine (err[i]);
     if (cslOk)
       delete csl;
     csl = NULL;
@@ -3427,7 +3429,7 @@ void CSLHandler::InitNet (void)
         pClient->OnTradeAdd (net_tradeadd);
 
       }
-  pGame.OnStatusDrag (game_onstatusdrag);
-  pGame.OnDynamicDrag (game_ondynamicdrag);
-  pGame.OnAOSTooltip (game_onaostooltip);
+  Game::GetInstance()->OnStatusDrag (game_onstatusdrag);
+  Game::GetInstance()->OnDynamicDrag (game_ondynamicdrag);
+  Game::GetInstance()->OnAOSTooltip (game_onaostooltip);
 }

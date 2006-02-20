@@ -23,7 +23,7 @@
 #include "iris_endian.h"
 #include "Exception.h"
 #include "loaders/MultisLoader.h"
-#include "Debug.h"
+#include "Logger.h"
 #include "uotype.h"
 #include <string.h>
 #include <iostream>

@@ -1436,7 +1436,27 @@
     <FARMS>Models/others/h_male_farms_v2_lod2.grn</FARMS>
     <ULEGS>Models/others/h_male_ulegs_v2_lod2.grn</ULEGS>
     <PELVIS>Models/others/h_male_pelvis_v2_lod2.grn</PELVIS>
-    <ID>400</ID>
+    <LEFT_HAND_BONE>24</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>20</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
+
+  <CHARACTER_AOS>
+    <DESCRIPTION>maleelf</DESCRIPTION>
+    <ID>605</ID>
+    <ANIMSET>0</ANIMSET>
+    <EARS>Models/others/E_Male_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/others/h_male_face_01_v2_lod2.grn</FACE>
+    <FEET>Models/others/h_male_feet_v2_lod2.grn</FEET>
+    <HANDS>Models/others/h_male_hands_v2_lod2.grn</HANDS>
+    <HEAD>Models/others/h_male_head_v2_lod2.grn</HEAD>
+    <LLEGS>Models/others/h_male_llegs_v2_lod2.grn</LLEGS>
+    <NECK>Models/others/h_male_neck_v2_lod2.grn</NECK>
+    <TORSOUP>Models/others/h_male_torso_upper_v2_lod2.grn</TORSOUP>
+    <TORSO>Models/others/h_male_torso_v2_lod2.grn</TORSO>
+    <UARMS>Models/others/h_male_uarms_v2_lod2.grn</UARMS>
+    <FARMS>Models/others/h_male_farms_v2_lod2.grn</FARMS>
+    <ULEGS>Models/others/h_male_ulegs_v2_lod2.grn</ULEGS>
+    <PELVIS>Models/others/h_male_pelvis_v2_lod2.grn</PELVIS>
     <LEFT_HAND_BONE>24</LEFT_HAND_BONE>
     <RIGHT_HAND_BONE>20</RIGHT_HAND_BONE>
   </CHARACTER_AOS>
@@ -1465,11 +1485,30 @@
     <FARMS>Models/others/h_female_farms_v2_lod2.grn</FARMS>
     <ULEGS>Models/others/h_female_ulegs_v2_lod2.grn</ULEGS>
     <PELVIS>Models/others/h_female_pelvis_v2_lod2.grn</PELVIS>
-    <ID>401</ID>
     <LEFT_HAND_BONE>22</LEFT_HAND_BONE>
     <RIGHT_HAND_BONE>15</RIGHT_HAND_BONE>
   </CHARACTER_AOS>
 
+  <CHARACTER_AOS>
+    <DESCRIPTION>femaleelf</DESCRIPTION>
+    <ID>606</ID>
+    <ANIMSET>1</ANIMSET>
+    <EARS>Models/others/E_Female_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/others/h_female_face_02_v2_lod2.grn</FACE>
+    <FEET>Models/others/h_female_feet_v2_lod2.grn</FEET>
+    <HANDS>Models/others/h_female_hands_v2_lod2.grn</HANDS>
+    <HEAD>Models/others/h_female_head_v2_lod2.grn</HEAD>
+    <LLEGS>Models/others/h_female_llegs_v2_lod2.grn</LLEGS>
+    <NECK>Models/others/h_female_neck_v2_lod2.grn</NECK>
+    <TORSOUP>Models/others/h_female_torso_upper_v2_lod2.grn</TORSOUP>
+    <TORSO>Models/others/h_female_torso_v2_lod2.grn</TORSO>
+    <UARMS>Models/others/h_female_uarms_v2_lod2.grn</UARMS>
+    <FARMS>Models/others/h_female_farms_v2_lod2.grn</FARMS>
+    <ULEGS>Models/others/h_female_ulegs_v2_lod2.grn</ULEGS>
+    <PELVIS>Models/others/h_female_pelvis_v2_lod2.grn</PELVIS>
+    <LEFT_HAND_BONE>22</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>15</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
 
   <!-- 
   ============================================================================================================
@@ -10142,18 +10181,6 @@
     <FILE>$_lod2.grn</FILE>
     <ANIMSET>0</ANIMSET>
     <PREFIX>Models/Humans/player_ghost</PREFIX>
-  </CHARACTER>
-  <CHARACTER>
-    <ID>605</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>0</ANIMSET>
-    <PREFIX>Models/Humans/h_male</PREFIX>
-  </CHARACTER>
-  <CHARACTER>
-    <ID>606</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>1</ANIMSET>
-    <PREFIX>Models/Humans/h_female</PREFIX>
   </CHARACTER>
   <CHARACTER>
     <ID>607</ID>

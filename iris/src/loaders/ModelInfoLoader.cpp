@@ -24,7 +24,7 @@
 #include "loaders/ModelInfoLoader.h"
 
 #include "Config.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <iostream>
 #include "xml.h"
 #include "iris_endian.h"
@@ -109,7 +109,7 @@ void cModelInfoLoader::Init (std::string filename)
   }
   catch (...)
   {
-    pDebug.Log ("Couldn't load ModelsInfo");
+    Logger::WriteLine ("Couldn't load ModelsInfo");
     return;
   }
 

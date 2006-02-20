@@ -24,7 +24,7 @@
 #include "Macros.h"
 
 #include "Config.h"
-#include "Debug.h"
+#include "Logger.h"
 #include <vector>
 #include <iostream>
 #include "xml.h"
@@ -51,7 +51,7 @@ MacroLoader::MacroLoader()
 	  }
 	  catch( ... )
 	  {
-		  pDebug.Log ("Couldn't load Macros.xml");
+		  Logger::WriteLine ("\t| -> Couldn't load Macros.xml");
 		  return;
       }
   
@@ -64,7 +64,7 @@ MacroLoader::MacroLoader()
       int keymod = 0x0000;
       std::vector<m_Parameter*> parameters;
       std::string script_function = "none";
-      pDebug.Log("MCR1");
+      Logger::WriteLine("MCR1");
       value = macro_node->findNode("ID");
 
         id = (value != NULL) ? value->asInteger() : idx;
@@ -128,14 +128,14 @@ MacroLoader::MacroLoader()
              }
           else
             {
-             pDebug.Log("Warning: Macros.xml: wrong parameter type, skipping...");
+             Logger::WriteLine("Warning: Macros.xml: wrong parameter type, skipping...");
              continue;
             }
  
           }
           else
            {
-             pDebug.Log("Warning: Macros.xml: no parameter type specified, skipping...");
+             Logger::WriteLine("Warning: Macros.xml: no parameter type specified, skipping...");
              continue;
             }
           if(parameters.size() < 5)
