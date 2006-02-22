@@ -93,10 +93,10 @@ bool cClilocLoader::Init(std::string path)
 	std::ifstream clilocfile;
 
 	std::string default_language = "enu";
-	std::string filename = path + "cliloc." + default_language;
+	std::string filename = path + "Cliloc." + default_language;
 
 	std::string language = Config::GetClilocLang();
-	std::string filename_custom = path + "cliloc." + language;
+	std::string filename_custom = path + "Cliloc." + language;
 
 	clilocfile.open (filename.c_str (), std::ios::in | std::ios::binary);
 

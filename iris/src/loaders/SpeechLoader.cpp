@@ -47,7 +47,7 @@ void cSpeechLoader::Init (std::string path)
 {
 	std::ifstream Speechfile;
 
-	std::string filename = path + "Speech.mul";
+	std::string filename = path + "speech.mul";
 	std::cout << "\t| -> Speech file: " << filename << std::endl;
 
 
