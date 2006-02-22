@@ -1,3 +1,7 @@
+22.02.2006
+Changes by Nuno Ramiro
+	- Cleaned SDLEvent class a bit and documented it (doxygen).
+
 21.02.2006
 Changes by Nuno Ramiro
 	- speech.mul; Cliloc.enu - Linux fix (upper case/lower case were not correct).

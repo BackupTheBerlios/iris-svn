@@ -1,3 +1,4 @@
 - When clicking with the middle side button it crashes with "Unhandled exception" 		- Need debug
 - When quiting the game it crashes (memory leaks? dealocating memory that is not ours?) 	- Need debug
 - Something's wrong with XML destructor 							- Need debug
+- When clicking with the Right/Middle button (drag+drop) it crashes (login menu)		- Not sure if this only happens to me
