@@ -43,8 +43,6 @@
 
 SDLScreen *SDLscreen;
 
-#undef main
-
 /// Program Entry point
 int main( int argc, char **args )
 {
@@ -128,7 +126,7 @@ int main( int argc, char **args )
 		pCSLHandler.ExecuteFunction( "main" );
 
 		// Main loop
-		while ( !SDLevent->GetStatus() && !pUOGUI.QuitFlag() )
+		while ( !SDLevent->quit && !pUOGUI.QuitFlag() )
 		{
 			// Handle events in the queue
 			SDLevent->PollEvent();
