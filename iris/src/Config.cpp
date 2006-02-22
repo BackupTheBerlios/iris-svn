@@ -34,7 +34,7 @@ XML::Node *Config::m_kSection = NULL;
 std::string Config::m_sVersion = "0.8.6";
 
 int Config::m_iWidth = 640, Config::m_iHeight = 480, Config::m_iBPP = 16, Config::m_iStartFullScreen = 0,
-Config::m_iCursor = 1, Config::m_iPerspective = 0, Config::m_iDepthBuffer = 16, Config::m_iMaxZoom = 10,
+Config::m_iCursor = 1, Config::m_iPerspective = 1, Config::m_iDepthBuffer = 16, Config::m_iMaxZoom = 10,
 Config::m_iMaxAngle = 75, Config::m_iViewDistance = 8, Config::m_iBrightness = 5, Config::m_iAnimationSmoothness = 25,
 Config::m_iWidth2D = 640, Config::m_iHeight2D = 480, Config::m_iFirstPerson = 0, Config::m_iHideSelf = 0,
 Config::m_iRoofFade = 1, Config::m_iStartX = 1500, Config::m_iStartY = 1000, Config::m_iStartZ = 0, Config::m_iAOS = 1,

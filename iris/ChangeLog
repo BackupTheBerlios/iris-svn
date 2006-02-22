@@ -1,8 +1,8 @@
 22.02.2006
 Changes by Nuno Ramiro
 	- Cleaned SDLEvent class a bit and documented it (doxygen).
-	- Reverted it since it had some weird behaviours, will rework it tonight.
 	- Small changes under other files.
+	- Fixed a small bug that would not allow you to walk.
 
 21.02.2006
 Changes by Nuno Ramiro

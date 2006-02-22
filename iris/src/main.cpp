@@ -126,7 +126,7 @@ int main( int argc, char **args )
 		pCSLHandler.ExecuteFunction( "main" );
 
 		// Main loop
-		while ( !SDLevent->quit && !pUOGUI.QuitFlag() )
+		while ( !SDLevent->GetStatus() && !pUOGUI.QuitFlag() )
 		{
 			// Handle events in the queue
 			SDLevent->PollEvent();

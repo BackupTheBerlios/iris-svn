@@ -881,7 +881,7 @@ void Game::MoveToMouse()
 		dir -= 8;
 	}
   
-	if ( Config::GetPerspective == 0 && !pCamera.forceRotation() )
+	if ( Config::GetPerspective() == 0 && !pCamera.forceRotation() )
 	{
 		pClient->Walk (dir | run_flag);
 	}

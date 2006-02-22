@@ -1,9 +1,17 @@
-//
-// File: SDLEvent.h
-// Created by: Gustav Nylander - blobba@ultima-iris.de
-//
-/*****
+/*! \file SDLEvent.h
+ * \brief SDLEvent class handles all SDL inputs.
+ * 
+ * This class handles all inputs, it parses SDL input commands.
  *
+ * Copyright (©) Iris Team
+ */
+
+/*
+ * Created by Gustav Nylander.
+ * Last change: 17-02-06 (Nuno Ramiro)
+ */
+
+/*
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -17,12 +25,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *****/
-
-/*
-  Handles SDL Events
-*/
+ */
  
 #ifndef _SDLEVENT_H_
 #define _SDLEVENT_H_
@@ -30,33 +33,40 @@
 #include "SDL/SDL.h"
 #include "Macros.h"
 
+///\brief SDLEvent class, handles all input.
 class SDLEvent
 {
-private:
-  void HandleKeyPress (SDL_keysym * keysym);
-  void HandleMouseMotion (SDL_MouseMotionEvent * event);
-  void HandleMouseDown (SDL_MouseButtonEvent * event);
-  void HandleEvent (SDL_Event event,unsigned int currenttime);
-  void HandleMovement (void);
-  SDL_Event event;
-  int lasttick;
-  int lastx, lasty, lastbutton;
-  unsigned int last_click;
-  int clickdown_x, clickdown_y;
-  bool dragging;
-  
-  void HandleMacro(MacroEntry * entry);
-
 public:
-    SDLEvent ();
-   ~SDLEvent ();
+	// Constructor
+	SDLEvent();
+	// Destructor
+	~SDLEvent();
 
-  void PollEvent ();
-  void WaitEvent ();
-  int quit;
+	/// Handles all event on queue.
+	void PollEvent();
+	/// Event wait list.
+	void WaitEvent();	
+	/// Kills the application.
+	static void KillApplication();
+	/// Gets status application (if it needs to be closed/forced to be closed).
+	static bool GetStatus();
 
-protected:
+private:
+	static bool m_bQuit;
+	int m_iLastTick;
+	int m_iLastX, m_iLastY, m_iLastButton;
+	unsigned int m_uiLastClick;
+	int m_iClickDownX, m_iClickDownY;
+	bool m_bIsDragging;
+	SDL_Event m_kEvent;
 
+private:
+	void HandleKeyPress( SDL_keysym *kKeysym );
+	void HandleMouseMotion( SDL_MouseMotionEvent *kEvent );
+	void HandleMouseDown( SDL_MouseButtonEvent *kEvent );
+	void HandleEvent( SDL_Event kEvent, unsigned int uicurrenttime );
+	void HandleMovement( void );
+	void HandleMacro( MacroEntry *kEntry );
 };
 
 #endif //_SDLEVENT_H_
