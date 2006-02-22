@@ -1,3 +1,7 @@
+21.02.2006
+Changes by Nuno Ramiro
+	- speech.mul; Cliloc.enu - Linux fix (upper case/lower case were not correct).
+
 20.02.2006
 Changes by Nuno Ramiro
 	- Linux Makefile Fix
