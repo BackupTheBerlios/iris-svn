@@ -41,7 +41,6 @@
 #include "sound/SoundMixer.h"
 #include "sound/MusicListLoader.h"
 
-SDLEvent *SDLevent;
 SDLScreen *SDLscreen;
 
 #undef main
@@ -73,12 +72,12 @@ int main( int argc, char **args )
 			Logger::Write( "| ->Could not initialize SDLNet; throwing error...\n" );
 		}
  
-		/* 
+		/*
 		 * Initialize video and event handling
 		 * FIXME: do this after all heavy loading
 		 */
 		SDLscreen = new SDLScreen();
-		SDLevent = new SDLEvent();
+		SDLEvent *SDLevent = new SDLEvent();
 
 		Config::RegisterFonts();
 
@@ -129,7 +128,7 @@ int main( int argc, char **args )
 		pCSLHandler.ExecuteFunction( "main" );
 
 		// Main loop
-		while ( !SDLevent->quit && !pUOGUI.QuitFlag() )
+		while ( !SDLevent->GetStatus() && !pUOGUI.QuitFlag() )
 		{
 			// Handle events in the queue
 			SDLevent->PollEvent();

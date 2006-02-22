@@ -37,478 +37,551 @@
 #include "Macros.h"
 #include "csl/CSLHandler.h"
 
-using namespace std;
-
 extern SDLScreen *SDLscreen;
 
-SDLEvent::SDLEvent ()
-{
-  lasttick = 0;
-  last_click = 0;
-  lastx = 0;
-  lasty = 0;
-  lastbutton = 0;
-  quit = 0;
-  clickdown_x = 0;
-  clickdown_y = 0;
-  dragging = false;
-}
+bool SDLEvent::m_bQuit = false;
 
-SDLEvent::~SDLEvent ()
+SDLEvent::SDLEvent() : m_iLastTick( 0 ), m_iLastX( 0 ), m_iLastY( 0 ), m_iLastButton( 0 ),
+						m_uiLastClick( 0 ), m_iClickDownX( 0 ), m_iClickDownY( 0 ), m_bIsDragging( false )
 {
-  // TODO: put destructor code here
 
 }
 
-void SDLEvent::PollEvent ()
+
+SDLEvent::~SDLEvent()
 {
-
-  /* handle the events in the queue */
-  //SDL_WarpMouse( 320, 240 );
-
-  unsigned int currenttime = SDL_GetTicks ();
-
-  if (last_click)
-    if ((currenttime - last_click) >= CLICK_TIME)
-        {
-          Game::GetInstance()->HandleClick (lastx, lasty, lastbutton, false);
-//      printf("Single Click!\n");
-          last_click = 0;
-        }
-
-  while (SDL_PollEvent (&event))
-      {
-        HandleEvent (event, currenttime);
-      }
-  HandleMovement ();
-
+	// TODO: put destructor code here
 }
 
-void SDLEvent::WaitEvent ()
+
+void SDLEvent::KillApplication()
 {
-
-  unsigned int currenttime = SDL_GetTicks ();
-
-  while (!quit && SDL_WaitEvent (&event))
-      {
-        HandleEvent (event, currenttime);
-      }
-
+	m_bQuit = true;
 }
-void SDLEvent::HandleEvent (SDL_Event event, unsigned int currenttime)
+
+
+bool SDLEvent::GetStatus()
 {
-  gui_message msg;
-  switch (event.type)
-      {
+	return m_bQuit;
+}
+
+
+void SDLEvent::PollEvent()
+{
+	/* handle the events in the queue */
+	//SDL_WarpMouse( 320, 240 );
+
+	unsigned int uiCurrentTime = SDL_GetTicks();
+
+	if ( m_uiLastClick )
+	{
+		if ( ( uiCurrentTime - m_uiLastClick ) >= CLICK_TIME )
+		{
+			Game::GetInstance()->HandleClick( m_iLastX, m_iLastY, m_iLastButton, false );
+			// printf("Single Click!\n");
+			m_uiLastClick = 0;
+		}
+	}
+
+	// Handle all our queue events.
+	while ( SDL_PollEvent( &m_kEvent ) )
+	{
+		HandleEvent( m_kEvent, uiCurrentTime );
+	}
+	
+	HandleMovement();
+}
+
+
+void SDLEvent::WaitEvent()
+{
+	unsigned int uiCurrentTime = SDL_GetTicks();
+
+	while ( !m_bQuit && SDL_WaitEvent( &m_kEvent ) )
+	{
+		HandleEvent( m_kEvent, uiCurrentTime );
+	}
+}
+
+
+void SDLEvent::HandleEvent( SDL_Event kEvent, unsigned int uiCurrentTime )
+{
+	gui_message msg;
+	
+	switch ( kEvent.type )
+	{
 /*
-      case SDL_ACTIVEEVENT:
-        //Something's happend with our focus
-        //If we lost focus or we are iconified, we
-        //shouldn't draw the screen
-        if ( event.active.gain == 0 )
-           isActive = false;
-        else
-            isActive = TRUE;
-        break;
+	case SDL_ACTIVEEVENT:
+		//Something's happend with our focus
+		//If we lost focus or we are iconified, we
+		//shouldn't draw the screen
+		if ( kEvent.active.gain == 0 )
+		{
+			isActive = false;
+		}
+		else
+		{
+			isActive = TRUE;
+		}
+		break;
 */
-      case SDL_VIDEORESIZE:
-        // handle resize event
+	case SDL_VIDEORESIZE:
+		// handle resize event
 #ifndef WIN32
-        // Do not reinitialize window in Win32
-        SDLscreen->screen = SDL_SetVideoMode (event.resize.w,
-                                              event.resize.h,
-                                              Config::GetBPP(),
-                                              SDLscreen->videoFlags);
-        if (!SDLscreen->screen)
-            {
-              cerr << "Could not get a surface after resize: " <<
-                SDL_GetError () << endl;
-              exit (1);
-            };
+		// Do not reinitialize window in Win32
+		SDLscreen->screen = SDL_SetVideoMode( kEvent.resize.w, kEvent.resize.h, Config::GetBPP(), SDLscreen->videoFlags );
+
+		if ( !SDLscreen->screen )
+		{
+			cerr << "Could not get a surface after resize: " <<
+			SDL_GetError() << endl;
+			exit( 1 );					// NOTE: Exiting in the middle of program means LOADS of memory leaks this code is not safe.
+		};
 #endif
-        SDLscreen->ResizeWindow (event.resize.w, event.resize.h);
-        break;
-      case SDL_KEYDOWN:
-        /* handle key presses */
-        HandleKeyPress (&event.key.keysym);
-        break;
-      case SDL_MOUSEMOTION:
-        /* handle mouse movements */
-        HandleMouseMotion (&event.motion);
-        break;
-      case SDL_MOUSEBUTTONDOWN:
-        if ((event.button.button == 4))
-          pCamera.ChangeZoom (-0.8f);    // Handle mouse wheel up
-        if ((event.button.button == 5))
-          pCamera.ChangeZoom (0.8f);     // Handle mouse wheel down
+		SDLscreen->ResizeWindow( kEvent.resize.w, kEvent.resize.h );
+		break;
 
-      case SDL_MOUSEBUTTONUP:
-        if ((event.button.button == 4) || (event.button.button == 5))
-          break;                // Do nothing on mouse wheel event
+	case SDL_KEYDOWN:
+		/* handle key presses */
+		HandleKeyPress( &kEvent.key.keysym );
+		break;
 
+	case SDL_MOUSEMOTION:
+		/* handle mouse movements */
+		HandleMouseMotion( &kEvent.motion );
+		break;
 
-        if (event.type == SDL_MOUSEBUTTONDOWN)
-          msg.type = MESSAGE_MOUSEDOWN;
+	case SDL_MOUSEBUTTONDOWN:
+		// Only check if we have pressed a key if we are in game (playing).
+		if ( !Game::GetInstance()->paused() )
+		{
+			if ( ( kEvent.button.button == 4 ) )
+			{
+				pCamera.ChangeZoom( -0.8f );    // Handle mouse wheel up
+			}
+	        
+			if ( ( kEvent.button.button == 5) )
+			{
+				pCamera.ChangeZoom( 0.8f );     // Handle mouse wheel down
+			}
+		}
+		break;
 
-        else
-            {
-              msg.type = MESSAGE_MOUSEUP;
-              pUOGUI.SetDragging (false);
-              dragging = false;
-              if (Game::GetInstance()->CheckDragDrop (event.button.x, event.button.y))
+	case SDL_MOUSEBUTTONUP:
+		if ( ( kEvent.button.button == 4 ) || ( kEvent.button.button == 5 ) )
+		{
+			break;                // Do nothing on mouse wheel event
+		}
+
+		if ( kEvent.type == SDL_MOUSEBUTTONDOWN )
+		{
+			msg.type = MESSAGE_MOUSEDOWN;
+		}
+		else
+		{
+			msg.type = MESSAGE_MOUSEUP;
+			pUOGUI.SetDragging( false );
+			m_bIsDragging = false;
+
+			if ( Game::GetInstance()->CheckDragDrop( kEvent.button.x, kEvent.button.y ) )
+			{
                 break;
-            }
-        msg.mouseevent.x = event.button.x - pUOGUI.GetX ();
-        msg.mouseevent.y = event.button.y - pUOGUI.GetY ();
-        msg.mouseevent.button = event.button.button;
-        if (!pUOGUI.HandleMessage (&msg))
-            {
-              if (event.type == SDL_MOUSEBUTTONUP)
-                  {
-                    Game::GetInstance()->HandleMouseUp (event.button.x, event.button.y,
-                                         event.button.button);
-                    if (!last_click)
-                        {
-                          last_click = currenttime;
-                          lastx = event.button.x;
-                          lasty = event.button.y;
-                          lastbutton = event.button.button;
-                        }
-                    else
-                        {
-                          if ((currenttime - last_click) < CLICK_TIME)
-                              {
-                                Game::GetInstance()->HandleClick (lastx, lasty,
-                                                   event.button.button, true);
-                                //printf("Double Click!\n");
-                              }
-                          last_click = 0;
-                        }
-                  }
-              else
-                  {
-                    Game::GetInstance()->HandleMouseDown (event.button.x, event.button.y,
-                                           event.button.button);
-                    clickdown_x = event.button.x;
-                    clickdown_y = event.button.y;
-                  }
-            }
+			}
+		}
+        
+		msg.mouseevent.x = kEvent.button.x - pUOGUI.GetX();
+		msg.mouseevent.y = kEvent.button.y - pUOGUI.GetY();
+		msg.mouseevent.button = kEvent.button.button;
 
+		if ( !pUOGUI.HandleMessage( &msg ) )
+		{
+			if ( kEvent.type == SDL_MOUSEBUTTONUP )
+			{
+				Game::GetInstance()->HandleMouseUp( kEvent.button.x, kEvent.button.y, kEvent.button.button );
+
+				if ( !m_uiLastClick )
+				{
+					m_uiLastClick = uiCurrentTime;
+					m_iLastX = kEvent.button.x;
+					m_iLastY = kEvent.button.y;
+					m_iLastButton = kEvent.button.button;
+				}
+				else
+				{
+					if ( ( uiCurrentTime - m_uiLastClick ) < CLICK_TIME )
+					{
+						Game::GetInstance()->HandleClick( m_iLastX, m_iLastY, kEvent.button.button, true );
+						//printf("Double Click!\n");
+					}
+
+					m_uiLastClick = 0;
+				}
+			}
+			else
+			{
+				Game::GetInstance()->HandleMouseDown( kEvent.button.x, kEvent.button.y, kEvent.button.button );
+				m_iClickDownX = kEvent.button.x;
+				m_iClickDownY = kEvent.button.y;
+			}
+		}
         break;
 
-      case SDL_QUIT:
-        /* handle quit requests */
-        quit = true;
+	case SDL_QUIT:
+		/* handle quit requests */
+		m_bQuit = true;
         break;
-      default:
-        break;
-      }
+
+	default:
+		break;
+	}
 }
+
 
 /* function to handle key press events */
-void SDLEvent::HandleKeyPress (SDL_keysym * keysym)
+void SDLEvent::HandleKeyPress( SDL_keysym *kKeysym )
 {
-  gui_message msg;
-  MacroEntry * entry = pMacroLoader->GetMacro((int)keysym->sym);
-  if(entry/* && (SDL_GetModState() == entry->keymod)*/)
-  {
-   if(SDL_GetModState() == entry->keymod)
-     HandleMacro(entry);
-   else
-   {
-     int macrocount = pMacroLoader->GetEntriesCount((int)keysym->sym);
-     if( macrocount>1 )
-     {
-        for(int i = 0; i < macrocount; i++)
-        {
-           entry = pMacroLoader->GetMultiMacro((int)keysym->sym, i);
-           if(entry && entry->keymod == SDL_GetModState())
-              HandleMacro(entry);
-        }
-     }
-   }
-  }
+	gui_message msg;
+	MacroEntry *kEntry = pMacroLoader->GetMacro( (int)kKeysym->sym );
 
-  msg.keypressed.type = MESSAGE_KEYPRESSED;
-  msg.keypressed.key = keysym->unicode & 0xFF;
+	//if ( entry/* && (SDL_GetModState() == entry->keymod)*/ )
+	if ( kEntry )
+	{
+		if ( SDL_GetModState() == kEntry->keymod )
+		{
+			HandleMacro( kEntry );
+		}
+		else
+		{
+			int iMacroCount = pMacroLoader->GetEntriesCount( (int)kKeysym->sym );
 
-  if (keysym->sym == SDLK_LEFT)
-    msg.keypressed.key = SDLK_LEFT;
-  else if (keysym->sym == SDLK_RIGHT)
-    msg.keypressed.key = SDLK_RIGHT;
+			if ( iMacroCount > 1 )
+			{
+				for ( int i = 0; i < iMacroCount; i++ )
+				{
+					kEntry = pMacroLoader->GetMultiMacro( (int)kKeysym->sym, i );
+					
+					if ( kEntry && kEntry->keymod == SDL_GetModState() )
+					{
+						HandleMacro( kEntry );
+					}
+				}
+			}
+		}
+	}
 
-    if (pUOGUI.HandleMessage (&msg))
-        {
-          pUOGUI.HandleMessageQueues ();
-          return;
-        }
+	msg.keypressed.type = MESSAGE_KEYPRESSED;
+	msg.keypressed.key = kKeysym->unicode & 0xFF;
 
-  // Check if the GUI can handle it
-  Uint8 *keys;
+	if ( kKeysym->sym == SDLK_LEFT )
+	{
+		msg.keypressed.key = SDLK_LEFT;
+	}
+	else if ( kKeysym->sym == SDLK_RIGHT )
+	{
+		msg.keypressed.key = SDLK_RIGHT;
+	}
 
-  keys = SDL_GetKeyState (NULL);
+    if ( pUOGUI.HandleMessage( &msg ) )
+	{
+		pUOGUI.HandleMessageQueues();
+	
+		return;
+	}
 
-  /* ESC key was pressed */
-  if (keys[SDLK_ESCAPE] == SDL_PRESSED)
-    quit = true;
+	// Check if the GUI can handle it
+	Uint8 *uiKeys;
 
-  Renderer *pRenderer = Game::GetInstance()->GetRenderer ();
-  if (keys[SDLK_a] == SDL_PRESSED && pRenderer)
-      {
-        pRenderer->FadeStatics (50, 1000);
-      }
+	uiKeys = SDL_GetKeyState( NULL );
 
-  if (keys[SDLK_s] == SDL_PRESSED && pRenderer)
-      {
-        pRenderer->FadeStatics (255, 1000);
-      }
+	/* ESC key was pressed */
+	if ( uiKeys[SDLK_ESCAPE] == SDL_PRESSED )
+	{
+		m_bQuit = true;
+	}
 
-  Game::GetInstance()->OnKeyPress (keysym);
-  /* F1 key was pressed this toggles fullscreen mode - does not work under windows currently */
+	Renderer *pRenderer = Game::GetInstance()->GetRenderer();
+	if ( uiKeys[SDLK_a] == SDL_PRESSED && pRenderer )
+	{
+		pRenderer->FadeStatics( 50, 1000 );
+	}
+
+	if ( uiKeys[SDLK_s] == SDL_PRESSED && pRenderer )
+	{
+		pRenderer->FadeStatics( 255, 1000 );
+	}
+
+	Game::GetInstance()->OnKeyPress( kKeysym );
+	/* F1 key was pressed this toggles fullscreen mode - does not work under windows currently */
 
 #ifndef WIN32
-  if (keys[SDLK_F1] == SDL_PRESSED)
-    SDLscreen->ToggleFullScreen ();
+	if ( uiKeys[SDLK_F1] == SDL_PRESSED )
+	{
+		SDLscreen->ToggleFullScreen();
+	}
 
-  if (keys[SDLK_F12] == SDL_PRESSED)
-    SDLscreen->ScreenSave ();
+	if ( uiKeys[SDLK_F12] == SDL_PRESSED )
+	{
+		SDLscreen->ScreenSave();
+	}
 #endif
 }
 
-void SDLEvent::HandleMovement (void)
+
+void SDLEvent::HandleMovement( void )
 {
+	Uint8 *uiKeys;
 
+	uiKeys = SDL_GetKeyState( NULL );
 
-        Uint8 *keys;
+	static Uint32 uiLastTick = 0;
+	float fFactor = 30.0f;
 
-        keys = SDL_GetKeyState (NULL);
+	Uint32 uiTick = SDL_GetTicks();
 
-        static Uint32 lasttick = 0;
-        float factor = 30.0f;
+	if ( uiLastTick )
+	{
+		fFactor = (float)( uiTick - uiLastTick ) / 150.0f;
+	}
+	uiLastTick = uiTick;
 
-        Uint32 tick = SDL_GetTicks ();
+	if ( fFactor > 30.0f )
+	{
+		fFactor = 30.0f;
+	}
 
-        if (lasttick)
-          factor = (float) (tick - lasttick) / 150.0f;
-        lasttick = tick;
+/*
+	if ( uiKeys[SDLK_y] == SDL_PRESSED )
+	{
+		pCamera.SetZ( pCamera.GetZ() + fFactor * 2.0f );
+	}
 
-        if (factor > 30.0f)
-          factor = 30.0f;
+	if ( uiKeys[SDLK_x] == SDL_PRESSED )
+	{
+		pCamera.SetZ( pCamera.GetZ() - fFactor * 2.0f );
+	}
+*/
 
-/*      if(keys[SDLK_y] == SDL_PRESSED)
-	pCamera.SetZ(pCamera.GetZ() + factor * 2.0f );
+	if ( uiKeys[SDLK_LEFT] == SDL_PRESSED )
+	{
+		Game::GetInstance()->Walk_Simple( WALK_LEFT );
+	}
+	// pCamera.Rotate( 0.0, 0.0, 8.0 * fFactor );
 
-      if(keys[SDLK_x] == SDL_PRESSED)
-	pCamera.SetZ(pCamera.GetZ() - factor * 2.0f ); */
+	if ( uiKeys[SDLK_RIGHT] == SDL_PRESSED )
+	{
+          Game::GetInstance()->Walk_Simple( WALK_RIGHT );
+	}
+	// pCamera.Rotate( 0.0, 0.0, -8.0 * fFactor );
 
-        if (keys[SDLK_LEFT] == SDL_PRESSED)
-            {
-              Game::GetInstance()->Walk_Simple (WALK_LEFT);
-            }
-//      pCamera.Rotate(0.0, 0.0, 8.0 * factor);
+	if ( uiKeys[SDLK_UP] == SDL_PRESSED )
+	{
+          Game::GetInstance()->Walk_Simple( WALK_FORWARD );
+	}
+	// pCamera.Move( fFactor );
 
-        if (keys[SDLK_RIGHT] == SDL_PRESSED)
-          Game::GetInstance()->Walk_Simple (WALK_RIGHT);
-//      pCamera.Rotate(0.0, 0.0, -8.0 * factor);
-
-        if (keys[SDLK_UP] == SDL_PRESSED)
-          Game::GetInstance()->Walk_Simple (WALK_FORWARD);
-//      pCamera.Move(factor);
-
-        if (keys[SDLK_DOWN] == SDL_PRESSED)
-          //pCamera.Move (-factor);
-           {
-            int dir =  pClient->player_character()->direction();
-            (dir >= 4)?dir-=4:dir+=4;
-                  pClient->Walk (dir);       
-           }
-
+	if ( uiKeys[SDLK_DOWN] == SDL_PRESSED )
+	{
+		//pCamera.Move (-factor);
+		int dir = pClient->player_character()->direction();
+		( dir >= 4 ) ? dir -= 4 : dir += 4;
+		pClient->Walk( dir );
+	}
 }
 
-void SDLEvent::HandleMouseMotion (SDL_MouseMotionEvent * event)
+
+void SDLEvent::HandleMouseMotion( SDL_MouseMotionEvent *kEvent )
 {
-  Uint8 *keys;
-  keys = SDL_GetKeyState (NULL);
+	Uint8 *uiKeys;
+	uiKeys = SDL_GetKeyState( NULL );
   
-  if (!event)
-      {
-        Logger::WriteLine ("Null event pointer in SDLEvent::HandleMouseMotion",
-                    __FILE__, __LINE__, LEVEL_WARNING);
-        return;
-      }
-      
-   if(!pCamera.forceRotation())
-    pUOGUI.SetCursorPos (event->x, event->y);
-
-  Game::GetInstance()->UpdateDragMode (event->x, event->y);
-
-  gui_message msg;
-
-  msg.type = MESSAGE_MOUSEMOTION;
-  msg.mousemotionevent.x = event->x - pUOGUI.GetX ();
-  msg.mousemotionevent.y = event->y - pUOGUI.GetY ();
-  msg.mousemotionevent.button = event->state;
-  msg.mousemotionevent.relx = event->xrel;
-  msg.mousemotionevent.rely = event->yrel;
-
-  if (pUOGUI.HandleMessage (&msg))
-      {
-        pUOGUI.HandleMessageQueues ();
-      }
-  else
-      {
-
-        if ((event->state & (SDL_BUTTON (2) | SDL_BUTTON (3))))
-            {
-              /*if (SDL_GetModState () & KMOD_LSHIFT)
-                  {
-                    pCamera.Rotate (0.0f, 0.0f, -event->xrel / 3.0f);
-                    pCamera.ChangeZoom (event->yrel * 0.05f);
-                  }
-              else if (SDL_GetModState () & (KMOD_RSHIFT))
-                pCamera.Rotate (event->yrel / 3.0f, 0.0f,
-                                 -event->xrel / 3.0f);*/
-                                 
-                
-            if(event->state & SDL_BUTTON (1)){                 
-                pCamera.Rotate (event->yrel / 3.0f, 0.0f,
-                                 -event->xrel / 3.0f);
-                pCamera.SetForceRotation(true); 
-                } 
-                
-                float amount= pCamera.GetAngleZ() - -pClient->player_character ()->angle ();
-                  
-                if (keys[SDLK_UP] == SDL_PRESSED && Config::GetPerspective() == 1 ){
-                  int wdirection=WALK_FORWARD;
-                  if(amount > 215)
-                   wdirection = WALK_LEFT;
-                  else if (amount < 145)
-                   wdirection = WALK_RIGHT;
-                  if(wdirection == WALK_LEFT ||  wdirection == WALK_RIGHT)
-                  Game::GetInstance()->Walk_Simple (wdirection); 
-                  }                            
-            }
-
-        if (!(event->state & (SDL_BUTTON (2) | SDL_BUTTON (3))))
-         pCamera.SetForceRotation(false);  
-
-
-
-
-        if (event->state & SDL_BUTTON (1))
-          if ((abs (clickdown_x - event->x) > 10)
-              && (abs (clickdown_y - event->y) > 10) && !dragging)
-              {
-                Game::GetInstance()->HandleDrag (clickdown_x, clickdown_y);
-                dragging = true;
-              }
-        Game::GetInstance()->HandleMouseMotion (event);
-
-      }
-
-}
-
-void SDLEvent::HandleMacro(MacroEntry * entry)
-{
-
-      char integers[4][15];
-     
-      //std::vector<char*> ints;
-      int numints = 0;
-      std::vector<char*> strs;
-      
-      
-      if(entry->parameters.size() == 4)
-      {
-        for(int i = 0; i < 4; i++)
-        {
-         
-         if(entry->parameters.at(i)->type == 2)
-         {
-           sprintf(integers[i- strs.size()], "%d", entry->parameters.at(i)->int_value);
-           numints++;
-         }
-        else if(entry->parameters.at(i)->type == 1)
-         strs.push_back((char*)entry->parameters.at(i)->str_value.c_str());
-        }
+	if ( !kEvent )
+	{
+		Logger::WriteLine( "Null event pointer in SDLEvent::HandleMouseMotion", __FILE__, __LINE__, LEVEL_WARNING );
         
-        if(numints == 4)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],integers[2],integers[3]);
-        else if(numints == 3)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],integers[2],strs.at(0));
-        else if(numints == 2)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],strs.at(0),strs.at(1));
-        else if(numints == 1)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], strs.at(0),strs.at(1),strs.at(2));
-        else if(numints == 0)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), strs.at(0),strs.at(1),strs.at(2), strs.at(3)); 
-      }
-       else if(entry->parameters.size() == 3)
-      {
-        for(int i = 0; i < 3; i++)
-        {
-         if(entry->parameters.at(i)->type == 2)
-         {
-           sprintf(integers[i - strs.size()], "%d", entry->parameters.at(i)->int_value);
-           numints++;
-         }
-        else if(entry->parameters.at(i)->type == 1)
-         strs.push_back((char*)entry->parameters.at(i)->str_value.c_str());
-        }
-        
+		return;
+	}
   
-        if(numints == 3)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],integers[2]);
-        else if(numints == 2)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1],strs.at(0));
-        else if(numints == 1)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], strs.at(0),strs.at(1));
-        else if(numints == 0)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), strs.at(0),strs.at(1),strs.at(2)); 
-      }
-      else if(entry->parameters.size() == 2)
-      {
-        for(int i = 0; i < 2; i++)
-        {
-         if(entry->parameters.at(i)->type == 2)
-         { 
-           sprintf(integers[i - strs.size()], "%d", entry->parameters.at(i)->int_value);
-          
-           numints++;
-         }
-        else if(entry->parameters.at(i)->type == 1)
-         strs.push_back((char*)entry->parameters.at(i)->str_value.c_str());
-        }
-        
-        if(numints == 2)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], integers[1]);
-        else if(numints == 1)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0], strs.at(0));
-        else if(numints == 0)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), strs.at(0),strs.at(1)); 
-      }
-      else if(entry->parameters.size() == 1)
-      {
-      
-         if(entry->parameters.at(0)->type == 2)
-         {
-           sprintf(integers[0], "%d", entry->parameters.at(0)->int_value);
-           numints++;
-         }
-        else if(entry->parameters.at(0)->type == 1)
-         strs.push_back((char*)entry->parameters.at(0)->str_value.c_str());
-      
-      
-        if(numints == 1)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), integers[0]);
-        else if(numints == 0)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str(), strs.at(0)); 
-      }
-        else if(entry->parameters.size() == 0)
-         pCSLHandler.ExecuteFunction((char*)entry->script_function.c_str());
-       
-    strs.clear();
-    numints = 0;
+	if ( !pCamera.forceRotation() )
+	{
+		pUOGUI.SetCursorPos( kEvent->x, kEvent->y );
+	}
 
+	Game::GetInstance()->UpdateDragMode( kEvent->x, kEvent->y );
+
+	gui_message msg;
+
+	msg.type = MESSAGE_MOUSEMOTION;
+	msg.mousemotionevent.x = kEvent->x - pUOGUI.GetX();
+	msg.mousemotionevent.y = kEvent->y - pUOGUI.GetY();
+	msg.mousemotionevent.button = kEvent->state;
+	msg.mousemotionevent.relx = kEvent->xrel;
+	msg.mousemotionevent.rely = kEvent->yrel;
+
+	if ( pUOGUI.HandleMessage( &msg ) )
+	{
+		pUOGUI.HandleMessageQueues();
+	}
+	else
+	{
+		if ( ( kEvent->state & ( SDL_BUTTON( 2 ) | SDL_BUTTON( 3 ) ) ) )
+		{
+			/*
+			if ( SDL_GetModState() & KMOD_LSHIFT )
+			{
+				pCamera.Rotate( 0.0f, 0.0f, -kEvent->xrel / 3.0f );
+				pCamera.ChangeZoom( kEvent->yrel * 0.05f );
+			}
+			else if ( SDL_GetModState() & ( KMOD_RSHIFT ) )
+			{
+				pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
+			}
+			*/
+  
+			if ( kEvent->state & SDL_BUTTON( 1 ) )
+			{                 
+				pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
+				pCamera.SetForceRotation( true );
+			} 
+                
+			float fAmount = pCamera.GetAngleZ() - -pClient->player_character()->angle();
+
+			if ( uiKeys[SDLK_UP] == SDL_PRESSED && Config::GetPerspective() == 1 )
+			{
+				int iWalkDir = WALK_FORWARD;
+				if ( fAmount > 215 )
+				{
+                   iWalkDir = WALK_LEFT;
+				}
+				else if ( fAmount < 145 )
+				{
+                   iWalkDir = WALK_RIGHT;
+				}
+				
+				if ( iWalkDir == WALK_LEFT ||  iWalkDir == WALK_RIGHT )
+				{
+					Game::GetInstance()->Walk_Simple( iWalkDir );
+				}
+			}
+		}
+
+		if ( !( kEvent->state & ( SDL_BUTTON( 2 ) | SDL_BUTTON( 3 ) ) ) )
+		{
+			pCamera.SetForceRotation( false );
+		}
+
+		if ( kEvent->state & SDL_BUTTON( 1 ) )
+		{
+			if ( ( abs( m_iClickDownX - kEvent->x ) > 10 ) && ( abs( m_iClickDownY - kEvent->y ) > 10 ) && !m_bIsDragging )
+			{
+                Game::GetInstance()->HandleDrag( m_iClickDownX, m_iClickDownY );
+                m_bIsDragging = true;
+			}
+
+			Game::GetInstance()->HandleMouseMotion( kEvent );
+		}
+	}
 }
 
+
+void SDLEvent::HandleMacro( MacroEntry *kEntry )
+{
+	char cIntegers[4][15]; 
+	int iNumInts = 0;
+	std::vector<char *> vStrs;
+
+	for ( int i = 0; i < kEntry->parameters.size(); i++ )
+	{
+		if ( kEntry->parameters.at( i )->type == 2 )
+		{ 
+			sprintf( cIntegers[i - vStrs.size()], "%d", kEntry->parameters.at( i )->int_value );
+			iNumInts++;
+		}
+		else if ( kEntry->parameters.at( i )->type == 1 )
+		{
+			vStrs.push_back( (char *)kEntry->parameters.at( i )->str_value.c_str() );
+		}
+	}
+
+	if ( kEntry->parameters.size() == 4 )
+	{
+		switch ( iNumInts )
+		{
+		case 0:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), vStrs.at( 0 ), vStrs.at( 1 ), vStrs.at( 2 ), vStrs.at( 3 ) );
+			break;
+
+		case 1:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0], vStrs.at( 0 ), vStrs.at( 1 ), vStrs.at( 2 ) );
+			break;
+
+		case 2:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0], cIntegers[1], vStrs.at( 0 ), vStrs.at( 1 ) );
+			break;
+
+		case 3:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0], cIntegers[1], cIntegers[2], vStrs.at( 0 ) );
+			break;
+
+		case 4:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0], cIntegers[1], cIntegers[2], cIntegers[3] );
+			break;
+		}
+	}
+	else if ( kEntry->parameters.size() == 3 )
+	{
+		switch ( iNumInts )
+		{
+		case 0:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), vStrs.at( 0 ), vStrs.at( 1 ), vStrs.at( 2 ) ); 	
+			break;
+			
+		case 1:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0], vStrs.at( 0 ), vStrs.at( 1 ) );
+			break;
+
+		case 2:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0], cIntegers[1], vStrs.at( 0 ) );
+			break;
+
+		case 3:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0], cIntegers[1], cIntegers[2] );
+			break;
+		}
+	}  
+	else if ( kEntry->parameters.size() == 2 )
+	{
+        switch ( iNumInts )
+		{
+		case 0:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), vStrs.at( 0 ), vStrs.at( 1 ) ); 
+			break;
+
+		case 1:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0], vStrs.at( 0 ) );
+			break;
+
+		case 2:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0], cIntegers[1] );
+			break;
+		}
+	}
+	else if ( kEntry->parameters.size() == 1 )
+	{
+		switch ( iNumInts )
+		{
+		case 0:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), vStrs.at( 0 ) );
+			break;
+
+		case 1:
+			pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str(), cIntegers[0] );
+			break;
+		}
+	}
+	else if ( kEntry->parameters.size() == 0 )
+	{
+		pCSLHandler.ExecuteFunction( (char *)kEntry->script_function.c_str() );
+	}
+
+    vStrs.clear();
+}
