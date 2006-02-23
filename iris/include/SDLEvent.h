@@ -8,7 +8,7 @@
 
 /*
  * Created by Gustav Nylander.
- * Last change: 17-02-06 (Nuno Ramiro)
+ * Last change: 22-02-06 (Nuno Ramiro)
  */
 
 /*
@@ -30,8 +30,19 @@
 #ifndef _SDLEVENT_H_
 #define _SDLEVENT_H_
 
+#include <cassert>
 #include "SDL/SDL.h"
 #include "Macros.h"
+#include "Logger.h"
+#include "Config.h"
+#include "Game.h"
+#include "renderer/SDLScreen.h"
+#include "renderer/Renderer.h"
+#include "renderer/Camera.h"
+#include "net/Client.h"
+#include "gui/GUIHandler.h"
+#include "csl/CSLHandler.h"
+
 
 ///\brief SDLEvent class, handles all input.
 class SDLEvent

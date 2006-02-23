@@ -52,6 +52,9 @@ int main( int argc, char **args )
 	// Initialize Game
 	Game *pGame = Game::GetInstance();
 
+	// Initialize Input(SDL) Event
+	SDLEvent *SDLevent = new SDLEvent();
+
 	try
 	{
 		// Try to load config file
@@ -75,7 +78,6 @@ int main( int argc, char **args )
 		 * FIXME: do this after all heavy loading
 		 */
 		SDLscreen = new SDLScreen();
-		SDLEvent *SDLevent = new SDLEvent();
 
 		Config::RegisterFonts();
 
@@ -144,25 +146,23 @@ int main( int argc, char **args )
 		pGame->DeInit();
 		pUOGUI.DeInit();
 
-		SAFE_DELETE( pSoundMix );	
-		SAFE_DELETE( SDLevent );
-		SAFE_DELETE( SDLscreen );
-
-		SDLNet_Quit();
-		SDL_Quit();
-
-		SAFE_DELETE( pMusicListLoader );
 	}
-	catch ( cException my_exception )
+	catch ( cException kException )
 	{
-		Logger::WriteLine( my_exception.debug_message() );
-		SDLNet_Quit();
-		SDL_Quit();
+		Logger::WriteLine( kException.debug_message() );
 	}
 	catch ( ... )
 	{
 		Logger::WriteLine( "Unhandled exception" );
 	}
+
+	SAFE_DELETE( pSoundMix );	
+	SAFE_DELETE( SDLevent );
+	SAFE_DELETE( SDLscreen );
+	SAFE_DELETE( pMusicListLoader );
+
+	SDLNet_Quit();
+	SDL_Quit();
 
 	SAFE_DELETE( pGame );
 	Config::Close();

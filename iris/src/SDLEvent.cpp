@@ -1,4 +1,9 @@
 /*
+ * Created by Gustav Nylander.
+ * Last change: 22-02-06 (Nuno Ramiro)
+ */
+
+/*
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -14,25 +19,12 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <iostream>
 #include "SDLEvent.h"
-#include "renderer/SDLScreen.h"
-#include "renderer/Renderer.h"
-#include "renderer/Camera.h"
-#include "net/Client.h"
-#include "gui/GUIHandler.h"
-#include "Logger.h"
-#include <math.h>
-#include "Config.h"
-#include "Game.h"
-#include <cassert>
-#include "Config.h"
-#include "Macros.h"
-#include "csl/CSLHandler.h"
+
 
 extern SDLScreen *SDLscreen;
-
 bool SDLEvent::m_bQuit = false;
+
 
 SDLEvent::SDLEvent() : m_iLastTick( 0 ), m_iLastX( 0 ), m_iLastY( 0 ), m_iLastButton( 0 ), m_uiLastClick( 0 ), 
 						m_iClickDownX( 0 ), m_iClickDownY( 0 ), m_bIsDragging( false )
@@ -253,6 +245,8 @@ void SDLEvent::HandleKeyPress( SDL_keysym *kKeysym )
 		}
 	}
 
+	SAFE_DELETE( kEntry );
+
 	msg.keypressed.type = MESSAGE_KEYPRESSED;
 	msg.keypressed.key = kKeysym->unicode & 0xFF;
 
@@ -294,6 +288,8 @@ void SDLEvent::HandleKeyPress( SDL_keysym *kKeysym )
 		pRenderer->FadeStatics( 255, 1000 );
 	}
 
+	SAFE_DELETE( pRenderer );
+
 	Game::GetInstance()->OnKeyPress( kKeysym );
 	/* F1 key was pressed this toggles fullscreen mode - does not work under windows currently */
 
@@ -305,7 +301,7 @@ void SDLEvent::HandleKeyPress( SDL_keysym *kKeysym )
 
 	if ( uiKeys[SDLK_F12] == SDL_PRESSED )
 	{
-		SDLscreen->ScreenSave ();
+		SDLscreen->ScreenSave();
 	}
 #endif
 }

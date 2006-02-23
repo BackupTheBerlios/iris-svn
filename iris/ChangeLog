@@ -3,6 +3,7 @@ Changes by Nuno Ramiro
 	- Cleaned SDLEvent class a bit and documented it (doxygen).
 	- Small changes under other files.
 	- Fixed a small bug that would not allow you to walk.
+	- Fixes under granny_aos.xml (upper/lower cases).
 
 21.02.2006
 Changes by Nuno Ramiro

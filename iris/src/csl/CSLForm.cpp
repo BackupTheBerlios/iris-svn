@@ -42,7 +42,6 @@
 #include "gui/TextManager.h"
 
 #include "renderer/DynamicObjects.h"
-#include "renderer/SDLScreen.h"
 
 #include "loaders/GumpLoader.h"
 #include "loaders/SkillLoader.h"
