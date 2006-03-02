@@ -19,54 +19,8 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <iostream>
-#include <assert.h>
-
 #include "Game.h"
-#include "Logger.h"
-#include "Exception.h"
-#include "Config.h"
-#include "Geometry.h"
-
-#include "loaders/StaticModelLoader.h"
-#include "loaders/UOMap.h"
-//#include "loaders/CompressedMap.h"
-#include "loaders/GroundTextures.h"
-#include "loaders/GumpLoader.h"
-#include "loaders/ArtLoader.h"
-#include "loaders/FontLoader.h"
-#include "loaders/HueLoader.h"
-#include "loaders/SkillLoader.h"
-#include "loaders/TileDataLoader.h"
-#include "loaders/TileDataBuffer.h"
-#include "loaders/StitchinLoader.h"
-#include "loaders/ClilocLoader.h"
-#include "loaders/ModelInfoLoader.h"
-#include "loaders/VerdataLoader.h"
-#include "loaders/MultisLoader.h"
-#include "loaders/MapInfo.h"
-#include "loaders/SpeechLoader.h"
-
-#include "renderer/SDLScreen.h"
-#include "renderer/TextureBuffer.h"
-#include "renderer/DynamicObjects.h"
-#include "renderer/Characters.h"
-
-#include "renderer/particles/ParticleEngine.h"
-#include "renderer/particles/ParticleLoader.h"
-
 #include "renderer/3D/Renderer3D.h"
-#include "renderer/3D/Light3D.h"
-
-#include "net/Client.h"
-
-#include "granny/GrannyLoader.h"
-
-#include "gui/GUIHandler.h"
-#include "gui/TextManager.h"
-
-#include "csl/CSLHandler.h"
-#include "Macros.h"
 
 extern SDLScreen *SDLscreen;
 
@@ -82,6 +36,7 @@ Game::Game()
 	// Default values
 	pRenderer = NULL;
 	m_kMapBuffer3D = NULL;
+	m_kArtLoader = NULL;
 	m_paused = true;
 
 	cursor3d[0] = 0;
@@ -111,15 +66,39 @@ Game::Game()
 	pGrannyLoader = NULL;
 	pMultisLoader = NULL;
 	pTextManager = NULL;
+	m_kMapBuffer3D = NULL;
 }
 
 
 Game::~Game()
 {
-	//SiENcE: not needed
-	//DeInit();
-	SAFE_DELETE( m_kMapBuffer3D );
-	SAFE_DELETE( m_sgGame );
+	m_sgGame = NULL;
+
+	Logger::WriteLine( "\tSYS | Deinitializing Iris...." );
+	pParticleEngine.Reset();
+	pParticleLoader.DeInit();
+
+	if ( pRenderer )
+	{
+		pRenderer->DeInit();
+	}
+
+	DeInitRenderer();
+
+	pCamera.Reset();
+
+	pDynamicObjectList.Clear();
+	pCharacterList.Clear();
+
+	SAFE_DELETE( pRenderer );
+	SAFE_DELETE( pTextManager );
+	SAFE_DELETE( m_kArtLoader );
+
+	if ( pClient )
+	{
+		Disconnect();
+	}
+	//SAFE_DELETE( m_kMapBuffer3D );
 }
 
 
@@ -201,29 +180,6 @@ bool Game::Init( void )
 }
 
 
-void Game::DeInit( void )
-{
-	Logger::WriteLine( "\tSYS | Deinitializing Iris...." );
-	pParticleEngine.Reset();
-	pParticleLoader.DeInit();
-
-	if ( pRenderer )
-	{
-		pRenderer->DeInit();
-	}
-
-	DeInitRenderer();
-
-	pCamera.Reset();
-
-	pDynamicObjectList.Clear();
-	pCharacterList.Clear();
-
-	SAFE_DELETE( pRenderer );
-	SAFE_DELETE( pTextManager );
-}
-
-
 void Game::InitRenderer( std::string sMulPath )
 {
 	string sMulMap0 = sMulPath + "map0.mul";
@@ -231,11 +187,6 @@ void Game::InitRenderer( std::string sMulPath )
 	string sMulStaidx0 = sMulPath + "staidx0.mul";
 	string sMulTexmaps = sMulPath + "texmaps.mul";
 	string sMulTexidx = sMulPath + "texidx.mul";
-
-	pMapLoader = NULL;
-	pGrannyLoader = NULL;
-	pMacroLoader = NULL;
-	pMultisLoader = NULL;
 
 	Logger::WriteLine( "\t| -> mapinfo" );
 	pMapInfoLoader.Init( "xml/Maps.xml" );
@@ -247,7 +198,7 @@ void Game::InitRenderer( std::string sMulPath )
 	pGroundTextureLoader.Init( sMulTexmaps, sMulTexidx );
 
 	Logger::WriteLine( "\t| -> arts" );
-	pArtLoader.Init( sMulPath + "art.mul", sMulPath + "artidx.mul" );
+	m_kArtLoader = new ArtLoader( sMulPath + "art.mul", sMulPath + "artidx.mul" );
 
 	Logger::WriteLine( "\t| -> fonts" );
 	pFontLoader.Init( sMulPath + "fonts.mul" );
@@ -272,7 +223,7 @@ void Game::InitRenderer( std::string sMulPath )
 	}
 
 	Logger::WriteLine( "\t| -> map buffer" );
-	m_kMapBuffer3D = new cMapbuffer3D();
+	m_kMapBuffer3D = new Mapbuffer3D();
 	pMapbufferHandler.Init( m_kMapBuffer3D );
 
 	Logger::WriteLine( "\t| -> tiledata buffer" );
@@ -327,7 +278,6 @@ void Game::DeInitRenderer( void )
 	SAFE_DELETE( pMacroLoader );
 	
 	pGroundTextureLoader.DeInit();
-	pArtLoader.DeInit();
 	pFontLoader.DeInit();
 	pGumpLoader.DeInit();
 	pHueLoader.DeInit();
@@ -637,9 +587,9 @@ void Game::ItemClick2D( Uint32 id, bool double_click )
 
 void Game::SetPosition( int x, int y, int z )
 {
-	pCamera.SetX( -( x % 8 ) );
-	pCamera.SetY( -( y % 8 ) );
-	pCamera.SetZ( -z );
+	pCamera.SetX( (float) -( x % 8 ) );
+	pCamera.SetY( (float) -( y % 8 ) );
+	pCamera.SetZ( (float) -z );
 
 	pCamera.SetBlockX( x / 8 );
 	pCamera.SetBlockY( y / 8 );

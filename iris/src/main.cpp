@@ -35,11 +35,13 @@
 #include "Game.h"
 #include "net/Client.h"
 #include "Config.h"
-#include "gui/GUIHandler.h"
-
 #include "csl/CSLHandler.h"
 #include "sound/SoundMixer.h"
 #include "sound/MusicListLoader.h"
+
+#if defined(_WIN32) && !defined(_DEBUG)
+	#pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
+#endif
 
 SDLScreen *SDLscreen;
 
@@ -47,38 +49,44 @@ SDLScreen *SDLscreen;
 int main( int argc, char **args )
 {
 	// Initializes Logger
-	Logger::Init( Config::GetVersion() );
+	if ( !Logger::Init( Config::GetVersion() ) )
+	{
+		std::cout << "WARNING: Could not create Log file." << std::endl;
+	}
 
 	// Initialize Game
 	Game *pGame = Game::GetInstance();
-
-	// Initialize Input(SDL) Event
-	SDLEvent *SDLevent = new SDLEvent();
 
 	try
 	{
 		// Try to load config file
 		if ( !Config::Init() )
 		{
-			Logger::Write( "\t| ->Unable to load configuration file - Using defaults ",
+			Logger::WriteLine( "\t| ->Unable to load configuration file - Using defaults ",
 				__FILE__, __LINE__, LEVEL_WARNING );
         }
 
 		// Initialize SDL
-		SDL_Init( 0 );
+		if ( SDL_Init( 0 ) == -1 )
+		{
+			Logger::WriteLine( "| -> Could not initialize SDL: " + std::string( SDL_GetError() ) );
+		}
 
 		// Initializes SDLNet
 		if ( SDLNet_Init() == -1 )
 		{
-			Logger::Write( "| ->Could not initialize SDLNet; throwing error...\n" );
+			Logger::WriteLine( "| -> Could not initialize SDLNet: " + std::string( SDL_GetError() ) );
 		}
- 
+
 		/*
-		 * Initialize video and event handling
 		 * FIXME: do this after all heavy loading
 		 */
+		// Initialize Video(SDL)
+		//SDLScreen *SDLscreen = SDLScreen::GetInstance();
 		SDLscreen = new SDLScreen();
-
+		// Initialize Input(SDL) Event
+		SDLEvent *SDLevent = new SDLEvent();
+ 
 		Config::RegisterFonts();
 
 		// Initialize SDL_music
@@ -103,19 +111,21 @@ int main( int argc, char **args )
 		pCSLHandler.Init();
 		pCSLHandler.InitAPI();
 
+		// Configure scripts path
 		std::string sScriptPath = Config::GetScriptPath();
 
 		if ( sScriptPath == "root" )
 		{
-			sScriptPath = "script/iris.csl";
+			sScriptPath = "script/";
 		}
 		else
 		{
-			sScriptPath = "script/" + sScriptPath + "/iris.csl";
+			sScriptPath = "script/" + sScriptPath;
 		}
 
 		Logger::Write( "DBG | Script path: " );
 		Logger::WriteLine( sScriptPath.c_str() );
+		sScriptPath += "iris.csl";
 		pCSLHandler.Load( (char *)sScriptPath.c_str() );
 
 		// Init game engine
@@ -128,7 +138,7 @@ int main( int argc, char **args )
 		pCSLHandler.ExecuteFunction( "main" );
 
 		// Main loop
-		while ( !SDLevent->GetStatus() && !pUOGUI.QuitFlag() )
+		while ( !SDLevent->GetStatus() )
 		{
 			// Handle events in the queue
 			SDLevent->PollEvent();
@@ -142,10 +152,10 @@ int main( int argc, char **args )
 		}
 
 		// Clean up
-		pGame->Disconnect();
-		pGame->DeInit();
+		pCSLHandler.DeInit();
 		pUOGUI.DeInit();
 
+		SAFE_DELETE( SDLevent );
 	}
 	catch ( cException kException )
 	{
@@ -156,8 +166,7 @@ int main( int argc, char **args )
 		Logger::WriteLine( "Unhandled exception" );
 	}
 
-	SAFE_DELETE( pSoundMix );	
-	SAFE_DELETE( SDLevent );
+	SAFE_DELETE( pSoundMix );
 	SAFE_DELETE( SDLscreen );
 	SAFE_DELETE( pMusicListLoader );
 
@@ -165,8 +174,8 @@ int main( int argc, char **args )
 	SDL_Quit();
 
 	SAFE_DELETE( pGame );
-	Config::Close();
 	Logger::Close();
+	Config::Close();
 
 	return 0;
 }

@@ -47,12 +47,14 @@ namespace XML
 
 // NODE IMPLEMENTATION
 
-  Node::~Node ()
+  Node::~Node()
   {
     // Delete all subnodes
-    for (unsigned int i = 0; i < nodes.size (); ++i)
-      delete nodes[i];
-  };
+    for (unsigned int i = 0; i < nodes.size(); ++i)
+	{
+		SAFE_DELETE( nodes[i] );
+	}
+  }//;
 
   int Node::addNode (Node * node)
   {

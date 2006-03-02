@@ -22,65 +22,63 @@
 
 
 #include "renderer/MapBuffer.h"
-#include <assert.h>
-#include "Logger.h"
-#include "Config.h"
-#include "Exception.h"
-#include "include.h"
-#include "renderer/Camera.h"
 
-using namespace std;
+MapbufferHandler pMapbufferHandler;
 
-
-
-cMapbufferHandler pMapbufferHandler;
-
-cMapbuffer::cMapbuffer ()
+Mapbuffer::Mapbuffer ()
 {
-  m_roof_z = ROOF_NONE;
+	m_roof_z = ROOF_NONE;
 }
 
-cMapbuffer::~cMapbuffer ()
+Mapbuffer::~Mapbuffer ()
 {
-  Clear ();
+	Clear();
 }
 
-void cMapbuffer::Clear (void)
+void Mapbuffer::Clear (void)
 {
-  MapBuffer_t::iterator iter;
+	MapBuffer_t::iterator iter;
 
-  for (iter = root.begin (); iter != root.end (); iter++)
-    delete (*iter).second;
+	for ( iter = root.begin (); iter != root.end (); iter++ )
+	{
+		delete (*iter).second;
+	}
 
-  root.clear ();
+	root.clear();
 }
 
-cMapblock *cMapbuffer::Get (int x, int y)
+cMapblock *Mapbuffer::Get( int x, int y )
 {
-  if ((x < 0) || (y < 0))
-    return NULL;
+	if ( ( x < 0 ) || ( y < 0 ) )
+	{
+		return NULL;
+	}
+	
+	MapBuffer_t::iterator iter;
 
-  MapBuffer_t::iterator iter;
+	iter = root.find( (Uint32) x << 16 | y );
 
-  iter = root.find ((Uint32) x << 16 | y);
-
-  if (iter == root.end ())
-    return NULL;
-  else
-    return (*iter).second;
+	if ( iter == root.end() )
+	{
+		return NULL;
+	}
+	else
+	{
+		return (*iter).second;
+	}
 }
 
-void cMapbuffer::Add (cMapblock * block)
+void Mapbuffer::Add (cMapblock * block)
 {
   assert (block);
 
   Uint16 x = block->getBlockX ();
   Uint16 y = block->getBlockY ();
 
-  root.insert (make_pair ((Uint32) x << 16 | y, block));
+  root.insert (std::make_pair ((Uint32) x << 16 | y, block));
 }
 
-void cMapbuffer::FreeBuffer (int radius)
+void Mapbuffer::FreeBuffer (int radius)
 {
   MapBuffer_t::iterator iter;
 
@@ -103,7 +101,7 @@ void cMapbuffer::FreeBuffer (int radius)
 
 }
 
-void cMapbuffer::SetUsageFlag (bool value)
+void Mapbuffer::SetUsageFlag (bool value)
 {
   MapBuffer_t::iterator iter;
 
@@ -111,7 +109,7 @@ void cMapbuffer::SetUsageFlag (bool value)
     iter->second->set_in_use (value);
 }
 
-void cMapbuffer::ResetFader (cFader * fader)
+void Mapbuffer::ResetFader (cFader * fader)
 {
   MapBuffer_t::iterator iter;
 
@@ -119,7 +117,7 @@ void cMapbuffer::ResetFader (cFader * fader)
     iter->second->ResetFader (fader);
 }
 
-void cMapbuffer::UpdateAlpha ()
+void Mapbuffer::UpdateAlpha ()
 {
   MapBuffer_t::iterator iter;
   for (iter = root.begin (); iter != root.end (); iter++)
@@ -133,7 +131,7 @@ void cMapbuffer::UpdateAlpha ()
         }
 }
 
-void cMapbuffer::ResetLight ()
+void Mapbuffer::ResetLight ()
 {
   MapBuffer_t::iterator iter;
   for (iter = root.begin (); iter != root.end (); iter++)
@@ -141,29 +139,29 @@ void cMapbuffer::ResetLight ()
 }
 
 
-cMapbufferHandler::cMapbufferHandler ()
+MapbufferHandler::MapbufferHandler ()
 {
     map_buffer = NULL;
 }
 
-cMapbufferHandler::~cMapbufferHandler ()
+MapbufferHandler::~MapbufferHandler ()
 {
     DeInit ();
 }
 
-void cMapbufferHandler::Init (cMapbuffer * map_buffer)
+void MapbufferHandler::Init (Mapbuffer * map_buffer)
 {
     DeInit ();
     this->map_buffer = map_buffer;
 }
 
-void cMapbufferHandler::DeInit ()
+void MapbufferHandler::DeInit ()
 {
     delete map_buffer;
     map_buffer = NULL;
 }
 
-cMapbuffer * cMapbufferHandler::buffer ()
+Mapbuffer *MapbufferHandler::buffer ()
 {
       if (!map_buffer)
           THROWEXCEPTION ("Invalid Map buffer access");

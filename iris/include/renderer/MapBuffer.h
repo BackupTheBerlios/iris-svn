@@ -23,60 +23,56 @@
 #ifndef _MAPBUFFER_H_
 #define _MAPBUFFER_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
-#include "../include.h"
+#include <assert.h>
 #include "MapBlock.h"
-#include "SDL/SDL.h"
-#include <map>
+#include "Config.h"
+#include "renderer/Camera.h"
 
-
-class cMapbuffer 
+class Mapbuffer 
 {
-protected:
- typedef std::map<Uint32, cMapblock *>	MapBuffer_t;
- MapBuffer_t	root;
- 
- int m_roof_z;
-
 public:
-    cMapbuffer ();
-   virtual ~cMapbuffer ();
+	Mapbuffer();
+	virtual ~Mapbuffer();
 
-   void Clear();
-   int GetCount(void);
+	void Clear();
+	int GetCount( void );
 
-   cMapblock * Get (int x, int y);
-   void Add(cMapblock * block);
-   void FreeBuffer(int radius);
+	cMapblock *Get( int x, int y );
+	void Add(cMapblock * block);
+	void FreeBuffer(int radius);
    
-   virtual cMapblock * CreateBlock (int x, int y) = 0;
+	virtual cMapblock *CreateBlock( int x, int y ) = 0;
    
-   void setRoofZ(int z) { m_roof_z = z; }
-   void SetUsageFlag (bool value);
+	void setRoofZ( int z ) { m_roof_z = z; }
+	void SetUsageFlag( bool value );
    
-   void ResetFader (cFader * fader);
-   void UpdateAlpha();
-   
-   void ResetLight ();
+	void ResetFader( cFader *fader );
+	void UpdateAlpha();
 
+	void ResetLight();
+
+protected:
+	typedef std::map<Uint32, cMapblock *> MapBuffer_t;
+	MapBuffer_t root;
+	int m_roof_z;
 };
 
-class cMapbufferHandler
+
+class MapbufferHandler
 {
-    private:
-       cMapbuffer * map_buffer;
-    public:
-        cMapbufferHandler ();
-        ~ cMapbufferHandler ();
-        void Init (cMapbuffer * map_buffer);
-        void DeInit ();
-        cMapbuffer * buffer ();
+public:
+	MapbufferHandler();
+	~MapbufferHandler();
+	
+	void Init( Mapbuffer *map_buffer );
+	void DeInit();
+	Mapbuffer *buffer();
+
+private:
+	Mapbuffer *map_buffer;
 };
 
 
-extern cMapbufferHandler pMapbufferHandler;
+extern MapbufferHandler pMapbufferHandler;
 
 #endif //_MAPBUFFER_H_

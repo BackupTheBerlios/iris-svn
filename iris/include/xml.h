@@ -26,6 +26,7 @@
 #if !defined(__XMLDOM_H__)
 #define __XMLDOM_H__
 
+#include "Common.h"
 #include <vector>
 #include <string>
 

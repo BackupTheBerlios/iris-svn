@@ -1,5 +1,11 @@
 - When clicking with the middle side button it crashes with "Unhandled exception" 		- Need debug
-- When quiting the game it crashes (memory leaks? dealocating memory that is not ours?) 	- Need debug
+- Weird behaviour when closing Iris it doesn't close the console (probably memory leaks)	- Needs debug
 - Something's wrong with XML destructor 							- Need debug
 - When clicking with the Right/Middle button (drag+drop) it crashes (login menu)		- Not sure if this only happens to me
 - On login menu, after the music has stopped it does not start again (loop).			- New Feature
+- Macros output is kinda weird.									- Needs fixing
+- Options "Music Off" does not work								- Need fixing
+- When opening the "Bag" you can get multiple bags						- Needs fixing
+- When clicking self it opens the tooltips but if you click somewhere it doesn't go away	- Needs debug
+- Mouse move over the char does not highlight it (SiENcE)					- FIXED
+- Crash on exit											- FIXED

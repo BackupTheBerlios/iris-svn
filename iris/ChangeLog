@@ -1,3 +1,36 @@
+1.03.2006
+Changes by Nuno Ramiro
+	- Speed improvements.
+	- Small fixes.
+	- Removed console under windows and when not debugging.
+
+28.02.2006
+Changes by Nuno Ramiro
+	- Small fixes.
+	- Debugs.
+	- Memory leaks.
+	- Some warnings.
+	- Stability.
+	- Mouse Move highlight bug fixed.
+	- Fixed walking.
+	- Linux compatibility.
+
+27.02.2006
+26.02.2006
+25.02.2006
+24.02.2006
+Changes by Nuno Ramiro
+	- Debugs.
+	- Memory leaks.
+	- Stability.
+
+23.02.2006
+Changes by Nuno Ramiro
+	- Code simplification (Logger files).
+	- Cleaned SDLScreen class and added some documentation.
+	- Memory leak fixed under SpeechLoader.
+	- Some more leaks fixed.
+
 22.02.2006
 Changes by Nuno Ramiro
 	- Cleaned SDLEvent class a bit and documented it (doxygen).

@@ -779,7 +779,7 @@ void cMatrix::Identity ()
 {
   for (int i = 0; i < 4; i++)
     for (int j = 0; j < 4; j++)
-      m_fields[i][j] = (i == j) ? 1 : 0;  // Kronecker Symbol ;)
+      m_fields[i][j] = (i == j) ? 1.0f : 0.0f;  // Kronecker Symbol ;)
 }
 
 void cMatrix::RotationMatrix (cVector axis, float angle)    // Creates a rotation matrix

@@ -712,7 +712,7 @@ void api_addcontrol (Control * control)
 
 static ZString api_iris_log (ZCsl * aCsl)
 {
-  Logger::WriteLine ("CSL | " + string (aCsl->get ("text").buffer ()));
+	Logger::WriteLine ("CSL | " + std::string (aCsl->get ("text").buffer ()));
   return "";
 }
 
@@ -724,7 +724,7 @@ static ZString api_iris_disconnect (ZCsl * aCsl)
 
 static ZString api_iris_deinit (ZCsl * aCsl)
 {
-  Game::GetInstance()->DeInit ();
+  //Game::GetInstance()->DeInit ();
   return "";
 }
 
@@ -862,7 +862,7 @@ static ZString api_net_sendtarget(ZCsl * aCsl)
 
 static ZString api_net_waittarget(ZCsl* aCsl)
 {
-if(pClient){string fname = string(aCsl->get("funcname").buffer());
+	if(pClient){std::string fname = std::string(aCsl->get("funcname").buffer());
  std::cout << "fname: " << fname << std::endl;
  pClient->wait_for_target(fname);}
 
@@ -873,7 +873,7 @@ if(pClient){string fname = string(aCsl->get("funcname").buffer());
 static ZString api_game_settimer(ZCsl* aCsl)
 {
 
- string func = string(aCsl->get("func").buffer());
+	std::string func = std::string(aCsl->get("func").buffer());
  Game::GetInstance()->SetTimerFunction(func, aCsl->get("time").asInt());
  
  return "0";
@@ -939,7 +939,7 @@ static ZString api_camera_firstperson(ZCsl* aCsl)
  
            
            if(selfview)
-            pCamera.ChangeZoom(-3.4);
+            pCamera.ChangeZoom(-3.4f);
 
  return "0";
 }
@@ -1917,7 +1917,7 @@ static ZString api_gui_gumpexists (ZCsl * aCsl)
 static ZString api_quit (ZCsl * aCsl)
 {
 
-    pUOGUI.SetQuitFlag (1);
+    pUOGUI.SetQuitFlag();
   return "-1";
 }
 
@@ -2107,7 +2107,7 @@ static ZString api_net_createchar (ZCsl * aCsl)
   sNewCharSettings doll;
   int errorid = 0;
   Uint8 i;
-  string town_name;
+  std::string town_name;
   cLoginListEntry *location;
 
   for(i = 0; i < 31; i++)
@@ -2465,7 +2465,7 @@ static ZString api_net_getmenuitem (ZCsl * aCsl)
     return "";
 
 
-  string text = "";
+  std::string text = "";
   int model = 0;
 
   pClient->GetMenuItem (index, text, model);
@@ -2538,22 +2538,23 @@ static ZString api_object_getparent (ZCsl * aCsl)
   return "0";
 }
 
-static ZString api_net_openbackpack (ZCsl * aCsl)
+static ZString api_net_openbackpack( ZCsl *aCsl )
 {
-  if (pClient)
-      {
-        cCharacter *character = pClient->player_character ();
-        if (character)
-            {
-              cCharacterEquip *equip = character->GetEquip (0x15);
-              if (equip)
-                pClient->Send_DoubleClick (equip->id ());
+	if ( pClient )
+	{
+		cCharacter *character = pClient->player_character();
 
+		if ( character )
+		{
+			cCharacterEquip *equip = character->GetEquip( 0x15 );
+			if (equip)
+			{
+                pClient->Send_DoubleClick( equip->id () );
+			}
+		}
+	}
 
-            }
-      }
-
-  return "0";
+	return "0";
 }
 
 static ZString api_char_getstatus (ZCsl * aCsl)
@@ -2708,7 +2709,7 @@ static ZString api_char_addtext (ZCsl * aCsl)
         cCharacter *character = pCharacterList.Get ((Uint32) id);
         if (character)
             {
-              character->AddText (string (aCsl->get ("text").buffer ()),
+				character->AddText (std::string (aCsl->get ("text").buffer ()),
                                   timeout, hue);
               return "1";
             }
@@ -2745,7 +2746,7 @@ static ZString api_gui_addhtmllabel (ZCsl * aCsl)
   int y = aCsl->get ("y").asInt ();
   int width = aCsl->get ("width").asInt ();
   int height = aCsl->get ("height").asInt ();
-  string htmltext = string (aCsl->get ("htmltext").buffer ());
+  std::string htmltext = std::string (aCsl->get ("htmltext").buffer ());
   int scrollbar = aCsl->get ("scrollbar").asInt ();
 
         Logger::WriteLine (htmltext.c_str ());
@@ -3003,8 +3004,8 @@ void CSLHandler::Load (char *filename)
 int CSLHandler::ExecuteFunction (char *funcname, char *p1, char *p2, char *p3,
                                  char *p4)
 {
-  if (!initialized)
-    return -1;
+	if (!initialized)
+		return -1;
 
   try
   {

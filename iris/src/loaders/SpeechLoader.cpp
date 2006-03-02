@@ -22,15 +22,8 @@
  *
  *****/
 
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include "Logger.h"
-#include "Config.h"
+
 #include "loaders/SpeechLoader.h"
-#include "string_utils.h"
-#include <string>
-#include <SDL/SDL_endian.h>
 
 cSpeechLoader pSpeechLoader;
 
@@ -43,58 +36,63 @@ cSpeechLoader::~cSpeechLoader ()
     DeInit ();
 }
 
-void cSpeechLoader::Init (std::string path)
+void cSpeechLoader::Init( std::string path )
 {
 	std::ifstream Speechfile;
 
 	std::string filename = path + "speech.mul";
 	std::cout << "\t| -> Speech file: " << filename << std::endl;
 
+	Speechfile.open( filename.c_str (), std::ios::in | std::ios::binary );
 
-  Speechfile.open (filename.c_str (), std::ios::in | std::ios::binary);
+	if ( !Speechfile.is_open() )
+	{
+		Logger::WriteLine ("\t| -> Warning: Couldn't open Speech file");
+		Speechfile.close ();
+		
+		return;
+	}
 
-  if (!Speechfile.is_open ())
-      {
-        Logger::WriteLine ("\t| -> Warning: Couldn't open Speech file");
-        Speechfile.close ();
-        //nConfig::Speech_mul = 0;
-        return;
-      }
+	Speechfile.seekg( 0, std::ios::end );
+	int filelen = Speechfile.tellg();
+	Speechfile.seekg( 0, std::ios::beg );
 
-  Speechfile.seekg (0, std::ios::end);
-  int filelen = Speechfile.tellg ();
-  Speechfile.seekg (0, std::ios::beg);
-
-  Uint16 index;
-  Uint16 keywordlen;
-  char * c_keyword;
-  std::string s_keyword = "";
+	Uint16 index;
+	Uint16 keywordlen;
+	char *c_keyword;
+	std::string s_keyword = "";
   
- bool first_lan= true;
+	bool first_lan = true;
 
-  while (Speechfile.tellg () < filelen)
-  {
-       
-        Speechfile.read ((char *) &index, 2);
-        index = SDL_Swap16 (index);
-        if(index == 0 && first_lan)
-         first_lan = false;
-        else{
-           m_languages.push_back(m_keywords); 
-           m_keywords.clear(); 
-          }
-        Speechfile.read ((char *) &keywordlen, 2);
-        keywordlen=SDL_Swap16 (keywordlen);
-        c_keyword = new char[keywordlen + 1];
-        Speechfile.read ((char *) c_keyword, keywordlen);
-        c_keyword[keywordlen] = 0;
-        s_keyword = std::string (c_keyword);
-        delete c_keyword;
+	while ( Speechfile.tellg () < filelen )
+	{
+		Speechfile.read( (char *) &index, 2 );
+		index = SDL_Swap16( index );
+
+		if ( index == 0 && first_lan )
+		{
+			first_lan = false;
+		}
+		else
+		{
+			m_languages.push_back( m_keywords );
+			m_keywords.clear();
+		}
+
+		Speechfile.read( (char *) &keywordlen, 2 );
+		keywordlen = SDL_Swap16( keywordlen );
+		c_keyword = new char[keywordlen + 1];
+		Speechfile.read( (char *) c_keyword, keywordlen );
+		c_keyword[keywordlen] = 0;
+		s_keyword = std::string( c_keyword );
+		SAFE_DELETE_ARRAY( c_keyword );
+
         //std::cout << "ID: " << index << " WORD: " << s_keyword << "   len: " << keywordlen << std::endl;
         //Logger::WriteLine(s_keyword.c_str());
-        m_keywords.insert (make_pair ( s_keyword, index));
-  }
-  Speechfile.close ();
+        m_keywords.insert( make_pair( s_keyword, index ) );
+	}
+
+	Speechfile.close();
 }
 
 void cSpeechLoader::DeInit ()

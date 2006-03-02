@@ -49,7 +49,7 @@ cItemContainerEntry::cItemContainerEntry (Uint32 id, Uint16 model, int x,
         else if (count >= 20)
           model += 2;
       }
-  m_texture = pArtLoader.LoadArt (model + 16384, true, false, hue);
+  m_texture = ArtLoader::GetInstance()->LoadArt (model + 16384, true, false, hue);
   m_id = id;
   m_model = model;
   m_x = x;

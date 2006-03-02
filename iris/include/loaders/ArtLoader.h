@@ -1,9 +1,17 @@
-//
-// File: ArtLoader.h
-// Created by:  Alexander Oster - tensor@ultima-iris.de
-//
-/*****
- *
+/*! \file ArtLoader.h
+* \brief Loads Art file
+* 
+* ArtLoader deals with all kind of Art Loads, puts in memory then removes them from memory.
+*
+* Copyright (©) Iris Team
+*/
+
+/*
+* Created by Alexander Oster.
+* Last change: 25-02-06 (Nuno Ramiro)
+*/
+
+/*
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -17,45 +25,44 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *****/
+ */
 
 #ifndef _ARTLOADER_H_
 #define _ARTLOADER_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
+#include "Common.h"
 #include <iostream>
-#include <fstream>
-#include <cstring>
-#include "include.h"
+#include <string.h>
+#include "Logger.h"
+#include "Exception.h"
+#include "loaders/VerdataLoader.h"
 #include "../renderer/Texture.h"
 
 
-class cArtLoader
+class ArtLoader
 {
-private:
-	std::ifstream * artfile;
-	std::ifstream * artindex;
-   
-   Texture * LoadGroundArt(int index);
-   Texture * LoadStaticArt(int index, bool is2D = false, bool isCursor = false);
- 
 public:
-    cArtLoader ();
-   ~cArtLoader ();
+	ArtLoader( std::string sFileName, std::string sIndexName );
+	~ArtLoader();
 
-   void Init (std::string filename, std::string indexname);
-   void DeInit ();
-   
-   Texture * LoadArt(int index, bool is2D = false, bool isCursor = false, Uint16 hue = 0);
+	/// Returns ArtLoader Instance, NOTE that it MUST be instantiated before by using new.
+	static ArtLoader *GetInstance();
 
-protected:
-	unsigned int art_count;
+	/// Load an Art Object (Static/Ground).
+	Texture *LoadArt( int index, bool is2D = false, bool isCursor = false, Uint16 hue = 0 );
+
+private:
+	// Singleton
+	static ArtLoader *m_sgArtLoader;
+
+	Texture *m_kTexture;
+	std::ifstream *m_kArtFile;
+	std::ifstream *m_kArtIndex;
+	unsigned int m_uiArtCount;
+
+private:
+	Texture *LoadGroundArt( int index );
+	Texture *LoadStaticArt( int index, bool is2D = false, bool isCursor = false );
 };
 
-extern cArtLoader pArtLoader;
-
-#endif //_GROUNDTEXTURES_H_
+#endif // _ARTLOADER_H_

@@ -105,7 +105,7 @@ static void clear_controlid_list()
 
 static void add_controlid(std::string name, Uint32 id)
 {
-	controlid_lookup.insert(make_pair(checksum32(name), id));
+	controlid_lookup.insert(std::make_pair(checksum32(name), id));
 }
 
 static Uint32 get_controlid(std::string name)
@@ -132,7 +132,7 @@ ZString api_gui_addform (ZCsl* aCsl)
 //	int flags = GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE;
 	int x = aCsl->get("x").asInt();
 	int y = aCsl->get("y").asInt();
-	std::string gfm_file = string (aCsl->get("gfm_file").buffer ());
+	std::string gfm_file = std::string (aCsl->get("gfm_file").buffer ());
 	bool is_container = (argCount > 3) ? ((int) aCsl->get("is_container").asInt()) : false;
 
 	Container* container = NULL;

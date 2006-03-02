@@ -261,7 +261,7 @@ void cCharacter::MoveTo (float x, float y, float z)
 	m_destx = x;
 	m_desty = y;
 	m_destz = z;
-	m_moving = -1;
+	m_moving = false;
 }
 
 void cCharacter::Handle (float time_factor)

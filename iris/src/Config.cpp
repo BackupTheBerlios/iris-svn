@@ -173,7 +173,7 @@ bool Config::Init()
 				}
 				else if ( Data.iType == IS_STRING )
 				{
-					*reinterpret_cast<string *>( Data.pData ) = m_kValue->asString();
+					*reinterpret_cast<std::string *>( Data.pData ) = m_kValue->asString();
 				}
 			}
 		}
@@ -302,10 +302,10 @@ bool Config::RegisterFonts()
 void Config::Close()
 {
 	SAFE_DELETE( m_kValue );
-	SAFE_DELETE( m_kConfig );
-	SAFE_DELETE( m_kDocument );
-	SAFE_DELETE( m_kSection );
-	
+	m_kSection = NULL;
+	m_kDocument = NULL;
+	m_kConfig = NULL;
+
 	m_vFonts.clear();
 	m_vFonts.empty();
 

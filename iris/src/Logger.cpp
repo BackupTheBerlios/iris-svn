@@ -10,6 +10,7 @@
 
 /*
  * Created by Nuno Ramiro (15-02-06)
+ * Last change: 23-02-06 (Nuno Ramiro)
  */
 
 /*
@@ -67,13 +68,18 @@ bool Logger::Init( const std::string sVersion, const std::string sLogName )
 {
 	if ( m_bLogToFile )
 	{
-		m_fLogFile = new std::fstream( sLogName.c_str() );
+		if ( NULL == m_fLogFile )
+		{
+			m_fLogFile = new std::fstream( sLogName.c_str() );
+		}
+		
+		m_fLogFile->open( sLogName.c_str(), std::ios::out | std::ios::trunc );
 
 		if ( !m_fLogFile->is_open() )
 		{
 			return false;
 		}
-		
+
 		m_fLogFile->flush();
 	}
 
@@ -83,7 +89,7 @@ bool Logger::Init( const std::string sVersion, const std::string sLogName )
 	WriteLine( "This is free software, and you are welcome to redistribute it" );
 	WriteLine( "under certain conditions; for details, take a look into License.txt" );
 #ifdef _DEBUG
-	WriteLine( "\nAttention this is the debug version of Iris, if you are not a developer you should not be using this version." );
+	WriteLine( "\nAttention this is the debug version of Iris, if you are not a developer you \nshould not be using this version." );
 #endif
 
 	return true;
@@ -211,11 +217,7 @@ void Logger::Close()
 			WriteLine( "[End of File]" );
 			m_fLogFile->close();
 
-			if ( m_fLogFile != NULL )
-			{
-				delete m_fLogFile;
-				m_fLogFile = NULL;
-			}
+			SAFE_DELETE( m_fLogFile );
 		}
 	}
 }

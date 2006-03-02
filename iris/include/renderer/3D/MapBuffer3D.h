@@ -23,31 +23,20 @@
 #ifndef _MAPBUFFER3D_H_
 #define _MAPBUFFER3D_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
-#include "include.h"
-#include "renderer/MapBlock.h"
-
+#include "renderer/MapBuffer.h"
 #include "renderer/3D/MapBlock3D.h"
 #include "renderer/3D/Light3D.h"
-#include "renderer/3D/LightNodeEnvironment.h"
-
-#include "renderer/MapBuffer.h"
-#include "SDL/SDL.h"
-#include <map>
 
 
-class cMapbuffer3D : public cMapbuffer
+class Mapbuffer3D : public Mapbuffer
 {
 public:
-   void GetEnvironment(int x, int y, cLightNodeEnvironment & environment);
-   virtual cMapblock * CreateBlock (int x, int y);
+	void GetEnvironment( int x, int y, cLightNodeEnvironment &environment );
+	virtual cMapblock *CreateBlock( int x, int y );
    
-   void AddLight (cLight3D * light);
-   void RemoveLight (cLight3D * light);
-   void SetRecalcAmbientLightFlag ();
+	void AddLight( cLight3D *light );
+	void RemoveLight( cLight3D *light );
+	void SetRecalcAmbientLightFlag();
 };
 
 #endif //_MAPBUFFER3D_H_

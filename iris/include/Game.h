@@ -34,9 +34,47 @@
 
 #include "Common.h"
 #include "SDL/SDL.h"
+#include "Macros.h"
+
 #include "renderer/Renderer.h"
 #include "renderer/DynamicObjects.h"
+#include "renderer/SDLScreen.h"
+#include "renderer/TextureBuffer.h"
+#include "renderer/Characters.h"
+
+#include "renderer/3D/Light3D.h"
 #include "renderer/3D/MapBuffer3D.h"
+
+#include "renderer/particles/ParticleEngine.h"
+#include "renderer/particles/ParticleLoader.h"
+
+#include "loaders/ArtLoader.h"
+#include "loaders/StaticModelLoader.h"
+#include "loaders/UOMap.h"
+#include "loaders/GroundTextures.h"
+#include "loaders/GumpLoader.h"
+#include "loaders/FontLoader.h"
+#include "loaders/HueLoader.h"
+#include "loaders/SkillLoader.h"
+#include "loaders/TileDataLoader.h"
+#include "loaders/TileDataBuffer.h"
+#include "loaders/StitchinLoader.h"
+#include "loaders/ClilocLoader.h"
+#include "loaders/ModelInfoLoader.h"
+#include "loaders/VerdataLoader.h"
+#include "loaders/MultisLoader.h"
+#include "loaders/MapInfo.h"
+#include "loaders/SpeechLoader.h"
+
+#include "net/Client.h"
+
+#include "granny/GrannyLoader.h"
+
+#include "gui/GUIHandler.h"
+#include "gui/TextManager.h"
+
+#include "csl/CSLHandler.h"
+
 
 #define CLICK_NORMAL     0
 #define CLICK_TARGET_ID  1
@@ -44,45 +82,6 @@
 
 class Game
 {
-private:	// Member variables
-	// Singleton
-	static Game *m_sgGame;
-
-	Renderer *pRenderer;
-	cMapbuffer3D *m_kMapBuffer3D;
-	bool m_paused;
-	bool m_AOSToolTip;
-
-	int cursor3d[3];
-	int cursorx, cursory;
-	Uint32 cursor_character;
-	Uint32 cursor_object;
-	Uint32 m_cursorid;
-
-	std::string timer_func;
-	int timer;
-
-	bool button_left;
-	bool button_right;
-	int m_click_mode;
-	Uint32 m_MouseLastTick;
-
-	Uint32 drag_id;
-	Uint16 drag_model;
-	bool drag_in_world;
-		
-	Uint32 pointed_obj;
-
-private:	// Private Functions
-	void GrabMousePosition( int x, int y, int max_z = 1000 );
-	void MoveToMouse();
-	void GrabDynamic( int x, int y, cDynamicObject ** r_object, cCharacter ** r_character );
-
-	void SetDragInWorld( bool value );
-
-	void InitRenderer( std::string mulpath ); /** Initialize Renderer */
-	void DeInitRenderer( void ); /** Deinitialize */
-
 public:
 	Game();
 	~Game();
@@ -90,7 +89,6 @@ public:
 	static Game *GetInstance();
 
 	bool Init( void );  /** Initialize a new game */
-	void DeInit( void ); /** Deinitialization */
 
 
 	void RenderScene( void ); /** Renders the whole scene */
@@ -143,10 +141,49 @@ public:
 	   
 	void SetTimerFunction( std::string function_name, int time );
    
-protected:
+private:
 	void (*callback_OnStatusDrag)( Uint32 charid, int mousex, int mousey );
 	void (*callback_OnDynamicDrag)( Uint32 id, Uint16 model, int count, int x, int y, Uint32 container );
 	void (*callback_OnAOSTooltip)( Uint32 id, int count, int x, int y );
+
+	void GrabMousePosition( int x, int y, int max_z = 1000 );
+	void MoveToMouse();
+	void GrabDynamic( int x, int y, cDynamicObject ** r_object, cCharacter ** r_character );
+
+	void SetDragInWorld( bool value );
+
+	void InitRenderer( std::string mulpath ); /** Initialize Renderer */
+	void DeInitRenderer( void ); /** Deinitialize */
+
+private:	// Member variables
+	// Singleton
+	static Game *m_sgGame;
+
+	Renderer *pRenderer;
+	Mapbuffer3D *m_kMapBuffer3D;
+	ArtLoader *m_kArtLoader;
+	bool m_paused;
+	bool m_AOSToolTip;
+
+	int cursor3d[3];
+	int cursorx, cursory;
+	Uint32 cursor_character;
+	Uint32 cursor_object;
+	Uint32 m_cursorid;
+
+	std::string timer_func;
+	int timer;
+
+	bool button_left;
+	bool button_right;
+	int m_click_mode;
+	Uint32 m_MouseLastTick;
+
+	Uint32 drag_id;
+	Uint16 drag_model;
+	bool drag_in_world;
+
+	Uint32 pointed_obj;
 };
 
 #endif //_GAME_H_

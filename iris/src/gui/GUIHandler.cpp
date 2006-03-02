@@ -31,79 +31,81 @@
 #include "Game.h"
 #include <cassert>
 
-using namespace std;
-
 GUIHandler pUOGUI;
 
-GUIHandler::GUIHandler ()
+GUIHandler::GUIHandler()
 {
-  Reset ();
+	Reset();
 }
 
 
-GUIHandler::~GUIHandler ()
+GUIHandler::~GUIHandler()
 {
-    DeInit ();
-}
-
-void GUIHandler::Reset ()
-{
-  posx = 0;
-  posy = 0;
-  idcounter = 1;
-  default_focusid = 0;
-  zcounter = 1;
-  focusid = 0;
-  quitflag = 0;
-  startflag = 0;
-  search_index = 0;
-  callback_OnDrag = NULL;
-  callback_OnItemClick = NULL;
-  for (int i = 0; i < 9; i++)
-
-    tex_cursors[i] = NULL;
-  drag_cursor = NULL;
-  m_dragging = false;
+	DeInit();
 }
 
 
-void GUIHandler::DeInit ()
+void GUIHandler::Reset()
 {
-  ClearControls ();
-  for (int i = 0; i < 9; i++)
-      {
-        delete tex_cursors[i];
-        tex_cursors[i] = NULL;
-      }
+	posx = 0;
+	posy = 0;
+	idcounter = 1;
+	default_focusid = 0;
+	zcounter = 1;
+	focusid = 0;
+	startflag = 0;
+	search_index = 0;
+	callback_OnDrag = NULL;
+	callback_OnItemClick = NULL;
 
-  if (drag_cursor)
-    delete drag_cursor;
-  drag_cursor = NULL;
+	for ( int i = 0; i < 9; i++ )
+	{
+		tex_cursors[i] = NULL;
+	}
 
-  refresh_times.clear ();
-  stack.Clear ();
-  pGumpHandler.ClearTextures ();
-
-  Reset ();
-}
-
-void GUIHandler::ClearControls (void)
-{
-  ControlList_t::iterator iter;
-
-  for (iter = control_root.begin (); iter != control_root.end (); iter++)
-    delete (*iter).second;
-
-  control_root.clear ();
-  z_root.clear ();
-
+	drag_cursor = NULL;
+	m_dragging = false;
 }
 
 
-
-void GUIHandler::ClearControlsSafe (void)
+void GUIHandler::DeInit()
 {
+	ClearControls();
+	
+	// SAFE_DELETE_ARRAY( tex_cursors );
+
+	/*
+	for ( int i = 0; i < 9; i++ )
+	{
+		delete tex_cursors[i];
+		tex_cursors[i] = NULL;
+	}
+	*/
+
+	SAFE_DELETE( drag_cursor );
+
+	refresh_times.clear();
+	stack.Clear();
+	pGumpHandler.ClearTextures();
+
+	Reset();
 }
+
+
+void GUIHandler::ClearControls( void )
+{
+	ControlList_t::iterator iter;
+
+	for ( iter = control_root.begin(); iter != control_root.end(); iter++ )
+	{
+		SAFE_DELETE( (*iter).second );
+		//delete (*iter).second;
+	}
+
+	control_root.clear();
+	z_root.clear();
+}
+
 
 Control *GUIHandler::GetControl (int controlid)
 {
@@ -118,14 +120,16 @@ Control *GUIHandler::GetControl (int controlid)
 
 void GUIHandler::AddControl (Control * control)
 {
-  if (!control)
-    return;
-  control->SetID (idcounter);
-  control->SetZ (zcounter);
-  control_root.insert (make_pair ((Uint32) idcounter, control));
-  z_root.insert (make_pair ((Uint32) zcounter, control));
-  idcounter++;
-  zcounter++;
+	if ( !control )
+	{
+		return;
+	}
+	control->SetID( idcounter );
+	control->SetZ( zcounter );
+	control_root.insert( std::make_pair( (Uint32) idcounter, control ) );
+	z_root.insert( std::make_pair( (Uint32) zcounter, control ) );
+	idcounter++;
+	zcounter++;
 }
 
 void GUIHandler::CloseWindow (int controlid)
@@ -175,17 +179,17 @@ void GUIHandler::ReleaseFocus (int controlid)
       }
 }
 
-void GUIHandler::BringToFront (int controlid)
+void GUIHandler::BringToFront( int controlid )
 {
-  Control *control = GetControl (controlid);
+	Control *control = GetControl( controlid );
 
-  if (control)
-      {
-        z_root.erase (control->GetZ ());
-        z_root.insert (make_pair ((Uint32) zcounter, control));
-        control->SetZ (zcounter);
-        zcounter++;
-      }
+	if ( control )
+	{
+		z_root.erase( control->GetZ() );
+		z_root.insert( std::make_pair( (Uint32) zcounter, control ) );
+		control->SetZ( zcounter );
+		zcounter++;
+	}
 }
 
 void GUIHandler::Draw (void)    //Uint16 hue)
@@ -209,7 +213,7 @@ void GUIHandler::Draw (void)    //Uint16 hue)
 
   pCharacterList.RenderText ();
 
-  glTranslatef (posx, -posy, 0.0f);
+  glTranslatef( (GLfloat)posx, (GLfloat)-posy, 0.0f );
 
   ControlList_t::iterator iter;
   for (iter = z_root.begin (); iter != z_root.end (); iter++)
@@ -218,10 +222,8 @@ void GUIHandler::Draw (void)    //Uint16 hue)
   if (drag_cursor)
       {
         glLoadIdentity ();
-        glTranslatef (cursorx - drag_cursor->GetRealWidth (),
-                      Config::GetHeight() - 1 - (cursory -
-                                             drag_cursor->GetRealHeight ()),
-                      0.0f);
+        glTranslatef( (GLfloat)cursorx - drag_cursor->GetRealWidth(), 
+			(GLfloat)Config::GetHeight() - 1 - ( cursory - drag_cursor->GetRealHeight() ), 0.0f );
         glBindTexture (GL_TEXTURE_2D, drag_cursor->GetGLTex ());
         glBegin (GL_QUADS);
         glTexCoord2f (0.0f, 0.0f);
@@ -249,7 +251,7 @@ void GUIHandler::Draw (void)    //Uint16 hue)
         if (tex_cursors[cursor_id])
             {
               glLoadIdentity ();
-              glTranslatef (cursorx, Config::GetHeight() - 1 - cursory, 0.0f);
+              glTranslatef( (GLfloat)cursorx, (GLfloat)Config::GetHeight() - 1 - cursory, 0.0f );
               glBindTexture (GL_TEXTURE_2D,
                              tex_cursors[cursor_id]->GetGLTex ());
               glBegin (GL_QUADS);
@@ -348,8 +350,8 @@ void GUIHandler::HandleMessageQueues (void)
           BringToFront (msg.windowaction.controlid);
           break;
         case MESSAGE_QUIT:
-          quitflag = -1;
-          break;
+			SDLEvent::KillApplication();
+			break;
         case MESSAGE_STARTGAME:
           startflag = -1;
           break;
@@ -413,14 +415,6 @@ void GUIHandler::HandleMessageQueues (void)
 
 }
 
-int GUIHandler::QuitFlag (void)
-{
-  int result = quitflag;
-
-  quitflag = 0;
-  return result;
-}
-
 int GUIHandler::StartFlag (void)
 {
   int result = startflag;
@@ -463,17 +457,17 @@ void GUIHandler::AddMessageToStack (gui_message * msg)
 
 void GUIHandler::SetStartFlag (int flag)
 {
-  startflag = flag;
+	startflag = flag;
 }
 
-void GUIHandler::SetQuitFlag (int flag)
+void GUIHandler::SetQuitFlag()
 {
-  quitflag = flag;
+	SDLEvent::KillApplication();
 }
 
 void GUIHandler::Rewind (void)
 {
-  search_index = 0;
+	search_index = 0;
 }
 
 Control *GUIHandler::GetNext (void)
@@ -548,12 +542,13 @@ OnItemClick (void (*callback) (unsigned int itemid, bool doubleclick))
 
 void GUIHandler::LoadCursor (int id, int artid)
 {
-  if ((id >= 0) && (id < 9))
-      {
-        delete tex_cursors[id];
-        tex_cursors[id] = NULL;
-        tex_cursors[id] = pArtLoader.LoadArt (artid + 0x4000, true, true);
-      }
+	if ( ( id >= 0 ) && ( id < 9 ) )
+	{
+		SAFE_DELETE( tex_cursors[id] );
+        /*delete tex_cursors[id];
+        tex_cursors[id] = NULL;*/
+		tex_cursors[id] = ArtLoader::GetInstance()->LoadArt( artid + 0x4000, true, true );
+	}
 }
 
 void GUIHandler::SetCursorPos (int x, int y)
@@ -588,7 +583,7 @@ void GUIHandler::LoadDragCursor (Uint16 model)
 
   if (model)
       {
-        drag_cursor = pArtLoader.LoadArt (model + 16384, true, false, 0);
+		  drag_cursor = ArtLoader::GetInstance()->LoadArt (model + 16384, true, false, 0);
       }
 }
 

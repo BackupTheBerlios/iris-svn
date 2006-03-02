@@ -22,17 +22,9 @@
 
 
 #include "renderer/3D/MapBuffer3D.h"
-#include "renderer/3D/MapBlock3D.h"
-#include "Logger.h"
-#include "Config.h"
-#include "include.h"
-#include "renderer/Camera.h"
-#include <cassert>
-
-using namespace std;
 
 
-cMapblock *cMapbuffer3D::CreateBlock (int x, int y)
+cMapblock *Mapbuffer3D::CreateBlock (int x, int y)
 {
   cMapblock3D *block;
   cLightNodeEnvironment environment;
@@ -62,7 +54,7 @@ cMapblock *cMapbuffer3D::CreateBlock (int x, int y)
 }
 
 
-void cMapbuffer3D::GetEnvironment (int x, int y,
+void Mapbuffer3D::GetEnvironment (int x, int y,
                                    cLightNodeEnvironment & environment)
 {
   for (int dx = -1; dx <= 1; dx++)
@@ -79,7 +71,7 @@ void cMapbuffer3D::GetEnvironment (int x, int y,
 }
 
 
-void cMapbuffer3D::AddLight (cLight3D * light)
+void Mapbuffer3D::AddLight (cLight3D * light)
 {
   assert (light);
   MapBuffer_t::iterator iter;
@@ -91,7 +83,7 @@ void cMapbuffer3D::AddLight (cLight3D * light)
       }
 }
 
-void cMapbuffer3D::RemoveLight (cLight3D * light)
+void Mapbuffer3D::RemoveLight (cLight3D * light)
 {
   assert (light);
   MapBuffer_t::iterator iter;
@@ -103,7 +95,7 @@ void cMapbuffer3D::RemoveLight (cLight3D * light)
       }
 }
 
-void cMapbuffer3D::SetRecalcAmbientLightFlag ()
+void Mapbuffer3D::SetRecalcAmbientLightFlag ()
 {
   MapBuffer_t::iterator iter;
   for (iter = root.begin (); iter != root.end (); iter++)

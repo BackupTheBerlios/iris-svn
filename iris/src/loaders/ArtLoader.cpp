@@ -2,8 +2,8 @@
 // File: ArtLoader.cpp
 // Created by: Alexander Oster - tensor@ultima-iris.de
 //
-/*****
- *
+
+/*
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -17,108 +17,85 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *****/
+ */
 
 
-#include "iris_endian.h"
 #include "loaders/ArtLoader.h"
-#include "loaders/VerdataLoader.h"
-#include "Logger.h"
-#include "Exception.h"
-#include "uotype.h"
-#include <string.h>
-#include <iostream>
 
-using namespace std;
+ArtLoader *ArtLoader::m_sgArtLoader = NULL;
 
-cArtLoader pArtLoader;
 
-cArtLoader::cArtLoader ()
+ArtLoader::ArtLoader( std::string sFileName, std::string sIndexName ) : m_kArtFile( NULL ), m_kArtIndex( NULL ), m_uiArtCount( 0 )
 {
-    artfile = NULL;
-    artindex = NULL;
-}
+	m_sgArtLoader = this;
+	std::string sError;
 
-cArtLoader::~cArtLoader ()
-{
-    DeInit ();
-}
+	m_kArtFile = new std::ifstream( sFileName.c_str (), std::ios::in | std::ios::binary );
+	m_kArtIndex = new std::ifstream( sIndexName.c_str (), std::ios::in | std::ios::binary );
 
-void cArtLoader::Init (std::string filename, std::string indexname)
-{
-  DeInit ();
-  
-  art_count = 0;
-  string errstr;
+	sError = "Could not load art file: ";
+	if ( !m_kArtFile->is_open () || !m_kArtIndex->is_open() )
+	{
+		sError += sFileName;
+		Logger::WriteLine( (char *) sError.c_str(), __FILE__, __LINE__, LEVEL_ERROR );
+		SAFE_DELETE( m_kArtFile );
+		SAFE_DELETE( m_kArtIndex );
+		THROWEXCEPTION( sError );
+	}
 
-  artfile = new ifstream (filename.c_str (), ios::in | ios::binary);
-  artindex = new ifstream (indexname.c_str (), ios::in | ios::binary);
+	ASSERT( m_kArtIndex );
 
-  errstr = "Could not load art file: ";
-  if (!artfile->is_open ())
-      {
-        errstr += filename;
-        Logger::WriteLine ((char *) errstr.c_str (), __FILE__, __LINE__,
-                    LEVEL_ERROR);
-        delete artfile;
-        delete artindex;
-        artfile = NULL;
-        artindex = NULL;
-        THROWEXCEPTION (errstr);
-      }
-
-  if (!artindex->is_open ())
-      {
-        errstr += indexname;
-        Logger::WriteLine ((char *) errstr.c_str (), __FILE__, __LINE__,
-                    LEVEL_ERROR);
-        delete artfile;
-        delete artindex;
-        artfile = NULL;
-        artindex = NULL;
-        THROWEXCEPTION (errstr);
-      }
-
-  ASSERT (artindex);
-
-  artindex->seekg (0, ios::end);
-  unsigned long idxE = artindex->tellg ();
-  art_count = idxE / 12;
-}
-
-void cArtLoader::DeInit ()
-{
-  delete artfile;
-  artfile = NULL;
-
-  delete artindex;
-  artindex = NULL;
-}
-
-Texture *cArtLoader::LoadArt (int index, bool is2D, bool isCursor, Uint16 hue)
-{
-    ASSERT (artfile);
-    ASSERT (artindex);
-    
-  if ((index < 0) || ((unsigned int) index >= art_count))
-    return NULL;
-
-  if (index < 0x4000)
-    return LoadGroundArt (index);
-
-  return LoadStaticArt (index, is2D, isCursor);
+	m_kArtIndex->seekg( 0, std::ios::end );
+	unsigned long idxE = m_kArtIndex->tellg();
+	m_uiArtCount = idxE / 12;
 }
 
 
-Texture *cArtLoader::LoadGroundArt (int index)
+ArtLoader::~ArtLoader()
+{
+	m_sgArtLoader = NULL;
+
+	m_kArtFile->close();
+	SAFE_DELETE( m_kArtFile );
+	m_kArtIndex->close();
+	SAFE_DELETE( m_kArtIndex );
+}
+
+
+// Note that it MUST be created first (by using constructor which is being done under Game).
+ArtLoader *ArtLoader::GetInstance()
+{
+	return m_sgArtLoader;
+}
+
+
+Texture *ArtLoader::LoadArt( int index, bool is2D, bool isCursor, Uint16 hue )
+{
+	ASSERT( m_kArtFile );
+	ASSERT( m_kArtIndex );
+
+	if ( ( index < 0 ) || ( (unsigned int) index >= m_uiArtCount ) )
+	{
+		return NULL;
+	}
+
+	if ( index < 0x4000 )
+	{
+		return LoadGroundArt( index );
+	}
+
+	return LoadStaticArt( index, is2D, isCursor );
+}
+
+
+Texture *ArtLoader::LoadGroundArt (int index)
 {
   if ((index < 0) || ((unsigned int) index >= 0x4000))
     return NULL;
 
-  if (!artfile)
+  if (!m_kArtFile)
     THROWEXCEPTION ("NULL artfile pointer");
-  if (!artindex)
+  if (!m_kArtIndex)
     THROWEXCEPTION ("NULL artindex pointer");
 
   struct sPatchResult patch = pVerdataLoader.FindPatch (VERDATAPATCH_ART, index);
@@ -131,12 +108,12 @@ Texture *cArtLoader::LoadGroundArt (int index)
       }
   else
       {
-        if (index >= (int) art_count)
+        if (index >= (int) m_uiArtCount)
           return NULL;
 
-        patch.file = artfile;
-        artindex->seekg (index * 12, ios::beg);
-        artindex->read ((char *) &idx, sizeof (struct stIndexRecord));
+        patch.file = m_kArtFile;
+		m_kArtIndex->seekg (index * 12, std::ios::beg);
+        m_kArtIndex->read ((char *) &idx, sizeof (struct stIndexRecord));
         idx.offset = IRIS_SwapU32 (idx.offset);
         idx.length = IRIS_SwapU32 (idx.length);
         idx.extra = IRIS_SwapU32 (idx.extra);
@@ -147,7 +124,7 @@ Texture *cArtLoader::LoadGroundArt (int index)
 
   Uint16 *imagecolors = new Uint16[1024];
 
-  patch.file->seekg (idx.offset, ios::beg);
+  patch.file->seekg (idx.offset, std::ios::beg);
   patch.file->read ((char *) imagecolors, 1024 * 2);
 
   Uint32 *data = new Uint32[44 * 44];
@@ -228,25 +205,25 @@ Texture *cArtLoader::LoadGroundArt (int index)
             }
       }
 
-  Texture *texture = new Texture;
-  texture->LoadFromData (rdata, 44, 44, 32, GL_LINEAR);
+  Texture *kTexture = new Texture();
+  kTexture->LoadFromData (rdata, 44, 44, 32, GL_LINEAR);
 
   delete data;
   delete rdata;
   delete imagecolors;
 
-  return texture;
+  return kTexture;
 }
 
 
-Texture *cArtLoader::LoadStaticArt (int index, bool is2D, bool isCursor)
+Texture *ArtLoader::LoadStaticArt (int index, bool is2D, bool isCursor)
 {
-  if ((index < 0x4000) || ((unsigned int) index >= art_count))
+  if ((index < 0x4000) || ((unsigned int) index >= m_uiArtCount))
     return NULL;
 
-  if (!artfile)
+  if (!m_kArtFile)
     THROWEXCEPTION ("NULL artfile pointer");
-  if (!artindex)
+  if (!m_kArtIndex)
     THROWEXCEPTION ("NULL artindex pointer");
 
   struct sPatchResult patch = pVerdataLoader.FindPatch (VERDATAPATCH_ART, index);
@@ -259,9 +236,9 @@ Texture *cArtLoader::LoadStaticArt (int index, bool is2D, bool isCursor)
       }
   else
       {
-        patch.file = artfile;
-        artindex->seekg (index * 12, ios::beg);
-        artindex->read ((char *) &idx, sizeof (struct stIndexRecord));
+        patch.file = m_kArtFile;
+		m_kArtIndex->seekg (index * 12, std::ios::beg);
+        m_kArtIndex->read ((char *) &idx, sizeof (struct stIndexRecord));
         idx.offset = IRIS_SwapU32 (idx.offset);
         idx.length = IRIS_SwapU32 (idx.length);
         idx.extra = IRIS_SwapU32 (idx.extra);
@@ -273,7 +250,7 @@ Texture *cArtLoader::LoadStaticArt (int index, bool is2D, bool isCursor)
   int header;
   Uint16 width, height;
 
-  patch.file->seekg (idx.offset, ios::beg);
+  patch.file->seekg (idx.offset, std::ios::beg);
   patch.file->read ((char *) &header, 4);
   patch.file->read ((char *) &width, 2);
   patch.file->read ((char *) &height, 2);
@@ -306,7 +283,7 @@ Texture *cArtLoader::LoadStaticArt (int index, bool is2D, bool isCursor)
         Uint16 xOffset = 0, xRun = 0;
         patch.file->seekg (idx.offset +
                            (IRIS_SwapU16 (lookuptable[y]) + height + 4) * 2,
-                           ios::beg);
+						   std::ios::beg);
         patch.file->read ((char *) &xOffset, 2);
         patch.file->read ((char *) &xRun, 2);
         xOffset = IRIS_SwapU16 (xOffset);
@@ -351,12 +328,12 @@ Texture *cArtLoader::LoadStaticArt (int index, bool is2D, bool isCursor)
             }
       }
 
-  Texture *texture = new Texture;
-  texture->LoadFromData (data, w, h, 32, GL_LINEAR, is2D);
-  texture->SetRealSize (width, height);
+  Texture *kTexture = new Texture();
+  kTexture->LoadFromData (data, w, h, 32, GL_LINEAR, is2D);
+  kTexture->SetRealSize (width, height);
 
-  delete lookuptable;
-  delete data;
+  SAFE_DELETE_ARRAY( lookuptable );
+  SAFE_DELETE_ARRAY( data );
 
-  return texture;
+  return kTexture;
 }

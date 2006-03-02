@@ -165,6 +165,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				EmbedManifest="false"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -190,7 +191,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="sources"
+			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
@@ -314,7 +315,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="resources"
+			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
@@ -326,6 +327,106 @@
 				RelativePath=".\devcpp\Ultima Iris.ico"
 				>
 			</File>
+			<Filter
+				Name="XML"
+				>
+				<File
+					RelativePath=".\xml\config.xml"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\xml\granny.xml"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\xml\granny_aos.xml"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\xml\ground.xml"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+				</File>
+			</Filter>
+			<Filter
+				Name="CSL Scripts"
+				>
+				<File
+					RelativePath=".\script\aostooltips.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\constants.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\help.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\iris.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\Macros.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\options.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\popups.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\skills.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\spellbooks.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\startup.csl"
+					>
+				</File>
+				<File
+					RelativePath=".\script\trade.csl"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="CSL header"
@@ -413,58 +514,6 @@
 			<File
 				RelativePath=".\include\csl\ZTrace.hpp"
 				>
-			</File>
-		</Filter>
-		<Filter
-			Name="xmls"
-			>
-			<File
-				RelativePath=".\xml\config.xml"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\xml\granny.xml"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\xml\granny_aos.xml"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\xml\ground.xml"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -1512,6 +1561,10 @@
 			>
 			<File
 				RelativePath=".\src\loaders\ArtLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\loaders\ArtLoader.h"
 				>
 			</File>
 			<File

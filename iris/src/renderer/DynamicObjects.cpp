@@ -337,9 +337,7 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
             {
               int blockx = x / 8;
               int blocky = y / 8;
-              cMotiveBasedLight *light =
-                new cMotiveBasedLight_Entity (x % 8, y % 8, z, blockx, blocky,
-                                              static_model);
+              cMotiveBasedLight *light = new cMotiveBasedLight_Entity( (float)(x % 8), (float)(y % 8), (float)z, blockx, blocky, static_model);
               result->setMotive (light);
               if (static_model->GetLightSourceInfo ())
                 result->setLightSource (pLightManager.
@@ -363,10 +361,8 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
               if (static_model->GetParticleEffectInfo ())
               {
                 printf("Effect");
-                result->SetParticleEffectHandle (pParticleEngine.
-                                                 AddEffect (static_model->
-                                                            GetParticleEffectInfo
-                                                            (), x, y, z * 0.1f));
+                result->SetParticleEffectHandle( pParticleEngine.AddEffect( static_model->GetParticleEffectInfo(), 
+					(float)x, (float)y, z * 0.1f ) );
               }
       }
 

@@ -47,7 +47,7 @@ void Container::Draw (GumpHandler * gumps)
 {
   Control::Draw (gumps);
   glPushMatrix ();
-  glTranslatef (GetX (), -GetY (), 0.0);
+  glTranslatef( (GLfloat)GetX(), (GLfloat)-GetY(), 0.0 );
 
   ControlList_t::iterator iter;
 

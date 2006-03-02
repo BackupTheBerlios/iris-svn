@@ -1,9 +1,17 @@
-//
-// File: SDLScreen.h
-// Created by: Gustav Nylander - blobba@ultima-iris.de
-//
-/*****
+/*! \file SDLScreen.h
+ * \brief SDLScreen class handles all video stuff.
+ * 
+ * This class handles all SDL Video operations.
  *
+ * Copyright (©) Iris Team
+ */
+
+/*
+ * Created by Gustav Nylander.
+ * Last change: 23-02-06 (Nuno Ramiro)
+ */
+
+/*
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation; either version 2 of the License, or
@@ -17,72 +25,68 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- *****/
+ */
 
 #ifndef _SDLSCREEN_H_
 #define _SDLSCREEN_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
+#include "Common.h"
 #include <iostream>
 #include <fstream>
-#include <cstring>
+#include <string>
+#include <map>
+#include "Config.h"
 #include "irisgl.h"
 #include "SDL/SDL.h"
 #include "SDL/SDL_ttf.h"
-#include <stdlib.h>
-#include <string>
-#include <map>
-
-using namespace std;
+#include "loaders/HueLoader.h"
 
 class SDLScreen
 {
-private:
-  int Init (int width, int height, int bpp);
-  int InitGL (GLvoid);
-  void DisplayFps ();
-  const SDL_VideoInfo *videoInfo;
-  GLfloat ratio;
-  std::map <Uint32, TTF_Font *> fonts;
-  std::map <Uint32, Uint16> default_hues;
-  Uint8 act_alpha;
+public:
+	SDLScreen();
+	~SDLScreen();
+
+	static SDLScreen *GetInstance();
+
+	int ResizeWindow( int width, int height );
+	void ToggleFullScreen();
+	void ClearScreen();
+	void ClearZBuffer();
+	int DrawGL( GLvoid );
+	int ScreenSave();
+	void SetPerspective( void );
+	float GetRatio( void );
+
+	void SetAlpha( Uint8 alpha, bool force = false);
+	void SetHue( Uint16 hue = 0 );
   
-  float light_factor;
+	void ClearFonts();
+	void RegisterFont( Uint32 id, std::string filename, Uint32 size, Uint16 defaulthue = 0 );
+	void UnregisterFont( Uint32 id );
+	TTF_Font *GetFont( Uint32 id );
+
+	Uint16 GetDefaultHue( Uint32 id );
+
+	void SetLight( float factor );
 
 public:
-    SDLScreen ();
-   ~SDLScreen ();
+	SDL_Surface *m_kScreen;
+	int videoFlags;
 
-  int ResizeWindow (int width, int height);
-  void ToggleFullScreen ();
-  void ClearScreen ();
-  void ClearZBuffer ();
-  int DrawGL (GLvoid);
-  int ScreenSave ();
-  SDL_Surface *screen;
-  int videoFlags;
-  void SetPerspective(void);
-  float GetRatio(void);
-  
-  void SetAlpha(Uint8 alpha, bool force = false);
-  void SetHue(Uint16 hue = 0);
-  
-  void ClearFonts ();
-  void RegisterFont (Uint32 id, std::string filename, Uint32 size, Uint16 defaulthue = 0);
-  void UnregisterFont (Uint32 id);
-  TTF_Font * GetFont(Uint32 id);
-  
-  Uint16 GetDefaultHue(Uint32 id);
-  
-  void SetLight(float factor);
-  
-protected:
+private:
+	int Init( int width, int height, int bpp );
+	int InitGL( GLvoid );
+	void DisplayFps();
 
+private:
+	static SDLScreen *m_sgSDLScreen;
+	const SDL_VideoInfo *videoInfo;
+	GLfloat ratio;
+	std::map <Uint32, TTF_Font *> fonts;
+	std::map <Uint32, Uint16> default_hues;
+	Uint8 act_alpha;
+	float light_factor;
 };
-
 
 #endif //_SDLSCREEN_H_

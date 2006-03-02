@@ -21,7 +21,6 @@
 
 #include "SDLEvent.h"
 
-
 extern SDLScreen *SDLscreen;
 bool SDLEvent::m_bQuit = false;
 
@@ -97,9 +96,9 @@ void SDLEvent::HandleEvent( SDL_Event kEvent, unsigned int uiCurrentTime )
 		// handle resize event
 #ifndef WIN32
 		// Do not reinitialize window in Win32
-		SDLscreen->screen = SDL_SetVideoMode( kEvent.resize.w, kEvent.resize.h, Config::GetBPP(), SDLscreen->videoFlags );
+		SDLscreen->m_kScreen = SDL_SetVideoMode( kEvent.resize.w, kEvent.resize.h, Config::GetBPP(), SDLscreen->videoFlags );
         
-		if ( !SDLscreen->screen )
+		if ( !SDLscreen->m_kScreen )
 		{
 			cerr << "Could not get a surface after resize: " <<
 			SDL_GetError() << endl;
@@ -316,7 +315,7 @@ void SDLEvent::HandleMovement( void )
 	static Uint32 uiLastTick = 0;
 	float fFactor = 30.0f;
 
-	Uint32 uiTick = SDL_GetTicks ();
+	Uint32 uiTick = SDL_GetTicks();
 	if ( uiLastTick )
 	{
 		fFactor = (float) ( uiTick - uiLastTick ) / 150.0f;
@@ -425,12 +424,13 @@ void SDLEvent::HandleMouseMotion( SDL_MouseMotionEvent *kEvent )
 				pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
 			}
 			*/
+		//}
 
 			if ( kEvent->state & SDL_BUTTON( 1 ) )
 			{
 				pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
 				pCamera.SetForceRotation( true );
-			} 
+			}
 	                
 			float fAmount = pCamera.GetAngleZ() - -pClient->player_character()->angle();
 
@@ -466,9 +466,8 @@ void SDLEvent::HandleMouseMotion( SDL_MouseMotionEvent *kEvent )
 				Game::GetInstance()->HandleDrag( m_iClickDownX, m_iClickDownY );
 				m_bIsDragging = true;
 			}
-			
-			Game::GetInstance()->HandleMouseMotion( kEvent );
 		}
+		Game::GetInstance()->HandleMouseMotion( kEvent );
 	}
 }
 

@@ -26,34 +26,34 @@ using namespace std;
 bool stringSplit (vector < std::string > &vec, const std::string & str,
                   const std::string & delim)
 {
-  vec.clear ();
+	vec.clear();
 
-  if (delim.empty ())
-      {
-        vec.push_back (str);
-        return false;
-      }
+	if ( delim.empty() )
+	{
+		vec.push_back( str );
+		return false;
+	}
 
-  string::size_type i = 0;
-  string::size_type j = 0;
+	string::size_type i = 0;
+	string::size_type j = 0;
 
-  for (;;)
-      {
-        j = str.find (delim, i);
-        if (j == string::npos)
-            {
-              vec.push_back (str.substr (i));
-              break;
-            }
+	for ( ; ; )
+	{
+		j = str.find( delim, i );
+		if ( j == string::npos )
+		{
+			vec.push_back( str.substr( i ) );
+			break;
+		}
 
-        vec.push_back (str.substr (i, j - i));
-        i = j + delim.size ();
+		vec.push_back( str.substr( i, j - i ) );
+		i = j + delim.size();
 
-        if (i == str.size ())
-            {
-              vec.push_back (string ());
-              break;
-            }
-      }
-
+		if ( i == str.size() )
+		{
+			vec.push_back( string() );
+			break;
+		}
+	}
+	return true;
 }

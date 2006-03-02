@@ -12,6 +12,7 @@
 
 /*
  * Created by Nuno Ramiro (15-02-06)
+ * Last change: 23-02-06 (Nuno Ramiro)
  */
 
 /*
@@ -33,6 +34,7 @@
 #ifndef _LOGGER_H_
 #define _LOGGER_H_
 
+#include "Common.h"
 #include <string>
 #include <fstream>
 #include <assert.h>

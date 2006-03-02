@@ -78,7 +78,7 @@ void ImageArt::Draw (GumpHandler * gumps)
         //if (texid >= 16384) 
 
         //    texture = pTextureBuffer->GetArtTexture(texid);
-        //texture = pArtLoader->LoadArt(texid + 16384, true, false, 0);
+        //texture = ArtLoader::GetInstance()->LoadArt(texid + 16384, true, false, 0);
 //    else
 
         //    texture = pTextureBuffer->GetGroundTexture(texid);

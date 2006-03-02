@@ -288,7 +288,7 @@ cLight3D *cLightManager::AddDefinedStaticLightSource (int x, int y, int z,
                           light_info->color (), false);
         AddStaticLight (light);
 
-        ((cMapbuffer3D *) pMapbufferHandler.buffer())->AddLight (light);
+        ((Mapbuffer3D *) pMapbufferHandler.buffer())->AddLight (light);
         pDynamicObjectList.AddLight (light);
         return light;
 }
@@ -297,7 +297,7 @@ cLight3D *cLightManager::AddDefinedStaticLightSource (int x, int y, int z,
 void cLightManager::UnRegisterLight (cLight3D * light)
 {
   assert (light);
-  ((cMapbuffer3D *) pMapbufferHandler.buffer())->RemoveLight (light);
+  ((Mapbuffer3D *) pMapbufferHandler.buffer())->RemoveLight (light);
     
   pDynamicObjectList.RemoveLight (light);
 

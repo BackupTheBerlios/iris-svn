@@ -69,7 +69,7 @@ Texture *TextureBuffer::GetGroundTexture (int index)
 
         if (!result)
             {
-              result = pArtLoader.LoadArt (index);
+				result = ArtLoader::GetInstance()->LoadArt (index);
             }
 
         if (!result)
@@ -97,7 +97,7 @@ Texture *TextureBuffer::GetArtTexture (int index)
   if (!result)
       {
 
-        result = pArtLoader.LoadArt (index, false);
+		  result = ArtLoader::GetInstance()->LoadArt (index, false);
         if (!result)
             {
               result = new Texture;

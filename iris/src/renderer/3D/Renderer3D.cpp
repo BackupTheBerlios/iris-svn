@@ -115,10 +115,10 @@ Renderer3D::~Renderer3D ()
 
 int Renderer3D::Init (void)
 {
-  tex_water = new Texture;
+  tex_water = new Texture();
   tex_water->LoadFromFileWithTransparency ("./textures/water1.png", 200);
 
-  tex_char_shadow = new Texture;
+  tex_char_shadow = new Texture();
   tex_char_shadow->LoadFromFile ("./textures/char_shadow.png");
 
   LoadSkyboxTextures ();
@@ -439,7 +439,7 @@ int Renderer3D::RenderScene (void)
           light_angle_dir = -1.0f;
         if (light_angle < 3.14159f * 0.1f)
           light_angle_dir = 1.0f;
-        ((cMapbuffer3D *) pMapbufferHandler.buffer ())->SetRecalcAmbientLightFlag ();
+        ((Mapbuffer3D *) pMapbufferHandler.buffer ())->SetRecalcAmbientLightFlag ();
         pDynamicObjectList.SetRecalcAmbientLightFlag ();
 
 

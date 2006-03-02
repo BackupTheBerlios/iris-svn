@@ -23,10 +23,7 @@
 #ifndef _GUIHANDLER_H_
 #define _GUIHANDLER_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
+#include "Common.h"
 #include "SDL/SDL.h"
 #include <map>
 #include <list>
@@ -35,6 +32,7 @@
 #include "Control.h"
 #include "Gump.h"
 #include "renderer/Texture.h"
+#include "SDLEvent.h"
 
 class GUIHandler
 {
@@ -47,7 +45,6 @@ public:
   void Draw (void);
 
   void ClearControls (void);
-  void ClearControlsSafe (void);
 
   void AddControl(Control * control);
   Control * GetControl(int controlid);
@@ -59,8 +56,7 @@ public:
   int HandleMessage(gui_message * msg);
   void HandleMessageQueues(void);
 
-  int QuitFlag(void);
-  void SetQuitFlag(int flag);
+  void SetQuitFlag();
 
   int StartFlag(void);
   void SetStartFlag(int flag);
@@ -112,7 +108,6 @@ private:
 
  int idcounter;
  int zcounter;
- int quitflag;
  int startflag;
  int posx, posy;
  

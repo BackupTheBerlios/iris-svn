@@ -266,8 +266,8 @@ void Camera::GetGamePosition (unsigned int &x, unsigned int &y, int &z)
 
 void Camera::GetGamePosition (float &x, float &y, float &z)
 {
-  x = GetBlockX () * 8 - GetX ();
-  y = GetBlockY () * 8 - GetY ();
+  x = GetBlockX () * 8.0 - GetX ();
+  y = GetBlockY () * 8.0 - GetY ();
   z = -(int) GetZ ();
 }
 
@@ -305,7 +305,7 @@ void Camera::ChangeZoom (float value)
   zoom += value;
   
   if ( zoom > Config::GetMaxZoom() )
-    zoom = Config::GetMaxZoom();
+    zoom = (float)Config::GetMaxZoom();
     
   float maxvalue = -5.0f;
   

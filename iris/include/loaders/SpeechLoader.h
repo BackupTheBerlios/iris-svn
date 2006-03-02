@@ -20,45 +20,37 @@
  *
  *****/
 
-#ifndef __SPEECH__LOADER__
-#define __SPEECH__LOADER__
+#ifndef _SPEECHLOADER_H_
+#define _SPEECHLOADER_H_
 
-#include "SDL/SDL.h"
+#include "Common.h"
 #include <iostream>
-
-#include <fstream>
-
-#include <cstring>
 #include <vector>
 #include <string>
 #include <map>
-#ifdef WIN32
+#include <SDL/SDL_endian.h>
 
-#include <windows.h>
-
-#endif
-
-using namespace std;
+#include "Logger.h"
 
 typedef std::map < std::string, Uint16> speech_language;
 
 class cSpeechLoader
 {
-  public:
-      cSpeechLoader ();
-      ~cSpeechLoader();
+public:
+	cSpeechLoader();
+	~cSpeechLoader();
 
-      void Init (std::string path);
-      void DeInit ();
+	void Init( std::string path );
+	void DeInit();
       
-      Uint16 GetID(std::string keyword);
-      std::vector <Uint16> GetIDs(std::string keyword);
-      
-  private:
-      std::map < std::string, Uint16> m_keywords;
-      std::vector<speech_language> m_languages;
+	Uint16 GetID( std::string keyword );
+	std::vector<Uint16> GetIDs( std::string keyword );
+
+private:
+	std::map<std::string, Uint16> m_keywords;
+	std::vector<speech_language> m_languages;
 };
 
 extern cSpeechLoader pSpeechLoader;
 
-#endif
+#endif // _SPEECHLOADER_H_
