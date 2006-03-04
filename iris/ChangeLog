@@ -1,4 +1,8 @@
 1.03.2006
+Changes by Florian Fischer (SiENcE)
+	- Characters.cpp - Quick fix to get walking working again (m_moving = -1;) - must be recoded
+
+1.03.2006
 Changes by Nuno Ramiro
 	- Speed improvements.
 	- Small fixes.

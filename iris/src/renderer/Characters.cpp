@@ -261,7 +261,10 @@ void cCharacter::MoveTo (float x, float y, float z)
 	m_destx = x;
 	m_desty = y;
 	m_destz = z;
-	m_moving = false;
+
+//	m_moving = false;
+// SiENcE: quick fix to get walking working again
+    m_moving = -1;
 }
 
 void cCharacter::Handle (float time_factor)
