@@ -1,3 +1,7 @@
+6.03.2006
+Changes by Florian Fischer (SiENcE)
+	- iris.csl - deinit and init removed from handler_deinit
+
 1.03.2006
 Changes by Florian Fischer (SiENcE)
 	- Characters.cpp - Quick fix to get walking working again (m_moving = -1;) - must be recoded
