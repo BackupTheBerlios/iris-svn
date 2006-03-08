@@ -19,9 +19,14 @@
 #ifndef _MUSIC_H_
 #define _MUSIC_H_
 
+#include <iostream>
+#include <assert.h>
 #include <string>
 #include "SDL/SDL_mixer.h"
 #include "SDL/SDL.h"
+#include "sound/MusicListLoader.h"
+#include "Logger.h"
+#include "Config.h"
 
 #ifdef WIN32
 #include "smpeg/smpeg.h"
@@ -29,20 +34,22 @@
 
 class Music
 {
-	public:
-		Music();
-		virtual ~Music();
-		int Config();
-		// will change later to play song that server tells us
-		int PlayMusic (std::string name, int volume = 0);
-		int PlayMusic (int id, int format, int volume = 0);
-		void MusicVolume( int volume);// * deprecated *
+public:
+	Music();
+	virtual ~Music();
+
+	int Config();
+	// will change later to play song that server tells us
+	int PlayMusic( std::string sMusicName, int iVolume = 0 );
+	int PlayMusic( int iId, int iFormat, int iVolume = 0 );
+	void MusicVolume( int iVolume );	// * deprecated *
 	
-	private:
-		Mix_Music *music;
+private:
+	Mix_Music *m_kMusic;
+
 #ifdef WIN32
-	SMPEG *mpeg;
-        SMPEG_Info info;
+	SMPEG *m_kMpeg;
+	SMPEG_Info m_kInfo;
 #endif
 };
 

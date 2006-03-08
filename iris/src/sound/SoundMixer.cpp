@@ -16,29 +16,34 @@
  *
  *****/
 
-
-#include <iostream>
-#include "SDL/SDL.h"
-#include "SDL/SDL_mixer.h"
-#include "Logger.h"
-#include "Config.h"
 #include "sound/SoundMixer.h"
-#include "loaders/SoundLoader.h"
-#include "sound/Music.h"
-#include "net/Client.h"
-#include "renderer/Characters.h"
-#include "math.h"
-#include <cassert>
 
-SoundMix *pSoundMix = NULL;
+SoundMix *SoundMix::m_sgSoundMix = NULL;
 
-SoundMix::SoundMix ()
+//SoundMix *pSoundMix = NULL;
+
+
+SoundMix::SoundMix() : wave( NULL )
 {
 }
 
+
 SoundMix::~SoundMix ()
 {
-  SDL_QuitSubSystem (SDL_INIT_AUDIO);
+	SAFE_DELETE( wave );
+	SDL_QuitSubSystem( SDL_INIT_AUDIO );
+	m_sgSoundMix = NULL;
+}
+
+
+SoundMix *SoundMix::GetInstance()
+{
+	if ( !m_sgSoundMix )
+	{
+		m_sgSoundMix = new SoundMix();
+	}
+
+	return m_sgSoundMix;
 }
 
 void SoundMix::Init ()
@@ -90,8 +95,7 @@ void SoundMix::Init ()
       }
 }
 
-void
-  SoundMix::PlaySound (int sound, int volume, char flags, int x, int y, int z)
+void SoundMix::PlaySound (int sound, int volume, char flags, int x, int y, int z)
 {
   wave = Load (sound);
 

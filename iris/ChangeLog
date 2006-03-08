@@ -1,3 +1,15 @@
+8.03.2006
+Changes by Nuno Ramiro
+	- Stability improvements.
+	- Memory leaks.
+	- Macros class fix.
+	- Write bug.
+	- Small fixes.
+	- XML problem fix.
+	- Small Logger fix, added tests (assertions).
+	- Added WriteDebug, should be used when testing output values.
+	- Credits add/fix.
+
 6.03.2006
 Changes by Florian Fischer (SiENcE)
 	- iris.csl - deinit and init removed from handler_deinit

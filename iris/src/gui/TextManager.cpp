@@ -39,7 +39,7 @@
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
-extern SDLScreen *SDLscreen;
+//extern SDLScreen *SDLscreen;
 
 // Private Data Members of cTextElement
 struct stTextItem
@@ -57,21 +57,21 @@ struct stTextItem
 void cTextElement::setText (const char *text, unsigned short hueId,
                             unsigned short fontId)
 {
-  assert (SDLscreen);
+	assert( SDLScreen::GetInstance() );
   if (p)
       {
         delete p->texture;
         delete p;
       }
 
-  TTF_Font *ttf_font = SDLscreen->GetFont (fontId);
+  TTF_Font *ttf_font = SDLScreen::GetInstance()->GetFont (fontId);
   if (ttf_font)
       {
         if (!hueId)
            hueId = 0;
 
 //SiENcE: seems to be incorrect
-//          hueId = SDLscreen->GetDefaultHue (fontId);
+//          hueId = SDLScreen::GetInstance()->GetDefaultHue (fontId);
 //printf (text);
 //printf ("[hueId %d]\n", hueId);
 //if (hueId == 1152) hueId = 0;
@@ -332,7 +332,7 @@ void cTextManager::draw ()
 unsigned char cTextManager::getTextHeight (const char *text,
                                            unsigned short fontId)
 {
-  TTF_Font *ttf_font = SDLscreen->GetFont (fontId);
+	TTF_Font *ttf_font = SDLScreen::GetInstance()->GetFont (fontId);
   if (ttf_font)
       {
         return getTextHeightTTF (text, ttf_font);
@@ -368,7 +368,7 @@ unsigned int cTextManager::getTextWidth (const char *text,
                                          unsigned short fontId)
 {
 
-  TTF_Font *ttf_font = SDLscreen->GetFont (fontId);
+	TTF_Font *ttf_font = SDLScreen::GetInstance()->GetFont (fontId);
   if (ttf_font)
       {
         return getTextWidthTTF (text, ttf_font);

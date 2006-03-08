@@ -36,17 +36,19 @@
 
 class cException
 {
-private:
-   std::string m_message;
-   std::string m_file;
-   int m_line;
 public:
-    cException (std::string message, std::string file, int line);
-    virtual ~cException ();
-    virtual std::string message ();
-    std::string file (); 
-    int line ();
-    std::string debug_message ();
+	cException( std::string message, std::string file, int line );
+	virtual ~cException();
+	
+	virtual std::string message();
+	std::string file();
+	int line();
+	std::string debug_message();
+
+private:
+	std::string m_message;
+	std::string m_file;
+	int m_line;
 };
 
 class cAssertException : public cException 

@@ -16,251 +16,262 @@
  *
  *****/
 
-
-#include <stdio.h>
-#include "Logger.h"
-#include "Config.h"
 #include "sound/Music.h"
-#include "sound/MusicListLoader.h"
+
+
+Music::Music()
+{ 
+	m_kMusic = NULL; 
 #ifdef WIN32
-#include "smpeg/smpeg.h"
+	m_kMpeg = NULL; 
 #endif
-
-#include <iostream>
-#include <cassert>
-using namespace std;
-
-Music::Music () 
-{ 
-       music=NULL; 
-#ifdef WIN32 
-       mpeg=NULL; 
-#endif 
 }
 
-Music::~Music () 
-{ 
-  // fade music out for .1 seconds 
-  while (Mix_PlayingMusic() && !Mix_FadeOutMusic (100)) 
-      { 
-        // wait for any fades to complete 
-        SDL_Delay (100); 
-      } 
+Music::~Music() 
+{
+	// fade music out for .1 seconds 
+	while ( Mix_PlayingMusic() && !Mix_FadeOutMusic( 100 ) )
+	{
+		// wait for any fades to complete
+		SDL_Delay( 100 );
+	}
 
-  // MIDI doesn't fade nor does it turn MusicPlaying off when it completes 
-  if ( Mix_PlayingMusic() && !Config::GetMP3() ) { 
-    // force music to end 
-    Mix_HaltMusic(); 
-  } 
+	// MIDI doesn't fade nor does it turn MusicPlaying off when it completes
+	if ( Mix_PlayingMusic() && !Config::GetMP3() )
+	{
+		// force music to end
+		Mix_HaltMusic();
+	}
 
-  Mix_FreeMusic (music); 
-  music = NULL; 
+	Mix_FreeMusic( m_kMusic );
+	m_kMusic = NULL;
 }
+
 
 // Function to read music.ini, will finish when xml support is done
-int Music::Config ()
+int Music::Config()
 {
-  return true;
+	return true;
 }
 
-int Music::PlayMusic (std::string name, int volume)
+
+int Music::PlayMusic( std::string sMusicName, int iVolume )
 {
-  std::string file = Config::GetMulPath();
+	std::string sFileName = Config::GetMulPath();
 
-  if (!volume)
-    volume = Config::GetMusicVolume();
+	if ( !iVolume )
+	{
+		iVolume = Config::GetMusicVolume();
+	}
 
-  if ( Config::GetMP3() )
-      {
-        file += "music/digital/" + name;
+	if ( Config::GetMP3() )
+	{
+		sFileName += "music/digital/" + sMusicName;
+
 #ifdef WIN32
-        if (mpeg)
-            {
-              SMPEG_stop (mpeg);
-              SMPEG_delete (mpeg);
-            }
-        mpeg = SMPEG_new (file.c_str (), &info, 0);
+		if ( m_kMpeg )
+		{
+			SMPEG_stop( m_kMpeg );
+			SMPEG_delete( m_kMpeg );
+		}
+		m_kMpeg = SMPEG_new( sFileName.c_str(), &m_kInfo, 0 );
 
-        char *error = SMPEG_error (mpeg);
+		char *cError = SMPEG_error( m_kMpeg );
 
-        Logger::WriteLine (error);
-        assert (mpeg);
-        assert (info.has_audio);
+		Logger::WriteLine( cError );
+		assert( m_kMpeg );
+		assert( m_kInfo.has_audio );
 
-        // Tell SMPEG what the audio format is.
+		// Tell SMPEG what the audio format is.
+		SDL_AudioSpec kAudioFmt;
+		int iFrequency, iChannels;
+		Uint16 uiFormat;
+		Mix_QuerySpec( &iFrequency, &uiFormat, &iChannels );
+		kAudioFmt.format = uiFormat;
+		kAudioFmt.freq = iFrequency;
+		kAudioFmt.channels = iChannels;
 
-        SDL_AudioSpec audioFmt;
-        int frequency, channels;
-        Uint16 format;
-        Mix_QuerySpec (&frequency, &format, &channels);
-        audioFmt.format = format;
-        audioFmt.freq = frequency;
-        audioFmt.channels = channels;
+		SMPEG_actualSpec( m_kMpeg, &kAudioFmt );
 
-        SMPEG_actualSpec (mpeg, &audioFmt);
+		// Hook in the MPEG music mixer.
+		Mix_HookMusic( SMPEG_playAudioSDL, m_kMpeg );
+		SMPEG_enableaudio( m_kMpeg, 1 );
+		SMPEG_enablevideo( m_kMpeg, 0 );
+		SMPEG_setvolume( m_kMpeg, iVolume );
+		SMPEG_loop( m_kMpeg, true );
 
-
-        // Hook in the MPEG music mixer.
-        Mix_HookMusic (SMPEG_playAudioSDL, mpeg);
-        SMPEG_enableaudio (mpeg, 1);
-        SMPEG_enablevideo (mpeg, 0);
-        SMPEG_setvolume (mpeg, volume);
-        SMPEG_loop (mpeg, true /* repeat */ );
-
-
-        SMPEG_play (mpeg);
-        return 1;
+		SMPEG_play( m_kMpeg );
+		return 1;
 #endif
-      }
-      else
-      {
-        file += "music/" + name;
-      }
+	}
+	else
+	{
+		sFileName += "music/" + sMusicName;
+	}
 
-      while (!Mix_FadeOutMusic (100) && Mix_PlayingMusic ()) {
-        // wait for any fades to complete
-        SDL_Delay (100);
-      }
-      /* Stop the music from playing */
-      Mix_HaltMusic();
-      /* Unload the music from memory, since we don't need it
-      anymore */
-      Mix_FreeMusic(music);
-      music = NULL;
-      Logger::WriteLine (file.c_str ());
+	while ( !Mix_FadeOutMusic( 100 ) && Mix_PlayingMusic() )
+	{
+		// wait for any fades to complete
+		SDL_Delay( 100 );
+	}
 
-      if(music == NULL) {
-               music = Mix_LoadMUS (file.c_str ());
-      }
+	/* Stop the music from playing */
+	Mix_HaltMusic();
+	
+	//Unload the music from memory, since we don't need it anymore
+	Mix_FreeMusic( m_kMusic );
+	m_kMusic = NULL;
+	Logger::WriteLine( sFileName.c_str() );
 
-      if (!music)
-      {
-        Logger::WriteLine ("\t| -> PlayMusic() can not load file", __FILE__, __LINE__,
-                    LEVEL_WARNING);
-        // this might be a critical error...
-        Config::SetMusic( 0 );
-        return false;
-      }
-      if (Mix_FadeInMusic (music, -1, 3000) == -1)
-      {
-        printf ("Mix_FadeInMusic: %s\n", Mix_GetError ());
-        // well, there's no music, but most games don't break without music...
-        Config::SetMusic( 0 );
-        return false;
-      }
-      return true;
+	if ( m_kMusic == NULL )
+	{
+		m_kMusic = Mix_LoadMUS( sFileName.c_str() );
+	}
+
+	if ( !m_kMusic )
+	{
+		Logger::WriteLine( "\t| -> PlayMusic() can not load file", __FILE__, __LINE__, LEVEL_WARNING );
+		// this might be a critical error...
+		Config::SetMusic( 0 );
+		return false;
+	}
+      
+	if ( Mix_FadeInMusic( m_kMusic, -1, 3000 ) == -1 )
+	{
+		printf( "Mix_FadeInMusic: %s\n", Mix_GetError() );
+		// well, there's no music, but most games don't break without music...
+		Config::SetMusic( 0 );
+		return false;
+	}
+ 
+	return true;
 }
 
-int Music::PlayMusic (int id, int format, int volume)
+
+int Music::PlayMusic( int iId, int iFormat, int iVolume )
 {
-  std::string file;
+	std::string sFileName;
 
-  std::string mp3path = pMusicListLoader->mp3path ();
-  std::string midipath = pMusicListLoader->midipath ();
+	std::string sMP3Path = pMusicListLoader->mp3path();
+	std::string sMidiPath = pMusicListLoader->midipath();
 
-  if (!volume)
-    volume = Config::GetMusicVolume();
+	if ( !iVolume )
+	{
+		iVolume = Config::GetMusicVolume();
+	}
 
-  std::string name = pMusicListLoader->GetMusic (id, format);
-  if(name == "")
-    return 0;
+	std::string sMusicName = pMusicListLoader->GetMusic( iId, iFormat );
+	if ( sMusicName == "" )
+	{
+		return 0;
+	}
 
-  cMusicListEntry *entry = pMusicListLoader->GetMusicListEntry (id);
+	cMusicListEntry *entry = pMusicListLoader->GetMusicListEntry( iId );
 
-  if (name.empty ())
-      {
-        Logger::WriteLine ("\t| -> Wrong musicfile name");
-        return 0;
-      }
+	if ( sMusicName.empty() )
+	{
+		Logger::WriteLine( "\t| -> Wrong musicfile name" );
+		return 0;
+	}
 
-  if (format == FORMAT_MP3)
-      {
-        file = mp3path + name;
+	if ( iFormat == FORMAT_MP3 )
+	{
+		sFileName = sMP3Path + sMusicName;
 
 #ifdef WIN32
-        if (mpeg)
-            {
-              Logger::WriteLine ("PLAYING");
-              SMPEG_stop (mpeg);
-              SMPEG_delete (mpeg);
-            }
-        mpeg = SMPEG_new (file.c_str (), &info, 0);
+		if ( m_kMpeg )
+		{
+			Logger::WriteLine( "PLAYING" );
+			SMPEG_stop( m_kMpeg );
+			SMPEG_delete( m_kMpeg );
+		}
+		m_kMpeg = SMPEG_new( sFileName.c_str(), &m_kInfo, 0 );
 
-        char *error = SMPEG_error (mpeg);
+		char *cError = SMPEG_error( m_kMpeg );
 
-        if (error != NULL)
+		if ( cError != NULL )
 		{
 			Logger::Write( "\t| -> " );
-			Logger::WriteLine( error );
+			Logger::WriteLine( cError );
 
 			return 0;
 		}
 
-        assert (mpeg);
-        assert (info.has_audio);
+		assert( m_kMpeg );
+		assert( m_kInfo.has_audio );
 
-        // Tell SMPEG what the audio format is.
+		// Tell SMPEG what the audio format is.
+		SDL_AudioSpec kAudioFmt;
+		int iFrequency, iChannels;
+		Uint16 uiFormat;
+		Mix_QuerySpec( &iFrequency, &uiFormat, &iChannels );
+		kAudioFmt.format = uiFormat;
+		kAudioFmt.freq = iFrequency;
+		kAudioFmt.channels = iChannels;
 
-        SDL_AudioSpec audioFmt;
-        int frequency, channels;
-        Uint16 format;
-        Mix_QuerySpec (&frequency, &format, &channels);
-        audioFmt.format = format;
-        audioFmt.freq = frequency;
-        audioFmt.channels = channels;
+		SMPEG_actualSpec( m_kMpeg, &kAudioFmt );
 
-        SMPEG_actualSpec (mpeg, &audioFmt);
+		// Hook in the MPEG music mixer.
+		Mix_HookMusic( SMPEG_playAudioSDL, m_kMpeg );
+		SMPEG_enableaudio( m_kMpeg, 1 );
+		SMPEG_enablevideo( m_kMpeg, 0 );
+		SMPEG_setvolume( m_kMpeg, iVolume );
+		SMPEG_loop( m_kMpeg, entry->loop );
 
-        // Hook in the MPEG music mixer.
-        Mix_HookMusic (SMPEG_playAudioSDL, mpeg);
-        SMPEG_enableaudio (mpeg, 1);
-        SMPEG_enablevideo (mpeg, 0);
-        SMPEG_setvolume (mpeg, volume);
-        SMPEG_loop (mpeg, entry->loop);
+		SMPEG_play( m_kMpeg );
 
-        SMPEG_play (mpeg);
-        return true;
+		return true;
 #endif
-      }
-      else
-      {
-        file = midipath + name;
-        //Logger::WriteLine(file.c_str());
-      }
-      while (!Mix_FadeOutMusic (100) && Mix_PlayingMusic ()) {
-        // wait for any fades to complete
-        SDL_Delay (100);
-      }
-     // MIDI doesn't fade nor does it turn MusicPlaying off when it completes 
-     if ( Mix_PlayingMusic() && !Config::GetMP3() ) {
-         // force music to end
-         Mix_HaltMusic(); 
-         Mix_FreeMusic (music);
-         music = NULL;
-      } 
-      Logger::WriteLine (file.c_str ());
+	}
+	else
+	{
+		sFileName = sMidiPath + sMusicName;
+		//Logger::WriteLine(file.c_str());
+	}
+	while ( !Mix_FadeOutMusic( 100 ) && Mix_PlayingMusic() )
+	{
+		// wait for any fades to complete
+		SDL_Delay( 100 );
+	}
 
-      if(music == NULL) {
-               music = Mix_LoadMUS (file.c_str ());
-      }
+	// MIDI doesn't fade nor does it turn MusicPlaying off when it completes 
+	if ( Mix_PlayingMusic() && !Config::GetMP3() )
+	{
+		// force music to end
+		Mix_HaltMusic(); 
+		Mix_FreeMusic( m_kMusic );
+		m_kMusic = NULL;
+	}
+	Logger::WriteLine( sFileName.c_str() );
 
-      if(music == NULL) {
-        Logger::WriteLine ("PlayMusic() can not load file", __FILE__, __LINE__,
-                    LEVEL_WARNING);
-        // this might be a critical error...
-        Config::SetMusic( 0 );
-        return false;
-      }
-      if (Mix_FadeInMusic (music, -1, 3000) == -1) {
-        printf ("Mix_FadeInMusic: %s\n", Mix_GetError ());
-        // well, there's no music, but most games don't break without music...
-        Config::SetMusic( 0 );
-        return false;
-      }
-      return true;
+	if ( m_kMusic == NULL )
+	{
+		m_kMusic = Mix_LoadMUS( sFileName.c_str() );
+	}
+
+	if ( m_kMusic == NULL )
+	{
+		Logger::WriteLine( "PlayMusic() can not load file", __FILE__, __LINE__, LEVEL_WARNING );
+		// this might be a critical error...
+		Config::SetMusic( 0 );
+		
+		return false;
+	}
+
+	if ( Mix_FadeInMusic( m_kMusic, -1, 3000 ) == -1 )
+	{
+		printf( "Mix_FadeInMusic: %s\n", Mix_GetError() );
+		// well, there's no music, but most games don't break without music...
+		Config::SetMusic( 0 );
+        
+		return false;
+	}
+
+	return true;
 }
 
-void Music::MusicVolume (int volume)
+
+void Music::MusicVolume( int iVolume )
 {
-  Mix_VolumeMusic (volume);
+	Mix_VolumeMusic( iVolume );
 }

@@ -32,12 +32,10 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#include "Common.h"
 #include <assert.h>
-#include "include.h"
 #include <string>
-#include "Exception.h"
 #include "xml.h"
+#include "Exception.h"
 #include "renderer/SDLScreen.h"
 
 
@@ -252,7 +250,6 @@ public:
 protected:
 	// ParserData Vector (With all nodes)
 	static std::vector<ParserData> m_vParserInfo;
-	static XML::Node *m_kValue, *m_kConfig, *m_kDocument, *m_kSection;
 
 	// GFX
 	static std::string m_sVersion;

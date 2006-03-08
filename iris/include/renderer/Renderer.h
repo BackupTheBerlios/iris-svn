@@ -63,7 +63,7 @@ public:
 
    virtual int Init(void) = 0;
    virtual int DeInit(void) = 0;
-   virtual int RenderScene(void) = 0;
+   virtual void RenderScene(void) = 0;
    virtual void GrabDynamic(int x, int y, cDynamicObject ** r_object, cCharacter ** r_character) = 0;
    virtual void GrabMousePosition(int x, int y, int maxz, int cursor3d[3], int * cursor_character) = 0;
    virtual void AddDynamic (cDynamicObject * object);

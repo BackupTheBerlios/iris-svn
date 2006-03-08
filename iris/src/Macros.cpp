@@ -30,128 +30,151 @@
 #include "xml.h"
 #include "iris_endian.h"
 
-using namespace std;
-
 MacroLoader * pMacroLoader = NULL;
 
 MacroLoader::MacroLoader()
 {
-      XML::Parser parser;
-	  XML::Node *macroentries, *document;
+	XML::Parser parser;
+	XML::Node *macroentries, *document;
 	  
-	  try
-	  {
-		  parser.loadData("./xml/Macros.xml");
-		  document = parser.parseDocument();
+	try
+	{
+		parser.loadData( "./xml/Macros.xml" );
+		document = parser.parseDocument();
 		  
-		  macroentries = document->findNode( "MACROS" );
+		macroentries = document->findNode( "MACROS" );
 		  
-		  if( !macroentries )
-			  throw "Couldn't find macros node.";
-	  }
-	  catch( ... )
-	  {
-		  Logger::WriteLine ("\t| -> Couldn't load Macros.xml");
-		  return;
-      }
+		if ( !macroentries )
+		{
+			throw "Couldn't find macros node.";
+		}
+	}
+	catch( ... )
+	{
+		Logger::WriteLine( "\t| -> Couldn't load Macros.xml" );
+		return;
+	}
   
-      XML::Node *macro_node, *value; 
-      int idx = 0;
+	XML::Node *macro_node, *value;
+	int idx = 0, iMacroCount = 0;
      
-      while ((macro_node = macroentries->findNode("MACRO", idx))) {
-      int id = idx;
-      SDLKey key = (SDLKey)0;
-      int keymod = 0x0000;
-      std::vector<m_Parameter*> parameters;
-      std::string script_function = "none";
-      Logger::WriteLine("MCR1");
-      value = macro_node->findNode("ID");
+	while ( ( macro_node = macroentries->findNode( "MACRO", idx ) ) )
+	{
+		int id = idx;
+		SDLKey key = (SDLKey)0;
+		int keymod = 0x0000;
+		std::vector<m_Parameter*> parameters;
+		std::string script_function = "none";
+		//Logger::WriteLine( "MCR1" );
+		iMacroCount++;
+		value = macro_node->findNode( "ID" );
 
-        id = (value != NULL) ? value->asInteger() : idx;
+		id = ( value != NULL ) ? value->asInteger() : idx;
 
-        if ((value = macro_node->findNode("KEY")))
-         key = getkey_byname(value->asString());
+		if ( ( value = macro_node->findNode( "KEY" ) ) )
+		{
+			key = getkey_byname(value->asString());
+		}
 
-        if ((value = macro_node->findNode("LEFT_SHIFT")))
+		if ( ( value = macro_node->findNode( "LEFT_SHIFT" ) ) )
+		{
+			if ( value->asInteger() == 1 )
+			{
+				keymod |= KMOD_LSHIFT;
+			}
+		}
+		if ( ( value = macro_node->findNode( "RIGHT_SHIFT" ) ) )
+		{
+			if ( value->asInteger() == 1 )
+			{
+				keymod |= KMOD_RSHIFT;
+			}
+		}
+		if ( ( value = macro_node->findNode( "RIGHT_ALT" ) ) )
         {
-         if(value->asInteger() == 1)
-          keymod |= KMOD_LSHIFT;   
-        }
-        if ((value = macro_node->findNode("RIGHT_SHIFT")))
+			if ( value->asInteger() == 1 )
+			{
+				keymod |= KMOD_RALT;
+			}
+		}
+        if ( ( value = macro_node->findNode( "LEFT_ALT" ) ) )
         {
-         if(value->asInteger() == 1)
-          keymod |= KMOD_RSHIFT;   
+			if ( value->asInteger() == 1 )
+			{
+				keymod |= KMOD_LALT;
+			}
         }
-        if ((value = macro_node->findNode("RIGHT_ALT")))
-        {
-         if(value->asInteger() == 1)
-          keymod |= KMOD_RALT;   
-        }
-        if ((value = macro_node->findNode("LEFT_ALT")))
-        {
-         if(value->asInteger() == 1)
-          keymod |= KMOD_LALT;   
-        }
-          if ((value = macro_node->findNode("RIGHT_CONTROL")))
-        {
-         if(value->asInteger() == 1)
-          keymod |= KMOD_RCTRL;   
-        }
-        if ((value = macro_node->findNode("LEFT_CONTROL")))
-        {
-         if(value->asInteger() == 1)
-          keymod |= KMOD_LCTRL;   
-        }
-        if ((value = macro_node->findNode("SCRIPT_FUNCTION")))
-         script_function = value->asString();
-        std::string parameter_type;
+		if ( ( value = macro_node->findNode( "RIGHT_CONTROL" ) ) )
+		{
+			if ( value->asInteger() == 1 )
+			{
+				keymod |= KMOD_RCTRL;
+			}
+		}
+        if ( ( value = macro_node->findNode( "LEFT_CONTROL" ) ) )
+		{
+			if ( value->asInteger() == 1 )
+			{
+				keymod |= KMOD_LCTRL;
+			}
+		}
+		if ( ( value = macro_node->findNode( "SCRIPT_FUNCTION" ) ) )
+		{
+			script_function = value->asString();
+		}
+		std::string parameter_type;
         
-        int idx2 = 0;
-        while ((value = macro_node->findNode("PARAMETER", idx2))) 
-        {
-          m_Parameter * param = NULL;
-         if(value->lookupAttribute( "TYPE", parameter_type )){
-
-          std::cout << "PARAMETER" << parameter_type << std::endl;
-          param = new m_Parameter;
-          if(parameter_type == "string"){
-             param->type = PARAMETERTYPE_STRING;
-             param->str_value = value->asString();
-             param->int_value = 0;
-            }
-          else if(parameter_type == "integer"){
-
-              param->type = PARAMETERTYPE_INTEGER;
-              param->str_value = "";
-              param->int_value = IRIS_SwapI32(value->asInteger());
-             
-             }
-          else
-            {
-             Logger::WriteLine("Warning: Macros.xml: wrong parameter type, skipping...");
-             continue;
-            }
- 
-          }
-          else
-           {
-             Logger::WriteLine("Warning: Macros.xml: no parameter type specified, skipping...");
-             continue;
-            }
-          if(parameters.size() < 5)
-           parameters.push_back(param);
-          idx2++;
-        }
-        MacroEntry * entry = new MacroEntry;
-        entry->id = IRIS_SwapI32(id);
-        entry->key = key;
-        entry->keymod = (SDLMod)keymod;
-        entry->script_function = script_function;
-        entry->parameters = parameters;
-        macros.insert(make_pair((int)key, entry));
-        idx++;
-  }        
+		int idx2 = 0;
+		while ( ( value = macro_node->findNode( "PARAMETER", idx2 ) ) )
+		{
+			m_Parameter * param = NULL;
+			if ( value->lookupAttribute( "TYPE", parameter_type ) )
+			{
+				// std::cout << "PARAMETER" << parameter_type << std::endl;
+				param = new m_Parameter();
+				if ( parameter_type == "string" )
+				{
+					param->type = PARAMETERTYPE_STRING;
+					param->str_value = value->asString();
+					param->int_value = 0;
+				}
+				else if ( parameter_type == "integer" )
+				{
+					param->type = PARAMETERTYPE_INTEGER;
+					param->str_value = "";
+					param->int_value = IRIS_SwapI32(value->asInteger());
+				}
+				else
+				{
+					Logger::WriteLine("Warning: Macros.xml: wrong parameter type, skipping...");
+					continue;
+				}
+			}
+			else
+			{
+				Logger::WriteLine("Warning: Macros.xml: no parameter type specified, skipping...");
+				continue;
+			}
+			if ( parameters.size() < 5 )
+			{
+				parameters.push_back(param);
+			}
+			idx2++;
+		}
+		MacroEntry * entry = new MacroEntry();
+		entry->id = IRIS_SwapI32(id);
+		entry->key = key;
+		entry->keymod = (SDLMod)keymod;
+		entry->script_function = script_function;
+		entry->parameters = parameters;
+		macros.insert( std::make_pair( (int)key, entry ) );
+		idx++;
+	}
+	char cMacros[2];
+	sprintf( cMacros, "%d", iMacroCount );
+	Logger::WriteLine( "\t|  -> Sucessfuly loaded " + std::string( cMacros ) );
 }
+
 
 MacroLoader::~MacroLoader()
 {
@@ -287,11 +310,11 @@ int MacroLoader::GetEntriesCount(int id)
 
 MacroEntry * MacroLoader::GetMultiMacro(int id, int index)
 {
-    typedef multimap <int, MacroEntry*>::const_iterator c_iter;
-    typedef pair<c_iter, c_iter> Range;
+	typedef std::multimap <int, MacroEntry*>::const_iterator c_iter;
+	typedef std::pair<c_iter, c_iter> Range;
     Range range=macros.equal_range(id);
     int idx = 0;
-    for(c_iter i=range.first; i!=range.second; ++i)
+	for ( c_iter i = range.first; i != range.second; ++i )
     {
      if(idx == index)
      {

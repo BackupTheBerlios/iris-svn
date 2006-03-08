@@ -20,7 +20,6 @@
  *
  *****/
 
-
 #include "Geometry.h"
 
 #include <math.h>

@@ -41,13 +41,13 @@ void cSpeechLoader::Init( std::string path )
 	std::ifstream Speechfile;
 
 	std::string filename = path + "speech.mul";
-	std::cout << "\t| -> Speech file: " << filename << std::endl;
+	Logger::WriteDebug( "\t| -> Speech file: " + filename );
 
 	Speechfile.open( filename.c_str (), std::ios::in | std::ios::binary );
 
 	if ( !Speechfile.is_open() )
 	{
-		Logger::WriteLine ("\t| -> Warning: Couldn't open Speech file");
+		Logger::WriteLine ("\t| -> Warning: Couldn't open Speech file" );
 		Speechfile.close ();
 		
 		return;

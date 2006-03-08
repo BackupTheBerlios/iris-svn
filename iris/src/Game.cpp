@@ -22,7 +22,7 @@
 #include "Game.h"
 #include "renderer/3D/Renderer3D.h"
 
-extern SDLScreen *SDLscreen;
+//extern SDLScreen *SDLscreen;
 
 // Singleton
 Game *Game::m_sgGame = NULL;
@@ -74,7 +74,7 @@ Game::~Game()
 {
 	m_sgGame = NULL;
 
-	Logger::WriteLine( "\tSYS | Deinitializing Iris...." );
+	Logger::WriteLine( "SYS | Deinitializing Iris...." );
 	pParticleEngine.Reset();
 	pParticleLoader.DeInit();
 
@@ -265,7 +265,7 @@ void Game::InitRenderer( std::string sMulPath )
     
     Logger::WriteLine( "\t| -> speech" );
     pSpeechLoader.Init( sMulPath );
-    std::cout << "\t| -> Bank word: " << pSpeechLoader.GetID( "*bank*" ) << std::endl;
+	Logger::WriteDebug( "\t| -> Bank word: " + pSpeechLoader.GetID( "*bank*" ) );
     
     Logger::WriteLine( "\t| -> macros" );
     pMacroLoader = new MacroLoader();
@@ -313,9 +313,9 @@ void Game::RenderScene( void )
 
 	if ( m_paused )
 	{
-		SDLscreen->ClearScreen();
+		SDLScreen::GetInstance()->ClearScreen();
 		pUOGUI.Draw();
-		SDLscreen->DrawGL();
+		SDLScreen::GetInstance()->DrawGL();
 
 		return;
 	}

@@ -42,7 +42,7 @@
 
 using namespace std;
 
-extern SDLScreen *SDLscreen;
+//extern SDLScreen *SDLscreen;
 
 
 int GroundCoords[4][2] = { {0, 1}, {1, 1}, {1, 0}, {0, 0} };

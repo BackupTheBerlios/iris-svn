@@ -27,6 +27,7 @@
 #include "MapBlock.h"
 #include "Config.h"
 #include "renderer/Camera.h"
+#include "include.h"
 
 class Mapbuffer 
 {

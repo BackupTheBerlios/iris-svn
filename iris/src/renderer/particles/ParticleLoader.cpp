@@ -444,7 +444,7 @@ void cParticleLoader::Init (std::string filename)
 
     if (!collection)
         {
-          delete document;
+          //delete document;
           Logger::WriteLine ("could not find effect root node");
           return;
         }
@@ -474,7 +474,7 @@ void cParticleLoader::Init (std::string filename)
       }
 
 
-  delete document;
+  //delete document;
 
   m_texture_manager = new Particle::cParticleTextureManager;
 }

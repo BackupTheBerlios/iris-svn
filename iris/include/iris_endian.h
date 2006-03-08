@@ -19,7 +19,7 @@
 #ifndef __IRIS_ENDIAN_H
 #define __IRIS_ENDIAN_H
 
-#include <SDL/SDL_endian.h>
+#include "SDL/SDL_endian.h"
 //#include "Game.h"
 //#include "posh.h"
 

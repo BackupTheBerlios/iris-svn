@@ -10,7 +10,7 @@
 
 /*
  * Created by Nuno Ramiro (15-02-06)
- * Last change: 23-02-06 (Nuno Ramiro)
+ * Last change: 08-03-06 (Nuno Ramiro)
  */
 
 /*
@@ -66,21 +66,22 @@ bool Logger::Init( const std::string sVersion )
 /// Initializes the Logger given version.
 bool Logger::Init( const std::string sVersion, const std::string sLogName )
 {
+	assert( sLogName.compare( "" ) );
+
 	if ( m_bLogToFile )
 	{
 		if ( NULL == m_fLogFile )
 		{
 			m_fLogFile = new std::fstream( sLogName.c_str() );
+			m_fLogFile->close();
 		}
-		
+
 		m_fLogFile->open( sLogName.c_str(), std::ios::out | std::ios::trunc );
 
 		if ( !m_fLogFile->is_open() )
 		{
 			return false;
 		}
-
-		m_fLogFile->flush();
 	}
 
 	WriteLine( std::string( "Iris version " ) + sVersion.c_str() + 
@@ -91,6 +92,11 @@ bool Logger::Init( const std::string sVersion, const std::string sLogName )
 #ifdef _DEBUG
 	WriteLine( "\nAttention this is the debug version of Iris, if you are not a developer you \nshould not be using this version." );
 #endif
+
+	if ( m_bLogToFile )
+	{
+		m_fLogFile->flush();
+	}
 
 	return true;
 }
@@ -133,6 +139,7 @@ void Logger::Write( const char *cMessage, const char *cFileName, const int iLine
 	if ( m_bLogToFile )
 	{
 		(*m_fLogFile) << sErrorMsg.c_str();
+		m_fLogFile->flush();
 	}
 	else
 	{
@@ -148,6 +155,7 @@ void Logger::Write( const char *cMessage )
 	if ( m_bLogToFile )
 	{
 		(*m_fLogFile) << cMessage;
+		m_fLogFile->flush();
 	}
 	else
 	{
@@ -193,6 +201,17 @@ void Logger::WriteLine()
 }
 
 
+/// Write to screen when on debugging mode a message.
+
+void Logger::WriteDebug( std::string sMessage )
+{
+	#ifdef _DEBUG
+	WriteLine( sMessage );
+	#endif
+}
+
+
+
 /// Get Logging level
 int Logger::GetLoglevel( void )
 {
@@ -215,6 +234,7 @@ void Logger::Close()
 		if ( m_fLogFile->is_open() )
 		{
 			WriteLine( "[End of File]" );
+			m_fLogFile->flush();
 			m_fLogFile->close();
 
 			SAFE_DELETE( m_fLogFile );

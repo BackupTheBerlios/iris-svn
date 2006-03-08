@@ -76,6 +76,10 @@ protected:
     Texture * tex_char_shadow;
 
 private:
+	float fog_view_dist;
+	float lightNormalize;
+	float cam_x, cam_y, cam_z;
+	int current_ticks;
 //flo:	unsigned long lastTime;
 
 public:
@@ -84,7 +88,7 @@ public:
 
    virtual int Init(void);
    virtual int DeInit(void);
-   virtual int RenderScene(void);
+   virtual void RenderScene(void);
    virtual void GrabDynamic(int x, int y, cDynamicObject ** r_object, cCharacter ** r_character);
    virtual void GrabMousePosition(int x, int y, int maxz, int cursor3d[3], int * cursor_character);
    virtual void AddDynamic (cDynamicObject * object);

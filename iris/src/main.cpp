@@ -39,15 +39,20 @@
 #include "sound/SoundMixer.h"
 #include "sound/MusicListLoader.h"
 
-#if defined(_WIN32) && !defined(_DEBUG)
-	#pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
+
+//#include "Engine.h"
+
+#if defined( _WIN32 ) && !defined( _DEBUG )
+#pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
 #endif
 
-SDLScreen *SDLscreen;
 
 /// Program Entry point
 int main( int argc, char **args )
 {
+/*	Engine *eng = new Engine();
+	SAFE_DELETE( eng );
+*/
 	// Initializes Logger
 	if ( !Logger::Init( Config::GetVersion() ) )
 	{
@@ -56,6 +61,8 @@ int main( int argc, char **args )
 
 	// Initialize Game
 	Game *pGame = Game::GetInstance();
+
+	SDLScreen *SDLscreen;
 
 	try
 	{
@@ -82,7 +89,6 @@ int main( int argc, char **args )
 		 * FIXME: do this after all heavy loading
 		 */
 		// Initialize Video(SDL)
-		//SDLScreen *SDLscreen = SDLScreen::GetInstance();
 		SDLscreen = new SDLScreen();
 		// Initialize Input(SDL) Event
 		SDLEvent *SDLevent = new SDLEvent();
@@ -90,9 +96,9 @@ int main( int argc, char **args )
 		Config::RegisterFonts();
 
 		// Initialize SDL_music
+		SoundMix *pSoundMix = new SoundMix();
 		if ( Config::GetMusic() || Config::GetSound() )
         {
-			pSoundMix = new SoundMix();
 			pSoundMix->Init();
 
 			pMusicListLoader = new cMusicListLoader();
@@ -156,6 +162,7 @@ int main( int argc, char **args )
 		pUOGUI.DeInit();
 
 		SAFE_DELETE( SDLevent );
+		SAFE_DELETE( pSoundMix );
 	}
 	catch ( cException kException )
 	{
@@ -166,7 +173,6 @@ int main( int argc, char **args )
 		Logger::WriteLine( "Unhandled exception" );
 	}
 
-	SAFE_DELETE( pSoundMix );
 	SAFE_DELETE( SDLscreen );
 	SAFE_DELETE( pMusicListLoader );
 
@@ -174,8 +180,9 @@ int main( int argc, char **args )
 	SDL_Quit();
 
 	SAFE_DELETE( pGame );
-	Logger::Close();
+
 	Config::Close();
+	Logger::Close();
 
 	return 0;
 }

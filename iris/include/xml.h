@@ -27,8 +27,10 @@
 #define __XMLDOM_H__
 
 #include "Common.h"
+#include <stdio.h>
 #include <vector>
 #include <string>
+#include "Exception.h"
 
 #ifdef XMLDOM_EXPORTS
 #define XMLDOM_API __declspec( dllexport )
@@ -46,6 +48,7 @@ namespace XML
 		char current;
 		std::string data;
 		unsigned int position;
+		Node *m_kParseDocument;
 
 		// Parse Helpers
 		bool parseAttribute( Node *node );

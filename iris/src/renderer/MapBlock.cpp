@@ -35,7 +35,7 @@
 
 using namespace std;
 
-extern SDLScreen *SDLscreen;
+//extern SDLScreen *SDLscreen;
 
 
 cMapblock::cMapblock (int blockx, int blocky)

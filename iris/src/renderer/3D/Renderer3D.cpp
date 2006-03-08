@@ -64,7 +64,7 @@
 
 using namespace std;
 
-extern SDLScreen *SDLscreen;
+//extern SDLScreen *SDLscreen;
 float water_phase = 0.0f;
 
 extern float light_direction[3];
@@ -395,207 +395,220 @@ for(vertexId = 0; vertexId < vertexCount; vertexId++)
 }*/
 
 
-int Renderer3D::RenderScene (void)
+void Renderer3D::RenderScene( void )
 {
-  float fog_view_dist = (float) (view_distance - 2.5f) * 8 + pCamera.GetZoom();
-  glFogf (GL_FOG_START, (float) fog_view_dist);
-  glFogf (GL_FOG_END, (float) fog_view_dist + 8);
+	fog_view_dist = (float) (view_distance - 2.5f) * 8 + pCamera.GetZoom();
+	
+	glFogf( GL_FOG_START, (float)fog_view_dist );
+	glFogf( GL_FOG_END, (float)fog_view_dist + 8 );
+	// printf ("Fogdistance_START: %i\n", (int) fog_view_dist);
 
-//  printf ("Fogdistance_START: %i\n", (int) fog_view_dist);
+	flush_vertex_buffer();
 
-  flush_vertex_buffer ();
+	HandleStaticFaders();
 
-  HandleStaticFaders ();
+	glEnable( GL_CULL_FACE );
+	flag_cullbackfaces = true;
 
-  glEnable (GL_CULL_FACE);
-  flag_cullbackfaces = true;
+	SDLScreen::GetInstance()->ClearScreen();
 
-  SDLscreen->ClearScreen ();
-
-  SDLscreen->SetLight (m_lightlevel);
-  glDisable (GL_LIGHTING);
+	// SDLScreen::GetInstance()->SetLight( m_lightlevel );
+	glDisable( GL_LIGHTING );
 
 
-  int current_ticks = SDL_GetTicks ();
-  if (current_ticks - light_last_change > 15000)
-      {
-        // This is a temporary day cycle
-        light_angle +=
-          (current_ticks - light_last_change) * 0.000001f * light_angle_dir;
-//        light_angle = 0.2;
-        light_direction[0] = cos (0.6f) * sin (light_angle);
-        light_direction[1] = cos (light_angle) * sin (0.6f);
-        light_direction[2] = sin (light_angle);
-        // Normalize
-        float l =
-          sqrt (light_direction[0] * light_direction[0] +
-                light_direction[1] * light_direction[1] +
-                light_direction[2] * light_direction[2]);
-        light_direction[0] /= l;
-        light_direction[1] /= l;
-        light_direction[2] /= l;
+	current_ticks = SDL_GetTicks();
+	if ( current_ticks - light_last_change > 15000 )
+	{
+		// This is a temporary day cycle
+		light_angle += ( current_ticks - light_last_change ) * 0.000001f * light_angle_dir;
+		// light_angle = 0.2;
+		light_direction[0] = cos( 0.6f ) * sin( light_angle );
+		light_direction[1] = cos( light_angle ) * sin( 0.6f );
+		light_direction[2] = sin( light_angle );
+        
+		// Normalize (NOTE: Multiplication is faster than division).
+		lightNormalize = 1 / sqrt( light_direction[0] * light_direction[0] + 
+			light_direction[1] * light_direction[1] + light_direction[2] * light_direction[2] );
+		light_direction[0] *= lightNormalize;
+		light_direction[1] *= lightNormalize;
+		light_direction[2] *= lightNormalize;
 
-        if (light_angle > 3.14159f * 0.9f)
-          light_angle_dir = -1.0f;
-        if (light_angle < 3.14159f * 0.1f)
-          light_angle_dir = 1.0f;
-        ((Mapbuffer3D *) pMapbufferHandler.buffer ())->SetRecalcAmbientLightFlag ();
-        pDynamicObjectList.SetRecalcAmbientLightFlag ();
-
+		if ( light_angle > 3.14159f * 0.9f )
+		{
+			light_angle_dir = -1.0f;
+		}
+		if (light_angle < 3.14159f * 0.1f)
+		{
+			light_angle_dir = 1.0f;
+		}
+		( (Mapbuffer3D *)pMapbufferHandler.buffer() )->SetRecalcAmbientLightFlag();
+		pDynamicObjectList.SetRecalcAmbientLightFlag();
 
         light_last_change = current_ticks;
-      }
+	}
+
+	if ( pClient )
+	{
+		cCharacter *player_character = pClient->player_character();
+		if ( player_character )
+		{
+			float player_x, player_y, player_z;
+			pCamera.GetGamePosition( cam_x, cam_y, cam_z );
+			player_character->getPosition( player_x, player_y, player_z );
+
+			if ( ( player_x != cam_x ) || ( player_y != cam_y ) || ( player_z != cam_z ) )
+			{
+				pCamera.SetX( -( player_x - (int)( player_x / 8.0f ) * 8 ) );
+				pCamera.SetY( -( player_y - (int)( player_y / 8.0f ) * 8 ) );
+				pCamera.SetZ( -player_z );
+
+				pCamera.SetBlockX( (int) player_x / 8 );
+				pCamera.SetBlockY( (int) player_y / 8 );
+			}
+			if ( Config::GetPerspective() == 1 && ( !pCamera.forceRotation() ) )
+			{
+				pCamera.SetAngleZ( -player_character->angle() + 180 );
+			}
+		}
+	}
 
 
-  float cam_x, cam_y, cam_z;
-  if (pClient)
-      {
-        cCharacter *player_character = pClient->player_character ();
-        if (player_character)
-            {
-              float player_x, player_y, player_z;
-              pCamera.GetGamePosition (cam_x, cam_y, cam_z);
-              player_character->getPosition (player_x, player_y, player_z);
+	bool do_culling = pCamera.CamHasChanged() != 0;
 
-              if ((player_x != cam_x) || (player_y != cam_y)
-                  || (player_z != cam_z))
-                  {
-                    pCamera.SetX (-(player_x - (int) (player_x / 8.0f) * 8));
-                    pCamera.SetY (-(player_y - (int) (player_y / 8.0f) * 8));
-                    pCamera.SetZ (-player_z);
+	// Do our Skybox
+	pCamera.PlaceGLRotationMatrix();
 
-                    pCamera.SetBlockX ((int) player_x / 8);
-                    pCamera.SetBlockY ((int) player_y / 8);
+	RenderSkybox();
 
+	SDLScreen::GetInstance()->ClearZBuffer();
 
-                  }
-              if (Config::GetPerspective() == 1 && (!pCamera.forceRotation()))
+	pCamera.PlaceGLMatrix();
 
-                pCamera.SetAngleZ (-player_character->angle () + 180);
+	pCamera.FetchMatrix();
 
-            }
+	if ( do_culling )
+	{
+		ExtractFrustum();
+	}
 
-      }
-
-
-  bool do_culling = pCamera.CamHasChanged () != 0;
-
-  // Do our Skybox
-
-  pCamera.PlaceGLRotationMatrix ();
-
-  RenderSkybox ();
-
-  SDLscreen->ClearZBuffer ();
-
-  pCamera.PlaceGLMatrix ();
-
-  pCamera.FetchMatrix ();
-
-  if (do_culling)
-    ExtractFrustum ();
-
-  //check is only if you are in 1st person (roofs shouldn't fade out)
-  /*if(nConfig::roof_fade_time < 0)
-   nConfig::roof_fade_alpha = 255;
-  else
-   nConfig::roof_fade_alpha = 1;*/
+	//check is only if you are in 1st person (roofs shouldn't fade out)
+	/*if(nConfig::roof_fade_time < 0)
+		nConfig::roof_fade_alpha = 255;
+	else
+		nConfig::roof_fade_alpha = 1;*/
  
-  static int old_z = ROOF_NONE;
-  //static int force_fadein = 0;
+	static int old_z = ROOF_NONE;
+	//static int force_fadein = 0;
 
-  if (do_culling || (old_z == ROOF_WAIT))
-      {
-        int z;// = GetRoofHeight ();
-        if ( Config::GetRoofFade() )
-         z = GetRoofHeight ();
-        else
-        {
-         z = ROOF_NONE;
-         //force_fadein = 1;
-        }
+	if ( do_culling || ( old_z == ROOF_WAIT ) )
+	{
+		int z;// = GetRoofHeight ();
+	
+		if ( Config::GetRoofFade() )
+		{
+			z = GetRoofHeight ();
+		}
+		else
+		{
+			z = ROOF_NONE;
+			//force_fadein = 1;
+		}
 
-        if (z != old_z)
-            {
-                pMapbufferHandler.buffer ()->setRoofZ (z);
-              pMapbufferHandler.buffer ()->UpdateAlpha ();
-              if (static_faders.size ())
-                  {
-                    old_z = ROOF_WAIT;
-                  }
-              else
-                  {
-                    cFader *fader =
-						new cFader (255.0f, Config::GetRoofFadeAlpha(),
-						Config::GetRoofFadeTime() );
-                    fader->Start ();
-                    int count = SetFader (z, 255, fader, false);
-                    if (count)
-                      static_faders.push_back (fader);
-                    else
-                      delete fader;
+		if ( z != old_z )
+		{
+			pMapbufferHandler.buffer()->setRoofZ( z );
+			pMapbufferHandler.buffer()->UpdateAlpha();
 
-                    fader =
-                      new cFader ( Config::GetRoofFadeAlpha(), 255.0f,
-					  Config::GetRoofFadeTime() );
-                    fader->Start ();
-                    count =
-                      SetFader (z, Config::GetRoofFadeAlpha(), fader, true);
-                    if (count)
-                      static_faders.push_back (fader);
-                    else
-                      delete fader;
-                    old_z = z;
-                  }
-            }
-      }
+			if ( static_faders.size() )
+			{
+				old_z = ROOF_WAIT;
+			}
+			else
+			{
+				cFader *fader = new cFader( 255.0f, Config::GetRoofFadeAlpha(), Config::GetRoofFadeTime() );
+				fader->Start();
 
-  if (do_culling)
-    pMapbufferHandler.buffer ()->SetUsageFlag (false);
+				int count = SetFader( z, 255, fader, false );
+				if ( count )
+				{
+					static_faders.push_back( fader );
+				}
+				else
+				{
+					delete fader;
+				}
 
-  RenderTerrain (do_culling);
-  RenderDynamics (do_culling);
+				fader = new cFader( Config::GetRoofFadeAlpha(), 255.0f, Config::GetRoofFadeTime() );
+				fader->Start();
+				count = SetFader( z, Config::GetRoofFadeAlpha(), fader, true );
 
-  if (drag_model)
-    RenderDragModel ();
+				if ( count )
+				{
+					static_faders.push_back( fader );
+				}
+				else
+				{
+					delete fader;
+				}
+				old_z = z;
+			}
+		}
+	}
 
-  render_vertex_buffer ();
-  RenderWater (do_culling);
+	if ( do_culling )
+	{
+		pMapbufferHandler.buffer()->SetUsageFlag( false );
+	}
 
-  // must be rendered last because of Char Shadows
-  RenderCharacters (do_culling);
+	RenderTerrain( do_culling );
+	RenderDynamics( do_culling );
 
-  //  does not work correct
-  pParticleEngine.Render ();
+	if ( drag_model )
+	{
+		RenderDragModel();
+	}
 
-  render_vertex_buffer_transparent ();
+	render_vertex_buffer();
+	RenderWater( do_culling );
 
-  glMatrixMode (GL_MODELVIEW_MATRIX);
+	// must be rendered last because of Char Shadows
+	RenderCharacters( do_culling );
 
-  pUOGUI.Draw ();
-  return SDLscreen->DrawGL ();
+	//  does not work correct
+	pParticleEngine.Render();
+
+	render_vertex_buffer_transparent();
+
+	glMatrixMode( GL_MODELVIEW_MATRIX );
+
+	pUOGUI.Draw();
+
+	SDLScreen::GetInstance()->DrawGL();
 }
+
 
 /* Skybox Renderer */
 void Renderer3D::RenderSkybox ()
 {
-  for (int side = 0; side < 5; side++)
-    if (skyboxtextures[side])
-        {
-          glBindTexture (GL_TEXTURE_2D, skyboxtextures[side]->GetGLTex ());
+	for ( int side = 0; side < 5; side++ )
+	{
+		if ( skyboxtextures[side] )
+		{
+			glBindTexture( GL_TEXTURE_2D, skyboxtextures[side]->GetGLTex() );
 
-//Just a Test for correct Skybox ... GL_EXT Feature
-//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, /*0x812F */ GL_CLAMP_TO_EDGE); 
-//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, /*0x812F */ GL_CLAMP_TO_EDGE);
+			//Just a Test for correct Skybox ... GL_EXT Feature
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, /*0x812F */ GL_CLAMP_TO_EDGE); 
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, /*0x812F */ GL_CLAMP_TO_EDGE);
 
-          glBegin (GL_QUADS);
-          for (int vertex = 0; vertex <= 3; vertex++)
-              {
-                glTexCoord2fv (SkyBoxTexCoords[vertex]);
-                glVertex3fv (SkyBoxCoords[side][vertex]);
-              }
-          glEnd ();
-        }
+			glBegin( GL_QUADS );
+			for ( int vertex = 0; vertex <= 3; vertex++ )
+			{
+				glTexCoord2fv( SkyBoxTexCoords[vertex] );
+				glVertex3fv( SkyBoxCoords[side][vertex] );
+			}
+			glEnd();
+		}
+	}
 }
 
 void Renderer3D::RenderTerrain (bool do_culling)
@@ -833,9 +846,9 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                              colb);
 /*
                     if((m_kGame->GetPointedObj() == character->id()) || (pClient->GetEnemy() == character->id())) 
-                                              SDLscreen->SetHue((int) character->getHighlightColor());
+                                              SDLScreen::GetInstance()->SetHue((int) character->getHighlightColor());
                                            else
-                                              SDLscreen->SetHue(character->hue());
+                                              SDLScreen::GetInstance()->SetHue(character->hue());
 */
 
                     if (defhue != 0)
@@ -1021,7 +1034,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                                  colr, colg, colb, alpha,
                                                  &left_matrix, &right_matrix);
                         }
-                    SDLscreen->SetHue ();
+					SDLScreen::GetInstance()->SetHue ();
            /* TODO (#1#): Temporary fix for a bad memory leak...need to find a
                            better solution in the future */
 

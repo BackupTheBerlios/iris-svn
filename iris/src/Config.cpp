@@ -22,14 +22,10 @@
 
 #include "Config.h"
 
-extern SDLScreen *SDLscreen;
+//extern SDLScreen *SDLscreen;
 
 // Initializing variables
 std::vector<ParserData> Config::m_vParserInfo;
-XML::Node *Config::m_kValue = NULL;
-XML::Node *Config::m_kConfig = NULL;
-XML::Node *Config::m_kDocument = NULL;
-XML::Node *Config::m_kSection = NULL;
 
 std::string Config::m_sVersion = "0.8.6";
 
@@ -137,16 +133,17 @@ bool Config::Init()
 	XML::Parser kParser;
 
 	kParser.loadData( "./xml/config.xml" );
-	m_kDocument = kParser.parseDocument();
-	m_kConfig = m_kDocument->findNode( "CONFIG" );
+	XML::Node *kDocument = kParser.parseDocument();
+	XML::Node *kConfig = kDocument->findNode( "CONFIG" );
 
-	if ( !m_kConfig )
+	if ( !kConfig )
 	{
 		THROWEXCEPTION( "Could not find configuration node." );
 
 		return false;
 	}
 
+	XML::Node *kValue = NULL, *kSection = NULL;
 	// Read all values from config.xml
 	for ( int i = 0; m_vParserInfo[i].iType != IS_END; i++ )
 	{
@@ -154,26 +151,26 @@ bool Config::Init()
 
 		if ( Data.iType == IS_SECTION )
 		{
-			m_kSection = m_kConfig->findNode( Data.sName );
+			kSection = kConfig->findNode( Data.sName );
 		}
 		else
 		{
 			// If no section is loaded get from <config>
-			m_kValue = m_kSection != NULL ? m_kSection->findNode( Data.sName ) : m_kConfig->findNode( Data.sName );
+			kValue = kSection != NULL ? kSection->findNode( Data.sName ) : kConfig->findNode( Data.sName );
 
-			if ( m_kValue != NULL )
+			if ( kValue != NULL )
 			{
 				if ( Data.iType == IS_BOOL )
 				{
-					*reinterpret_cast<bool *>( Data.pData ) = m_kValue->asBool();
+					*reinterpret_cast<bool *>( Data.pData ) = kValue->asBool();
 				}
 				else if ( Data.iType == IS_INTEGER )
 				{
-					*reinterpret_cast<int *>( Data.pData ) = m_kValue->asInteger();
+					*reinterpret_cast<int *>( Data.pData ) = kValue->asInteger();
 				}
 				else if ( Data.iType == IS_STRING )
 				{
-					*reinterpret_cast<std::string *>( Data.pData ) = m_kValue->asString();
+					*reinterpret_cast<std::string *>( Data.pData ) = kValue->asString();
 				}
 			}
 		}
@@ -181,7 +178,7 @@ bool Config::Init()
 
 
 	// Read Fonts bit of the file
-	XML::Node *kFontSet = m_kConfig->findNode( "FONTSET" );
+	XML::Node *kFontSet = kConfig->findNode( "FONTSET" );
 
 	if ( kFontSet )
 	{
@@ -218,11 +215,7 @@ bool Config::Init()
 
 			m_vFonts.push_back( kFont );
 		}
-
-		SAFE_DELETE( kFontNode );
 	}
-
-	SAFE_DELETE( kFontSet );
 
 
 	// Depth Buffer
@@ -284,7 +277,7 @@ bool Config::Init()
 
 bool Config::RegisterFonts()
 {
-	if ( !SDLscreen )
+	if ( !SDLScreen::GetInstance() )
 	{
 		return false;
 	}
@@ -292,7 +285,7 @@ bool Config::RegisterFonts()
 	for ( unsigned int i = 0; i < m_vFonts.size(); i++ )
 	{
 		const FontInfo &kFont = m_vFonts[i];
-		SDLscreen->RegisterFont( kFont.iId, kFont.sFile, kFont.iSize, kFont.iHue );
+		SDLScreen::GetInstance()->RegisterFont( kFont.iId, kFont.sFile, kFont.iSize, kFont.iHue );
 	}
 
 	return true;
@@ -301,11 +294,6 @@ bool Config::RegisterFonts()
 
 void Config::Close()
 {
-	SAFE_DELETE( m_kValue );
-	m_kSection = NULL;
-	m_kDocument = NULL;
-	m_kConfig = NULL;
-
 	m_vFonts.clear();
 	m_vFonts.empty();
 

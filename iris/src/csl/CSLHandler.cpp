@@ -68,7 +68,7 @@ int gamestate = GAMESTATE_MENU;
 CSLHandler pCSLHandler;
 
 extern SDLEvent *SDLevent;
-extern SDLScreen *SDLscreen;
+//extern SDLScreen *SDLscreen;
 
 static ZCsl *csl = 0;           // csl object ptr
 static ZBoolean cslOk (zFalse); // ok flag
@@ -210,8 +210,8 @@ static ZString api_iris_playmusic (ZCsl * aCsl)
   int volume = 0;
   if (argCount > 2)
     volume = aCsl->get ("volume").asInt ();
-  if (pSoundMix)
-    pSoundMix->PlayMusic (id, format, volume);
+  if ( SoundMix::GetInstance() )
+	  SoundMix::GetInstance()->PlayMusic (id, format, volume);
   else
     return "-1";
   return "0";
@@ -223,8 +223,8 @@ static ZString api_iris_playsound (ZCsl * aCsl)
   int id = aCsl->get ("id").asInt ();
   int volume = aCsl->get ("volume").asInt ();
 
-  if (pSoundMix)
-    pSoundMix->PlaySoundWithVolume (id, volume);
+  if (SoundMix::GetInstance())
+	  SoundMix::GetInstance()->PlaySoundWithVolume (id, volume);
   else
     return "-1";
   return "0";
@@ -725,7 +725,7 @@ static ZString api_iris_disconnect (ZCsl * aCsl)
 static ZString api_iris_deinit (ZCsl * aCsl)
 {
   //Game::GetInstance()->DeInit ();
-  return "";
+	return "";
 }
 
 static ZString api_iris_init (ZCsl * aCsl)
@@ -2724,8 +2724,8 @@ static ZString api_font_register (ZCsl * aCsl)
   if (argCount == 4)
     defaulthue = aCsl->get ("defaulthue").asInt ();
 
-  if (SDLscreen)
-    SDLscreen->RegisterFont (aCsl->get ("id").asInt (),
+  if (SDLScreen::GetInstance())
+	  SDLScreen::GetInstance()->RegisterFont (aCsl->get ("id").asInt (),
                              aCsl->get ("filename").buffer (),
                              aCsl->get ("size").asInt (), defaulthue);
 
@@ -2734,8 +2734,8 @@ static ZString api_font_register (ZCsl * aCsl)
 
 static ZString api_font_unregister (ZCsl * aCsl)
 {
-  if (SDLscreen)
-    SDLscreen->UnregisterFont (aCsl->get ("id").asInt ());
+	if (SDLScreen::GetInstance())
+		SDLScreen::GetInstance()->UnregisterFont (aCsl->get ("id").asInt ());
 
   return "0";
 }

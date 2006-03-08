@@ -46,7 +46,7 @@
 
 using namespace std;
 
-extern SDLScreen *SDLscreen;
+//extern SDLScreen *SDLscreen;
 
 Renderer::Renderer ()
 {

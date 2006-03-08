@@ -31,7 +31,6 @@
 #include <string>
 #include <map>
 #include <vector>
-//#include "SDL/sdl.h"
 
 #define PARAMETERTYPE_STRING 1;
 #define PARAMETERTYPE_INTEGER 2;

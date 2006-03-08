@@ -220,7 +220,7 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 	tick = 0;
 
 	XML::Parser parser;
-	XML::Node * granny, *document;
+	XML::Node *granny, *document;
 
 	try
 	{
@@ -452,7 +452,7 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 		delete iter->second;
 	animsets.clear ();
 
-	delete document;
+	//delete document;
 }
 
 cGrannyLoader::~cGrannyLoader ()

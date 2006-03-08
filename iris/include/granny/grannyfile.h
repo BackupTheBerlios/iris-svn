@@ -27,6 +27,7 @@
 #include "grnmatrix.h"
 #include "renderer/Texture.h"
 #include "renderer/3D/CharacterLight.h"
+#include "include.h"
 #include <map>
 
 class cDeformedArray

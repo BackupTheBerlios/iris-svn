@@ -16,8 +16,8 @@
  *
  *****/
 
-#if !defined( __SOUNDLOADER_H__ )
-#define __SOUNDLOADER_H__
+#ifndef _SOUNDLOADER_H_
+#define _SOUNDLOADER_H_
 
 #include <fstream>
 #include <string>
@@ -26,10 +26,10 @@
 #include "SDL/SDL_types.h"
 
 /*
-To find data for a certain entry, you seek to (EntryID * 12), and read the data.
-Then, in the actual MUL file (not the index file), you seek to (lookup), and read (length) number of bytes.
-Some data relies on the extra field.
-*/
+ * To find data for a certain entry, you seek to (EntryID * 12), and read the data.
+ * Then, in the actual MUL file (not the index file), you seek to (lookup), and read (length) number of bytes.
+ * Some data relies on the extra field.
+ */
 
 struct stSoundIndx
 {
@@ -40,19 +40,18 @@ struct stSoundIndx
 
 class SoundLoader
 {
-private:
-	std::ifstream IndexFile;
-	std::ifstream SoundFile;
-	std::vector<stSoundIndx> Soundindx;
-	int indx;
 public:
 	SoundLoader();
 	virtual ~SoundLoader();
 
 	int SoundInit(std::string mulPath);
 	Mix_Chunk *Load(int soundindx);
+
+private:
+	std::ifstream IndexFile;
+	std::ifstream SoundFile;
+	std::vector<stSoundIndx> Soundindx;
+	int indx;
 };
 
-//extern SoundLoader pSoundLoader;
-
-#endif
+#endif	// _SOUNDLOADER_H_

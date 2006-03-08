@@ -203,7 +203,7 @@ ZString api_gui_addform (ZCsl* aCsl)
 			act_container_id = container->GetID();
 		}
 	} catch (...) {
-		delete document;
+		//delete document;
 		return "0";
 	}
 
@@ -359,7 +359,8 @@ ZString api_gui_addform (ZCsl* aCsl)
 		}
 	}
 
-	delete document; document=NULL;
+	//delete document;
+	document=NULL;
 
 	if (container) {
 		if (!shape.empty())

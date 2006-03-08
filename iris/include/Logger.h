@@ -91,6 +91,9 @@ public:
 	/// Log, Writes to a file an empty line.
 	static void WriteLine();
 
+	/// Writes a debug message to screen only when debugging.
+	static void WriteDebug( std::string sMessage );
+
 	/// Get Logging level
 	static int GetLoglevel( void );
 

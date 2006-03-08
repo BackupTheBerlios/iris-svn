@@ -18,8 +18,7 @@
 
 
 #include "xml.h"
-#include <stdio.h>
-#include "Exception.h"
+
 
 // Charsets
 const char *letterSet =
@@ -45,21 +44,22 @@ inline bool isInSet (const char *set, char c)
 namespace XML
 {
 
-// NODE IMPLEMENTATION
+	// NODE IMPLEMENTATION
 
-  Node::~Node()
-  {
-    // Delete all subnodes
-    for (unsigned int i = 0; i < nodes.size(); ++i)
+	Node::~Node()
 	{
-		SAFE_DELETE( nodes[i] );
+		// Delete all subnodes
+		for ( unsigned int i = 0; i < nodes.size(); i++ )
+		{
+			SAFE_DELETE( nodes[i] );
+		}
 	}
-  }//;
 
-  int Node::addNode (Node * node)
+  int Node::addNode( Node *node )
   {
-    nodes.push_back (node);
-    return nodes.size () - 1;
+		nodes.push_back( node );
+
+		return nodes.size () - 1;
   }
 
 // Search for the node
@@ -115,8 +115,10 @@ namespace XML
               }
         }
 
-    if (raiseError)
+    if ( raiseError )
+	{
         THROWXMLEXCEPTION ("Node was not found.");
+	}
 
     return 0;
   }
@@ -311,67 +313,72 @@ namespace XML
     reportError ("DocType is not yet implemented.");
   }
 
-  bool Parser::parseElement (Node * node)
-  {
-    if (current != '<')
-      return false;
+	bool Parser::parseElement (Node * node)
+	{
+		if (current != '<')
+		{
+			return false;
+		}
 
-    State state = SaveState ();
-    std::string name;
-    readChar (false);
+		State state = SaveState();
+		std::string name;
+		readChar( false );
 
-    if (!parseName (name))
-        {
-          RestoreState (state);
-          return false;
-        }
+		if ( !parseName( name ) )
+		{
+			RestoreState( state );
+			return false;
+		}
 
-    Node *thisNode = new Node;
-    thisNode->setName (name);
-    thisNode->setNodeType (Element);
+		Node *thisNode = new Node();
+		thisNode->setName (name);
+		thisNode->setNodeType (Element);
 
-    try
-    {
-      do
-          {
-            parseWhitespace ();
-          }
-      while (parseAttribute (thisNode));
+		try
+		{
+			do
+			{
+				parseWhitespace();
+			} while ( parseAttribute( thisNode ) );
 
-      // Empty Element Tag
-      if (current == '/')
-          {
-            readChar (false);
-            if (current != '>')
-              reportError ("Tag not terminated properly.");
-            readChar ();        // Skip Char
-          }
-      // Normal Start Tag
-      else if (current == '>')
-          {
-            readChar (false);
-            parseContent (thisNode);
-            //thisNode->setData( thisNode->data().replace( ... ) );
-            // was: ThisNode.Data := TrimChars(ThisNode.Data, [' ', #9, #13, #10]);
+			// Empty Element Tag
+			if ( current == '/' )
+			{
+				readChar( false );
+				if ( current != '>' )
+				{
+					reportError( "Tag not terminated properly." );
+				}
+				readChar();        // Skip Char
+			}
+			// Normal Start Tag
+			else if ( current == '>' )
+			{
+				readChar( false );
+				parseContent( thisNode );
+				//thisNode->setData( thisNode->data().replace( ... ) );
+				// was: ThisNode.Data := TrimChars(ThisNode.Data, [' ', #9, #13, #10]);
 
-            if (!parseETag (thisNode))
-              reportError ("No ending tag for " + name);
-          }
-      // Not terminated properly
-      else
-          {
-            reportError ("Tag not terminated properly.");
-          }
-    }
-    catch (...)
-    {
-      delete thisNode;
-      throw;
-    }
+				if ( !parseETag( thisNode ) )
+				{
+					reportError( "No ending tag for " + name );
+				}
+			}
+			// Not terminated properly
+			else
+			{
+				reportError( "Tag not terminated properly." );
+			}
+		}
+		catch (...)
+		{
+			throw;
+		}
 
-    node->addNode (thisNode);
-    return true;
-  }
+		node->addNode( thisNode );
+
+		return true;
+	}
 
   bool Parser::parseEq ()
   {
@@ -600,6 +607,7 @@ namespace XML
     char *err = new char[error.length () + 1];
     strcpy (err, error.c_str ());
     THROWXMLEXCEPTION (err);
+	SAFE_DELETE_ARRAY( err );
   }
 
 // This is kind of a fetch-ahead
@@ -660,25 +668,29 @@ namespace XML
     current = state.current;
   }
 
-  Node *Parser::parseDocument ()
-  {
-    readChar (false);
-    Node *result = new Node;
-    result->setName ("");
-    result->setNodeType (Document);
+	Node *Parser::parseDocument ()
+	{
+		readChar (false);
+		m_kParseDocument = new Node();
+		m_kParseDocument->setName( "" );
+		m_kParseDocument->setNodeType( Document );
 
-    if (!parseProlog (result))
-      reportError ("Missing prolog");
+		if ( !parseProlog( m_kParseDocument ) )
+		{
+			reportError( "Missing prolog" );
+		}
 
-    if (!parseElement (result))
-      reportError ("Missing content");
+		if ( !parseElement( m_kParseDocument ) )
+		{
+			reportError( "Missing content" );
+		}
 
-    while (parseMisc (result))
-        {
-        }
+		while ( parseMisc( m_kParseDocument ) )
+		{
+		}
 
-    return result;
-  }
+		return m_kParseDocument;
+	}
 
   void Parser::setData (const std::string & data)
   {
@@ -686,34 +698,35 @@ namespace XML
     this->data = data;
   }
 
-  Parser::~Parser ()
+  Parser::~Parser()
   {
+	  SAFE_DELETE( m_kParseDocument );
   }
 
-  void Parser::loadData (const std::string & filename)
-  {
-    FILE *fp = fopen (filename.c_str (), "rt");
+	void Parser::loadData (const std::string & filename)
+	{
+		FILE *fp = fopen (filename.c_str (), "rt");
 
-    if (!fp)
-      throw "Couldn't open file.";
+		if (!fp)
+			throw "Couldn't open file.";
 
-    fseek (fp, 0, SEEK_END);
-    //unsigned int size = ftell( fp );
-    fseek (fp, 0, SEEK_SET);
+		fseek (fp, 0, SEEK_END);
+		//unsigned int size = ftell( fp );
+		fseek (fp, 0, SEEK_SET);
 
-    char buffer[1025];
-    std::string result;
+		char buffer[1025];
+		std::string result;
 
-    while (!feof (fp))
-        {
-          int bytesRead = fread (buffer, 1, 1024, fp);
-          buffer[bytesRead] = 0;
-          result += buffer;
-        }
+		while (!feof (fp))
+		{
+			int bytesRead = fread (buffer, 1, 1024, fp);
+			buffer[bytesRead] = 0;
+			result += buffer;
+		}
 
-    fclose (fp);
+		fclose (fp);
 
-    setData (result);
+		setData (result);
   }
 
   bool Node::lookupAttribute (const std::string & name, unsigned int &data) const

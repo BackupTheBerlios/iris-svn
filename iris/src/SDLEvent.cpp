@@ -21,7 +21,7 @@
 
 #include "SDLEvent.h"
 
-extern SDLScreen *SDLscreen;
+//extern SDLScreen *SDLscreen;
 bool SDLEvent::m_bQuit = false;
 
 
@@ -96,9 +96,9 @@ void SDLEvent::HandleEvent( SDL_Event kEvent, unsigned int uiCurrentTime )
 		// handle resize event
 #ifndef WIN32
 		// Do not reinitialize window in Win32
-		SDLscreen->m_kScreen = SDL_SetVideoMode( kEvent.resize.w, kEvent.resize.h, Config::GetBPP(), SDLscreen->videoFlags );
+		SDLScreen::GetInstance()->m_kScreen = SDL_SetVideoMode( kEvent.resize.w, kEvent.resize.h, Config::GetBPP(), SDLscreen->videoFlags );
         
-		if ( !SDLscreen->m_kScreen )
+		if ( !SDLScreen::GetInstance()->m_kScreen )
 		{
 			cerr << "Could not get a surface after resize: " <<
 			SDL_GetError() << endl;
@@ -106,7 +106,7 @@ void SDLEvent::HandleEvent( SDL_Event kEvent, unsigned int uiCurrentTime )
 			exit( 1 );
 		};
 #endif
-		SDLscreen->ResizeWindow( kEvent.resize.w, kEvent.resize.h );
+		SDLScreen::GetInstance()->ResizeWindow( kEvent.resize.w, kEvent.resize.h );
 		break;
 
 	case SDL_KEYDOWN:
@@ -156,7 +156,7 @@ void SDLEvent::HandleEvent( SDL_Event kEvent, unsigned int uiCurrentTime )
 		msg.mouseevent.x = kEvent.button.x - pUOGUI.GetX ();
 		msg.mouseevent.y = kEvent.button.y - pUOGUI.GetY ();
 		msg.mouseevent.button = kEvent.button.button;
-        
+
 		if ( !pUOGUI.HandleMessage( &msg ) )
 		{
 			if ( kEvent.type == SDL_MOUSEBUTTONUP )
@@ -244,8 +244,6 @@ void SDLEvent::HandleKeyPress( SDL_keysym *kKeysym )
 		}
 	}
 
-	SAFE_DELETE( kEntry );
-
 	msg.keypressed.type = MESSAGE_KEYPRESSED;
 	msg.keypressed.key = kKeysym->unicode & 0xFF;
 
@@ -287,20 +285,18 @@ void SDLEvent::HandleKeyPress( SDL_keysym *kKeysym )
 		pRenderer->FadeStatics( 255, 1000 );
 	}
 
-	SAFE_DELETE( pRenderer );
-
 	Game::GetInstance()->OnKeyPress( kKeysym );
 	/* F1 key was pressed this toggles fullscreen mode - does not work under windows currently */
 
 #ifndef WIN32
 	if ( uiKeys[SDLK_F1] == SDL_PRESSED )
 	{
-		SDLscreen->ToggleFullScreen();
+		SDLScreen::GetInstance()->ToggleFullScreen();
 	}
 
 	if ( uiKeys[SDLK_F12] == SDL_PRESSED )
 	{
-		SDLscreen->ScreenSave();
+		SDLScreen::GetInstance()->ScreenSave();
 	}
 #endif
 }
@@ -371,7 +367,7 @@ void SDLEvent::HandleMovement( void )
 		{
 			iDirection += 4;
 		}
-		
+
 		pClient->Walk( iDirection );
 	}
 }
@@ -381,14 +377,14 @@ void SDLEvent::HandleMouseMotion( SDL_MouseMotionEvent *kEvent )
 {
 	Uint8 *uiKeys;
 	uiKeys = SDL_GetKeyState( NULL );
-  
+
 	if ( !kEvent )
 	{
 		Logger::WriteLine( "Null event pointer in SDLEvent::HandleMouseMotion", __FILE__, __LINE__, LEVEL_WARNING );
 	
 		return;
 	}
-  
+
 	if ( !pCamera.forceRotation() )
 	{
 		pUOGUI.SetCursorPos( kEvent->x, kEvent->y );
@@ -424,20 +420,19 @@ void SDLEvent::HandleMouseMotion( SDL_MouseMotionEvent *kEvent )
 				pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
 			}
 			*/
-		//}
 
 			if ( kEvent->state & SDL_BUTTON( 1 ) )
 			{
 				pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
 				pCamera.SetForceRotation( true );
 			}
-	                
+
 			float fAmount = pCamera.GetAngleZ() - -pClient->player_character()->angle();
 
 			if ( uiKeys[SDLK_UP] == SDL_PRESSED && Config::GetPerspective() == 1 )
 			{
 				int iWalkDirection = WALK_FORWARD;
-				
+
 				if ( fAmount > 215 )
 				{
 					iWalkDirection = WALK_LEFT;
@@ -446,7 +441,7 @@ void SDLEvent::HandleMouseMotion( SDL_MouseMotionEvent *kEvent )
 				{
 					iWalkDirection = WALK_RIGHT;
 				}
-				
+
 				if ( iWalkDirection == WALK_LEFT || iWalkDirection == WALK_RIGHT)
 				{
 					Game::GetInstance()->Walk_Simple( iWalkDirection );

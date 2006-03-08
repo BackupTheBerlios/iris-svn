@@ -33,7 +33,6 @@
 
 #include "SDL/SDL.h"
 
-
 class cVector 
 {
     private:

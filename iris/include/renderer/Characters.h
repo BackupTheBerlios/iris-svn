@@ -38,8 +38,6 @@
 #include "renderer/3D/CharacterLight.h"
 #include "uotype.h"
 
-
-
 struct sSkillEntry {
 	Uint16 value;
 	Uint16 unmodified;

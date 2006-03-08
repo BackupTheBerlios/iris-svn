@@ -1597,8 +1597,8 @@ void cClient::Act_WalkAck (cPacket * packet)
                     cCharacterEquip *mount = mychar->GetEquip (25);
                     if (mount != NULL)
                       footsteps_snd = 298;
-                    if (pSoundMix)
-                      pSoundMix->PlaySound (footsteps_snd, 128, (char) 0,
+					if ( SoundMix::GetInstance() )
+						SoundMix::GetInstance()->PlaySound (footsteps_snd, 128, (char) 0,
                                             (int) mychar->x (),
                                             (int) mychar->y (), mychar->z ());
                   }
@@ -2653,7 +2653,7 @@ void cClient::Act_PlayMusic (cPacket * packet)
   Uint16 id = packet->GetWord ();
   if ( Config::GetMusic() )
       {
-        pSoundMix->PlayMusic ((int) id, Config::GetMP3(), Config::GetMusicVolume() );
+		  SoundMix::GetInstance()->PlayMusic ((int) id, Config::GetMP3(), Config::GetMusicVolume() );
       }
 }
 
@@ -2698,9 +2698,9 @@ void cClient::Act_ContAdd (cPacket * packet)
 
 void cClient::Act_Sound (cPacket * packet)
 {
-  if (pSoundMix)
+	if ( SoundMix::GetInstance() )
       {
-        pSoundMix->PlaySound ((int) packet->packet.Sound.m_sound,
+		  SoundMix::GetInstance()->PlaySound ((int) packet->packet.Sound.m_sound,
                               (int) packet->packet.Sound.m_volume,
                               (char) packet->packet.Sound.m_flags,
                               (int) packet->packet.Sound.m_x,
