@@ -34,7 +34,7 @@ Game::Game()
 	m_AOSToolTip = false;
 
 	// Default values
-	pRenderer = NULL;
+	m_kRenderer = NULL;
 	m_kMapBuffer3D = NULL;
 	m_kArtLoader = NULL;
 	m_paused = true;
@@ -78,11 +78,6 @@ Game::~Game()
 	pParticleEngine.Reset();
 	pParticleLoader.DeInit();
 
-	if ( pRenderer )
-	{
-		pRenderer->DeInit();
-	}
-
 	DeInitRenderer();
 
 	pCamera.Reset();
@@ -90,7 +85,7 @@ Game::~Game()
 	pDynamicObjectList.Clear();
 	pCharacterList.Clear();
 
-	SAFE_DELETE( pRenderer );
+	SAFE_DELETE( m_kRenderer );
 	SAFE_DELETE( pTextManager );
 	SAFE_DELETE( m_kArtLoader );
 
@@ -164,9 +159,9 @@ bool Game::Init( void )
 	pParticleLoader.Init( "xml/particles.xml" );
 
 	Logger::WriteLine( "\t| -> renderer" );
-	pRenderer = new Renderer3D();
+	m_kRenderer = new Renderer3D();
 
-	if ( !pRenderer->Init() )
+	if ( !m_kRenderer->Init() )
 	{
 		return false;
 	}
@@ -306,7 +301,7 @@ void Game::DeInitRenderer( void )
 
 void Game::RenderScene( void )
 {
-	if ( !pRenderer )
+	if ( !m_kRenderer )
 	{
 		return;
 	}
@@ -328,16 +323,16 @@ void Game::RenderScene( void )
         {
 			if ( drag_in_world )
 			{
-				pRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
+				m_kRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
 			}
 			else
 			{
-				pRenderer->setDragModel( 0 );
+				m_kRenderer->setDragModel( 0 );
 			}
 		}
 	}
 
-	pRenderer->RenderScene();
+	m_kRenderer->RenderScene();
 }
 
 
@@ -379,9 +374,9 @@ void Game::Handle( void )
 		pParticleEngine.Handle();
 		pLightManager.Handle( new_tick );
 
-		if ( pRenderer )
+		if ( m_kRenderer )
 		{
-			pMapbufferHandler.buffer()->FreeBuffer( pRenderer->GetViewDistance () + 2 );
+			pMapbufferHandler.buffer()->FreeBuffer( m_kRenderer->GetViewDistance() + 2 );
 		}
 	}
 
@@ -394,7 +389,7 @@ void Game::Handle( void )
 
 Renderer *Game::GetRenderer( void )
 {
-	return pRenderer;
+	return m_kRenderer;
 }
 
 
@@ -684,14 +679,14 @@ void Game::Walk_Simple( Uint8 action )
 
 void Game::GrabMousePosition( int x, int y, int max_z )
 {
-	if ( m_paused || !pRenderer )
+	if ( m_paused || !m_kRenderer )
 	{
 		return;
 	}
 
 	int cursor_char = 0;
 
-	pRenderer->GrabMousePosition( x, y, max_z, cursor3d, &cursor_char );
+	m_kRenderer->GrabMousePosition( x, y, max_z, cursor3d, &cursor_char );
 
 	cursor_character = cursor_char;
 }
@@ -709,12 +704,12 @@ void Game::GrabDynamic( int x, int y, cDynamicObject **r_object, cCharacter **r_
 		*r_character = NULL;
 	}
 	
-	if ( m_paused || !pRenderer )
+	if ( m_paused || !m_kRenderer )
 	{
 		return;
 	}
 
-	pRenderer->GrabDynamic( x, y, r_object, r_character );
+	m_kRenderer->GrabDynamic( x, y, r_object, r_character );
 }
 
 
@@ -859,7 +854,7 @@ void Game::HandleDrag( int x, int y )
 		drag_id = object->id;
 		drag_model = object->model;
 		SetDragInWorld( true );
-		pRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
+		m_kRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
 		pClient->Send_PickupRequest( object->id );
 	}
   
@@ -877,9 +872,9 @@ void Game::DragCancel()
 	drag_id = 0;
     pUOGUI.LoadDragCursor( 0 );
 	
-	if ( pRenderer )
+	if ( m_kRenderer )
 	{
-		pRenderer->setDragModel( 0 );
+		m_kRenderer->setDragModel( 0 );
 	}
 
 	pUOGUI.SetDragging( false );
@@ -916,7 +911,7 @@ void Game::Drag( Uint32 id, Uint16 model )
 		}
 	}
 
-	pRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
+	m_kRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
 	pClient->Send_PickupRequest( id );
 	pUOGUI.SetDragging( true );
 }
@@ -1024,8 +1019,10 @@ bool Game::CheckDragDrop( int mousex, int mousey )
 
 	pUOGUI.LoadDragCursor( 0 );
 
-	if ( pRenderer )
-		pRenderer->setDragModel( 0 );
+	if ( m_kRenderer )
+	{
+		m_kRenderer->setDragModel( 0 );
+	}
 
 	drag_id = 0;
 	drag_model = 0;
@@ -1036,36 +1033,36 @@ bool Game::CheckDragDrop( int mousex, int mousey )
 
 void Game::AddDynamic( cDynamicObject *object )
 {
-	if ( pRenderer )
+	if ( m_kRenderer )
 	{
-		pRenderer->AddDynamic( object );
+		m_kRenderer->AddDynamic( object );
 	}
 }
 
 
 void Game::DelDynamic( cDynamicObject *object )
 {
-	if ( pRenderer )
+	if ( m_kRenderer )
 	{
-		pRenderer->DelDynamic( object );
+		m_kRenderer->DelDynamic( object );
 	}
 }
 
 
 void Game::AddCharacter( cCharacter *character )
 {
-	if ( pRenderer )
+	if ( m_kRenderer )
 	{
-		pRenderer->AddCharacter( character );
+		m_kRenderer->AddCharacter( character );
 	}
 }
 
 
 void Game::DelCharacter( cCharacter *character )
 {
-	if ( pRenderer )
+	if ( m_kRenderer )
 	{
-		pRenderer->DelCharacter( character );
+		m_kRenderer->DelCharacter( character );
 	}
 }
 
@@ -1074,7 +1071,7 @@ void Game::SendPickup( int id, int model, int count )
 {
 	drag_id = id;
 	drag_model = model;
-	pRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
+	m_kRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
 	pClient->Send_PickupRequest( id, count );
 	pUOGUI.SetDragging( true );
 }

@@ -60,10 +60,6 @@
 #include <iostream>
 #include <cassert>
 
-//#include "cal3d/cal3d.h"
-
-using namespace std;
-
 //extern SDLScreen *SDLscreen;
 float water_phase = 0.0f;
 
@@ -108,9 +104,10 @@ Renderer3D::Renderer3D ()
   m_kGame = Game::GetInstance();
 }
 
-Renderer3D::~Renderer3D ()
+Renderer3D::~Renderer3D()
 {
 	m_kGame = NULL;
+	DeInit();
 }
 
 int Renderer3D::Init (void)
@@ -202,31 +199,32 @@ void Renderer3D::LoadSkyboxTextures (int map)
 }
 
 
-int Renderer3D::DeInit (void)
+void Renderer3D::DeInit( void )
 {
-  for (int index = 0; index < 5; index++)
-    if (skyboxtextures[index])
-        {
-          delete skyboxtextures[index];
-          skyboxtextures[index] = NULL;
+	for (int index = 0; index < 5; index++)
+	{
+		if (skyboxtextures[index])
+		{
+			delete skyboxtextures[index];
+			skyboxtextures[index] = NULL;
         }
+	}
 
-  delete tex_water;
-  tex_water = NULL;
+	delete tex_water;
+	tex_water = NULL;
 
-  delete tex_char_shadow;
-  tex_char_shadow = NULL;
+	delete tex_char_shadow;
+	tex_char_shadow = NULL;
 
+	free_vertex_buffer();
 
-  free_vertex_buffer ();
+	// destroy the model instance
+	/*
+	m_calModel.destroy();
 
-  // destroy the model instance
-  /*m_calModel.destroy();
-
-     // destroy the core model instance
-     m_calCoreModel.destroy(); */
-
-  return (true);
+	// destroy the core model instance
+	m_calCoreModel.destroy();
+	*/
 }
 
 

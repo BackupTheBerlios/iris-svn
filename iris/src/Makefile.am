@@ -6,7 +6,6 @@ ui3_LDADD=@GL_LIBS@
 ui3_SOURCES= ArtLoader.cpp \
 Bitmask.cpp \
 Border.cpp \
-btree.cpp \
 Buffer.cpp \
 Macros.cpp \
 Button.cpp \

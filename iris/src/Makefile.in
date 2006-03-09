@@ -52,7 +52,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_ui3_OBJECTS = ArtLoader.$(OBJEXT) Bitmask.$(OBJEXT) \
-	Border.$(OBJEXT) btree.$(OBJEXT) Buffer.$(OBJEXT) \
+	Border.$(OBJEXT) Buffer.$(OBJEXT) \
 	Button.$(OBJEXT) Camera.$(OBJEXT) Characters.$(OBJEXT) \
 	Checkbox.$(OBJEXT) Client.$(OBJEXT) ClilocLoader.$(OBJEXT) \
 	Config.$(OBJEXT) Container.$(OBJEXT) Control.$(OBJEXT) \
@@ -235,7 +235,6 @@ ui3_LDADD = @GL_LIBS@
 ui3_SOURCES = ArtLoader.cpp \
 Bitmask.cpp \
 Border.cpp \
-btree.cpp \
 Buffer.cpp \
 Button.cpp \
 Camera.cpp \
@@ -544,7 +543,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ZSql.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ZString.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ZTrace.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/btree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/global.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/grannyfile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/grnanim.Po@am__quote@

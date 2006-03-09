@@ -43,49 +43,49 @@
 class Renderer
 {
 protected:
-	int SetFader (int min_z, Uint8 alpha, cFader * fader, bool below);
-	void ResetFader (cFader * fader);
-	
-        std::list <cFader *> static_faders;
+	int SetFader( int min_z, Uint8 alpha, cFader *fader, bool below );
+	void ResetFader( cFader *fader );
+
+	std::list<cFader *> static_faders;
 	void ClearStaticFaders();
 	void HandleStaticFaders();
 	
 	Uint16 drag_model;
 	int dragposition[3];
-	
+
 	int view_distance;
 	float m_lightlevel;
-        int flags;
+	int flags;
 
 public:
-   Renderer ();
-   virtual ~Renderer ();
+   Renderer();
+   virtual ~Renderer();
 
-   virtual int Init(void) = 0;
-   virtual int DeInit(void) = 0;
-   virtual void RenderScene(void) = 0;
-   virtual void GrabDynamic(int x, int y, cDynamicObject ** r_object, cCharacter ** r_character) = 0;
-   virtual void GrabMousePosition(int x, int y, int maxz, int cursor3d[3], int * cursor_character) = 0;
-   virtual void AddDynamic (cDynamicObject * object);
-   virtual void DelDynamic (cDynamicObject * object);
-   virtual void AddCharacter (cCharacter * character) { return; }
-   virtual void DelCharacter (cCharacter * character) { return; }
-   virtual void LoadSkyboxTextures(int map=0) { return; }
+   virtual int Init( void ) = 0;
+   virtual void DeInit( void ) = 0;
+   virtual void RenderScene( void ) = 0;
+   virtual void GrabDynamic( int x, int y, cDynamicObject **r_object, cCharacter **r_character ) = 0;
+   virtual void GrabMousePosition( int x, int y, int maxz, int cursor3d[3], int *cursor_character ) = 0;
+   virtual void AddDynamic( cDynamicObject *object );
+   virtual void DelDynamic( cDynamicObject *object );
+   virtual void AddCharacter( cCharacter *character ) { return; }
+   virtual void DelCharacter( cCharacter *character ) { return; }
+   virtual void LoadSkyboxTextures( int map = 0 ) { return; }
 
 
-   void SetRenderFlag(int flag, int value);
-   int GetRenderFlag(int flag);
-   void FadeStatics(int to, Uint32 time);
+   void SetRenderFlag( int flag, int value );
+   int GetRenderFlag( int flag );
+   void FadeStatics( int to, Uint32 time );
    
    int GetRoofHeight();
    void AdjustCameraZ();
    
    int GetViewDistance() { return view_distance; }
    
-   void setLightLevel(float lightlevel) { m_lightlevel = lightlevel; }
-   float lightlevel () { return m_lightlevel; }
+   void setLightLevel( float lightlevel ) { m_lightlevel = lightlevel; }
+   float lightlevel() { return m_lightlevel; }
    
-   void setDragModel(Uint16 drag_model, int x = 0, int y = 0, int z = 0);
+   void setDragModel( Uint16 drag_model, int x = 0, int y = 0, int z = 0 );
 };
 
-#endif //_CRenderer_H_
+#endif //_Renderer_H_

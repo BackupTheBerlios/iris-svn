@@ -159,7 +159,7 @@ private:	// Member variables
 	// Singleton
 	static Game *m_sgGame;
 
-	Renderer *pRenderer;
+	Renderer *m_kRenderer;
 	Mapbuffer3D *m_kMapBuffer3D;
 	ArtLoader *m_kArtLoader;
 	bool m_paused;

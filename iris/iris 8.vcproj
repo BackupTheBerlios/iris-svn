@@ -152,6 +152,7 @@
 				Name="VCLinkerTool"
 				AdditionalOptions="/LIBPATH:devcpp/libs&#x0D;&#x0A;sdl.lib sdl_image.lib sdl_mixer.lib sdl_net.lib sdl_ttf.lib&#x0D;&#x0A;opengl32.lib glu32.lib wsock32.lib&#x0D;&#x0A;imm32.lib smpeg.lib"
 				LinkIncremental="1"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				GenerateMapFile="true"
 				MapExports="true"
@@ -196,6 +197,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\src\Application.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Buffer.cpp"
 				>
 			</File>
@@ -212,11 +217,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Engine.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Exception.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\src\Game.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\GameMenu.cpp"
 				>
 			</File>
 			<File
@@ -244,6 +257,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Window.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\xml.cpp"
 				>
 			</File>
@@ -253,6 +270,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\include\Application.h"
+				>
+			</File>
 			<File
 				RelativePath=".\include\Buffer.h"
 				>
@@ -274,7 +295,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\Engine.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\Game.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\GameMenu.h"
 				>
 			</File>
 			<File
@@ -286,19 +315,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\iris_endian.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\Logger.h"
 				>
 			</File>
 			<File
+				RelativePath=".\include\Macros.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\loaders\MultisLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\sound\Music.h"
-				>
-			</File>
-			<File
-				RelativePath=".\resource.h"
 				>
 			</File>
 			<File
@@ -307,6 +336,10 @@
 			</File>
 			<File
 				RelativePath=".\include\uotype.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\Window.h"
 				>
 			</File>
 			<File
@@ -1008,14 +1041,6 @@
 			Name="net"
 			>
 			<File
-				RelativePath=".\src\net\btree.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\net\btree.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\net\Client.cpp"
 				>
 			</File>
@@ -1025,10 +1050,6 @@
 			</File>
 			<File
 				RelativePath=".\include\net\netconfig.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\net\network.h"
 				>
 			</File>
 			<File
@@ -1608,10 +1629,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\loaders\SoundLoader.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\src\loaders\SpeechLoader.cpp"
 				>
 			</File>
@@ -1672,7 +1689,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\sound\Music.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\sound\MusicListLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\sound\MusicListLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\loaders\SoundLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\loaders\SoundLoader.h"
 				>
 			</File>
 			<File

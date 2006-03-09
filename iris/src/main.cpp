@@ -39,7 +39,6 @@
 #include "sound/SoundMixer.h"
 #include "sound/MusicListLoader.h"
 
-
 //#include "Engine.h"
 
 #if defined( _WIN32 ) && !defined( _DEBUG )

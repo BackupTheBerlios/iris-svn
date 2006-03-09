@@ -206,7 +206,7 @@ void Logger::WriteLine()
 void Logger::WriteDebug( std::string sMessage )
 {
 	#ifdef _DEBUG
-	WriteLine( sMessage );
+	Write( ( sMessage + "\n" ) );
 	#endif
 }
 

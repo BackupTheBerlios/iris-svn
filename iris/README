@@ -1,20 +1,26 @@
 Iris 0.86, Copyright (C) 2003 Alexander Oster
 _____________________________________________
 
-Iris is a free 3D Client for the popular Massive Multiplayer Role Playing Game Ultima Online. The current Iris version works with the Ultima Online expansions Third Dawn, Age of Shadows, Samurai Empire and M.Legacy!
+Iris is a free 3D Client for the popular Massive Multiplayer Role Playing Game Ultima Online. The current Iris version works with the Ultima Online expansions Third Dawn, Age of Shadows, Samurai Empire and Mondain's Legacy!
+
 
 Iris Installation (Step 1-4):
 -------------------------------------------------
 1. All you need is a legal copy of Ultima Online.
 
    Supported Ultima Online expansions:
-	-Third Dawn
-	-Age of Shadows
-	-Samurai Empire and Gold Trial  (SE == Gold)
+	- Third Dawn
+	- Age of Shadows
+	- Samurai Empire and Gold Trial  (SE == Gold)
+	- Mondain's Legacy
 
-   Get a free Ultima Online Gold Trial :
-   -------------------------------------
-   http://www.gamedaily.com/gp/dlexe.asp?packageid=0078700170&gameid=&source=&sourcelist=Top49&cid=
+   Get a free Ultima Online Mondain's Legacy :
+   -------------------------------------------
+   http://largedownloads.ea.com/pub/uo/uoml_setup.exe
+
+
+   Or free Ultima Online Gold Trial :
+   ----------------------------------
    http://www.gamespot.com/promos/ultimaonline/index.html
    http://www.fileplanet.com/150525/150000/fileinfo/Ultima-Online-Gold-15-day-Trial
 
@@ -24,9 +30,9 @@ Iris Installation (Step 1-4):
 
 4. Please start IrisConfig.exe or edit xml/config.xml before starting Iris !!!
 
--Remember: If you Patch/Update UO-TD, AoS, SE or Gold select "Age of Shadows (AoS)" in Config!
+- Remember: If you Patch/Update UO-TD, AoS, SE, Gold or ML select "Age of Shadows (AoS)" in Config!
 
--If you don't update/patch UO-Third Dawn then select Third Dawn in Config.
+- If you don't update/patch UO-Third Dawn then select Third Dawn in Config.
 
 
 Linux compilation:
@@ -59,14 +65,16 @@ For Bugreports, suggestions, comments, please visit:
 	http://developer.berlios.de/projects/iris/
 
 
-Iris comes with ABSOLUTELY NO WARRANTY; This is free software, and you are welcome to redistribute it under certain conditions..
-Take a look into License.txt for details...
+Iris comes with ABSOLUTELY NO WARRANTY; This is free software, and you are welcome to redistribute it under certain conditions.
+Take a look into License.txt for details.
 
 Contact:
 	Tensor:	tensor@ultima-iris.de / icq: 25173236
 	SiENcE: seabeams@gmx.de	      /	icq: 11516096
 	Ar-Tix:				icq: 164112923
 	Thorgrim:			icq: 110406502
+	Nuno Ramiro:			icq: 92852852
+
 
 Credits:
 --------
@@ -94,17 +102,23 @@ Core Team:
 			Coder
 			Location: Korea
 
+	TheGangster - 	Nuno Ramiro
+			Coder
+			Location: Portugal (Lisbon)
+
+
 Team:
 -----
 Programming:
 	Darkstorm, Blobba, Soulburner, Gigi
-	netzzwerg, x.diablo, tharsade, The Gangster (Nuno Ramiro)
+	netzzwerg, x.diablo, tharsade, TheGangster (Nuno Ramiro)
 
 3D-Design:
 	Stygius, Alamar
 
 other:
 	Zeus, Scull, Emrysk, DC, Horian, Doc, Hitman
+
 
 Thanks:
 -------
@@ -119,5 +133,4 @@ Huffman encryption - http://injection.sourceforge.net
 SDL, SDL_ttf, SDL_mixer, SDL_net, SDL_image - http://www.libsdl.org
 
 
-SiENcE^(c)^Iris Team
-
+Copyright (©) 2003-2006 Iris Team

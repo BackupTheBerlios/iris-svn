@@ -1,6 +1,11 @@
 9.03.2006
 Changes by Nuno Ramiro
 	- Linux compatibility.
+	- Logger improvment.
+	- Some cleanup.
+	- Got rid of network.h, btree.h and btree.cpp they weren't beeing used.
+	- Updated Linux Makefile and VS05 Solution.
+	- Updated ReadMe.
 
 8.03.2006
 Changes by Nuno Ramiro

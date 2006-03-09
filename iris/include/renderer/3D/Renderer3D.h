@@ -71,9 +71,9 @@ protected:
     void GenerateLight ();
     //void LoadSkyboxTextures ();
 	
-	Texture * skyboxtextures[5];
-    Texture * tex_water;
-    Texture * tex_char_shadow;
+	Texture *skyboxtextures[5];
+    Texture *tex_water;
+    Texture *tex_char_shadow;
 
 private:
 	float fog_view_dist;
@@ -87,7 +87,7 @@ public:
    virtual ~Renderer3D ();
 
    virtual int Init(void);
-   virtual int DeInit(void);
+   virtual void DeInit(void);
    virtual void RenderScene(void);
    virtual void GrabDynamic(int x, int y, cDynamicObject ** r_object, cCharacter ** r_character);
    virtual void GrabMousePosition(int x, int y, int maxz, int cursor3d[3], int * cursor_character);
