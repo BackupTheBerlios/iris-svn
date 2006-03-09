@@ -96,7 +96,7 @@ void SDLEvent::HandleEvent( SDL_Event kEvent, unsigned int uiCurrentTime )
 		// handle resize event
 #ifndef WIN32
 		// Do not reinitialize window in Win32
-		SDLScreen::GetInstance()->m_kScreen = SDL_SetVideoMode( kEvent.resize.w, kEvent.resize.h, Config::GetBPP(), SDLscreen->videoFlags );
+		SDLScreen::GetInstance()->m_kScreen = SDL_SetVideoMode( kEvent.resize.w, kEvent.resize.h, Config::GetBPP(), SDLScreen::GetInstance()->videoFlags );
         
 		if ( !SDLScreen::GetInstance()->m_kScreen )
 		{
