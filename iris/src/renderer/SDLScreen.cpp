@@ -586,5 +586,5 @@ Uint16 SDLScreen::GetDefaultHue( Uint32 id )
 	if ( iter != default_hues.end() )
 		return iter->second;
 
-	return NULL;
+	return 0;
 }

@@ -1,3 +1,8 @@
+10.3.2006
+Changes by Florian Fischer (SiENcE)
+	-small fix to SDLScreen.cpp to give GetDefaultHue a return 0;
+	-Devcpp Project updated (btree.cpp removed)
+
 9.03.2006
 Changes by Nuno Ramiro
 	- Linux compatibility.
