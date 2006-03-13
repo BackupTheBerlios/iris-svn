@@ -45,6 +45,9 @@ int flag_cullbackfaces = 0;
 
 SDLScreen::SDLScreen()
 {
+	assert( m_sgSDLScreen == NULL );
+	m_sgSDLScreen = this;
+
 	act_alpha = 255;
 	ratio = 1.0f;
 	light_factor = 1.0f;
@@ -57,6 +60,9 @@ SDLScreen::SDLScreen()
 
 SDLScreen::~SDLScreen()
 {
+	assert( m_sgSDLScreen != NULL );
+	m_sgSDLScreen = NULL;
+
 	if ( m_kScreen )
 	{
 		SDL_FreeSurface( m_kScreen );
@@ -66,18 +72,11 @@ SDLScreen::~SDLScreen()
 	ClearFonts();
 	TTF_Quit();
 	SDL_QuitSubSystem( SDL_INIT_VIDEO );
-
-	m_sgSDLScreen = NULL;
 }
 
 
 SDLScreen *SDLScreen::GetInstance()
 {
-	if ( !m_sgSDLScreen )
-	{
-		m_sgSDLScreen = new SDLScreen();
-	}
-
 	return m_sgSDLScreen;
 }
 

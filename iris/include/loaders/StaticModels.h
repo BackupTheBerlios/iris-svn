@@ -24,48 +24,59 @@
 #define _STATICMODELS_H_
 
 #ifdef WIN32
-#include <windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #endif
 
-#include "irisgl.h"
-
+#include "Common.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <cassert>
 #include <map>
 #include <vector>
 
 #include "SDL/SDL.h"
 
-#include <iostream>
-#include <fstream>
-#include <string>
-
-#include "renderer/3D/SceneMaker.h"
+#include "irisgl.h"
+#include "Logger.h"
+#include "Exception.h"
+#include "Geometry.h"
+#include "uotype.h"
 #include "StaticModelRaster.h"
 #include "StaticTextureLoader.h"
+#include "iris_endian.h"
+#include "renderer/TextureBuffer.h"
+#include "renderer/3D/SceneMaker.h"
+#include "loaders/StaticTextureLoader.h"
+
+//#include "../Fluid/mmgr.h"
 
 #define FACEFLAG_BACKFACE 1
 
 
 class cStaticModel;
 
-class cStaticModelLightSourceInfo {
-    private:
-        bool m_flickering;
-        float m_x, m_y, m_z, m_radius;
-        sColor m_color;
-        int m_flicker_min_delay;
-        int m_flicker_max_delay;
-        int m_flicker_amount;
-    public:
-        cStaticModelLightSourceInfo (bool flickering, float x, float y, float z, float radius, sColor color, int flicker_min_delay, int flicker_max_delay, int flicker_amount);
-        bool flickering ();
-        float x ();
-        float y ();
-        float z ();
-        float radius ();
-        sColor color ();
-        int flicker_min_delay ();
-        int flicker_max_delay ();
-        int flicker_amount ();
+class cStaticModelLightSourceInfo
+{
+private:
+	bool m_flickering;
+	float m_x, m_y, m_z, m_radius;
+	sColor m_color;
+	int m_flicker_min_delay;
+	int m_flicker_max_delay;
+	int m_flicker_amount;
+public:
+	cStaticModelLightSourceInfo( bool flickering, float x, float y, float z, float radius, sColor color, int flicker_min_delay, int flicker_max_delay, int flicker_amount );
+	bool flickering();
+	float x();
+	float y();
+	float z();
+	float radius();
+	sColor color();
+	int flicker_min_delay();
+	int flicker_max_delay();
+	int flicker_amount();
 };
 
 class cStaticModelParticleEffectInfo {
@@ -150,45 +161,45 @@ class cStaticModelFace {
 };
 
 
-class cStaticModel {
-    private:
-        Uint32 m_modelid;
-        tStaticNodes m_nodes;
-        tStaticFaceLightNodes m_face_light_nodes;
-        tStaticPointLightNodes m_point_light_nodes;
-        std::vector <cStaticModelFace *> m_faces;
-        Uint32 m_flags;
+class cStaticModel
+{
+private:
+	Uint32 m_modelid;
+	tStaticNodes m_nodes;
+	tStaticFaceLightNodes m_face_light_nodes;
+	tStaticPointLightNodes m_point_light_nodes;
+	std::vector <cStaticModelFace *> m_faces;
+	Uint32 m_flags;
+
+	vertex *m_vertieces;
+	cStaticModelLightSourceInfo *light_source_info;
+	cStaticModelParticleEffectInfo *particle_effect_info;
         
-        vertex * m_vertieces;
-        cStaticModelLightSourceInfo * light_source_info;
-        cStaticModelParticleEffectInfo * particle_effect_info;
+	cStaticModelRaster m_raster;
+	cStaticTextureLoader *texture_loader;
+
+	float bounding_sphere[4];
         
-        cStaticModelRaster m_raster;
-        cStaticTextureLoader * texture_loader;
+	void CreateVertieces();
         
-        float bounding_sphere[4];
+public:
+	cStaticModel( std::ifstream *stream, Uint32 length, cStaticTextureLoader *texture_loader );
+	~cStaticModel();
         
-        void CreateVertieces ();
+	Uint32 modelid() { return m_modelid; }
         
-    public:
-        cStaticModel (std::ifstream * stream, Uint32 length, cStaticTextureLoader * texture_loader);
-        ~cStaticModel ();
+	void Render( float x, float y, float z, Uint8 alpha );
+	float *getBoundingSphere() { return bounding_sphere; }
+	tStaticNodes *nodes() { return &m_nodes; }
+	tStaticPointLightNodes *point_light_nodes() { return &m_point_light_nodes; }
+	tStaticFaceLightNodes *face_light_nodes() { return &m_face_light_nodes; }
+	vertex * vertieces() { return m_vertieces; }
+	bool flag( Uint32 flag_mask ) { return m_flags & flag_mask; }
         
-        Uint32 modelid () { return m_modelid; }
-        
-        void Render (float x, float y, float z, Uint8 alpha);
-        float * getBoundingSphere () { return bounding_sphere; }
-        tStaticNodes * nodes () { return &m_nodes; }
-        tStaticPointLightNodes * point_light_nodes () { return &m_point_light_nodes; }
-        tStaticFaceLightNodes * face_light_nodes () { return &m_face_light_nodes; }
-        vertex * vertieces () { return m_vertieces; }
-        bool flag (Uint32 flag_mask) { return m_flags & flag_mask; }
-        
-        cStaticModelLightSourceInfo * GetLightSourceInfo ();
-        cStaticModelParticleEffectInfo * GetParticleEffectInfo ();
-        cStaticModelRaster * raster () { return &m_raster; }
-        bool CheckRay(float vecOrigin[3], float vecDir[3], float deltax, float deltay, float deltaz, float & lambda);
-        
+	cStaticModelLightSourceInfo *GetLightSourceInfo();
+	cStaticModelParticleEffectInfo *GetParticleEffectInfo();
+	cStaticModelRaster *raster() { return &m_raster; }
+	bool CheckRay( float vecOrigin[3], float vecDir[3], float deltax, float deltay, float deltaz, float &lambda );
 };
 
 #endif //_STATICMODELS_H_

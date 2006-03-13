@@ -32,6 +32,9 @@
 #include <windows.h>
 #endif
 
+#include <iostream>
+#include <list>
+
 #include "irisgl.h"
 #include "SDL/SDL.h"
 
@@ -40,8 +43,7 @@
 #include "renderer/3D/ShaderMatrixBlock.h"
 #include "uotype.h"
 
-#include <iostream>
-#include <list>
+//#include "../Fluid/mmgr.h"
 
 // A light motive contains information in which way a light source influences an object
 class cGroundLightMotive {

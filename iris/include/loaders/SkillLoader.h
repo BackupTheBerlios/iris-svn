@@ -37,6 +37,8 @@
 #include <fstream>
 #include <cstring>
 
+//#include "../Fluid/mmgr.h"
+
 class cSkillEntry
 {
     private:

@@ -23,6 +23,8 @@
 #ifndef _MAP_H_
 #define _MAP_H_
 
+//#include "../Fluid/mmgr.h"
+
 struct MulBlock;
 struct stIndexRecord;
 struct staticentry;

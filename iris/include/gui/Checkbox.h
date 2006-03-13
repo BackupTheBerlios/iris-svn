@@ -30,6 +30,8 @@
 #include "SDL/SDL.h"
 #include "Control.h"
 
+//#include "../Fluid/mmgr.h"
+
 #define CHECKBOX_CHECKED   1
 #define CHECKBOX_UNCHECKED 0
 

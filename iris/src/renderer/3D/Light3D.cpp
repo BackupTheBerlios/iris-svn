@@ -22,7 +22,9 @@
 
 
 #include <iostream>
-#include "renderer/3D/Light3D.h"
+#include <cassert>
+#include <vector>
+#include <map>
 #include "renderer/3D/SceneMaker.h"
 #include "Geometry.h"
 #include "Logger.h"
@@ -31,10 +33,7 @@
 #include "Config.h"
 #include "renderer/3D/MapBuffer3D.h"
 #include "renderer/DynamicObjects.h"
-
-#include <cassert>
-#include <vector>
-#include <map>
+#include "renderer/3D/Light3D.h"
 
 using namespace std;
 

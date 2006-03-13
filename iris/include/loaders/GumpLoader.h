@@ -27,12 +27,14 @@
 #include <windows.h>
 #endif
 
+#include "Common.h"
 #include <iostream>
 #include <fstream>
 #include <cstring>
 #include "include.h"
 #include "../renderer/Texture.h"
 
+//#include "../Fluid/mmgr.h"
 
 class cGumpLoader
 {

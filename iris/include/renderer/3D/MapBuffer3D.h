@@ -27,6 +27,8 @@
 #include "renderer/3D/MapBlock3D.h"
 #include "renderer/3D/Light3D.h"
 
+//#include "../Fluid/mmgr.h"
+
 
 class Mapbuffer3D : public Mapbuffer
 {

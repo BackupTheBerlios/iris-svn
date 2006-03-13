@@ -181,11 +181,11 @@ void cTextElement::setText (const char *text, unsigned short hueId,
         xOffset += font->chars[c].width;
       }
 
-  Texture *texture = new Texture;
+  Texture *texture = new Texture();
 
   texture->LoadFromData (pixels, width, height, 32, GL_LINEAR);
 
-  delete pixels;
+  // NOTE: Do _NOT_ try to delete pixels since it was reseted by memset(...)
 
   stTextItem *item = new stTextItem;
 

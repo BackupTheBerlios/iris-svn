@@ -53,6 +53,8 @@
 
 #include "xml.h"
 
+//#include "../Fluid/mmgr.h"
+
 extern GUIHandler pUOGUI;
 
 // in xml.cpp
@@ -175,7 +177,7 @@ ZString api_gui_addform (ZCsl* aCsl)
 		}	
 
 		if (is_container) {
-			container = new Container;
+			container = new Container();
 			container->SetPosition(x,y);
 			container->SetSize(width, height);
 			container->SetAlpha(alpha);
@@ -268,19 +270,29 @@ ZString api_gui_addform (ZCsl* aCsl)
 				gump_node->lookupAttribute("pressed", pressed);
 			}
 
-			Button * button = new Button(left,top);
+			//Button *button = new Button(left,top);
 			
-			if (normal >= 0) button->SetButton(BUTTONGUMP_NORMAL, normal);					
-			if (over >= 0) button->SetButton(BUTTONGUMP_MOUSEOVER, over);				
-			if (pressed >= 0) button->SetButton(BUTTONGUMP_PRESSED, pressed);
 			
+			/*if (normal >= 0) button->SetButton(BUTTONGUMP_NORMAL, normal);
+			if (over >= 0) button->SetButton(BUTTONGUMP_MOUSEOVER, over);
+			if (pressed >= 0) button->SetButton(BUTTONGUMP_PRESSED, pressed);*/
+			control = new Button( left, top );
+
+			if (normal >= 0)
+				((Button*)control)->SetButton(BUTTONGUMP_NORMAL, normal);
+			if (over >= 0)
+				((Button*)control)->SetButton(BUTTONGUMP_MOUSEOVER, over);
+			if (pressed >= 0)
+				((Button*)control)->SetButton(BUTTONGUMP_PRESSED, pressed);
 
 			if (!onclick.empty()) {
-				button->OnClick(on_clickhandler);
-				button->SetScriptFunction(FUNC_ONCLICK, (char*)onclick.c_str());
+				/*button->OnClick(on_clickhandler);
+				button->SetScriptFunction(FUNC_ONCLICK, (char*)onclick.c_str());*/
+				((Button*)control)->OnClick(on_clickhandler);
+				((Button*)control)->SetScriptFunction(FUNC_ONCLICK, (char*)onclick.c_str());
 			}
 			
-			control = button;
+			//control = button;
 		} else if (type=="checkbox" || type=="radio") {
 			int normal=-1, checked=-1, group=0, ischecked=0;
 			gump_node = control_node->findNode("gump");
@@ -331,7 +343,7 @@ ZString api_gui_addform (ZCsl* aCsl)
 				{
 					font = font < 0 ? 3 : font;
 					hue = hue < 0 ? 0 : hue;
-					InputField * input = new InputField(left,top,width,height, text.c_str(), hue, font, password ? 42 : 0);
+					InputField *input = new InputField(left,top,width,height, text.c_str(), hue, font, password ? 42 : 0);
 					input->OnKeyPress(on_keypressedhandler);
 					if (!onkeypressed.empty())
 						input->SetScriptFunction(FUNC_ONKEYPRESSED, (char*)onkeypressed.c_str());

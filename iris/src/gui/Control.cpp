@@ -22,14 +22,10 @@
 
 #include "gui/Control.h"
 #include "gui/Container.h"
-#include "Logger.h"
-#include "Config.h"
+
 #include "loaders/GumpLoader.h"
 #include "loaders/HueLoader.h"
 
-using namespace std;
-
-int gui_counter;
 
 Control::Control ()
 {

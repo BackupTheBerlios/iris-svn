@@ -26,12 +26,13 @@
 #endif
 
 #include <SDL/SDL_endian.h>
-#include "net/Packet.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
 #include "Config.h"
+#include "net/Packet.h"
+
 
 using namespace std;
 

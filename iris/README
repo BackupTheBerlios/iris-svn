@@ -127,10 +127,10 @@ Thanks:
 
 Libraries:
 ----------
-C Scripting Language (CSL) - http://csl.sourceforge.net
-Granny Loader - http://uop.sourceforge.net
-Huffman encryption - http://injection.sourceforge.net
-SDL, SDL_ttf, SDL_mixer, SDL_net, SDL_image - http://www.libsdl.org
+C Scripting Language (CSL) - http://csl.sourceforge.net	( /csl )
+Granny Loader - http://uop.sourceforge.net	( /Granny/grn* )
+Huffman encryption - http://injection.sourceforge.net	( /net/unicode /net/uo_huffman )
+SDL, SDL_ttf, SDL_mixer, SDL_net, SDL_image - http://www.libsdl.org	( libs/sdl )
 
 
 Copyright (©) 2003-2006 Iris Team

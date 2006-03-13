@@ -22,6 +22,8 @@
 #include <map>
 #include <string>
 
+//#include "../Fluid/mmgr.h"
+
 // This class handles the hue (color-table) loading
 
 struct stHue

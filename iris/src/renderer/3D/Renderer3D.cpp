@@ -21,7 +21,10 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *****/
-
+#include <time.h>
+#include <math.h>
+#include <iostream>
+#include <cassert>
 
 #include "renderer/3D/Renderer3D.h"
 #include "renderer/SDLScreen.h"
@@ -55,10 +58,7 @@
 
 #include "Geometry.h"
 
-#include <time.h>
-#include <math.h>
-#include <iostream>
-#include <cassert>
+
 
 //extern SDLScreen *SDLscreen;
 float water_phase = 0.0f;

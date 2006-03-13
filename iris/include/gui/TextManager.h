@@ -21,11 +21,15 @@
 	Purpose: Manage "free" OnScreen Text
 */
 
-#if !defined( __TEXTMANAGER_H__ )
-#define __TEXTMANAGER_H__
+#ifndef _TEXTMANAGER_H_
+#define _TEXTMANAGER_H_
 
+#include "Common.h"
 #include "renderer/Texture.h"
 #include "SDL/SDL_ttf.h"
+
+//#include "../Fluid/mmgr.h"
+
 /*
 	Class for external Text
 */

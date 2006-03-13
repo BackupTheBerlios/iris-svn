@@ -27,20 +27,30 @@
 #include <windows.h>
 #endif
 
+#include <iostream>
+#include <math.h>
+#include <cassert>
+
+#include "include.h"
+#include "Config.h"
+
 #include "SDL/SDL.h"
+
+//#include "../Fluid/mmgr.h"
 
 class cBitmask
 {
-private:
-  Uint8 * pixels;
-  int m_width, m_height;
-  int m_mem;
 public:
-   cBitmask();
-   ~cBitmask();
-   void Create(Uint32 * data, int width, int height);
-   bool CheckPixel(int x, int y, bool swapy = false);
-protected:
+	cBitmask();
+	~cBitmask();
+	
+	void Create( Uint32 *data, int width, int height );
+	bool CheckPixel( int x, int y, bool swapy = false );
+
+private:
+	Uint8 *pixels;
+	int m_width, m_height;
+	int m_mem;
 };
 
 #endif //_BITMASK_H_

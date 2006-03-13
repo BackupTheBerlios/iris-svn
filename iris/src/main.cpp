@@ -41,6 +41,8 @@
 
 //#include "Engine.h"
 
+////#include "../Fluid/mmgr.h"
+
 #if defined( _WIN32 ) && !defined( _DEBUG )
 #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
 #endif
@@ -59,7 +61,7 @@ int main( int argc, char **args )
 	}
 
 	// Initialize Game
-	Game *pGame = Game::GetInstance();
+	Game *pGame = new Game();
 
 	SDLScreen *SDLscreen;
 
@@ -166,6 +168,10 @@ int main( int argc, char **args )
 	catch ( cException kException )
 	{
 		Logger::WriteLine( kException.debug_message() );
+	}
+	catch ( std::string sException )
+	{
+		Logger::WriteLine( sException );
 	}
 	catch ( ... )
 	{

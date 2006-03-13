@@ -41,6 +41,8 @@
 #include "StaticModels.h"
 #include "StaticTextureLoader.h"
 
+//#include "../Fluid/mmgr.h"
+
 struct sModelTableEntry {
   Uint32 id;
   Uint32 start;

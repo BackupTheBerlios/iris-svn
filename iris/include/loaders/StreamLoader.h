@@ -33,6 +33,8 @@
 #include "include.h"
 #include "SDL/SDL.h"
 
+//#include "../Fluid/mmgr.h"
+
 class cStreamLoader
 {
 private:

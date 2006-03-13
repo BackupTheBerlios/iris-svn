@@ -32,6 +32,8 @@
 #include <map>
 #include "renderer/Texture.h"
 
+//#include "../Fluid/mmgr.h"
+
 namespace Particle {    
 
     class cParticleTextureManager

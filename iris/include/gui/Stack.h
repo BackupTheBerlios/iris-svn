@@ -30,6 +30,8 @@
 #include "SDL/SDL.h"
 #include <stdlib.h>
 
+
+
 #define MESSAGE_NONE                   0
 #define MESSAGE_MOUSEDOWN              1
 #define MESSAGE_MOUSEUP                2

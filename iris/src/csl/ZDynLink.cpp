@@ -67,6 +67,8 @@ static ZString getWinError ()
 typedef void *HMODULE;
 #endif // ZC_UNIXFAM
 
+//#include "../Fluid/mmgr.h"
+
 //////////////////////////////// ZDllModule ///////////////////////////////////
 
 class ZDllModule:public ZBase

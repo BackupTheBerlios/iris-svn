@@ -18,9 +18,10 @@
 
 #ifndef __GRNTEXTUREINFOS_H__
 #define __GRNTEXTUREINFOS_H__
-
-#include "GrannyStream.h"
 #include <vector>
+#include "GrannyStream.h"
+
+//#include "../Fluid/mmgr.h"
 
 class TextureInfo
 {

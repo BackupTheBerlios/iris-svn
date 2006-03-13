@@ -27,7 +27,7 @@
 #ifndef _ZREGEX_
 #define _ZREGEX_
 
-#include <ZBase.h>
+
 
 #ifdef ZC_IBM
   #pragma library("ZRegExI.lib")
@@ -41,6 +41,8 @@
 #ifdef ZC_GNU
   // must explicitly link with "ZRegExG.lib"
 #endif
+
+#include <ZBase.h>
 
 #ifdef __cplusplus
 extern "C" {

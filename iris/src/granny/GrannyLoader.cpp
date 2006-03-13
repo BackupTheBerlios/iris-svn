@@ -224,31 +224,35 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 
 	try
 	{
-		parser.loadData (filename);
-		document = parser.parseDocument ();
+		parser.loadData( filename );
+		document = parser.parseDocument();
 
-		granny = document->findNode ("GRANNY");
+		granny = document->findNode( "GRANNY" );
 
-		if (!granny)
+		if ( !granny )
+		{
 			throw "Couldn't find granny node.";
+		}
 	}
 	catch (...)
 	{
-		Logger::WriteLine ("Couldn't load Granny Definitions");
+		Logger::WriteLine( "Couldn't load Granny Definitions" );
 		return;
 	}
 
 	XML::Node * char_node, *set_node, *value;
 
-	if ((value = granny->findNode ("TEXTUREPATH")))
-		tex_basepath = mulpath + value->asString ();
+	if ( (value = granny->findNode( "TEXTUREPATH" ) ) )
+	{
+		tex_basepath = mulpath + value->asString();
+	}
 
-	assert (!pGrannyTextureLoader);
-	pGrannyTextureLoader = new cGrannyTextureLoader (tex_basepath);
+	assert( !pGrannyTextureLoader );
+	pGrannyTextureLoader = new cGrannyTextureLoader( tex_basepath );
 
-	map < int, cAnimSet * >animsets;
-	map < int, cAnimSet * >::iterator iter;
-	map < int, string >::iterator name_iter;
+	map<int, cAnimSet *>animsets;
+	map<int, cAnimSet *>::iterator iter;
+	map<int, string>::iterator name_iter;
 
 
 	int idx = 0;
@@ -256,12 +260,12 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 	{
 		cAnimSet *animset = new cAnimSet;
 		value = set_node->findNode ("ID");
-		animset->id = (value != NULL) ? value->asInteger () : 0;
+		animset->id = (value != NULL) ? value->asInteger() : 0;
 		if ((value = set_node->findNode ("DEFAULTANIM")))
 			animset->defaultanim = mulpath + to_lower (value->asString ());
 
 		int idx2 = 0;
-		XML::Node * anim_node;
+		XML::Node *anim_node;
 		while ((anim_node = set_node->findNode ("ANIMATION", idx2)))
 		{
 			std::string animtype = "", filename = "";
@@ -346,24 +350,23 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 		if (id && (iter != animsets.end ()))
 		{
 			assert (iter->second);
-			cGrannyModel *model =
-				new cGrannyModelTD (filename, tex_basepath,
-				iter->second->defaultanim, prefix);
-			model->SetHandBones (left_hand_bone, right_hand_bone);
-			model->SetHand (hand);
-			model->SetAnimset (animset);
-			for (name_iter=iter->second->anim_names.begin(); name_iter!=iter->second->anim_names.end();name_iter++)
-				model->AddAnimation(name_iter->first, name_iter->second);
+			cGrannyModel *model = new cGrannyModelTD( filename, tex_basepath, iter->second->defaultanim, prefix );
+			model->SetHandBones( left_hand_bone, right_hand_bone );
+			model->SetHand( hand );
+			model->SetAnimset( animset );
+			for ( name_iter=iter->second->anim_names.begin(); name_iter != iter->second->anim_names.end(); name_iter++ )
+			{
+				model->AddAnimation( name_iter->first, name_iter->second );
+			}
 
 			//models.erase(id);
-			if (models.find(id)!=models.end()) 
+			if ( models.find(id) != models.end() )
 			{
 				//Logger::WriteLine("Warning: duplicated model id : %d", id);
 				delete models.find(id)->second;
 				models.erase(id);
 			}
-			models.insert (make_pair (id, model));
-
+			models.insert( make_pair( id, model ) );
 		}
 		else
 		{

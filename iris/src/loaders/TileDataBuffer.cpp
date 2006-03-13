@@ -22,10 +22,11 @@
 
 
 #include "iris_endian.h"
-#include "loaders/TileDataBuffer.h"
 #include "loaders/TileDataLoader.h"
 #include "Logger.h"
 #include "Config.h"
+#include "loaders/TileDataBuffer.h"
+
 
 using namespace std;
 

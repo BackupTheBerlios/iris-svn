@@ -19,8 +19,11 @@
 #ifndef __GRNBONETIES_H__
 #define __GRNBONETIES_H__
 
-#include "GrannyStream.h"
 #include <vector>
+#include "GrannyStream.h"
+
+//#include "../Fluid/mmgr.h"
+
 
 class BoneTie
 {

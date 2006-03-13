@@ -1,7 +1,27 @@
-10.3.2006
+13.03.2006
+Changes by Nuno Ramiro
+	- Stability.
+	- Debug.
+
+12.03.2006
+Changes by Nuno Ramiro
+	- More debug.
+	- Small fixes / Memory leaks.
+
+11.03.2006
+Changes by Nuno Ramiro
+	- Small debug changes.
+	- Memory leaks (mainly CSL and GUI files).
+	- Debug.
+
+10.03.2006
+Changes by Nuno Ramiro
+	- Logger was not working 100% under linux (Fixed).
+
+10.03.2006
 Changes by Florian Fischer (SiENcE)
-	-small fix to SDLScreen.cpp to give GetDefaultHue a return 0;
-	-Devcpp Project updated (btree.cpp removed)
+	- Small fix to SDLScreen.cpp to give GetDefaultHue a return 0;
+	- Devcpp Project updated (btree.cpp removed)
 
 9.03.2006
 Changes by Nuno Ramiro

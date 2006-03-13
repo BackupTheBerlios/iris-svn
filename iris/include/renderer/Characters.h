@@ -29,14 +29,18 @@
 
 #include "SDL/SDL.h"
 
-#include "gui/TextManager.h"
-
 #include <map>
 #include <list>
 #include <string>
+
+#include "gui/TextManager.h"
+
+
 #include "renderer/3D/SceneMaker.h"
 #include "renderer/3D/CharacterLight.h"
 #include "uotype.h"
+
+//#include "../Fluid/mmgr.h"
 
 struct sSkillEntry {
 	Uint16 value;

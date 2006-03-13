@@ -22,6 +22,8 @@
 #include <vector>
 #include "GrannyStream.h"
 
+//#include "../Fluid/mmgr.h"
+
 class BoneAnim
 {
 	public:

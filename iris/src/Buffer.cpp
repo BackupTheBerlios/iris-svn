@@ -29,6 +29,8 @@
 #include <string.h>
 #include "Buffer.h"
 
+//#include "../Fluid/mmgr.h"
+
 using namespace std;
 
 BufferEntry::BufferEntry ()

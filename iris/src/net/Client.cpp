@@ -21,50 +21,9 @@
  *****/
 
 
+
+
 #include "net/Client.h"
-#include "net/uo_huffman.h"
-
-#include "renderer/DynamicObjects.h"
-#include "renderer/Characters.h"
-#include "renderer/MapBuffer.h"
-
-#include "gui/GUIHandler.h"
-#include "gui/Container.h"
-#include "gui/Label.h"
-#include "gui/Border.h"
-#include "gui/Button.h"
-#include "gui/Image.h"
-#include "gui/InputField.h"
-#include "gui/ImageArt.h"
-#include "gui/MultiLabel.h"
-#include "gui/HTMLGumpParser.h"
-#include "gui/Checkbox.h"
-#include "gui/RadioButton.h"
-#include "loaders/ClilocLoader.h"
-#include "loaders/MapInfo.h"
-#include "loaders/UOMap.h"
-#include "string_utils.h"
-#include <sstream>
-
-#include "loaders/TileDataLoader.h"
-#include "loaders/MultisLoader.h"
-#include "loaders/SpeechLoader.h"
-#include "renderer/3D/MapBlock3D.h"
-#include "renderer/3D/MapBuffer3D.h"
-#include "renderer/Renderer.h"
-
-#include "Config.h"
-#include "Logger.h"
-#include "Exception.h"
-#include "net/unicode.h"
-
-#include "sound/SoundMixer.h"
-#include <time.h>
-#include <cassert>
-
-#include "csl/CSLHandler.h"
-
-#include "renderer/particles/ParticleEngine.h"
 
 using namespace std;
 

@@ -21,6 +21,8 @@
 
 #include "grntype.h"
 
+//#include "../Fluid/mmgr.h"
+
 class GrnMatrix
 {
 public:

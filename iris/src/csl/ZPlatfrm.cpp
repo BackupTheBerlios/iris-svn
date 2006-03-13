@@ -95,6 +95,8 @@ typedef LPOSVERSIONINFOEXA LPOSVERSIONINFOEX;
 
 #endif // ZC_WIN
 
+//#include "../Fluid/mmgr.h"
+
 int ZPlatform::iNumProcessors = 0;
 
 ZBoolean ZPlatform::iOS2 = zFalse;

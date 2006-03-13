@@ -33,6 +33,8 @@
 #include "SDLUtils.h"
 #include "uoproto.h"
 
+//#include "../Fluid/mmgr.h"
+
 #define PACKET_INVALID 0
 #define PACKET_CLIENT 1
 #define PACKET_SERVER 2

@@ -18,10 +18,12 @@
 
 #ifndef __GRNMESHES_H__
 #define __GRNMESHES_H__
-
-#include "GrannyStream.h"
 #include <list>
 #include <vector>
+#include "GrannyStream.h"
+
+//#include "../Fluid/mmgr.h"
+
 
 class BoneWeight
 {

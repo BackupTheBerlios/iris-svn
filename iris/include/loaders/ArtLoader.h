@@ -38,6 +38,7 @@
 #include "loaders/VerdataLoader.h"
 #include "../renderer/Texture.h"
 
+//#include "../Fluid/mmgr.h"
 
 class ArtLoader
 {
@@ -55,7 +56,6 @@ private:
 	// Singleton
 	static ArtLoader *m_sgArtLoader;
 
-	Texture *m_kTexture;
 	std::ifstream *m_kArtFile;
 	std::ifstream *m_kArtIndex;
 	unsigned int m_uiArtCount;

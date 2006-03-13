@@ -61,7 +61,7 @@
 #include "include.h"
 #include "sound/SoundMixer.h"
 
-
+//#include "../Fluid/mmgr.h"
 
 int gamestate = GAMESTATE_MENU;
 
@@ -978,8 +978,7 @@ static ZString api_gui_addgump (ZCsl * aCsl)
   if (argCount == 4)
     flags = aCsl->get ("flags").asInt ();
 
-        Image *image =
-          new Image (aCsl->get ("x").asInt (), aCsl->get ("y").asInt (),
+        Image *image = new Image (aCsl->get ("x").asInt (), aCsl->get ("y").asInt (),
                      aCsl->get ("gump").asInt (), flags);
         api_addcontrol (image);
         return ZString (image->GetID ());
@@ -2960,27 +2959,36 @@ void CSLHandler::Init ()
 
 void CSLHandler::DeInit ()
 {
-  if ((initialized) && (csl))
-      {
-        try
-        {
-          delete csl;
-/*			if (cont_content_list)
+	if ( (initialized) && (csl) )
+	{
+		try
+		{
+			delete csl;
+/*
+			if ( cont_content_list )
 				delete cont_content_list;
-			cont_content_list = NULL; */
-          initialized = false;
-        }
-        catch (const ZException & err)
-        {
-          for (int i = 0; i < err.count (); i++)
-            Logger::WriteLine (err[i]);
-          if (cslOk)
-            delete csl;
-          cslOk = zFalse;
-          csl = NULL;
-          initialized = false;
-        }                       // catch
-      }
+			
+			cont_content_list = NULL;
+*/
+			initialized = false;
+		}
+		catch ( const ZException &err )
+		{
+			for ( int i = 0; i < err.count(); i++ )
+			{
+				Logger::WriteLine (err[i]);
+			}
+			
+			if ( cslOk )
+			{
+				delete csl;
+			}
+
+			  cslOk = zFalse;
+			  csl = NULL;
+			  initialized = false;
+		}                       // catch
+	}
 }
 
 void CSLHandler::Load (char *filename)

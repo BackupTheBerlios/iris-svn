@@ -35,7 +35,7 @@
 std::fstream *Logger::m_fLogFile = NULL;
 int Logger::m_iLogLevel = LEVEL_WARNING;
 
-#ifdef NDEBUG
+#ifndef _DEBUG
 	bool Logger::m_bLogToFile = true;
 #else
 	bool Logger::m_bLogToFile = false;

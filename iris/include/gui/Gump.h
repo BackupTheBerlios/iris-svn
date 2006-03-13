@@ -32,6 +32,8 @@
 #include <map>
 #include <list>
 
+//#include "../Fluid/mmgr.h"
+
 
 class GumpHandler
 {

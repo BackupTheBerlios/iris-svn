@@ -32,6 +32,8 @@
 #include "smpeg/smpeg.h"
 #endif
 
+//#include "../Fluid/mmgr.h"
+
 class Music
 {
 public:

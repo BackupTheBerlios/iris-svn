@@ -21,60 +21,59 @@
  *****/
 
 
-#include <iostream>
-#include <math.h>
 #include "renderer/Bitmask.h"
-#include "include.h"
-#include "Config.h"
-#include <cassert>
 
 using namespace std;
 
-cBitmask::cBitmask ()
+cBitmask::cBitmask()
 {
-  pixels = NULL;
+	pixels = NULL;
 }
 
-cBitmask::~cBitmask ()
+cBitmask::~cBitmask()
 {
-  delete pixels;
-  pixels = NULL;
+	SAFE_DELETE( pixels );
 }
 
 
-void cBitmask::Create (Uint32 * data, int width, int height)
+void cBitmask::Create( Uint32 * data, int width, int height )
 {
-  assert (data);
+	assert (data);
 
-  m_width = width;
-  m_height = height;
+	m_width = width;
+	m_height = height;
 
-  int img_mem = width * height;
-  int mask_mem = (img_mem + 7) / 8;
+	int img_mem = width * height;
+	int mask_mem = (img_mem + 7) / 8;
 
-  delete pixels;
-  pixels = new Uint8[mask_mem];
-  m_mem = mask_mem;
+	SAFE_DELETE( pixels );
+	pixels = new Uint8[mask_mem];
+	m_mem = mask_mem;
 
-  Uint8 *dst = pixels;
-  Uint32 *src = data;
-  Uint32 *enddata = data + img_mem;
+	Uint8 *dst = pixels;
+	Uint32 *src = data;
+	Uint32 *enddata = data + img_mem;
 
-  for (int i = 0; i < mask_mem; i++)
-      {
-        Uint8 b = 0;
-        for (int j = 0; j < 8; j++)
-            {
-              if (*src)
+	for ( int i = 0; i < mask_mem; i++ )
+	{
+		Uint8 b = 0;
+		for ( int j = 0; j < 8; j++ )
+		{
+			if ( *src )
+			{
                 b |= 1 << j;
-              src++;
-              if (src >= enddata)
+			}
+			src++;
+			if ( src >= enddata )
+			{
                 break;
-            }
-        *dst = b;
-        dst++;
-      }
+			}
+		}
+		*dst = b;
+		dst++;
+	}
 }
+
 
 bool cBitmask::CheckPixel (int x, int y, bool swapy)
 {

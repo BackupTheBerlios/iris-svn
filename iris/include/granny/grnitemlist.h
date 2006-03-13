@@ -18,7 +18,7 @@
 
 #ifndef __GRNITEMLIST_H__
 #define __GRNITEMLIST_H__
-
+#include <string>
 #include "grntype.h"
 
 #include "grntextchunk.h"
@@ -32,7 +32,9 @@
 #include "grnunhandled.h"
 
 #include "GrannyStream.h"
-#include <string>
+
+//#include "../Fluid/mmgr.h"
+
 
 class ItemList
 {

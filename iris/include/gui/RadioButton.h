@@ -30,6 +30,7 @@
 #include "SDL/SDL.h"
 #include "Checkbox.h"
 
+//#include "../Fluid/mmgr.h"
 
 //RADIO X Y SELECTEDPIC UNSELECTEDPIC STARTSTATE IDNR
 

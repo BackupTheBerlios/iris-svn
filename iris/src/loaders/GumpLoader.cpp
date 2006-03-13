@@ -174,7 +174,7 @@ Uint32 *cGumpLoader::LoadGumpRaw (int index, int &tex_width, int &tex_height,
             }
       }
 
-  delete heightTable;
+  SAFE_DELETE_ARRAY( heightTable );
 
   tex_width = w;
   tex_height = h;
@@ -269,8 +269,8 @@ Texture *cGumpLoader::LoadGumpTiled (int index, int width, int height)
   texture->LoadFromData (data, tWidth, tHeight, 32, GL_NEAREST);
   texture->SetRealSize (width, height);
 
-  delete srcData;
-  delete data;
+  free( srcData );
+	// Do _NOT_ delete data since you have memset()...
 
   return texture;
 }

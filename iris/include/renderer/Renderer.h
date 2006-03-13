@@ -27,18 +27,20 @@
 #include <windows.h>
 #endif
 
+#include <string>
+#include <vector>
+#include <list>
+
 #include "Texture.h"
 #include "Camera.h"
 #include "DynamicObjects.h"
 #include "Characters.h"
 
-#include <string>
-#include <vector>
-#include <list>
-
 #include "SDL/SDL.h"
 
 #include "Fade.h"
+
+//#include "../Fluid/mmgr.h"
 
 class Renderer
 {

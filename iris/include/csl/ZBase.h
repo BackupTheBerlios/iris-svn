@@ -27,6 +27,9 @@
 #ifndef _ZBASEDEFS_
 #define _ZBASEDEFS_
 
+////#include "../Fluid/mmgr.h"
+
+
 #define ZC_MAJOR_VERSION 4
 #define ZC_MINOR_VERSION 3
 

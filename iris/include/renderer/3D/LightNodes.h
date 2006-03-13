@@ -38,6 +38,8 @@
 
 #include "loaders/StaticModels.h"
 
+//#include "../Fluid/mmgr.h"
+
 struct sLightNodeNormal {
     float normal[3];
     struct sLightNodeNormal * next;

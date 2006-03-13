@@ -36,6 +36,8 @@
 #include "LightNodes.h"
 
 
+//#include "../Fluid/mmgr.h"
+
 class cLightNodeEnvironment {
     private:
         cLightNodeHandler * m_nodes[3][3];  // a 3x3 array of nodes which contains the nodelist of the block and all 8 surrounding light node lists

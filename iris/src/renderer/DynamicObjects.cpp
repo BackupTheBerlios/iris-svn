@@ -22,6 +22,7 @@
 
 
 #include "renderer/DynamicObjects.h"
+
 #include "include.h"
 #include "Config.h"
 #include "loaders/TileDataBuffer.h"
@@ -29,7 +30,7 @@
 #include "loaders/StaticModelLoader.h"
 #include "loaders/MultisLoader.h"
 #include "renderer/particles/ParticleEngine.h"
-#include <cassert>
+
 
 using namespace std;
 

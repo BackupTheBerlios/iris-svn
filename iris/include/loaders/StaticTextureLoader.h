@@ -27,6 +27,7 @@
 #include <windows.h>
 #endif
 
+#include "Common.h"
 #include "irisgl.h"
 
 #include <map>
@@ -40,6 +41,8 @@
 #include <fstream>
 
 #include "renderer/Texture.h"
+
+//#include "../Fluid/mmgr.h"
 
 class cStaticTexture
 {

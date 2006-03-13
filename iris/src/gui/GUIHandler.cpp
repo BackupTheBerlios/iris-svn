@@ -70,7 +70,7 @@ void GUIHandler::Reset()
 
 void GUIHandler::DeInit()
 {
-	ClearControls();
+	//ClearControls();
 	
 	// SAFE_DELETE_ARRAY( tex_cursors );
 
@@ -86,7 +86,7 @@ void GUIHandler::DeInit()
 
 	refresh_times.clear();
 	stack.Clear();
-	pGumpHandler.ClearTextures();
+	//pGumpHandler.ClearTextures();
 
 	Reset();
 }
@@ -118,12 +118,15 @@ Control *GUIHandler::GetControl (int controlid)
     return (*iter).second;
 }
 
-void GUIHandler::AddControl (Control * control)
+void GUIHandler::AddControl( Control *control )
 {
 	if ( !control )
 	{
 		return;
 	}
+
+	// Problem with Control -> Button (5th) when trying to delete it, it will crash the app (Wrongly added).
+
 	control->SetID( idcounter );
 	control->SetZ( zcounter );
 	control_root.insert( std::make_pair( (Uint32) idcounter, control ) );
@@ -132,14 +135,14 @@ void GUIHandler::AddControl (Control * control)
 	zcounter++;
 }
 
-void GUIHandler::CloseWindow (int controlid)
+void GUIHandler::CloseWindow( int controlid )
 {
-  Control *control = GetControl (controlid);
+  Control *control = GetControl( controlid );
   if (control)
       {
-        control->DoOnClose ();
-        control_root.erase (controlid);
-        z_root.erase (control->GetZ ());
+        control->DoOnClose();
+        control_root.erase( controlid );
+        z_root.erase( control->GetZ() );
         delete control;
       }
   if (controlid == focusid)
@@ -216,8 +219,10 @@ void GUIHandler::Draw (void)    //Uint16 hue)
   glTranslatef( (GLfloat)posx, (GLfloat)-posy, 0.0f );
 
   ControlList_t::iterator iter;
+
+  // 14º -> crash
   for (iter = z_root.begin (); iter != z_root.end (); iter++)
-    iter->second->Draw (&pGumpHandler);
+    iter->second->Draw( &pGumpHandler );
 
   if (drag_cursor)
       {

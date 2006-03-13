@@ -31,6 +31,9 @@
 #include <windows.h>
 #endif
 
+#include <iostream>
+#include <list>
+
 #include "irisgl.h"
 #include "SDL/SDL.h"
 
@@ -38,8 +41,7 @@
 #include "renderer/3D/Light3D.h"
 #include "uotype.h"
 
-#include <iostream>
-#include <list>
+//#include "../Fluid/mmgr.h"
 
 // contains information about character lighting, for more information see engine doc
 class cCharacterLight {

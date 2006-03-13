@@ -34,6 +34,8 @@
 #include "SDL/SDL_types.h"
 #include <stdlib.h>
 
+//#include "../Fluid/mmgr.h"
+
 // Type definitions
 
 extern Uint16 bswap16 (Uint16 val);

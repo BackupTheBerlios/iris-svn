@@ -16,11 +16,14 @@
  *
  *****/
 
-#if !defined( __INPUTFIELD_H__ )
-#define __INPUTFIELD_H__
+#ifndef _INPUTFIELD_H_
+#define _INPUTFIELD_H_
 
+#include "Common.h"
 #include "Control.h"
 #include <string>
+
+//#include "../Fluid/mmgr.h"
 
 class cTextElement;
 
@@ -32,6 +35,7 @@ private:
 
 	unsigned short _hue;
 	unsigned short _font;
+	unsigned int *data;
 	bool generated;
 	std::string _text;
 	cTextElement *tElement;

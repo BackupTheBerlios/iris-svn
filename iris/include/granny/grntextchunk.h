@@ -18,10 +18,11 @@
 
 #ifndef __GRNTEXTCHUNK_H__
 #define __GRNTEXTCHUNK_H__
-
-#include "GrannyStream.h"
 #include <string>
 #include <vector>
+#include "GrannyStream.h"
+
+//#include "../Fluid/mmgr.h"
 
 class TextChunk
 {

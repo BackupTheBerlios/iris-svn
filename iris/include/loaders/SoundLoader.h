@@ -25,6 +25,8 @@
 #include "SDL/SDL_mixer.h"
 #include "SDL/SDL_types.h"
 
+//#include "../Fluid/mmgr.h"
+
 /*
  * To find data for a certain entry, you seek to (EntryID * 12), and read the data.
  * Then, in the actual MUL file (not the index file), you seek to (lookup), and read (length) number of bytes.

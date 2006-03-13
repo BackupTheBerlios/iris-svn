@@ -22,6 +22,8 @@
 #include "Game.h"
 #include "renderer/3D/Renderer3D.h"
 
+//#include "../Tests/Profiler.h"
+
 //extern SDLScreen *SDLscreen;
 
 // Singleton
@@ -30,6 +32,9 @@ Game *Game::m_sgGame = NULL;
 
 Game::Game()
 {
+	assert( m_sgGame == NULL );
+	m_sgGame = this;
+
 	m_MouseLastTick = SDL_GetTicks();
 	m_AOSToolTip = false;
 
@@ -72,38 +77,40 @@ Game::Game()
 
 Game::~Game()
 {
+	assert( m_sgGame != NULL );
 	m_sgGame = NULL;
 
 	Logger::WriteLine( "SYS | Deinitializing Iris...." );
-	pParticleEngine.Reset();
-	pParticleLoader.DeInit();
 
 	DeInitRenderer();
 
+	Logger::WriteLine( "\t| -> Particle Engine" );
+	pParticleEngine.Reset();
+	pParticleLoader.DeInit();
+
 	pCamera.Reset();
 
+	Logger::WriteLine( "\t| -> Dynamic Objects" );
 	pDynamicObjectList.Clear();
+	Logger::WriteLine( "\t| -> Character List" );
 	pCharacterList.Clear();
 
+	Logger::WriteLine( "\t| -> Renderer" );
 	SAFE_DELETE( m_kRenderer );
+	Logger::WriteLine( "\t| -> Text Manager" );
 	SAFE_DELETE( pTextManager );
+	Logger::WriteLine( "\t| -> Art Loader" );
 	SAFE_DELETE( m_kArtLoader );
 
 	if ( pClient )
 	{
 		Disconnect();
 	}
-	//SAFE_DELETE( m_kMapBuffer3D );
 }
 
 
 Game *Game::GetInstance()
 {
-	if ( !m_sgGame )
-	{
-		m_sgGame = new Game();
-	}
-	
 	return m_sgGame;
 }
 
@@ -138,6 +145,9 @@ bool Game::Init( void )
 	//SiENcE: just to verify that everything is correct deinit; Logout is normally done via iris.csl script
 	//DeInit();
 
+	//Profiler::Init();
+	//Profiler::Begin("Game");
+
 	Logger::WriteLine( "SYS | Initializing Iris...." );
 
 	InitRenderer( Config::GetMulPath() );
@@ -171,6 +181,9 @@ bool Game::Init( void )
 
 	m_click_mode = CLICK_NORMAL;
 
+	//Profiler::End();
+	//Profiler::Output();
+
 	return true;
 }
 
@@ -183,47 +196,73 @@ void Game::InitRenderer( std::string sMulPath )
 	string sMulTexmaps = sMulPath + "texmaps.mul";
 	string sMulTexidx = sMulPath + "texidx.mul";
 
+	//Profiler::Begin( "Map Info" );
 	Logger::WriteLine( "\t| -> mapinfo" );
 	pMapInfoLoader.Init( "xml/Maps.xml" );
+	//Profiler::End();
 
+	//Profiler::Begin( "Map" );
 	Logger::WriteLine( "\t| -> map" );
 	pMapLoader = new UOMapLoader( (char*)sMulMap0.c_str(), (char*)sMulStatics0.c_str(), (char*)sMulStaidx0.c_str(), 0 );
+	//Profiler::End();
 
+	//Profiler::Begin( "Ground Textures" );
 	Logger::WriteLine( "\t| -> ground textures" );
 	pGroundTextureLoader.Init( sMulTexmaps, sMulTexidx );
+	//Profiler::End();
 
+	//Profiler::Begin( "Arts" );
 	Logger::WriteLine( "\t| -> arts" );
 	m_kArtLoader = new ArtLoader( sMulPath + "art.mul", sMulPath + "artidx.mul" );
+	//Profiler::End();
 
+	//Profiler::Begin( "Fonts" );
 	Logger::WriteLine( "\t| -> fonts" );
 	pFontLoader.Init( sMulPath + "fonts.mul" );
+	//Profiler::End();
 
+	//Profiler::Begin( "Hues" );
 	Logger::WriteLine( "\t| -> hues" );
 	pHueLoader.Init( sMulPath + "hues.mul" );
+	//Profiler::End();
 
+	//Profiler::Begin( "TileData" );
 	Logger::WriteLine( "\t| -> tiledata" );
 	pTileDataLoader.Init( sMulPath + "tiledata.mul" );
+	//Profiler::End();
 
+	//Profiler::Begin( "Gumps" );
 	Logger::WriteLine( "\t| -> gumps" );
 	pGumpLoader.Init( sMulPath + "gumpart.mul", sMulPath + "gumpidx.mul" );
+	//Profiler::End();
 
+	//Profiler::Begin( "Skills" );
 	Logger::WriteLine( "\t| -> skills" );
 	pSkillLoader.Init( sMulPath + "skills.mul", sMulPath + "Skills.idx" );
+	//Profiler::End();
 
 	// Note that it should only be initialized if we are using an old expansion ( < AOS ).
 	if ( !Config::GetAOS() )
 	{
+		//Profiler::Begin( "Verdata" );
 		Logger::WriteLine( "\t| -> verdata" );
 		pVerdataLoader.Init( sMulPath + "verdata.mul" );
+		//Profiler::End();
 	}
 
+	//Profiler::Begin( "Map Buffer" );
 	Logger::WriteLine( "\t| -> map buffer" );
 	m_kMapBuffer3D = new Mapbuffer3D();
 	pMapbufferHandler.Init( m_kMapBuffer3D );
+	//Profiler::End();
 
+	//Profiler::Begin("Tiledata Buffer");
 	Logger::WriteLine( "\t| -> tiledata buffer" );
 	pTileDataBuffer.Clear();
+	//Profiler::End();
 
+	// Needs tweaking (It's killing performance)
+	//Profiler::Begin( "3D Character Models" );
 	Logger::WriteLine ("\t| -> 3D character models");
 	if ( Config::GetAOS() )
 	{
@@ -233,68 +272,126 @@ void Game::InitRenderer( std::string sMulPath )
 	{
 		pGrannyLoader = new cGrannyLoader( "xml/granny.xml", sMulPath );
 	}
+	//Profiler::End();
 
+	// Needs tweaking (It's killing performance)
+	//Profiler::Begin( "3D Static Models" );
 	Logger::WriteLine( "\t| -> 3D static models" );
 	pStaticModelLoader.Init( "./data/models.uim" );
+	//Profiler::End();
 
 	if ( Config::GetAOS() )
 	{
+		//Profiler::Begin( "Stitchin Loader" );
 		Logger::WriteLine( "\t| -> stitchinloader" );
 		pStitchinLoader.Init( sMulPath + "Models/models.txt", sMulPath + "stitchin.def" );
+		//Profiler::End();
 	}
 	
 	if ( Config::GetClilocs() )
 	{
+		//Profiler::Begin( "Clilocs" );
 		Logger::WriteLine( "\t| -> clilocs" );
 		if ( !pClilocLoader.Init( sMulPath ) )
 		{
 			Logger::WriteLine ("\t| -> Clilocs loader Error");
 		}
+		//Profiler::End();
     }
 
+	//Profiler::Begin( "Model infos" );
 	Logger::WriteLine( "\t| -> model infos" );
 	pModelInfoLoader.Init( "xml/ModelsInfo.xml" );
+	//Profiler::End();
 
+	//Profiler::Begin( "Multis" );
 	Logger::WriteLine( "\t| -> multis" );
 	pMultisLoader = new cMultisLoader( sMulPath + "multi.mul", sMulPath + "multi.idx" );
+	//Profiler::End();
     
+	//Profiler::Begin( "Speech" );
     Logger::WriteLine( "\t| -> speech" );
     pSpeechLoader.Init( sMulPath );
 	Logger::WriteDebug( "\t| -> Bank word: " + pSpeechLoader.GetID( "*bank*" ) );
+	//Profiler::End();
     
+	//Profiler::Begin( "Macros" );
     Logger::WriteLine( "\t| -> macros" );
     pMacroLoader = new MacroLoader();
+	//Profiler::End();
 }
 
 
 void Game::DeInitRenderer( void )
 {
+	Logger::WriteLine( "\t| -> map" );
 	SAFE_DELETE( pMapLoader );
+
+	Logger::WriteLine( "\t| -> macros" );
 	SAFE_DELETE( pMacroLoader );
 	
+	Logger::WriteLine( "\t| -> ground textures" );
 	pGroundTextureLoader.DeInit();
+
+	Logger::WriteLine( "\t| -> fonts" );
 	pFontLoader.DeInit();
+
+	Logger::WriteLine( "\t| -> gumps" );
 	pGumpLoader.DeInit();
+
+	Logger::WriteLine( "\t| -> hues" );
 	pHueLoader.DeInit();
+
+	Logger::WriteLine( "\t| -> tiledata" );
 	pTileDataLoader.DeInit();
+
+	Logger::WriteLine( "\t| -> map buffer" );
 	pMapbufferHandler.DeInit();
+	//SAFE_DELETE( m_kMapBuffer3D );
 
-	pTextureBuffer.Clear ();
-	pTileDataBuffer.Clear ();
-	pVerdataLoader.DeInit();
 
+	pTextureBuffer.Clear();		// ?!? This should be here?
+	
+	Logger::WriteLine( "\t| -> tiledata buffer" );
+	pTileDataBuffer.Clear();
+
+	if ( Config::GetAOS() )
+	{
+		Logger::WriteLine( "\t| -> verdata" );
+		pVerdataLoader.DeInit();
+	}
+
+	Logger::WriteLine ("\t| -> 3D character models");
 	SAFE_DELETE( pGrannyLoader );
 
+	Logger::WriteLine( "\t| -> skills" );
 	pSkillLoader.DeInit();
+
+	Logger::WriteLine( "\t| -> 3D static models" );
 	pStaticModelLoader.DeInit();
 
 	pLightManager.Clear();
 
-	pStitchinLoader.DeInit();
-	pClilocLoader. DeInit();
+
+	if ( Config::GetAOS() )
+	{
+		Logger::WriteLine( "\t| -> stitchinloader" );
+		pStitchinLoader.DeInit();
+	}
+	
+	if ( Config::GetClilocs() )
+	{
+		Logger::WriteLine( "\t| -> clilocs" );
+		pClilocLoader.DeInit();
+	}
+	
+	Logger::WriteLine( "\t| -> model infos" );
 	pModelInfoLoader.DeInit();
+
+	Logger::WriteLine( "\t| -> mapinfo" );
 	pMapInfoLoader.DeInit();
 
+	Logger::WriteLine( "\t| -> multis" );
 	SAFE_DELETE( pMultisLoader );
 }
 

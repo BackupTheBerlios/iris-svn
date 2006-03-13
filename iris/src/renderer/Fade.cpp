@@ -20,9 +20,9 @@
  *
  *****/
 
-
-#include "renderer/Fade.h"
 #include "include.h"
+#include "renderer/Fade.h"
+
 
 using namespace std;
 

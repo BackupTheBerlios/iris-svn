@@ -33,6 +33,8 @@
 #include <iostream>
 #include "uotype.h"
 
+//#include "../Fluid/mmgr.h"
+
 struct vertex { 
     float u, v, x, y, z; 
     sColor color;

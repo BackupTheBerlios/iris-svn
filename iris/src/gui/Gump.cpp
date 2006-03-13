@@ -28,23 +28,25 @@ using namespace std;
 
 GumpHandler pGumpHandler;
 
-GumpHandler::GumpHandler ()
+GumpHandler::GumpHandler()
 {
 }
 
-GumpHandler::~GumpHandler ()
+GumpHandler::~GumpHandler()
 {
-  ClearTextures ();
+	ClearTextures();
 }
 
-void GumpHandler::ClearTextures (void)
+void GumpHandler::ClearTextures( void )
 {
-  GumpBuffer_t::iterator iter;
+	GumpBuffer_t::iterator iter;
 
-  for (iter = tex_root.begin (); iter != tex_root.end (); iter++)
-    delete (*iter).second;
+	for ( iter = tex_root.begin(); iter != tex_root.end(); iter++ )
+	{
+		SAFE_DELETE( (*iter).second );
+	}
 
-  tex_root.clear ();
+	tex_root.clear();
 }
 
 Texture *GumpHandler::GetTexture (int index)

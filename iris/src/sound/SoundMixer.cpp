@@ -38,11 +38,6 @@ SoundMix::~SoundMix ()
 
 SoundMix *SoundMix::GetInstance()
 {
-	if ( !m_sgSoundMix )
-	{
-		m_sgSoundMix = new SoundMix();
-	}
-
 	return m_sgSoundMix;
 }
 

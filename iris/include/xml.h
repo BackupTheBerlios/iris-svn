@@ -32,6 +32,9 @@
 #include <string>
 #include "Exception.h"
 
+//#include "../Fluid/mmgr.h"
+
+
 #ifdef XMLDOM_EXPORTS
 #define XMLDOM_API __declspec( dllexport )
 #else

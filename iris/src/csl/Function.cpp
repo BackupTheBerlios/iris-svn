@@ -31,6 +31,8 @@
 
 #include <ZCsl.hpp>
 
+//#include "../Fluid/mmgr.h"
+
 ZCsl::Function::Function (ZCsl * aParent, const ZString & aName, Function * aPrev):
 iName (aName),
 iPrev (aPrev),

@@ -32,6 +32,8 @@
 #include <ZSql.hpp>
 #include <string.h>
 
+//#include "../Fluid/mmgr.h"
+
 ZEXCLASSIMPLEMENT (ZSqlError, ZException);
 
 class Dll:public ZBase

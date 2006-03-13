@@ -31,6 +31,8 @@
 
 #include <vector>
 
+////#include "../Fluid/mmgr.h"
+
 class cFader
 {
   private:

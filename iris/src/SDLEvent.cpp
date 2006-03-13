@@ -258,7 +258,7 @@ void SDLEvent::HandleKeyPress( SDL_keysym *kKeysym )
 
 	if ( pUOGUI.HandleMessage( &msg ) )
 	{
-		pUOGUI.HandleMessageQueues ();
+		pUOGUI.HandleMessageQueues();
 
 		return;
 	}

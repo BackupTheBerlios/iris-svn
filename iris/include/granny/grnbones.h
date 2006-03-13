@@ -19,9 +19,12 @@
 #ifndef __GRNBONES_H__
 #define __GRNBONES_H__
 
+#include <vector>
 #include "grnmatrix.h"
 #include "GrannyStream.h"
-#include <vector>
+
+
+//#include "../Fluid/mmgr.h"
 
 class Bone
 {

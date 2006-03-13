@@ -30,10 +30,14 @@
 #include "SDL/SDL.h"
 
 #include <map>
+#include <cassert>
 
 #include "Fade.h"
 #include "renderer/3D/Light3D.h"
 #include "renderer/3D/MotiveBasedLight.h"
+
+
+//#include "../Fluid/mmgr.h"
 
 #define DYNAMICTYPE_WORLD 0
 #define DYNAMICTYPE_CONTAINER 1

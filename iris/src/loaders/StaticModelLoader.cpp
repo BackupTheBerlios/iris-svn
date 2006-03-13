@@ -126,29 +126,29 @@ void cStaticModelLoader::Init (string filename)
         model_entries.insert (make_pair (entry.id, entry));
       }
 
-  map < Uint32, sModelTableEntry >::iterator iter;
-  for (iter = model_entries.begin (); iter != model_entries.end (); iter++)
-      {
-        modelstream->seekg (iter->second.start, ios::beg);
+	std::map<Uint32, sModelTableEntry>::iterator iter;
+	for ( iter = model_entries.begin(); iter != model_entries.end(); iter++ )
+	{
+		modelstream->seekg( iter->second.start, std::ios::beg );
 
-        cStaticModel *model =
-          new cStaticModel (modelstream, iter->second.length, &static_texture_loader);
-        models.insert (make_pair (iter->second.id, model));
-      }
+		cStaticModel *model = new cStaticModel( modelstream, iter->second.length, &static_texture_loader );
+		models.insert( std::make_pair( iter->second.id, model ) );
+	}
 }
 
 
-void cStaticModelLoader::DeInit ()
+void cStaticModelLoader::DeInit()
 {
-  map < Uint32, cStaticModel * >::iterator iter;
-  for (iter = models.begin (); iter != models.end (); iter++)
-    delete iter->second;
-  models.clear ();
+	std::map<Uint32, cStaticModel *>::iterator iter;
+	for ( iter = models.begin(); iter != models.end(); iter++ )
+	{
+		SAFE_DELETE( iter->second );
+	}
+	models.clear();
 
-  static_texture_loader.DeInit ();
+	static_texture_loader.DeInit();
 
-  delete modelstream;
-  modelstream = NULL;
+	SAFE_DELETE( modelstream );
 }
 
 cStaticModel *cStaticModelLoader::getModel (Uint32 id)

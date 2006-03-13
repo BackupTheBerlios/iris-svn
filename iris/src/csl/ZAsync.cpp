@@ -36,6 +36,8 @@
 #include <ZDate.hpp>
 #include <ZAsync.hpp>
 
+//#include "../Fluid/mmgr.h"
+
 #define INSTREAMBUF        2048 // size of instream buffer
 
 using namespace std;

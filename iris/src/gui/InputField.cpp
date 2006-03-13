@@ -23,8 +23,9 @@
 
 InputField::~InputField ()
 {
-  delete tElement;
-  delete caret;
+	SAFE_DELETE( tElement );
+	SAFE_DELETE( caret );
+	SAFE_DELETE_ARRAY( data );
 }
 
 InputField::InputField (int x, int y, unsigned int width, unsigned int height,
@@ -50,16 +51,13 @@ InputField::InputField (int x, int y, unsigned int width, unsigned int height,
       }
 
   // 2 * _height
-  unsigned int *data = new unsigned int[_height * 2];
+  data = new unsigned int[_height * 2];
 
   for (int i = 0; i < _height * 2; ++i)
     data[i] = 0x7FFFFFFF;
 
-  caret = new Texture;
-  caret->LoadFromData (data, 2, _height, 32, GL_NEAREST);
-
-  delete data;
-
+  caret = new Texture();
+  caret->LoadFromData( data, 2, _height, 32, GL_NEAREST );
 
   _caretPos = _text.length ();
   xCropOffset = 0;
@@ -99,7 +97,7 @@ void InputField::setText (char *text)
         pText[_text.length ()] = 0;
         memset (pText, _passwordChar, _text.length ());
         tElement = new cTextElement (pText, _hue, _font);
-        delete pText;
+        // Do NOT delete pText since it was memset()..
       }
   else
       {
@@ -123,7 +121,7 @@ void InputField::regenerate ()
         pText[_text.length ()] = 0;
         memset (pText, _passwordChar, _text.length ());
         tElement = new cTextElement (pText, _hue, _font);
-        delete pText;
+        // Do _NOT_ try to delete pText, since you have done memset()...
       }
   else
       {
@@ -174,7 +172,7 @@ void InputField::recalcXCrop ()
         pText[_text.length ()] = 0;
         memset (pText, _passwordChar, _text.length ());
         relX = pTextManager->getTextWidth (pText, _font) - 1;
-        delete pText;
+        // Do NOT delete pText since it was memset()..
       }
   else
       {

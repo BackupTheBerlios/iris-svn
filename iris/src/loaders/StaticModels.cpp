@@ -21,16 +21,9 @@
  *****/
 
 
-#include "iris_endian.h"
+
 #include "loaders/StaticModels.h"
-#include "loaders/StaticTextureLoader.h"
-#include "Logger.h"
-#include "Exception.h"
-#include "Geometry.h"
-#include "uotype.h"
-#include <string.h>
-#include <cassert>
-#include "renderer/TextureBuffer.h"
+
 
 using namespace std;
 
@@ -246,289 +239,284 @@ cStaticModelFace::~cStaticModelFace ()
 {
 }
 
-cStaticModel::cStaticModel (ifstream * stream, Uint32 length, cStaticTextureLoader * texture_loader)
+cStaticModel::cStaticModel( ifstream * stream, Uint32 length, cStaticTextureLoader *texture_loader )
 {
-  ASSERT (texture_loader);
-  ASSERT (stream);
-  
-  unsigned int index;
-  Uint32 stream_start = stream->tellg ();
-  Uint32 stream_end = stream_start + length;
+	ASSERT( texture_loader );
+	ASSERT( stream );
 
-  sGameModelFileHeader header;
+	unsigned int index;
+	Uint32 stream_start = stream->tellg ();
+	Uint32 stream_end = stream_start + length;
 
-  particle_effect_info = NULL;
-  light_source_info = NULL;
+	sGameModelFileHeader header;
 
-  this->texture_loader = texture_loader;
+	particle_effect_info = NULL;
+	light_source_info = NULL;
 
-
-  if (length < sizeof (header))
-    THROWEXCEPTION ("invalid texture stream size (<headersize)");
-
-  stream->read ((char *) &header, sizeof (header));
-  header.Length = IRIS_SwapU32 (header.Length);
-  header.Version = IRIS_SwapU32 (header.Version);
-  header.ModelID = IRIS_SwapU32 (header.ModelID);
-  header.Flags = IRIS_SwapU32 (header.Flags);
-  header.NodeStart = IRIS_SwapU32 (header.NodeStart);
-  header.NodeCount = IRIS_SwapU32 (header.NodeCount);
-  header.FaceStart = IRIS_SwapU32 (header.FaceStart);
-  header.FaceCount = IRIS_SwapU32 (header.FaceCount);
-  header.FaceLightNodeStart = IRIS_SwapU32 (header.FaceLightNodeStart);
-  header.FaceLightNodeCount = IRIS_SwapU32 (header.FaceLightNodeCount);
-  header.PointLightNodeStart = IRIS_SwapU32 (header.PointLightNodeStart);
-  header.PointLightNodeCount = IRIS_SwapU32 (header.PointLightNodeCount);
-  header.ParallelLightNodeStart =
-    IRIS_SwapU32 (header.ParallelLightNodeStart);
-  header.ParallelLightNodeCount =
-    IRIS_SwapU32 (header.ParallelLightNodeCount);
-  header.LightSourceInfoStart = IRIS_SwapU32 (header.LightSourceInfoStart);
-  header.EffectStart = IRIS_SwapU32 (header.EffectStart);
-  for (int ii = 0; ii < 4; ii++)
-    header.bounding_sphere[ii] =
-      IRIS_FloatFromLittle (header.bounding_sphere[ii]);
-  for (int ii = 0; ii < 8; ii++)
-    header.Reserved[ii] = IRIS_SwapU32 (header.Reserved[ii]);
-
-  m_flags = header.Flags;
-
-  /* Check some header information */
-  if (!CheckHeaderID (header.Sign, FILEID_GAMEMODEL))
-    THROWEXCEPTION ("invalid model stream");
-  if (header.Version != GAMEMODEL_VERSION)
-    THROWEXCEPTION ("model stream has an invalid version!");
-  if (length != header.Length)
-    THROWEXCEPTION ("invalid model stream size");
-
-  if ((header.NodeStart > stream_end) ||
-      (header.NodeStart + header.NodeCount * sizeof (sGameModelFileNode) >
-       stream_end))
-    THROWEXCEPTION ("invalid model stream");
-
-  if ((header.PointLightNodeStart > stream_end) ||
-      (header.PointLightNodeStart +
-       header.PointLightNodeCount * sizeof (sGameModelPointLightNode) >
-       stream_end))
-    THROWEXCEPTION ("invalid model stream");
-
-  if ((header.FaceLightNodeStart > stream_end) ||
-      (header.FaceLightNodeStart +
-       header.FaceLightNodeCount * sizeof (sGameModelFaceLightNode) >
-       stream_end))
-    THROWEXCEPTION ("invalid model stream");
-
-  if (header.LightSourceInfoStart)
-      {
-        if ((header.LightSourceInfoStart > stream_end) ||
-            (header.LightSourceInfoStart +
-             sizeof (sGameModelLightSourceInfo) > stream_end))
-          THROWEXCEPTION ("invalid model stream");
-
-        sGameModelLightSourceInfo info;
-        stream->seekg (header.LightSourceInfoStart + stream_start, ios::beg);
-        stream->read ((char *) &info, sizeof (info));
-        info.X = IRIS_FloatFromLittle (info.X);
-        info.Y = IRIS_FloatFromLittle (info.Y);
-        info.Z = IRIS_FloatFromLittle (info.Z);
-        info.Radius = IRIS_FloatFromLittle (info.Radius);
-        info.flicker_min_delay = IRIS_SwapI32 (info.flicker_min_delay);
-        info.flicker_max_delay = IRIS_SwapI32 (info.flicker_max_delay);
-        info.flicker_amount = IRIS_SwapI32 (info.flicker_amount);
-        for (int ii = 0; ii < 4; ii++)
-          info.Reserved[ii] = IRIS_SwapU32 (info.Reserved[ii]);
+	this->texture_loader = texture_loader;
 
 
-        if (info.ModelIsLightSource)
-            {
-              sColor color;
-              color.colorRGB.r = info.r;
-              color.colorRGB.g = info.g;
-              color.colorRGB.b = info.b;
-              color.colorRGB.a = 255;
-              light_source_info =
-                new cStaticModelLightSourceInfo (info.Flickering, info.X,
-                                                 info.Y, info.Z, info.Radius,
-                                                 color,
-                                                 info.flicker_min_delay,
-                                                 info.flicker_max_delay,
-                                                 info.flicker_amount);
-            }
+	if ( length < sizeof(header) )
+	{
+		THROWEXCEPTION ("invalid texture stream size (<headersize)");
+	}
 
-      }
+	stream->read( (char *)&header, sizeof(header) );
+	header.Length = IRIS_SwapU32( header.Length );
+	header.Version = IRIS_SwapU32( header.Version );
+	header.ModelID = IRIS_SwapU32( header.ModelID );
+	header.Flags = IRIS_SwapU32( header.Flags );
+	header.NodeStart = IRIS_SwapU32( header.NodeStart );
+	header.NodeCount = IRIS_SwapU32( header.NodeCount );
+	header.FaceStart = IRIS_SwapU32( header.FaceStart );
+	header.FaceCount = IRIS_SwapU32( header.FaceCount );
+	header.FaceLightNodeStart = IRIS_SwapU32( header.FaceLightNodeStart );
+	header.FaceLightNodeCount = IRIS_SwapU32( header.FaceLightNodeCount );
+	header.PointLightNodeStart = IRIS_SwapU32( header.PointLightNodeStart );
+	header.PointLightNodeCount = IRIS_SwapU32( header.PointLightNodeCount );
+	header.ParallelLightNodeStart = IRIS_SwapU32( header.ParallelLightNodeStart );
+	header.ParallelLightNodeCount = IRIS_SwapU32( header.ParallelLightNodeCount );
+	header.LightSourceInfoStart = IRIS_SwapU32( header.LightSourceInfoStart );
+	header.EffectStart = IRIS_SwapU32( header.EffectStart );
 
-  if (header.EffectStart)
-      {
-        struct sGameModelParticleEffectInfo effectinfo;
+	for ( int ii = 0; ii < 4; ii++ )
+	{
+		header.bounding_sphere[ii] = IRIS_FloatFromLittle( header.bounding_sphere[ii] );
+	}
+	
+	for ( int ii = 0; ii < 8; ii++ )
+	{
+		header.Reserved[ii] = IRIS_SwapU32( header.Reserved[ii] );
+	}
 
-        stream->seekg (header.EffectStart + stream_start, ios::beg);
-        stream->read ((char *) &effectinfo, sizeof (effectinfo));
-        effectinfo.X = IRIS_FloatFromLittle (effectinfo.X);
-        effectinfo.Y = IRIS_FloatFromLittle (effectinfo.Y);
-        effectinfo.Z = IRIS_FloatFromLittle (effectinfo.Z);
-        effectinfo.FAngle1 = IRIS_FloatFromLittle (effectinfo.FAngle1);
-        effectinfo.FAngle2 = IRIS_FloatFromLittle (effectinfo.FAngle2);
-        effectinfo.FRotateEffect = IRIS_SwapI32 (effectinfo.FRotateEffect);
-        char name[33];
-        name[33] = 0;
-        memcpy (name, &effectinfo.EffectName[0], 32);
-        particle_effect_info =
-          new cStaticModelParticleEffectInfo (string (name), effectinfo.X,
-                                              effectinfo.Y, effectinfo.Z,
-                                              effectinfo.FRotateEffect,
-                                              effectinfo.FAngle1,
-                                              effectinfo.FAngle2);
-      }
+	m_flags = header.Flags;
 
-  m_modelid = header.ModelID;
+	/* Check some header information */
+	if ( !CheckHeaderID( header.Sign, FILEID_GAMEMODEL ) )
+	{
+		THROWEXCEPTION( "invalid model stream" );
+	}
+	if ( header.Version != GAMEMODEL_VERSION )
+	{
+		THROWEXCEPTION( "model stream has an invalid version!" );
+	}
+	if ( length != header.Length )
+	{
+		THROWEXCEPTION( "invalid model stream size" );
+	}
 
-  for (index = 0; index < 4; index++)
-    bounding_sphere[index] = header.bounding_sphere[index];
+	if ( (header.NodeStart > stream_end) || (header.NodeStart + header.NodeCount * sizeof(sGameModelFileNode) > stream_end) )
+	{
+		THROWEXCEPTION( "invalid model stream" );
+	}
 
-  stream->seekg (header.NodeStart + stream_start, ios::beg);
-  for (index = 0; index < header.NodeCount; index++)
-      {
-        sGameModelFileNode nodeentry;
-        stream->read ((char *) &nodeentry, sizeof (nodeentry));
-        for (int ii = 0; ii < 3; ii++)
-            {
-              nodeentry.Vector[ii] =
-                IRIS_FloatFromLittle (nodeentry.Vector[ii]);
-              nodeentry.Normal[ii] =
-                IRIS_FloatFromLittle (nodeentry.Normal[ii]);
-            }
-        m_nodes.
-          push_back (new
-                     cStaticModelNode (nodeentry.Vector, nodeentry.Normal));
-      }
+	if ( (header.PointLightNodeStart > stream_end) || 
+		(header.PointLightNodeStart + header.PointLightNodeCount * sizeof(sGameModelPointLightNode) > stream_end) )
+	{
+		THROWEXCEPTION( "invalid model stream" );
+	}
 
-  stream->seekg (header.FaceLightNodeStart + stream_start, ios::beg);
-  for (index = 0; index < header.FaceLightNodeCount; index++)
-      {
-        sGameModelFaceLightNode nodeentry;
-        stream->read ((char *) &nodeentry, sizeof (nodeentry));
-        nodeentry.NodeIndex = IRIS_SwapU32 (nodeentry.NodeIndex);
-        nodeentry.PointLightNodeIndex =
-          IRIS_SwapU32 (nodeentry.PointLightNodeIndex);
-        nodeentry.ParallelLightNodeIndex =
-          IRIS_SwapU32 (nodeentry.ParallelLightNodeIndex);
-        m_face_light_nodes.
-          push_back (new
-                     cStaticModelFaceLightNode (nodeentry.NodeIndex,
-                                                nodeentry.PointLightNodeIndex,
-                                                nodeentry.
-                                                ParallelLightNodeIndex));
-      }
+	if ( (header.FaceLightNodeStart > stream_end) || 
+	  (header.FaceLightNodeStart + header.FaceLightNodeCount * sizeof(sGameModelFaceLightNode) > stream_end) )
+	{
+		THROWEXCEPTION( "invalid model stream" );
+	}
 
-  stream->seekg (header.PointLightNodeStart + stream_start, ios::beg);
-  for (index = 0; index < header.PointLightNodeCount; index++)
-      {
-        sGameModelPointLightNode nodeentry;
-        stream->read ((char *) &nodeentry, sizeof (nodeentry));
-        for (int ii = 0; ii < 3; ii++)
-            {
-              nodeentry.Vector[ii] =
-                IRIS_FloatFromLittle (nodeentry.Vector[ii]);
-              nodeentry.Normal[ii] =
-                IRIS_FloatFromLittle (nodeentry.Normal[ii]);
-            }
-        m_point_light_nodes.
-          push_back (new
-                     cStaticModelPointLightNode (nodeentry.Vector,
-                                                 nodeentry.Normal));
-      }
+	if ( header.LightSourceInfoStart )
+	{
+		if ( (header.LightSourceInfoStart > stream_end) || (header.LightSourceInfoStart + sizeof(sGameModelLightSourceInfo) > stream_end) )
+		{
+			THROWEXCEPTION( "invalid model stream" );
+		}
 
-  stream->seekg (header.FaceStart + stream_start, ios::beg);
-  for (index = 0; index < header.FaceCount; index++)
-      {
-        int nodeindex;
-        sGameModelFileFace faceentry;
-        stream->read ((char *) &faceentry, sizeof (faceentry));
-        for (int ii = 0; ii < 3; ii++)
-            {
-              faceentry.Nodes[ii] = IRIS_SwapU32 (faceentry.Nodes[ii]);
-              faceentry.FaceLightNodes[ii] =
-                IRIS_SwapU32 (faceentry.FaceLightNodes[ii]);
-              faceentry.Normal[ii] =
-                IRIS_FloatFromLittle (faceentry.Normal[ii]);
-              for (int jj = 0; jj < 2; jj++)
-                faceentry.TexCoords[ii][jj] =
-                  IRIS_FloatFromLittle (faceentry.TexCoords[ii][jj]);
-            }
-        faceentry.TextureIndex = IRIS_SwapI32 (faceentry.TextureIndex);
-	faceentry.Flags = IRIS_SwapU32 (faceentry.Flags);
+		sGameModelLightSourceInfo info;
+		stream->seekg( header.LightSourceInfoStart + stream_start, std::ios::beg );
+		stream->read ( (char *)&info, sizeof(info) );
+		info.X = IRIS_FloatFromLittle( info.X );
+		info.Y = IRIS_FloatFromLittle( info.Y );
+		info.Z = IRIS_FloatFromLittle( info.Z );
+		info.Radius = IRIS_FloatFromLittle( info.Radius );
+		info.flicker_min_delay = IRIS_SwapI32( info.flicker_min_delay );
+		info.flicker_max_delay = IRIS_SwapI32( info.flicker_max_delay );
+		info.flicker_amount = IRIS_SwapI32( info.flicker_amount );
 
-        cStaticModelNode *model_nodes[3];
+		for ( int ii = 0; ii < 4; ii++ )
+		{
+			info.Reserved[ii] = IRIS_SwapU32( info.Reserved[ii] );
+		}
 
-        for (nodeindex = 0; nodeindex < 3; nodeindex++)
-            {
-              if (faceentry.Nodes[nodeindex] >= m_nodes.size ())
-                THROWEXCEPTION ("invalid model stream");
-              model_nodes[nodeindex] = m_nodes[faceentry.Nodes[nodeindex]];
-            }
+		if ( info.ModelIsLightSource )
+		{
+			sColor color;
+			color.colorRGB.r = info.r;
+			color.colorRGB.g = info.g;
+			color.colorRGB.b = info.b;
+			color.colorRGB.a = 255;
+			light_source_info = new cStaticModelLightSourceInfo( info.Flickering, info.X, info.Y, info.Z, 
+				info.Radius, color, info.flicker_min_delay, info.flicker_max_delay, info.flicker_amount );
+		}
+	}
 
-        cStaticModelFace *face =
-          new cStaticModelFace (faceentry.FaceLightNodes, model_nodes,
-                                faceentry.Normal, faceentry.TexCoords,
-                                faceentry.Flags);
+	if ( header.EffectStart )
+	{
+		struct sGameModelParticleEffectInfo effectinfo;
 
-        for (nodeindex = 0; nodeindex < 3; nodeindex++)
-            {
-              if (faceentry.FaceLightNodes[nodeindex] >=
-                  m_face_light_nodes.size ())
-                THROWEXCEPTION ("invalid model stream");
-              face->m_face_light_nodes[nodeindex] =
-                m_face_light_nodes[faceentry.FaceLightNodes[nodeindex]];
-            }
+		stream->seekg( header.EffectStart + stream_start, std::ios::beg );
+		stream->read( (char *)&effectinfo, sizeof(effectinfo) );
+		effectinfo.X = IRIS_FloatFromLittle( effectinfo.X );
+		effectinfo.Y = IRIS_FloatFromLittle( effectinfo.Y );
+		effectinfo.Z = IRIS_FloatFromLittle( effectinfo.Z );
+		effectinfo.FAngle1 = IRIS_FloatFromLittle( effectinfo.FAngle1 );
+		effectinfo.FAngle2 = IRIS_FloatFromLittle( effectinfo.FAngle2 );
+		effectinfo.FRotateEffect = IRIS_SwapI32( effectinfo.FRotateEffect );
+		char name[33];
+		name[33] = 0;
+		memcpy( name, &effectinfo.EffectName[0], 32 );
+		particle_effect_info = new cStaticModelParticleEffectInfo( string( name ), effectinfo.X, effectinfo.Y, effectinfo.Z,
+			effectinfo.FRotateEffect, effectinfo.FAngle1, effectinfo.FAngle2 );
+	}
 
-        if (faceentry.TextureIndex >= 0)
-            {
-              face->setTexture (faceentry.TextureIndex);
-            }
-        else
-            {
-              face->setTexture (-m_modelid);
-            }
-        m_faces.push_back (face);
-      }
+	m_modelid = header.ModelID;
 
-  header.RasterStart = IRIS_SwapU32 (header.RasterStart);
-  if (header.RasterStart)
-      {
-        stream->seekg (header.RasterStart + stream_start, ios::beg);
-        m_raster.LoadFromStream (stream);
-      }
+	for ( index = 0; index < 4; index++ )
+	{
+		bounding_sphere[index] = header.bounding_sphere[index];
+	}
 
-  CreateVertieces ();
+	stream->seekg( header.NodeStart + stream_start, std::ios::beg );
+	for ( index = 0; index < header.NodeCount; index++ )
+	{
+		sGameModelFileNode nodeentry;
+		stream->read( (char *)&nodeentry, sizeof(nodeentry) );
+		for ( int ii = 0; ii < 3; ii++ )
+		{
+			nodeentry.Vector[ii] = IRIS_FloatFromLittle( nodeentry.Vector[ii] );
+			nodeentry.Normal[ii] = IRIS_FloatFromLittle( nodeentry.Normal[ii] );
+		}
+		m_nodes.push_back( new cStaticModelNode( nodeentry.Vector, nodeentry.Normal ) );
+	}
 
+	stream->seekg( header.FaceLightNodeStart + stream_start, std::ios::beg );
+	for ( index = 0; index < header.FaceLightNodeCount; index++ )
+	{
+		sGameModelFaceLightNode nodeentry;
+		stream->read( (char *)&nodeentry, sizeof(nodeentry) );
+		nodeentry.NodeIndex = IRIS_SwapU32( nodeentry.NodeIndex );
+		nodeentry.PointLightNodeIndex = IRIS_SwapU32( nodeentry.PointLightNodeIndex );
+		nodeentry.ParallelLightNodeIndex = IRIS_SwapU32 ( nodeentry.ParallelLightNodeIndex );
+		m_face_light_nodes.push_back( new cStaticModelFaceLightNode( nodeentry.NodeIndex, 
+			nodeentry.PointLightNodeIndex, nodeentry.ParallelLightNodeIndex ) );
+	}
+
+	stream->seekg( header.PointLightNodeStart + stream_start, ios::beg );
+	for ( index = 0; index < header.PointLightNodeCount; index++ )
+	{
+		sGameModelPointLightNode nodeentry;
+		stream->read( (char *)&nodeentry, sizeof(nodeentry) );
+		for ( int ii = 0; ii < 3; ii++ )
+		{
+			nodeentry.Vector[ii] = IRIS_FloatFromLittle( nodeentry.Vector[ii] );
+			nodeentry.Normal[ii] = IRIS_FloatFromLittle( nodeentry.Normal[ii] );
+		}
+		m_point_light_nodes.push_back( new cStaticModelPointLightNode( nodeentry.Vector, nodeentry.Normal ) );
+	}
+
+	stream->seekg (header.FaceStart + stream_start, ios::beg);
+	for ( index = 0; index < header.FaceCount; index++ )
+	{
+		int nodeindex;
+		sGameModelFileFace faceentry;
+		stream->read( (char *)&faceentry, sizeof(faceentry) );
+		for ( int ii = 0; ii < 3; ii++ )
+		{
+			faceentry.Nodes[ii] = IRIS_SwapU32( faceentry.Nodes[ii] );
+			faceentry.FaceLightNodes[ii] = IRIS_SwapU32( faceentry.FaceLightNodes[ii] );
+			faceentry.Normal[ii] = IRIS_FloatFromLittle( faceentry.Normal[ii] );
+			for ( int jj = 0; jj < 2; jj++ )
+			{
+				faceentry.TexCoords[ii][jj] = IRIS_FloatFromLittle( faceentry.TexCoords[ii][jj] );
+			}
+		}
+		faceentry.TextureIndex = IRIS_SwapI32 (faceentry.TextureIndex);
+		faceentry.Flags = IRIS_SwapU32 (faceentry.Flags);
+
+		cStaticModelNode *model_nodes[3];
+
+		for ( nodeindex = 0; nodeindex < 3; nodeindex++ )
+		{
+			if ( faceentry.Nodes[nodeindex] >= m_nodes.size() )
+			{
+				THROWEXCEPTION( "invalid model stream" );
+			}
+			model_nodes[nodeindex] = m_nodes[faceentry.Nodes[nodeindex]];
+		}
+
+		cStaticModelFace *face = new cStaticModelFace( faceentry.FaceLightNodes, model_nodes, 
+			faceentry.Normal, faceentry.TexCoords, faceentry.Flags );
+
+		for ( nodeindex = 0; nodeindex < 3; nodeindex++ )
+		{
+			if ( faceentry.FaceLightNodes[nodeindex] >= m_face_light_nodes.size() )
+			{
+				THROWEXCEPTION ("invalid model stream");
+			}
+			face->m_face_light_nodes[nodeindex] = m_face_light_nodes[faceentry.FaceLightNodes[nodeindex]];
+		}
+
+		if ( faceentry.TextureIndex >= 0 )
+		{
+			face->setTexture( faceentry.TextureIndex );
+		}
+		else
+		{
+			face->setTexture( -m_modelid );
+		}
+		m_faces.push_back( face );
+	}
+
+	header.RasterStart = IRIS_SwapU32( header.RasterStart );
+	if ( header.RasterStart )
+	{
+		stream->seekg( header.RasterStart + stream_start, ios::beg );
+		m_raster.LoadFromStream( stream );
+	}
+
+	CreateVertieces();
 }
 
 
-cStaticModel::~cStaticModel ()
+cStaticModel::~cStaticModel()
 {
-  unsigned int index;
-  for (index = 0; index < m_nodes.size (); index++)
-    delete m_nodes[index];
-  for (index = 0; index < m_face_light_nodes.size (); index++)
-    delete m_face_light_nodes[index];
-  for (index = 0; index < m_point_light_nodes.size (); index++)
-    delete m_point_light_nodes[index];
-  for (index = 0; index < m_faces.size (); index++)
-    delete m_faces[index];
-  m_face_light_nodes.clear ();
-  m_point_light_nodes.clear ();
-  m_nodes.clear ();
+	SAFE_DELETE( light_source_info );
+	SAFE_DELETE( particle_effect_info );
 
-  m_faces.clear ();
+	unsigned int index;
+	for ( index = 0; index < m_nodes.size(); index++ )
+	{
+		SAFE_DELETE( m_nodes[index] );
+	}
+	
+	for ( index = 0; index < m_face_light_nodes.size(); index++ )
+	{
+		SAFE_DELETE( m_face_light_nodes[index] );
+	}
 
-  delete light_source_info;
-  light_source_info = NULL;
+	for ( index = 0; index < m_point_light_nodes.size(); index++ )
+	{
+		SAFE_DELETE( m_point_light_nodes[index] );
+	}
+	for ( index = 0; index < m_faces.size(); index++ )
+	{
+		SAFE_DELETE( m_faces[index] );
+	}
+	
+	m_nodes.clear();
+	m_face_light_nodes.clear();
+	m_point_light_nodes.clear();
+	m_faces.clear();
 
-  delete particle_effect_info;
-  particle_effect_info = NULL;
-
-  free (m_vertieces);
-  m_vertieces = NULL;
+	free( m_vertieces );
+	m_vertieces = NULL;
 }
 
 void cStaticModel::CreateVertieces ()

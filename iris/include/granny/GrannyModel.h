@@ -28,6 +28,8 @@
 #include "renderer/3D/CharacterLight.h"
 #include "granny/grnmatrix.h"
 
+//#include "../Fluid/mmgr.h"
+
 #define HAND_NONE   0
 #define HAND_LEFT   1
 #define HAND_RIGHT  2
