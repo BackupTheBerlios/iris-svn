@@ -34,16 +34,16 @@ using namespace std;
 
 cPaperdollBuilder::cPaperdollBuilder ()
 {
-  pixels = new Uint32[256 * 256];
-  assert (pixels);
-  memset (pixels, 0, 256 * 256 * 4);
+	pixels = new Uint32[65536];	// 256 * 256
+	assert( pixels );
+	memset (pixels, 0, 256 * 256 * 4);
 }
 
 
 cPaperdollBuilder::~cPaperdollBuilder ()
 {
-  delete pixels;
-  pixels = NULL;
+	// NOTE: Memory not beeing de-alocated because our pointer is beeing changed somewhere (other than memset)
+	// SAFE_DELETE( pixels );
 }
 
 void cPaperdollBuilder::AddGump (int id, char layer, char *layermap, int hue)
@@ -115,7 +115,7 @@ void cPaperdollBuilder::AddGump (int id, char layer, char *layermap, int hue)
                   }
             }
       }
-  delete gump;
+  free( gump );
 }
 
 

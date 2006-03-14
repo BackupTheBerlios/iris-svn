@@ -30,6 +30,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include "Common.h"
 #include "include.h"
 #include "../renderer/Texture.h"
 
@@ -39,7 +40,8 @@
 class cPaperdollBuilder
 {
 private:
-   Uint32 * pixels;
+   Uint32 *pixels;
+
 public:
     cPaperdollBuilder ();
    ~cPaperdollBuilder ();

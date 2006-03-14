@@ -1,3 +1,9 @@
+14.03.2006
+Changes by Nuno Ramiro
+	- Paperdoll open memory leak.
+	- Paperdoll close memory leak.
+	- BackPack memory leak.
+
 13.03.2006
 Changes by Nuno Ramiro
 	- Stability.

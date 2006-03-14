@@ -3,6 +3,7 @@
 - When opening the "Bag" you can get multiple bags						- Needs fixing
 - When clicking self it opens the tooltips but if you click somewhere it doesn't go away	- Needs debug
 - When login then log out and exit Iris crashes							- Needs fixing
+- When logging in the shard name and char name does not display correctly (wrong font?)		- Needs fixing
 
 - Crash on log out?										- FIXED
 - When clicking with the middle side button it crashes with "Unhandled exception" 		- FIXED

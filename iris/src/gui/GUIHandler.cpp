@@ -149,7 +149,7 @@ void GUIHandler::CloseWindow( int controlid )
         control->DoOnClose();
         control_root.erase( controlid );
         z_root.erase( control->GetZ() );
-        delete control;
+		// NOTE: Do _NOT_ try to delete control since we did not alocate memory for it.
       }
   if (controlid == focusid)
       {

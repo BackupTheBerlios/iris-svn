@@ -260,9 +260,13 @@ int ItemContainer::HandleMessage (gui_message * msg)
 
 void ItemContainer::Clear ()
 {
-  std::map < Uint32, cItemContainerEntry * >::iterator iter;
-  for (iter = entries.begin (); iter != entries.end (); iter++)
-    delete iter->second;
+	std::map < Uint32, cItemContainerEntry * >::iterator iter;
+	
+	for (iter = entries.begin (); iter != entries.end (); iter++)
+	{
+		// NOTE: Something's wrong with this, we are trying to de allocate memory that was not allocated.
+		// SAFE_DELETE( iter->second );
+	}
   entries.clear ();
 }
 

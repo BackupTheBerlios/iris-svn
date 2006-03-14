@@ -27,10 +27,11 @@
 #include <windows.h>
 #endif
 
+#include <map>
+#include "Common.h"
 #include "Game.h"
 #include "SDL/SDL.h"
 #include "Control.h"
-#include <map>
 #include "renderer/Texture.h"
 #include "renderer/DynamicObjects.h"
 

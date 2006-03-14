@@ -577,8 +577,7 @@ void Game::HandleMouseMotion( SDL_MouseMotionEvent * event )
 }
 
 
-void Game::HandleClick( int x, int y, unsigned int buttonstate,
-                     bool double_click )
+void Game::HandleClick( int x, int y, unsigned int buttonstate, bool double_click )
 {
 /*	float vecP[3];
 	vecP[0] = -2.0f;

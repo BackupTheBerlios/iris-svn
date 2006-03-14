@@ -109,7 +109,7 @@ void Paperdoll::AssignChar (cCharacter * character)
 
   delete texture;
 
-  cPaperdollBuilder *builder = new cPaperdollBuilder;
+  cPaperdollBuilder *builder = new cPaperdollBuilder();
   assert (builder);
 
   int base_id = 50000;
@@ -160,7 +160,7 @@ void Paperdoll::AssignChar (cCharacter * character)
                                 layermap, equip->hue ());
             }
       }
-  texture = builder->CreateTexture ();
+  texture = builder->CreateTexture();
 
   delete builder;
 
