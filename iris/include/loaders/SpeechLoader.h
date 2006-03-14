@@ -34,25 +34,23 @@
 
 //#include "../Fluid/mmgr.h"
 
-typedef std::map < std::string, Uint16> speech_language;
+typedef std::map<std::string, Uint16> speech_language;
 
-class cSpeechLoader
+class SpeechLoader
 {
 public:
-	cSpeechLoader();
-	~cSpeechLoader();
+	SpeechLoader( std::string sPath );
+	~SpeechLoader();
 
-	void Init( std::string path );
-	void DeInit();
-      
+	static SpeechLoader *GetInstance();
+
 	Uint16 GetID( std::string keyword );
 	std::vector<Uint16> GetIDs( std::string keyword );
 
 private:
+	static SpeechLoader *m_sgSpeechLoader;
 	std::map<std::string, Uint16> m_keywords;
 	std::vector<speech_language> m_languages;
 };
-
-extern cSpeechLoader pSpeechLoader;
 
 #endif // _SPEECHLOADER_H_

@@ -36,6 +36,7 @@
 
 #include "SDL/SDL.h"
 #include "SDL/SDL_net.h"
+#include "Common.h"
 #include "Packet.h"
 #include "uo_huffman.h"
 #include "renderer/Characters.h"

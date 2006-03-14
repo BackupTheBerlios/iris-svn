@@ -91,8 +91,9 @@ public:
 
 	static Game *GetInstance();
 
-	bool Init( void );  /** Initialize a new game */
+	bool IsPaused() const;
 
+	bool Init( void );  /** Initialize a new game */
 
 	void RenderScene( void ); /** Renders the whole scene */
 	void Handle( void ); /** Handles the scene */
@@ -165,6 +166,7 @@ private:	// Member variables
 	Renderer *m_kRenderer;
 	Mapbuffer3D *m_kMapBuffer3D;
 	ArtLoader *m_kArtLoader;
+	SpeechLoader *m_kSpeechLoader;
 	bool m_paused;
 	bool m_AOSToolTip;
 

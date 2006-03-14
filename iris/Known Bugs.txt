@@ -1,13 +1,13 @@
-- When clicking with the middle side button it crashes with "Unhandled exception" 		- Need debug
-- When clicking with the Right/Middle button (drag+drop) it crashes (login menu)		- Not sure if this only happens to me
-
-- Weird behaviour when closing Iris it doesn't close the console (probably memory leaks)	- Needs debug
 - On login menu, after the music has stopped it does not start again (loop).			- New Feature
 - Options "Music Off" does not work								- Need fixing
 - When opening the "Bag" you can get multiple bags						- Needs fixing
 - When clicking self it opens the tooltips but if you click somewhere it doesn't go away	- Needs debug
-- Crash on log out?										- Needs fixing
+- When login then log out and exit Iris crashes							- Needs fixing
 
+- Crash on log out?										- FIXED
+- When clicking with the middle side button it crashes with "Unhandled exception" 		- FIXED
+- When clicking with the Right/Middle button (drag+drop) it crashes (login menu)		- FIXED
+- Weird behaviour when closing Iris it doesn't close the console (probably memory leaks)	- FIXED
 - Macros output is kinda weird.									- FIXED
 - Can't move only rotate?									- FIXED
 - If Config.xml user/pass is empty when you try to write it under login screen it crashes	- FIXED

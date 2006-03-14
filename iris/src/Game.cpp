@@ -115,6 +115,12 @@ Game *Game::GetInstance()
 }
 
 
+bool Game::IsPaused() const
+{
+	return m_paused;
+}
+
+
 /* Callback handlers */
 void OnAddDynamic( cDynamicObject * object )
 {
@@ -145,7 +151,7 @@ bool Game::Init( void )
 	//SiENcE: just to verify that everything is correct deinit; Logout is normally done via iris.csl script
 	//DeInit();
 
-	//Profiler::Init();
+	////Profiler::Init();
 	//Profiler::Begin("Game");
 
 	Logger::WriteLine( "SYS | Initializing Iris...." );
@@ -311,8 +317,8 @@ void Game::InitRenderer( std::string sMulPath )
     
 	//Profiler::Begin( "Speech" );
     Logger::WriteLine( "\t| -> speech" );
-    pSpeechLoader.Init( sMulPath );
-	Logger::WriteDebug( "\t| -> Bank word: " + pSpeechLoader.GetID( "*bank*" ) );
+    m_kSpeechLoader = new SpeechLoader( sMulPath );
+	Logger::WriteDebug( "\t| -> Bank word: " + m_kSpeechLoader->GetID( "*bank*" ) );
 	//Profiler::End();
     
 	//Profiler::Begin( "Macros" );
@@ -393,6 +399,9 @@ void Game::DeInitRenderer( void )
 
 	Logger::WriteLine( "\t| -> multis" );
 	SAFE_DELETE( pMultisLoader );
+
+	Logger::WriteLine( "\t| -> Speech" );
+	SAFE_DELETE( m_kSpeechLoader );
 }
 
 

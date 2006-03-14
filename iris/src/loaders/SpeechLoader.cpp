@@ -22,111 +22,122 @@
  *
  *****/
 
-
 #include "loaders/SpeechLoader.h"
 
-cSpeechLoader pSpeechLoader;
+SpeechLoader *SpeechLoader::m_sgSpeechLoader = NULL;
 
-cSpeechLoader::cSpeechLoader ()
+
+SpeechLoader::SpeechLoader( std::string sPath )
 {
-}
+	assert( m_sgSpeechLoader == NULL );
+	m_sgSpeechLoader = this;
 
-cSpeechLoader::~cSpeechLoader ()
-{
-    DeInit ();
-}
+	std::ifstream ifSpeechLoader;
 
-void cSpeechLoader::Init( std::string path )
-{
-	std::ifstream Speechfile;
+	const std::string sFileName = sPath + "speech.mul";
+	Logger::WriteDebug( "\t| -> Speech file: " + sFileName );
 
-	std::string filename = path + "speech.mul";
-	Logger::WriteDebug( "\t| -> Speech file: " + filename );
+	ifSpeechLoader.open( sFileName.c_str(), std::ios::in | std::ios::binary );
 
-	Speechfile.open( filename.c_str (), std::ios::in | std::ios::binary );
-
-	if ( !Speechfile.is_open() )
+	if ( !ifSpeechLoader.is_open() )
 	{
-		Logger::WriteLine ("\t| -> Warning: Couldn't open Speech file" );
-		Speechfile.close ();
-		
+		Logger::WriteLine( "\t| -> Warning: Couldn't open Speech file" );
+		ifSpeechLoader.close();
+
 		return;
 	}
 
-	Speechfile.seekg( 0, std::ios::end );
-	int filelen = Speechfile.tellg();
-	Speechfile.seekg( 0, std::ios::beg );
+	ifSpeechLoader.seekg( 0, std::ios::end );
+	const int filelen = ifSpeechLoader.tellg();
+	ifSpeechLoader.seekg( 0, std::ios::beg );
 
 	Uint16 index;
 	Uint16 keywordlen;
 	char *c_keyword;
 	std::string s_keyword = "";
-  
-	bool first_lan = true;
 
-	while ( Speechfile.tellg () < filelen )
+	 while ( ifSpeechLoader.tellg() < filelen )
+	//while ( !ifSpeechLoader.eof() )
 	{
-		Speechfile.read( (char *) &index, 2 );
+		ifSpeechLoader.read( (char *)&index, 2 );
 		index = SDL_Swap16( index );
 
-		if ( index == 0 && first_lan )
-		{
-			first_lan = false;
-		}
-		else
+		if ( index != 0 )
 		{
 			m_languages.push_back( m_keywords );
 			m_keywords.clear();
 		}
 
-		Speechfile.read( (char *) &keywordlen, 2 );
+		ifSpeechLoader.read( (char *)&keywordlen, 2 );
 		keywordlen = SDL_Swap16( keywordlen );
 		c_keyword = new char[keywordlen + 1];
-		Speechfile.read( (char *) c_keyword, keywordlen );
+		ifSpeechLoader.read( (char *)c_keyword, keywordlen );
 		c_keyword[keywordlen] = 0;
 		s_keyword = std::string( c_keyword );
 		SAFE_DELETE_ARRAY( c_keyword );
 
-        //std::cout << "ID: " << index << " WORD: " << s_keyword << "   len: " << keywordlen << std::endl;
-        //Logger::WriteLine(s_keyword.c_str());
-        m_keywords.insert( make_pair( s_keyword, index ) );
+		//std::cout << "ID: " << index << " WORD: " << s_keyword << "   len: " << keywordlen << std::endl;
+		//Logger::WriteLine( s_keyword.c_str() );
+
+		m_keywords.insert( std::make_pair( s_keyword, index ) );
 	}
 
-	Speechfile.close();
+	ifSpeechLoader.close();
 }
 
-void cSpeechLoader::DeInit ()
+
+SpeechLoader::~SpeechLoader()
 {
- m_keywords.clear();
- m_languages.clear();
+	assert( m_sgSpeechLoader != NULL );
+	m_sgSpeechLoader = NULL;
+
+	m_keywords.clear();
+	m_languages.clear();
 }
 
-Uint16 cSpeechLoader::GetID (std::string keyword)
+SpeechLoader *SpeechLoader::GetInstance()
 {
- for(int i=0;i<m_languages.size();i++){
-  speech_language act_lang = m_languages.at(i);       
-  std::map < std::string, Uint16 >::iterator iter;
-  iter = act_lang.find (keyword);
-  if (iter != act_lang.end ())
-    return iter->second;
- }
-  return 0xFFFF;
-  
+	return m_sgSpeechLoader;
 }
 
-std::vector<Uint16> cSpeechLoader::GetIDs (std::string keyword)
+
+Uint16 SpeechLoader::GetID( std::string keyword )
 {
- std::vector<Uint16> result;
- for(int i=0;i<m_languages.size();i++){
-  speech_language act_lang = m_languages.at(i);       
-  std::map < std::string, Uint16 >::iterator iter;
-  iter = act_lang.find (keyword);
-  if (iter != act_lang.end ())
-    result.push_back(iter->second);
- }
- if(result.size()>0)
-  return result;
-  
- //return 0xFFFF;
+	for ( int i = 0; i < m_languages.size(); i++ )
+	{
+		speech_language act_lang = m_languages.at( i );       
+		std::map<std::string, Uint16>::iterator iter;
+		iter = act_lang.find( keyword );
+
+		if ( iter != act_lang.end() )
+		{
+			return iter->second;
+		}
+	}
+
+	return 0xFFFF;
 }
 
+
+std::vector<Uint16> SpeechLoader::GetIDs( std::string keyword )
+{
+	std::vector<Uint16> result;
+
+	for ( int i = 0; i < m_languages.size(); i++ )
+	{
+		speech_language act_lang = m_languages.at( i );       
+		std::map<std::string, Uint16>::iterator iter;
+		iter = act_lang.find( keyword );
+		
+		if ( iter != act_lang.end() )
+		{
+			result.push_back( iter->second );
+		}
+	}
+	if ( result.size() > 0 )
+	{
+		return result;
+	}
+	
+	return result;
+}

@@ -120,14 +120,17 @@ void SDLEvent::HandleEvent( SDL_Event kEvent, unsigned int uiCurrentTime )
 		break;
 
 	case SDL_MOUSEBUTTONDOWN:
-		if ( ( kEvent.button.button == 4 ) )
+		if ( !Game::GetInstance()->IsPaused() )
 		{
-			pCamera.ChangeZoom( -0.8f );    // Handle mouse wheel up
-		}
+			if ( ( kEvent.button.button == 4 ) )
+			{
+				pCamera.ChangeZoom( -0.8f );    // Handle mouse wheel up
+			}
 
-        if ( ( kEvent.button.button == 5 ) )
-		{
-			pCamera.ChangeZoom( 0.8f );     // Handle mouse wheel down
+			if ( ( kEvent.button.button == 5 ) )
+			{
+				pCamera.ChangeZoom( 0.8f );     // Handle mouse wheel down
+			}
 		}
 		//break;	// ??
 
@@ -407,62 +410,67 @@ void SDLEvent::HandleMouseMotion( SDL_MouseMotionEvent *kEvent )
 	}
 	else
 	{
-		if ( ( kEvent->state & ( SDL_BUTTON( 2 ) | SDL_BUTTON( 3 ) ) ) )
+		// This should not be done this way, we should have a method for our GUI/Menu controls
+		// and another method for in game actions, so we can gain some performance.
+		if ( !Game::GetInstance()->IsPaused() )
 		{
-			/*
-			if ( SDL_GetModState() & KMOD_LSHIFT )
+			if ( ( kEvent->state & ( SDL_BUTTON( 2 ) | SDL_BUTTON( 3 ) ) ) )
 			{
-				pCamera.Rotate( 0.0f, 0.0f, -kEvent->xrel / 3.0f );
-				pCamera.ChangeZoom( kEvent->yrel * 0.05f );
+				/*
+				if ( SDL_GetModState() & KMOD_LSHIFT )
+				{
+					pCamera.Rotate( 0.0f, 0.0f, -kEvent->xrel / 3.0f );
+					pCamera.ChangeZoom( kEvent->yrel * 0.05f );
+				}
+				else if ( SDL_GetModState() & ( KMOD_RSHIFT ) )
+				{
+					pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
+				}
+				*/
+
+				if ( kEvent->state & SDL_BUTTON( 1 ) )
+				{
+					pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
+					pCamera.SetForceRotation( true );
+				}
+
+				float fAmount = pCamera.GetAngleZ() - -pClient->player_character()->angle();
+
+				if ( uiKeys[SDLK_UP] == SDL_PRESSED && Config::GetPerspective() == 1 )
+				{
+					int iWalkDirection = WALK_FORWARD;
+
+					if ( fAmount > 215 )
+					{
+						iWalkDirection = WALK_LEFT;
+					}
+					else if ( fAmount < 145 )
+					{
+						iWalkDirection = WALK_RIGHT;
+					}
+
+					if ( iWalkDirection == WALK_LEFT || iWalkDirection == WALK_RIGHT)
+					{
+						Game::GetInstance()->Walk_Simple( iWalkDirection );
+					}
+				}
 			}
-			else if ( SDL_GetModState() & ( KMOD_RSHIFT ) )
+
+			if ( !( kEvent->state & ( SDL_BUTTON( 2 ) | SDL_BUTTON( 3 ) ) ) )
 			{
-				pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
+				pCamera.SetForceRotation( false );
 			}
-			*/
 
 			if ( kEvent->state & SDL_BUTTON( 1 ) )
 			{
-				pCamera.Rotate( kEvent->yrel / 3.0f, 0.0f, -kEvent->xrel / 3.0f );
-				pCamera.SetForceRotation( true );
-			}
-
-			float fAmount = pCamera.GetAngleZ() - -pClient->player_character()->angle();
-
-			if ( uiKeys[SDLK_UP] == SDL_PRESSED && Config::GetPerspective() == 1 )
-			{
-				int iWalkDirection = WALK_FORWARD;
-
-				if ( fAmount > 215 )
+				if ( ( abs( m_iClickDownX - kEvent->x ) > 10 ) && ( abs( m_iClickDownY - kEvent->y ) > 10 ) && !m_bIsDragging )
 				{
-					iWalkDirection = WALK_LEFT;
-				}
-				else if ( fAmount < 145 )
-				{
-					iWalkDirection = WALK_RIGHT;
-				}
-
-				if ( iWalkDirection == WALK_LEFT || iWalkDirection == WALK_RIGHT)
-				{
-					Game::GetInstance()->Walk_Simple( iWalkDirection );
+					Game::GetInstance()->HandleDrag( m_iClickDownX, m_iClickDownY );
+					m_bIsDragging = true;
 				}
 			}
+			Game::GetInstance()->HandleMouseMotion( kEvent );
 		}
-
-		if ( !( kEvent->state & ( SDL_BUTTON( 2 ) | SDL_BUTTON( 3 ) ) ) )
-		{
-			pCamera.SetForceRotation( false );
-		}
-
-		if ( kEvent->state & SDL_BUTTON( 1 ) )
-		{
-			if ( ( abs( m_iClickDownX - kEvent->x ) > 10 ) && ( abs( m_iClickDownY - kEvent->y ) > 10 ) && !m_bIsDragging )
-			{
-				Game::GetInstance()->HandleDrag( m_iClickDownX, m_iClickDownY );
-				m_bIsDragging = true;
-			}
-		}
-		Game::GetInstance()->HandleMouseMotion( kEvent );
 	}
 }
 

@@ -98,8 +98,10 @@ void GUIHandler::ClearControls( void )
 
 	for ( iter = control_root.begin(); iter != control_root.end(); iter++ )
 	{
-		SAFE_DELETE( (*iter).second );
-		//delete (*iter).second;
+		// Memory leak here! -> Trying to delete a Button which was already deleted
+		// or which does not exist, needs debugging.
+
+		// SAFE_DELETE( (*iter).second );
 	}
 
 	control_root.clear();
@@ -107,15 +109,19 @@ void GUIHandler::ClearControls( void )
 }
 
 
-Control *GUIHandler::GetControl (int controlid)
+Control *GUIHandler::GetControl( int controlid )
 {
-  ControlList_t::iterator iter;
+	ControlList_t::iterator iter;
 
-  iter = control_root.find ((Uint32) controlid);
-  if (iter == control_root.end ())
-    return NULL;
-  else
-    return (*iter).second;
+	iter = control_root.find( (Uint32)controlid );
+	if ( iter == control_root.end() )
+	{
+		return NULL;
+	}
+	else
+	{
+		return (*iter).second;
+	}
 }
 
 void GUIHandler::AddControl( Control *control )
