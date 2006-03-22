@@ -163,17 +163,16 @@ int cGrannyModelTD::Age (int tick)
   return tick - last_tick;
 }
 
-void cGrannyModelTD::Free ()
+void cGrannyModelTD::Free()
 {
-	delete default_animation; default_animation = NULL;
+	std::map<int, cGrannyAnimation *>::iterator iter;
+	for ( iter = animations.begin(); iter != animations.end(); iter++ )
+	{
+		SAFE_DELETE( iter->second );
+	}
+	animations.clear();
 
-  map < int, cGrannyAnimation * >::iterator iter;
-  for (iter = animations.begin (); iter != animations.end (); iter++)
-    delete iter->second;
-  animations.clear ();
-
-  delete model;
-  model = NULL;
+	SAFE_DELETE( model );
 }
 
 void cGrannyModelTD::AddAnimation (int animid, std::string filename)

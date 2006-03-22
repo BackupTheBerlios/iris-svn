@@ -72,7 +72,7 @@ bool isMasterName(const char *str)
 	if (strstr(s, "master") || strstr(s, "mesh"))	
 		ismaster = true;
 
-	free(s);
+	// free(s);
 
 	return ismaster;
 }

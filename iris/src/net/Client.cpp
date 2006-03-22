@@ -306,7 +306,7 @@ void cClient::sell (Uint32 id)
 
 cClient::cClient (void (*error_callback) (unsigned int error))
 {
-  copier = new DecompressingCopier;
+  copier = new DecompressingCopier();
   socket = NULL;
   decompress = false;
   connected = false;

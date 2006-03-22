@@ -22,9 +22,9 @@
 #include "Game.h"
 #include "renderer/3D/Renderer3D.h"
 
-//#include "../Tests/Profiler.h"
+//#include "../Fluid/mmgr.h"
 
-//extern SDLScreen *SDLscreen;
+//#include "../Tests/Profiler.h"
 
 // Singleton
 Game *Game::m_sgGame = NULL;
@@ -97,10 +97,8 @@ Game::~Game()
 
 	Logger::WriteLine( "\t| -> Renderer" );
 	SAFE_DELETE( m_kRenderer );
-	Logger::WriteLine( "\t| -> Text Manager" );
+	Logger::WriteLine( "\t| -> Texture Manager" );
 	SAFE_DELETE( pTextManager );
-	Logger::WriteLine( "\t| -> Art Loader" );
-	SAFE_DELETE( m_kArtLoader );
 
 	if ( pClient )
 	{
@@ -330,20 +328,20 @@ void Game::InitRenderer( std::string sMulPath )
 
 void Game::DeInitRenderer( void )
 {
+	Logger::WriteLine( "\t| -> mapinfo" );
+	pMapInfoLoader.DeInit();
+
 	Logger::WriteLine( "\t| -> map" );
 	SAFE_DELETE( pMapLoader );
 
-	Logger::WriteLine( "\t| -> macros" );
-	SAFE_DELETE( pMacroLoader );
-	
 	Logger::WriteLine( "\t| -> ground textures" );
 	pGroundTextureLoader.DeInit();
 
+	Logger::WriteLine( "\t| -> Art Loader" );
+	SAFE_DELETE( m_kArtLoader );
+
 	Logger::WriteLine( "\t| -> fonts" );
 	pFontLoader.DeInit();
-
-	Logger::WriteLine( "\t| -> gumps" );
-	pGumpLoader.DeInit();
 
 	Logger::WriteLine( "\t| -> hues" );
 	pHueLoader.DeInit();
@@ -351,15 +349,11 @@ void Game::DeInitRenderer( void )
 	Logger::WriteLine( "\t| -> tiledata" );
 	pTileDataLoader.DeInit();
 
-	Logger::WriteLine( "\t| -> map buffer" );
-	pMapbufferHandler.DeInit();
-	//SAFE_DELETE( m_kMapBuffer3D );
+	Logger::WriteLine( "\t| -> gumps" );
+	pGumpLoader.DeInit();
 
-
-	pTextureBuffer.Clear();		// ?!? This should be here?
-	
-	Logger::WriteLine( "\t| -> tiledata buffer" );
-	pTileDataBuffer.Clear();
+	Logger::WriteLine( "\t| -> skills" );
+	pSkillLoader.DeInit();
 
 	if ( Config::GetAOS() )
 	{
@@ -367,14 +361,23 @@ void Game::DeInitRenderer( void )
 		pVerdataLoader.DeInit();
 	}
 
+	Logger::WriteLine( "\t| -> map buffer" );
+	pMapbufferHandler.DeInit();
+	//SAFE_DELETE( m_kMapBuffer3D );
+
+	Logger::WriteLine( "\t| -> tiledata buffer" );
+	pTileDataBuffer.Clear();
+
 	Logger::WriteLine ("\t| -> 3D character models");
 	SAFE_DELETE( pGrannyLoader );
 
-	Logger::WriteLine( "\t| -> skills" );
-	pSkillLoader.DeInit();
-
 	Logger::WriteLine( "\t| -> 3D static models" );
 	pStaticModelLoader.DeInit();
+
+	Logger::WriteLine( "\t| -> macros" );
+	SAFE_DELETE( pMacroLoader );
+
+	pTextureBuffer.Clear();		// ?!? This should be here?
 
 	pLightManager.Clear();
 
@@ -393,9 +396,6 @@ void Game::DeInitRenderer( void )
 	
 	Logger::WriteLine( "\t| -> model infos" );
 	pModelInfoLoader.DeInit();
-
-	Logger::WriteLine( "\t| -> mapinfo" );
-	pMapInfoLoader.DeInit();
 
 	Logger::WriteLine( "\t| -> multis" );
 	SAFE_DELETE( pMultisLoader );

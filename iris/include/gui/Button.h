@@ -30,7 +30,7 @@
 #include "SDL/SDL.h"
 #include "Image.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 #define BUTTONGUMP_NORMAL    0
 #define BUTTONGUMP_MOUSEOVER 1
@@ -41,7 +41,7 @@ class Button : public Control
  public:
   Button ();
   Button (int x, int y);
-  virtual ~Button ();
+  ~Button ();
   void SetButton (int type, int gump);
   int GetButton (int type);
   void SetPressed(int pressed);

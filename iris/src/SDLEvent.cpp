@@ -21,7 +21,6 @@
 
 #include "SDLEvent.h"
 
-//extern SDLScreen *SDLscreen;
 bool SDLEvent::m_bQuit = false;
 
 

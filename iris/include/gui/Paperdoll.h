@@ -32,7 +32,7 @@
 
 #include "renderer/Characters.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 class Paperdoll : public Control
 {
@@ -40,7 +40,7 @@ class Paperdoll : public Control
   Paperdoll ();
   Paperdoll (int x, int y);
   Paperdoll (int x, int y, int flags);
-  virtual ~Paperdoll ();
+  ~Paperdoll ();
   virtual void Draw(GumpHandler * gumps);
   
   void AssignChar(cCharacter * character);

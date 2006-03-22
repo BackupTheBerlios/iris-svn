@@ -39,7 +39,7 @@
 #include "sound/SoundMixer.h"
 #include "sound/MusicListLoader.h"
 
-//#include "Engine.h"
+// #include "Engine.h"
 
 ////#include "../Fluid/mmgr.h"
 
@@ -51,9 +51,11 @@
 /// Program Entry point
 int main( int argc, char **args )
 {
-/*	Engine *eng = new Engine();
+/*
+	Engine *eng = new Engine();
 	SAFE_DELETE( eng );
 */
+
 	// Initializes Logger
 	if ( !Logger::Init( Config::GetVersion() ) )
 	{
@@ -136,7 +138,7 @@ int main( int argc, char **args )
 		pCSLHandler.Load( (char *)sScriptPath.c_str() );
 
 		// Init game engine
-		if ( !pGame->Init() )
+		if ( !pGame->Init() ) 
 		{
 			Logger::WriteLine( "\t| -> Error while trying to initialize Game." );
 		}

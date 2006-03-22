@@ -32,13 +32,13 @@
 #include "GrannyModel.h"
 #include "GrannyModelTD.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 class cGrannyModelAOS : public cGrannyModel
 {
 public:
         cGrannyModelAOS (std::string basepath, std::string defaultanim);
-        virtual ~cGrannyModelAOS ();
+        ~cGrannyModelAOS();
            virtual void Render(int animid, int tick, float & curtime, GrnMatrix * left_matrix, GrnMatrix * right_matrix, cCharacterLight * character_light, float r, float g, float b, float alpha, bool is_corpse);
         virtual int Age(int tick);
         virtual void Free ();

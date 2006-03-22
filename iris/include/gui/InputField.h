@@ -23,7 +23,7 @@
 #include "Control.h"
 #include <string>
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 class cTextElement;
 
@@ -51,7 +51,7 @@ private:
 	int (*callback_OnKeyPress) (Control *sender, unsigned short key);
 public:
 	InputField( int x, int y, unsigned int width, unsigned int height, const char *text = 0, unsigned short hue = 0, unsigned char font = 3, char passwordChar = 0 );
-	virtual ~InputField();
+	~InputField();
 
 	bool MouseIsOver(int x, int y);
 

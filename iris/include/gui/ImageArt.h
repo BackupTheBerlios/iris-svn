@@ -30,7 +30,7 @@
 #include "SDL/SDL.h"
 #include "Control.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 
 class ImageArt : public Control
@@ -39,7 +39,7 @@ class ImageArt : public Control
   ImageArt ();
   ImageArt (int x, int y, int texid);
   ImageArt (int x, int y, int texid, int flags);
-  virtual ~ImageArt ();
+  ~ImageArt ();
   void SetTexID (int texid);
   int GetTexID(void);
   void SetHue(int hue){m_hue = hue;}

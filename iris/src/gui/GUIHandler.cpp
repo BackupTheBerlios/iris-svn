@@ -568,40 +568,41 @@ void GUIHandler::SetCursorPos (int x, int y)
   cursory = y;
 }
 
-bool GUIHandler::FindDragContainer (int x, int y, Uint32 * containerid,
-                                    int *drop_x, int *drop_y, Uint32 * charid)
+bool GUIHandler::FindDragContainer( int x, int y, Uint32 *containerid, int *drop_x, int *drop_y, Uint32 *charid )
 {
-  ControlList_t::reverse_iterator iter;
-  for (iter = z_root.rbegin (); iter != z_root.rend (); iter++)
-    if (iter->second->MouseIsOver (x, y))
-        {
-          if (containerid)
-            *containerid =
-              iter->second->FindDragContainer (x, y, drop_x, drop_y, charid);
+	ControlList_t::reverse_iterator iter;
+	
+	for ( iter = z_root.rbegin (); iter != z_root.rend (); iter++ )
+	{
+		if ( iter->second->MouseIsOver( x, y ) )
+		{
+			if ( containerid )
+			{
+				*containerid = iter->second->FindDragContainer( x, y, drop_x, drop_y, charid );
+			}
 
           return true;
         }
+	}
 
   return false;
 }
 
 
-void GUIHandler::LoadDragCursor (Uint16 model)
+void GUIHandler::LoadDragCursor( Uint16 model )
 {
-  if (drag_cursor)
-    delete drag_cursor;
-  drag_cursor = NULL;
+	SAFE_DELETE( drag_cursor );
 
-  if (model)
-      {
-		  drag_cursor = ArtLoader::GetInstance()->LoadArt (model + 16384, true, false, 0);
-      }
+	if ( model )
+	{
+		drag_cursor = ArtLoader::GetInstance()->LoadArt( model + 16384, true, false, 0 );
+	}
 }
 
 
 void GUIHandler::SetDragging (bool dragging)
 {
-  m_dragging = dragging;
+	m_dragging = dragging;
 }
 
 void GUIHandler::AdjustDropPosition (int &x, int &y)

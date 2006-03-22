@@ -54,21 +54,24 @@ struct stTextItem
 /*!
 	This method is for (re-)setting the text (and creating a texture, width, height)
 */
-void cTextElement::setText (const char *text, unsigned short hueId,
-                            unsigned short fontId)
+void cTextElement::setText( const char *text, unsigned short hueId, unsigned short fontId )
 {
 	assert( SDLScreen::GetInstance() );
-  if (p)
-      {
-        delete p->texture;
-        delete p;
-      }
+	if ( p )
+	{
+		SAFE_DELETE( p->texture );
+        SAFE_DELETE( p );
+		p = NULL;
+	}
 
-  TTF_Font *ttf_font = SDLScreen::GetInstance()->GetFont (fontId);
-  if (ttf_font)
-      {
-        if (!hueId)
-           hueId = 0;
+	TTF_Font *ttf_font = SDLScreen::GetInstance()->GetFont( fontId );
+	
+	if ( ttf_font )
+	{
+		if ( !hueId )
+		{
+			hueId = 0;
+		}
 
 //SiENcE: seems to be incorrect
 //          hueId = SDLScreen::GetInstance()->GetDefaultHue (fontId);
@@ -76,124 +79,134 @@ void cTextElement::setText (const char *text, unsigned short hueId,
 //printf ("[hueId %d]\n", hueId);
 //if (hueId == 1152) hueId = 0;
 
-        setTextTTF (text, hueId, ttf_font);
-        //if(_style)
-        TTF_SetFontStyle (ttf_font, _style);
-        return;
-      }
+		setTextTTF( text, hueId, ttf_font );
+		//if(_style)
+		TTF_SetFontStyle( ttf_font, _style );
+		return;
+	}
 
-  unsigned int width = 0;
-  unsigned int height = 0;
-  unsigned int hChar = 0;
-  unsigned int i = 0;
+	unsigned int width = 0;
+	unsigned int height = 0;
+	unsigned int hChar = 0;
+	unsigned int i = 0;
 
-  // Calculate the Width of the whole text first
-  const stFont *font = pFontLoader.getFont (fontId);
+	// Calculate the Width of the whole text first
+	const stFont *font = pFontLoader.getFont( fontId );
 
-  // Simply don't render
-  if (!font)
-    return;
+	// Simply don't render
+	if ( !font )
+	{
+		return;
+	}
 
-  const stHue *hue = 0;
+	const stHue *hue = 0;
 
-  if (hueId != 0)
-    hue = pHueLoader.getHue (hueId - 1);
+	if ( hueId != 0 )
+	{
+		hue = pHueLoader.getHue( hueId - 1 );
+	}
 
-  while (text[i] != 0)
-      {
-        unsigned char c = (unsigned char) text[i++];
+	while ( text[i] != 0 )
+	{
+		unsigned char c = (unsigned char)text[i++];
 
-        if (c < 32)
-            {
-              continue;
-            }
+		if ( c < 32 )
+		{
+			continue;
+		}
 
-        c -= 32;                // First 32 characters are not included
+		c -= 32;                // First 32 characters are not included
 
-        width += font->chars[c].width;
-        hChar = max (hChar, font->chars[c].height);
-      }
+		width += font->chars[c].width;
+		hChar = max( hChar, font->chars[c].height );
+	}
 
-  _width = width;
-  _height = hChar;
+	_width = width;
+	_height = hChar;
 
-  // Width and Height need to be a power of 2
-  height = max (64, hChar);     // Highest Char / Image Height
+	// Width and Height need to be a power of 2
+	height = max( 64, hChar );     // Highest Char / Image Height
 
-  // Make sure that height and width are powers of two so we don't get scaled here (min: 64)
-  i = 64;
+	// Make sure that height and width are powers of two so we don't get scaled here (min: 64)
+	i = 64;
 
-  while (i < width)
-    i *= 2;
+	while ( i < width )
+	{
+		i *= 2;
+	}
 
-  width = i;
+	width = i;
 
-  i = 64;
+	i = 64;
 
-  while (i < height)
-    i *= 2;
+	while ( i < height )
+	{
+		i *= 2;
+	}
 
-  height = i;
+	height = i;
 
-  unsigned int *pixels = new unsigned int[width * height];  // RGBA (32 bit)
-  unsigned int datalength = width * height * 4;
+	unsigned int *pixels = new unsigned int[width * height];  // RGBA (32 bit)
+	unsigned int datalength = width * height * 4;
 
-  memset (pixels, 0, datalength);   // All Transparent
+	memset( pixels, 0, datalength );   // All Transparent
 
-  unsigned int xOffset = 0;
+	unsigned int xOffset = 0;
 
-  i = 0;
+	i = 0;
 
-  // Now copy each character over
-  while (text[i] != 0)
-      {
-        unsigned char c = (unsigned char) text[i++];
+	// Now copy each character over
+	while ( text[i] != 0 )
+	{
+		unsigned char c = (unsigned char)text[i++];
 
-        if (c < 32)
-          continue;
+		if ( c < 32 )
+		{
+			continue;
+		}
 
-        c -= 32;                // First 32 characters are not included
+		c -= 32;                // First 32 characters are not included
 
-        // Calculate the Y offset
-        unsigned int yOffset = hChar - font->chars[c].height;
+		// Calculate the Y offset
+		unsigned int yOffset = hChar - font->chars[c].height;
 
-        // Start at curY and curX and copy the pixels over.
-        // Fonts are encoded Top To Bottom, Left To Right
-        for (unsigned int x = 0; x < font->chars[c].width; ++x)
-            {
-              for (unsigned int y = 0; y < font->chars[c].height; ++y)
-                  {
-                    unsigned int color =
-                      font->chars[c].pixels[y * font->chars[c].width + x];
+		// Start at curY and curX and copy the pixels over.
+		// Fonts are encoded Top To Bottom, Left To Right
+		for ( unsigned int x = 0; x < font->chars[c].width; ++x )
+		{
+			for ( unsigned int y = 0; y < font->chars[c].height; ++y )
+			{
+				unsigned int color = font->chars[c].pixels[y * font->chars[c].width + x];
 
-                    // Alpha
-                    if (color == 0)
-                      continue;
+				// Alpha
+				if ( color == 0 )
+				{
+					continue;
+				}
 
-                    if (hue)
-                      color =
-                        hue->colors[font->chars[c].
-                                    redmask[y * font->chars[c].width + x]];
+				if ( hue )
+				{
+					color = hue->colors[font->chars[c].redmask[y * font->chars[c].width + x]];
+				}
 
-                    pixels[(yOffset + y) * width + (xOffset + x)] = color;
-                  }
-            }
-        xOffset += font->chars[c].width;
-      }
+				pixels[(yOffset + y) * width + (xOffset + x)] = color;
+			}
+		}
+		xOffset += font->chars[c].width;
+	}
 
-  Texture *texture = new Texture();
+	Texture *texture = new Texture();
+	texture->LoadFromData( pixels, width, height, 32, GL_LINEAR );
 
-  texture->LoadFromData (pixels, width, height, 32, GL_LINEAR);
+	SAFE_DELETE_ARRAY( pixels );
 
-  // NOTE: Do _NOT_ try to delete pixels since it was reseted by memset(...)
+	stTextItem *item = new stTextItem();
 
-  stTextItem *item = new stTextItem;
+	item->texture = texture;
+	item->width = width;
+	item->height = height;
 
-  item->texture = texture;
-  item->width = width;
-  item->height = height;
-
-  p = item;
+	p = item;
 }
 
 /*

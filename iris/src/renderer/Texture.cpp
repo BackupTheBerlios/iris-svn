@@ -29,33 +29,30 @@
 
 using namespace std;
 
-Texture::Texture ()
+Texture::Texture() : gltex( 0 ), width( 0 ), height( 0 ), assigned( false ), bitmask( NULL )
 {
-  gltex = 0;
-  width = 0;
-  height = 0;
-  assigned = false;
-  bitmask = NULL;
+
 }
 
-Texture::~Texture ()
+Texture::~Texture()
 {
-  if (assigned && gltex)
-    glDeleteTextures (1, &gltex);
-  gltex = 0;
-  if (bitmask)
-    delete bitmask;
-  bitmask = NULL;
+	if ( assigned && gltex )
+	{
+		glDeleteTextures( 1, &gltex );
+	}
+	gltex = 0;
+
+	SAFE_DELETE( bitmask );
 }
 
 GLuint Texture::GetGLTex (void)
 {
-  return gltex;
+	return gltex;
 }
 
 bool Texture::GetAssigned (void)
 {
-  return assigned;
+	return assigned;
 }
 
 
@@ -70,12 +67,6 @@ int Texture::LoadFromData (void *data, int width, int height,
         Logger::WriteLine("Wrong Pixelformat in Texture::LoadFromData(void *, int, int, int)",
            __FILE__, __LINE__, LEVEL_ERROR);
         return (false);
-      }
-
-  if (bitmask)
-      {
-        delete bitmask;
-        bitmask = NULL;
       }
 
   if (assigned && gltex)
@@ -104,19 +95,20 @@ int Texture::LoadFromData (void *data, int width, int height,
      GL_LINEAR_MIPMAP_LINEAR  - BiLinear Mipmapped texture
    */
 
-  gltex = texture;
-  assigned = true;
-  this->width = width;
-  this->height = height;
+	gltex = texture;
+	assigned = true;
+	this->width = width;
+	this->height = height;
 
-  if (do_bitmask && (bits_per_pixel == 32))
-      {
-        bitmask = new cBitmask;
-        assert (bitmask);
-        bitmask->Create ((Uint32 *) data, width, height);
-      }
+	if ( do_bitmask && ( bits_per_pixel == 32 ) )
+	{
+		SAFE_DELETE( bitmask );
+		bitmask = new cBitmask();
+		assert( bitmask );
+		bitmask->Create( (Uint32 *)data, width, height );
+	}
 
-  return (true);
+	return true;
 }
 
 

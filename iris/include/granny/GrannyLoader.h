@@ -23,10 +23,7 @@
 #ifndef _GRANNYLOADER_H_
 #define _GRANNYLOADER_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
+#include "Common.h"
 #include "SDL/SDL.h"
 #include <string>
 #include <map>
@@ -40,21 +37,20 @@ class cGrannyLoader
 private:
 	std::string mulpath;
 	std::string tex_basepath;
-        std::map <Uint32, cGrannyModel *> models;
-        int tick;
+	std::map <Uint32, cGrannyModel *> models;
+	int tick;
+
 public:
-    cGrannyLoader (std::string filename, std::string mulpath);
-    ~cGrannyLoader ();
+    cGrannyLoader( std::string filename, std::string mulpath );
+    ~cGrannyLoader();
  
     void Clear ();
     void Render(Uint32 id, Uint32 type, float & curtime, cCharacterLight * character_light, float r, float g, float b, float alpha, GrnMatrix * left_matrix = NULL, GrnMatrix * right_matrix = NULL, bool is_corpse = false);
     void Render(Uint32 id, Uint32 type, float & curtime, cCharacterLight * character_light, float r, float g, float b, float alpha, std::vector<int> bodyparts, GrnMatrix * left_matrix = NULL, GrnMatrix * right_matrix = NULL, bool is_corpse = false);
     int GetAnimset(Uint32 id);
     bool isFound(Uint32 id);
-
-protected:
 };
 
-extern cGrannyLoader * pGrannyLoader;
+extern cGrannyLoader *pGrannyLoader;
 
 #endif //_GRANNYLOADER_H_

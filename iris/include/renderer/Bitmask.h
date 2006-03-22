@@ -23,20 +23,15 @@
 #ifndef _BITMASK_H_
 #define _BITMASK_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
+#include "SDL/SDL.h"
 #include <iostream>
 #include <math.h>
-#include <cassert>
+#include <assert.h>
 
 #include "include.h"
 #include "Config.h"
 
-#include "SDL/SDL.h"
-
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 class cBitmask
 {

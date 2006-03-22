@@ -23,7 +23,7 @@
 #ifndef _MAP_H_
 #define _MAP_H_
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 struct MulBlock;
 struct stIndexRecord;
@@ -33,8 +33,9 @@ struct staticentry;
 class MapLoader
 {
 public:
-   virtual void	LoadMapBlock( int x, int y, MulBlock * block ) = 0;
-   virtual struct staticinfo *LoadStatics(int x, int y, int &len) = 0;
+	virtual ~MapLoader() { };
+	virtual void LoadMapBlock( int x, int y, MulBlock * block ) = 0;
+	virtual struct staticinfo *LoadStatics(int x, int y, int &len) = 0;
 };
 
 extern MapLoader *pMapLoader;

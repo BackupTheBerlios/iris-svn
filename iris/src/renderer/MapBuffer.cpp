@@ -163,7 +163,9 @@ void MapbufferHandler::DeInit ()
 
 Mapbuffer *MapbufferHandler::buffer ()
 {
-      if (!map_buffer)
+      if ( !map_buffer )
+	  {
           THROWEXCEPTION ("Invalid Map buffer access");
+	  }
       return map_buffer;
 }

@@ -1,3 +1,14 @@
+22.03.2006
+Changes by Nuno Ramiro
+	- FIXED: 110k Memory leaks (No joking) under Granny models.
+	- FIXED: Granny Bones memory leak.
+
+21.03.2006
+Changes by Nuno Ramiro
+	- ADDED: Pause() and Stop() under Music.
+	- FIXED: Many Drag&Drop memory leaks.
+	- FIXED: Texture/Bitmask memory leak.
+
 14.03.2006
 Changes by Nuno Ramiro
 	- Paperdoll open memory leak.

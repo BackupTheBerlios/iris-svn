@@ -27,13 +27,14 @@
 #include <windows.h>
 #endif
 
+#include "Common.h"
 #include "SDL/SDL.h"
 #include "irisgl.h"
 
 #include "../Buffer.h"
 #include "Bitmask.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 class Texture : public BufferEntry
 {

@@ -30,7 +30,7 @@
 #include "SDL/SDL.h"
 #include "Checkbox.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 //RADIO X Y SELECTEDPIC UNSELECTEDPIC STARTSTATE IDNR
 
@@ -39,7 +39,7 @@ class RadioButton : public Checkbox
  public:
   RadioButton(int checkedpic, int uncheckedpic);
   RadioButton(int x, int y, int checkedpic, int uncheckedpic, bool checked = false);
-  virtual ~RadioButton ();
+  ~RadioButton ();
   void SetGroup(int groupid);
   int GetGroup(void);
   virtual int HandleMessage(gui_message * msg);

@@ -30,7 +30,7 @@
 #include "SDL/SDL.h"
 #include "Control.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 class Texture;
 
@@ -40,7 +40,7 @@ public:
 	Border();
 	Border( int x, int y, unsigned short gump );
 	Border( int x, int y, unsigned short gump, int flags );
-	virtual ~Border();
+	~Border();
   
 	void setGump( unsigned short data ) { generated = false; _gump = data; }
 	unsigned short gump() const { return _gump; }

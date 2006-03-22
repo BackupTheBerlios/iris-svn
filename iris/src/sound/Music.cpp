@@ -19,39 +19,31 @@
 #include "sound/Music.h"
 
 
-Music::Music()
+Music::Music() : m_kMusic( NULL ), m_bPlaying( false )
 { 
-	m_kMusic = NULL; 
 #ifdef WIN32
-	m_kMpeg = NULL; 
+	m_kMpeg = NULL;
 #endif
 }
 
-Music::~Music() 
+Music::~Music()
 {
-	// fade music out for .1 seconds 
-	while ( Mix_PlayingMusic() && !Mix_FadeOutMusic( 100 ) )
+	m_bPlaying = false;
+	Stop();
+#ifdef _WIN32
+	if ( m_kMpeg )
 	{
-		// wait for any fades to complete
-		SDL_Delay( 100 );
+		SMPEG_stop( m_kMpeg );
+		SMPEG_delete( m_kMpeg );
 	}
-
-	// MIDI doesn't fade nor does it turn MusicPlaying off when it completes
-	if ( Mix_PlayingMusic() && !Config::GetMP3() )
-	{
-		// force music to end
-		Mix_HaltMusic();
-	}
-
-	Mix_FreeMusic( m_kMusic );
-	m_kMusic = NULL;
+#endif
 }
 
 
 // Function to read music.ini, will finish when xml support is done
 int Music::Config()
 {
-	return true;
+	return Config::GetMusic();
 }
 
 
@@ -101,6 +93,7 @@ int Music::PlayMusic( std::string sMusicName, int iVolume )
 		SMPEG_loop( m_kMpeg, true );
 
 		SMPEG_play( m_kMpeg );
+		m_bPlaying = true;
 		return 1;
 #endif
 	}
@@ -143,7 +136,9 @@ int Music::PlayMusic( std::string sMusicName, int iVolume )
 		Config::SetMusic( 0 );
 		return false;
 	}
- 
+
+	m_bPlaying = true;
+
 	return true;
 }
 
@@ -219,6 +214,7 @@ int Music::PlayMusic( int iId, int iFormat, int iVolume )
 		SMPEG_loop( m_kMpeg, entry->loop );
 
 		SMPEG_play( m_kMpeg );
+		m_bPlaying = true;
 
 		return true;
 #endif
@@ -228,6 +224,7 @@ int Music::PlayMusic( int iId, int iFormat, int iVolume )
 		sFileName = sMidiPath + sMusicName;
 		//Logger::WriteLine(file.c_str());
 	}
+
 	while ( !Mix_FadeOutMusic( 100 ) && Mix_PlayingMusic() )
 	{
 		// wait for any fades to complete
@@ -251,7 +248,7 @@ int Music::PlayMusic( int iId, int iFormat, int iVolume )
 
 	if ( m_kMusic == NULL )
 	{
-		Logger::WriteLine( "PlayMusic() can not load file", __FILE__, __LINE__, LEVEL_WARNING );
+		Logger::WriteLine( "PlayMusic() can not load file ", __FILE__, __LINE__, LEVEL_WARNING );
 		// this might be a critical error...
 		Config::SetMusic( 0 );
 		
@@ -263,9 +260,11 @@ int Music::PlayMusic( int iId, int iFormat, int iVolume )
 		printf( "Mix_FadeInMusic: %s\n", Mix_GetError() );
 		// well, there's no music, but most games don't break without music...
 		Config::SetMusic( 0 );
-        
+
 		return false;
 	}
+
+	m_bPlaying = true;
 
 	return true;
 }
@@ -274,4 +273,36 @@ int Music::PlayMusic( int iId, int iFormat, int iVolume )
 void Music::MusicVolume( int iVolume )
 {
 	Mix_VolumeMusic( iVolume );
+}
+
+
+void Music::Pause()
+{
+	SMPEG_pause( m_kMpeg );
+}
+
+
+void Music::Stop()
+{
+	if ( m_bPlaying )
+	{
+		// fade music out for .1 seconds 
+		while ( Mix_PlayingMusic() && !Mix_FadeOutMusic( 100 ) )
+		{
+			// wait for any fades to complete
+			SDL_Delay( 100 );
+		}
+
+		// MIDI doesn't fade nor does it turn MusicPlaying off when it completes
+		if ( Mix_PlayingMusic() && !Config::GetMP3() )
+		{
+			// force music to end
+			Mix_HaltMusic();
+			Mix_FreeMusic( m_kMusic );
+			m_kMusic = NULL;
+		}
+#ifdef _WIN32
+		SMPEG_stop( m_kMpeg );
+#endif
+	}
 }

@@ -30,7 +30,7 @@
 #include "SDL/SDL.h"
 #include "Control.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 
 class Image : public Control
@@ -39,7 +39,7 @@ class Image : public Control
   Image ();
   Image (int x, int y, int gump);
   Image (int x, int y, int gump, int flags);
-  virtual ~Image ();
+  ~Image ();
   void SetGump (int gump);
   int GetGump(void);
 

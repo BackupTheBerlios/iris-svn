@@ -33,14 +33,14 @@
 #include "SDL/SDL.h"
 #include "Label.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 
 class Textbox : public Control
 {
 public:
 	Textbox();
-	virtual ~Textbox();
+	~Textbox();
 
 	virtual void Draw( GumpHandler *gumps );
 	void AddMessage(char * message, unsigned int timeout, unsigned short hue = 0);

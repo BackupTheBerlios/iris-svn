@@ -28,7 +28,7 @@
 #include "renderer/3D/CharacterLight.h"
 #include "granny/grnmatrix.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 #define HAND_NONE   0
 #define HAND_LEFT   1
@@ -38,15 +38,15 @@
 class cGrannyModel
 {
 public:
-     virtual void Render(int animid, int tick, float & curtime, GrnMatrix * left_matrix, GrnMatrix * right_matrix, cCharacterLight * character_light, float r, float g, float b, float alpha, bool is_corpse) = 0;
-        virtual int Age(int tick) = 0;
-        virtual void Free () = 0;
-        virtual void AddAnimation(int animid, std::string filename) = 0;
-        virtual void SetHandBones(int left, int right) = 0;
-        virtual void SetHand (int hand) = 0;
-        virtual void SetAnimset(int anim_set) = 0;
-        virtual int animset() = 0;
-private:
+	virtual ~cGrannyModel() { }
+	virtual void Render(int animid, int tick, float & curtime, GrnMatrix * left_matrix, GrnMatrix * right_matrix, cCharacterLight * character_light, float r, float g, float b, float alpha, bool is_corpse) = 0;
+	virtual int Age(int tick) = 0;
+	virtual void Free () = 0;
+	virtual void AddAnimation(int animid, std::string filename) = 0;
+	virtual void SetHandBones(int left, int right) = 0;
+	virtual void SetHand (int hand) = 0;
+	virtual void SetAnimset(int anim_set) = 0;
+	virtual int animset() = 0;
 };
 
 #endif

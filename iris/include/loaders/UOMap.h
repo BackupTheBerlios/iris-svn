@@ -23,6 +23,7 @@
 #ifndef _UOMAP_H_
 #define _UOMAP_H_
 
+#include "Common.h"
 #include "SDL/SDL.h"
 #include <iostream>
 #include <fstream>
@@ -34,7 +35,7 @@
 #include "loaders/MapInfo.h"
 #include "Exception.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 #define UOMAP_MAP0  1
 #define UOMAP_MAP2  2
@@ -51,7 +52,7 @@ private:
 
 public:
    UOMapLoader( char *mapfile, char *staticfile, char *staidx, int type );
-   virtual ~UOMapLoader();
+   ~UOMapLoader();
 
    void	LoadMapBlock( int x, int y, MulBlock *block );
    struct staticinfo *LoadStatics( int x, int y, int &len );

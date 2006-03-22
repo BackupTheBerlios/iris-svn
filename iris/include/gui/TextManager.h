@@ -28,7 +28,7 @@
 #include "renderer/Texture.h"
 #include "SDL/SDL_ttf.h"
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 /*
 	Class for external Text
@@ -50,7 +50,7 @@ public:
 	unsigned int height() const { return _height; }
 
 	cTextElement( const char *text, unsigned short hue = 0, unsigned short font = 3, int style = 0 );
-	virtual ~cTextElement();
+	~cTextElement();
 	
 	Texture * texture ();
 };

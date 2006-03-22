@@ -23,7 +23,7 @@
 #include <assert.h>
 #include <string>
 #include "SDL/SDL_mixer.h"
-#include "SDL/SDL.h"
+//#include "SDL/SDL.h"
 #include "sound/MusicListLoader.h"
 #include "Logger.h"
 #include "Config.h"
@@ -32,7 +32,7 @@
 #include "smpeg/smpeg.h"
 #endif
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 class Music
 {
@@ -45,9 +45,12 @@ public:
 	int PlayMusic( std::string sMusicName, int iVolume = 0 );
 	int PlayMusic( int iId, int iFormat, int iVolume = 0 );
 	void MusicVolume( int iVolume );	// * deprecated *
-	
+	void Pause();
+	void Stop();
+
 private:
 	Mix_Music *m_kMusic;
+	bool m_bPlaying;
 
 #ifdef WIN32
 	SMPEG *m_kMpeg;
@@ -56,4 +59,3 @@ private:
 };
 
 #endif	//_MUSIC_H_
-

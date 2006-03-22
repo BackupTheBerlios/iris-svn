@@ -25,7 +25,7 @@
 #include <vector>
 //class cTextElement;
 
-//#include "../Fluid/mmgr.h"
+////#include "../Fluid/mmgr.h"
 
 #define ALIGN_LEFT  0
 #define ALIGN_CENTER  1
@@ -54,7 +54,7 @@ private:
 	//int crop_w, crop_y;
 public:
 	Label( int x, int y, const char *text, unsigned short hue = 0, unsigned char font = 3 );
-	virtual ~Label();
+	~Label();
 
 	const char *text() const { return _text; }
 	void setText( char *text );

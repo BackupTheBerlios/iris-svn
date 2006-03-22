@@ -23,22 +23,20 @@
 
 #include "renderer/Bitmask.h"
 
-using namespace std;
-
-cBitmask::cBitmask()
+cBitmask::cBitmask() : pixels( NULL )
 {
-	pixels = NULL;
+
 }
 
 cBitmask::~cBitmask()
 {
-	SAFE_DELETE( pixels );
+	SAFE_DELETE_ARRAY( pixels );
 }
 
 
-void cBitmask::Create( Uint32 * data, int width, int height )
+void cBitmask::Create( Uint32 *data, int width, int height )
 {
-	assert (data);
+	assert( data );
 
 	m_width = width;
 	m_height = height;
@@ -46,17 +44,17 @@ void cBitmask::Create( Uint32 * data, int width, int height )
 	int img_mem = width * height;
 	int mask_mem = (img_mem + 7) / 8;
 
-	SAFE_DELETE( pixels );
 	pixels = new Uint8[mask_mem];
 	m_mem = mask_mem;
 
 	Uint8 *dst = pixels;
 	Uint32 *src = data;
 	Uint32 *enddata = data + img_mem;
+	Uint8 b;
 
 	for ( int i = 0; i < mask_mem; i++ )
 	{
-		Uint8 b = 0;
+		b = 0;
 		for ( int j = 0; j < 8; j++ )
 		{
 			if ( *src )

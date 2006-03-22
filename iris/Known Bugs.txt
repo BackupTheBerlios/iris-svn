@@ -1,10 +1,22 @@
-- On login menu, after the music has stopped it does not start again (loop).			- New Feature
-- Options "Music Off" does not work								- Need fixing
-- When opening the "Bag" you can get multiple bags						- Needs fixing
 - When clicking self it opens the tooltips but if you click somewhere it doesn't go away	- Needs debug
+- Options "Music Off" does not work								- Needs fixing
+- When opening the "Bag" you can get multiple bags						- Needs fixing
 - When login then log out and exit Iris crashes							- Needs fixing
 - When logging in the shard name and char name does not display correctly (wrong font?)		- Needs fixing
+- Mouse cursor is bugged (doesn't change as it should) (SiENcE)					- Needs fixing
+- Tooltips are bugged under RunUO, doesn't display the font (cliloc?) (SiENcE)			- Needs fixing
+- When puting a candle on floor and turning it on/off the effect remains on floor (SiENcE)	- Needs fixing
+- When dclicking the candle on backpack it equips but does not disapear from backpack (SiENcE)	- Needs fixing
+- Remove fountain effect from candle since it was for debug purposes (SiENcE)			- Needs fixing
 
+- On login menu, after the music has stopped it does not start again (loop).			- New Feature
+- Hide cursor when changing the view (SiENcE)							- New Feature
+- Hide cursor under First Person View (SiENcE)							- New Feature
+- Unicode support.										- New Feature
+
+
+- Beeing able to stop the Music.								- ADDED
+- Drag & Drop drops the performance to almost null (SiENcE)					- FIXED?
 - Crash on log out?										- FIXED
 - When clicking with the middle side button it crashes with "Unhandled exception" 		- FIXED
 - When clicking with the Right/Middle button (drag+drop) it crashes (login menu)		- FIXED

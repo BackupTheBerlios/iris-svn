@@ -43,9 +43,9 @@ cGrannyModelAOS::cGrannyModelAOS (std::string basepath,
   bodyparts.assign(13,0);
 }
 
-cGrannyModelAOS::~cGrannyModelAOS ()
+cGrannyModelAOS::~cGrannyModelAOS()
 {
-  Free ();
+	Free();
 }
 
 void cGrannyModelAOS::Render (int animid, int tick, float &curtime,
@@ -76,12 +76,14 @@ int cGrannyModelAOS::Age (int tick)
   return tick - last_tick;
 }
 
-void cGrannyModelAOS::Free ()
+void cGrannyModelAOS::Free()
 {
-  map < int, cGrannyModelTD * >::iterator iter;
-  for (iter = models.begin (); iter != models.end (); iter++)
-    delete iter->second;
-  models.clear ();
+	std::map<int, cGrannyModelTD *>::iterator iter;
+	for ( iter = models.begin (); iter != models.end (); iter++ )
+	{
+		SAFE_DELETE( iter->second );
+	}
+	models.clear();
 }
 
 void cGrannyModelAOS::AddAnimation (int animid, std::string filename)
@@ -91,14 +93,16 @@ void cGrannyModelAOS::AddAnimation (int animid, std::string filename)
     iter->second->AddAnimation (animid, filename);
 }
 
-void cGrannyModelAOS::AddModel (int id, std::string filename)
+void cGrannyModelAOS::AddModel( int id, std::string filename )
 {
-  cGrannyModelTD *model =
-    new cGrannyModelTD (filename, basepath, defaultanimname);
+	cGrannyModelTD *model = new cGrannyModelTD( filename, basepath, defaultanimname );
 
-	if (id == 3) // HANDS Part
-		model->SetHand(hand);
-  models.insert (make_pair (id, model));
+	if ( id == 3 ) // HANDS Part
+	{
+		model->SetHand( hand );
+	}
+	
+	models.insert( std::make_pair( id, model ) );
 }
 
 void cGrannyModelAOS::SetHandBones (int left, int right)

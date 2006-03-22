@@ -29,39 +29,45 @@
 
 Control::Control ()
 {
-  x = 0;
-  y = 0;
-  z = 0;
-  focus = 0;
-  alpha = 255;
-  fade = false;
-  id = 0;
-  width = 0;
-  height = 0;
-  next = NULL;
-  tag = NULL;
-  control_type = CONTROLTYPE_UNKNOWN;
-  flags = GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE;
-  callback_OnClose = NULL;
-  callback_OnMouseUp = NULL;
-  callback_OnMouseDown = NULL;
-  parent = NULL;
-  __page = 0;
+	x = 0;
+	y = 0;
+	z = 0;
+	focus = 0;
+	alpha = 255;
+	fade = false;
+	id = 0;
+	width = 0;
+	height = 0;
+	next = NULL;
+	tag = NULL;
+	control_type = CONTROLTYPE_UNKNOWN;
+	flags = GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE;
+	callback_OnClose = NULL;
+	callback_OnMouseUp = NULL;
+	callback_OnMouseDown = NULL;
+	parent = NULL;
+	__page = 0;
 
-  script_funcs = (char **) malloc (SCRIPT_FUNC_COUNT * sizeof (char *));
-  int i;
-  for (i = 0; i < SCRIPT_FUNC_COUNT; i++)
-    script_funcs[i] = NULL;
-  for (i = 0; i < 5; i++)
-    _data[i] = 0;
+	script_funcs = (char **) malloc (SCRIPT_FUNC_COUNT * sizeof (char *));
+	int i;
+	for ( i = 0; i < SCRIPT_FUNC_COUNT; i++ )
+	{
+		script_funcs[i] = NULL;
+	}
+	for ( i = 0; i < 5; i++ )
+	{
+		_data[i] = 0;
+	}
 }
 
-Control::~Control ()
+Control::~Control()
 {
-  for (int i = 0; i < SCRIPT_FUNC_COUNT; i++)
-    if (script_funcs[i])
-      delete script_funcs[i];
-  free (script_funcs);
+	for (int i = 0; i < SCRIPT_FUNC_COUNT; i++)
+	{
+		SAFE_DELETE_ARRAY( script_funcs[i] );
+	}
+	
+	free( script_funcs );
 }
 
 void Control::SetPosition (int x, int y)
@@ -545,21 +551,22 @@ int Control::GetPage (void)
   return __page;
 }
 
-void Control::SetScriptFunction (int id, char *funcname)
+
+void Control::SetScriptFunction( int id, char *funcname )
 {
-  if ((id >= 0) && (id < SCRIPT_FUNC_COUNT))
-      {
-        if (script_funcs[id])
-          delete script_funcs[id];
-        script_funcs[id] = NULL;
-        if (funcname)
-            {
-              int len = strlen (funcname);
-              script_funcs[id] = new char[len + 1];
-              memcpy (script_funcs[id], funcname, len + 1);
-            }
-      }
+	if ( ( id >= 0 ) && ( id < SCRIPT_FUNC_COUNT ) )
+	{
+		SAFE_DELETE_ARRAY( script_funcs[id] );
+
+		if ( funcname )
+		{
+			int len = strlen( funcname );
+			script_funcs[id] = new char[len + 1];
+			memcpy( script_funcs[id], funcname, len + 1 );
+		}
+	}
 }
+
 
 char *Control::GetScriptFunction (int id)
 {

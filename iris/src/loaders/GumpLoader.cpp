@@ -205,17 +205,18 @@ Texture *cGumpLoader::LoadGump (int index)
   return texture;
 }
 
-Texture *cGumpLoader::LoadGumpTiled (int index, int width, int height)
+Texture *cGumpLoader::LoadGumpTiled( int index, int width, int height )
 {
-  int tex_width, tex_height, gump_width, gump_height;
+	int tex_width, tex_height, gump_width, gump_height;
 
-  ASSERT (gumpfile);
-  ASSERT (gumpindex);
+	ASSERT( gumpfile );
+	ASSERT( gumpindex );
 
-  Uint32 *srcData =
-    LoadGumpRaw (index, tex_width, tex_height, gump_width, gump_height);
-  if (!srcData)
-    return NULL;
+	Uint32 *srcData = LoadGumpRaw( index, tex_width, tex_height, gump_width, gump_height );
+	if ( !srcData )
+	{
+		return NULL;
+	}
 
 /*  Texture * texture = new Texture;
   texture->LoadFromData(srcData, tex_width, tex_height, 32, GL_NEAREST);
@@ -225,54 +226,61 @@ Texture *cGumpLoader::LoadGumpTiled (int index, int width, int height)
   
   return texture; */
 
-  if (width <= 0)
-    width = gump_width;
+	if ( width <= 0 )
+	{
+		width = gump_width;
+	}
 
-  if (height <= 0)
-    height = gump_height;
+	if ( height <= 0 )
+	{
+		height = gump_height;
+	}
 
-  // Now determin the "realsize"
-  unsigned short tWidth = 64;
-  unsigned short tHeight = 64;
+	// Now determin the "realsize"
+	unsigned short tWidth = 64;
+	unsigned short tHeight = 64;
 
-  while (tWidth < width)
-    tWidth *= 2;
+	while ( tWidth < width )
+	{
+		tWidth *= 2;
+	}
 
-  while (tHeight < height)
-    tHeight *= 2;
+	while ( tHeight < height )
+	{
+		tHeight *= 2;
+	}
 
-  unsigned int *data = new unsigned int[tHeight * tWidth];
+	unsigned int *data = new unsigned int[tHeight * tWidth];
 
-  memset (data, 0, tHeight * tWidth * 4);
+	memset( data, 0, tHeight * tWidth * 4 );
 
-  // Fill the image row-by-row
-  for (int y = 0; y < height; ++y)
-      {
-        Uint32 *p_dst = data + (y * tWidth);
-        Uint32 *line_src = srcData + ((y % gump_height) * tex_width);
-        Uint32 *p_src = line_src;
-        for (int x = 0; x < width; ++x)
-            {
-              if (p_src - line_src >= gump_width)
-                p_src = line_src;
-              *p_dst = *p_src;
-              p_dst++;
-              p_src++;
+	// Fill the image row-by-row
+	for ( int y = 0; y < height; ++y )
+	{
+		Uint32 *p_dst = data + ( y * tWidth );
+		Uint32 *line_src = srcData + ( ( y % gump_height ) * tex_width );
+		Uint32 *p_src = line_src;
+		for ( int x = 0; x < width; ++x )
+		{
+			if ( p_src - line_src >= gump_width )
+			{
+				p_src = line_src;
+			}
+			*p_dst = *p_src;
+			p_dst++;
+			p_src++;
+		}
+	}
 
+	Texture *texture = new Texture();
 
-            }
-      }
+	texture->LoadFromData( data, tWidth, tHeight, 32, GL_NEAREST );
+	texture->SetRealSize( width, height );
 
+	free( srcData );
+	SAFE_DELETE_ARRAY( data	);
 
-  Texture *texture = new Texture;
-
-  texture->LoadFromData (data, tWidth, tHeight, 32, GL_NEAREST);
-  texture->SetRealSize (width, height);
-
-  free( srcData );
-	// Do _NOT_ delete data since you have memset()...
-
-  return texture;
+	return texture;
 }
 
 

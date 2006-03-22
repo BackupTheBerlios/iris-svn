@@ -521,7 +521,7 @@ void SDLScreen::SetLight( float factor )
 }
 
 
-void SDLScreen::ClearFonts ()
+void SDLScreen::ClearFonts()
 {
 	for ( std::map<Uint32, TTF_Font *>::iterator iter = fonts.begin(); iter != fonts.end(); iter++ )
 	{

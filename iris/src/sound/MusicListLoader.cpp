@@ -30,6 +30,8 @@
 #include <cassert>
 #include "iris_endian.h"
 
+//#include "../Fluid/mmgr.h"
+
 cMusicListLoader *pMusicListLoader = NULL;
 
 cMusicListLoader::cMusicListLoader()

@@ -34,6 +34,8 @@
 
 #include <cassert>
 
+//#include "../Fluid/mmgr.h"
+
 using namespace std;
 
 cGrannyLoader *pGrannyLoader = NULL;
@@ -209,12 +211,12 @@ AOSBodyData AOSBodyInfo[] = {
 class cAnimSet
 {
 public:
-	map < int, string > anim_names;
+	std::map<int, std::string> anim_names;
 	int id;
-	string defaultanim;
+	std::string defaultanim;
 };
 
-cGrannyLoader::cGrannyLoader (string filename, string mulpath)
+cGrannyLoader::cGrannyLoader( string filename, string mulpath )
 {
 	this->mulpath = mulpath;
 	tick = 0;
@@ -240,7 +242,7 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 		return;
 	}
 
-	XML::Node * char_node, *set_node, *value;
+	XML::Node *char_node, *set_node, *value;
 
 	if ( (value = granny->findNode( "TEXTUREPATH" ) ) )
 	{
@@ -250,47 +252,56 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 	assert( !pGrannyTextureLoader );
 	pGrannyTextureLoader = new cGrannyTextureLoader( tex_basepath );
 
-	map<int, cAnimSet *>animsets;
-	map<int, cAnimSet *>::iterator iter;
-	map<int, string>::iterator name_iter;
+	std::map<int, cAnimSet *> animsets;
+	std::map<int, cAnimSet *>::iterator iter;
+	std::map<int, string>::iterator name_iter;
 
 
 	int idx = 0;
-	while ((set_node = granny->findNode ("ANIMSET", idx)))
+	while ( (set_node = granny->findNode("ANIMSET", idx)) )
 	{
-		cAnimSet *animset = new cAnimSet;
-		value = set_node->findNode ("ID");
+		cAnimSet *animset = new cAnimSet();
+		value = set_node->findNode( "ID" );
 		animset->id = (value != NULL) ? value->asInteger() : 0;
-		if ((value = set_node->findNode ("DEFAULTANIM")))
-			animset->defaultanim = mulpath + to_lower (value->asString ());
+		if ( ( value = set_node->findNode( "DEFAULTANIM" )) )
+		{
+			animset->defaultanim = mulpath + to_lower( value->asString() );
+		}
 
 		int idx2 = 0;
 		XML::Node *anim_node;
-		while ((anim_node = set_node->findNode ("ANIMATION", idx2)))
+		while ( (anim_node = set_node->findNode( "ANIMATION", idx2 )) )
 		{
 			std::string animtype = "", filename = "";
-			if ((value = anim_node->findNode ("TYPE")))
-				animtype = value->asString ();
-			if ((value = anim_node->findNode ("FILE")))
-				filename = mulpath + to_lower (value->asString ());
-
-			int anim_typeid = -1;
-			for (int i = 0; TypeInfo[i].blockid != -1; i++)
+			if ( (value = anim_node->findNode( "TYPE" )) )
 			{
-				const TypeData & Data = TypeInfo[i];
-				if (Data.name == animtype)
-					anim_typeid = Data.blockid;
+				animtype = value->asString();
+			}
+			if ( (value = anim_node->findNode ("FILE")) )
+			{
+				filename = mulpath + to_lower( value->asString() );
 			}
 
-			if (anim_typeid != -1)
-				animset->anim_names.
-				insert (make_pair (anim_typeid, filename));
+			int anim_typeid = -1;
+			for ( int i = 0; TypeInfo[i].blockid != -1; i++ )
+			{
+				const TypeData &Data = TypeInfo[i];
+				if ( Data.name == animtype )
+				{
+					anim_typeid = Data.blockid;
+				}
+			}
+
+			if ( anim_typeid != -1 )
+			{
+				animset->anim_names.insert( std::make_pair( anim_typeid, filename ) );
+			}
 
 			idx2++;
 		}
 
 		//animsets.erase(animset->id);
-		animsets.insert (make_pair (animset->id, animset));
+		animsets.insert( std::make_pair( animset->id, animset ) );
 
 		idx++;
 	}
@@ -360,11 +371,11 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 			}
 
 			//models.erase(id);
-			if ( models.find(id) != models.end() )
+			if ( models.find( id ) != models.end() )
 			{
 				//Logger::WriteLine("Warning: duplicated model id : %d", id);
-				delete models.find(id)->second;
-				models.erase(id);
+				SAFE_DELETE( models.find( id )->second );
+				models.erase( id );
 			}
 			models.insert( make_pair( id, model ) );
 		}
@@ -409,11 +420,10 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 
 		iter = animsets.find (animset);
 
-		if (id && (iter != animsets.end ()))
+		if ( id && ( iter != animsets.end() ) )
 		{
 			assert (iter->second);
-			cGrannyModelAOS *model =
-				new cGrannyModelAOS (tex_basepath, iter->second->defaultanim);
+			cGrannyModelAOS *model = new cGrannyModelAOS (tex_basepath, iter->second->defaultanim);
 
 			model->SetHandBones (left_hand_bone, right_hand_bone);
 			model->SetHand (hand);
@@ -421,26 +431,27 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 			model->SetAnimset (animset);
 			for (int i = 0; AOSBodyInfo[i].id != 0; i++)
 			{
-				const AOSBodyData & Data = AOSBodyInfo[i];
-				XML::Node * submodel = char_node->findNode (Data.name);
-				if (submodel)
-					model->AddModel (i,
-					mulpath +
-					to_lower (submodel->asString ()));
+				const AOSBodyData &Data = AOSBodyInfo[i];
+				XML::Node *submodel = char_node->findNode (Data.name);
+				if ( submodel )
+				{
+					model->AddModel( i, mulpath + to_lower( submodel->asString() ) );
+				}
 			}
 
-
-			for (name_iter=iter->second->anim_names.begin(); name_iter!=iter->second->anim_names.end();name_iter++)			  
-				model->AddAnimation(name_iter->first, name_iter->second);
+			for ( name_iter = iter->second->anim_names.begin(); name_iter != iter->second->anim_names.end(); name_iter++ )
+			{
+				model->AddAnimation( name_iter->first, name_iter->second );
+			}
 
 			//models.erase(id);
-			if (models.find(id)!=models.end()) 
+			if ( models.find( id ) != models.end() )
 			{
 				//Logger::WriteLine("Warning: duplicated model id : %d\n", id);
-				delete models.find(id)->second;
-				models.erase(id);
+				SAFE_DELETE( models.find( id )->second );
+				models.erase( id );
 			}
-			models.insert (make_pair (id, model));
+			models.insert( std::make_pair( id, model ) );
 
 		}
 		else
@@ -451,26 +462,29 @@ cGrannyLoader::cGrannyLoader (string filename, string mulpath)
 		idx++;
 	}
 
-	for (iter = animsets.begin (); iter != animsets.end (); iter++)
-		delete iter->second;
-	animsets.clear ();
+	for ( iter = animsets.begin(); iter != animsets.end(); iter++ )
+	{
+		SAFE_DELETE( iter->second );
+	}
+	animsets.clear();
 
 	//delete document;
 }
 
-cGrannyLoader::~cGrannyLoader ()
+cGrannyLoader::~cGrannyLoader()
 {
-	std::map < Uint32, cGrannyModel * >::iterator iter;
-	for (iter = models.begin (); iter != models.end (); iter++)
-		delete iter->second;
-	models.clear ();
+	std::map<Uint32, cGrannyModel *>::iterator iter;
+	for ( iter = models.begin(); iter != models.end(); iter++ )
+	{
+		SAFE_DELETE( iter->second );
+	}
+	models.clear();
 
-	assert (pGrannyTextureLoader);
-	delete pGrannyTextureLoader;
-	pGrannyTextureLoader = NULL;
+	assert( pGrannyTextureLoader );
+	SAFE_DELETE( pGrannyTextureLoader );
 }
 
-void cGrannyLoader::Clear ()
+void cGrannyLoader::Clear()
 {
 }
 
@@ -496,27 +510,22 @@ void cGrannyLoader::Render (Uint32 id, Uint32 type, float &curtime,
 
 }
 
-void cGrannyLoader::Render (Uint32 id, Uint32 type, float &curtime,
-							cCharacterLight * character_light, float r,
-							float g, float b, float alpha,
-							std::vector < int >bodyparts,
-							GrnMatrix * left_matrix, GrnMatrix * right_matrix,
-							bool is_corpse)
+void cGrannyLoader::Render( Uint32 id, Uint32 type, float &curtime, cCharacterLight *character_light, float r,
+							float g, float b, float alpha, std::vector<int> bodyparts, GrnMatrix *left_matrix,
+							GrnMatrix *right_matrix, bool is_corpse )
 {
-	std::map < Uint32, cGrannyModel * >::iterator iter = models.find (id);
+	std::map<Uint32, cGrannyModel *>::iterator iter = models.find( id );
 
 	tick++;
 
-	if (iter != models.end ())
+	if ( iter != models.end() )
 	{
-		assert (iter->second);
-		if ((Config::GetAOS()) && (id == 400 || id == 401))
+		assert( iter->second );
+		if ( ( Config::GetAOS() ) && ( id == 400 || id == 401 ) )
 		{
-			cGrannyModelAOS *model =
-				dynamic_cast < cGrannyModelAOS * >(iter->second);
-			model->setBodyParts (bodyparts);
-			model->Render (type, tick, curtime, left_matrix, right_matrix,
-				character_light, r, g, b, alpha, is_corpse);
+			cGrannyModelAOS *model = dynamic_cast<cGrannyModelAOS *>( iter->second );
+			model->setBodyParts( bodyparts );
+			model->Render( type, tick, curtime, left_matrix, right_matrix, character_light, r, g, b, alpha, is_corpse );
 		}
 	}
 

@@ -32,43 +32,34 @@ UOMapLoader::UOMapLoader( char *mapfile, char *staticfile, char *staidx, int typ
 	m_mapstream = new std::ifstream( mapfile, std::ios::in | std::ios::binary );
 	if ( !m_mapstream->is_open() )
 	{
-		delete m_mapstream;
-		m_mapstream = NULL;
+		SAFE_DELETE( m_mapstream );
 
-		THROWEXCEPTION("Could not load map file: " + std::string(mapfile));
+		THROWEXCEPTION( "Could not load map file: " + std::string(mapfile) );
 	}
 
 	m_staticstream = new std::ifstream( staticfile, std::ios::in | std::ios::binary );
 	if ( !m_staticstream->is_open() )
 	{
-		delete m_mapstream;
-		m_mapstream = NULL;
+		SAFE_DELETE( m_mapstream );
+		SAFE_DELETE( m_staticstream );
 
-		delete m_staticstream;
-		m_staticstream = NULL;
-
-		THROWEXCEPTION("Could not load static file: " + std::string( staticfile ) );
+		THROWEXCEPTION( "Could not load static file: " + std::string( staticfile ) );
 	}
 
 	m_staidxstream = new std::ifstream( staidx, std::ios::in | std::ios::binary );
 	if ( !m_staidxstream->is_open() )
 	{
-		delete m_mapstream;
-		m_mapstream = NULL;
+		SAFE_DELETE( m_mapstream );
+		SAFE_DELETE( m_staticstream );
+		SAFE_DELETE( m_staidxstream );
 
-		delete m_staticstream;
-		m_staticstream = NULL;
-
-		delete m_staidxstream;
-		m_staidxstream = NULL;
-
-		THROWEXCEPTION ("Could not load static index file: " + std::string( staidx ) );
+		THROWEXCEPTION( "Could not load static index file: " + std::string( staidx ) );
 	}
 
 	cMapInfoEntry *mapinfo_entry = pMapInfoLoader.GetMapInfo( type );
 	if ( !mapinfo_entry )
 	{
-          THROWEXCEPTION ("Tried to load unknown map file");
+          THROWEXCEPTION( "Tried to load unknown map file" );
 	}
 	m_iWidth = mapinfo_entry->width();
 	m_iHeight = mapinfo_entry->height();
@@ -77,16 +68,13 @@ UOMapLoader::UOMapLoader( char *mapfile, char *staticfile, char *staidx, int typ
 UOMapLoader::~UOMapLoader()
 {
 	m_mapstream->close();
-	delete m_mapstream;
-	m_mapstream = NULL;
+	SAFE_DELETE( m_mapstream );
 
 	m_staticstream->close();
-	delete m_staticstream;
-	m_staticstream = NULL;
+	SAFE_DELETE( m_staticstream );
 
 	m_staidxstream->close();
-	delete m_staidxstream;
-	m_staidxstream = NULL;
+	SAFE_DELETE( m_staidxstream );
 }
 
 void UOMapLoader::LoadMapBlock( int x, int y, MulBlock *block )
