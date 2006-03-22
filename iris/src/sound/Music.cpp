@@ -278,7 +278,9 @@ void Music::MusicVolume( int iVolume )
 
 void Music::Pause()
 {
+#ifdef _WIN32
 	SMPEG_pause( m_kMpeg );
+#endif
 }
 
 
