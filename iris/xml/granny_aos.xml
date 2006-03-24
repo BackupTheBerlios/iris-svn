@@ -2727,6 +2727,73 @@
     <ID>803</ID>
     <ASSIGN>400</ASSIGN>
   </CHARACTER>
+
+<!------------------------------------ # 8th Anniversary edition ----->
+	<CHARACTER>
+		<ID>866</ID>
+		<DESCRIPTION>H_Male_HelmOfSwiftness_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Male_HelmOfSwiftness_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>869</ID>
+		<DESCRIPTION>H_M_HelmSpirituality_V2</DESCRIPTION>
+		<FILE>Models/Others/H_M_HelmSpirituality_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>870</ID>
+		<DESCRIPTION>Male_Gorget_of_Truth_V2</DESCRIPTION>
+		<FILE>Models/Others/Male_Gorget_of_Truth_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>871</ID>
+		<DESCRIPTION>Male_BreastplateOfJustice_V2</DESCRIPTION>
+		<FILE>Models/Others/Male_BreastplateOfJustice_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>872</ID>
+		<DESCRIPTION>H_M_ArmsOfCompassion_V2</DESCRIPTION>
+		<FILE>Models/Others/H_M_ArmsOfCompassion_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>873</ID>
+		<DESCRIPTION>H_M_Gauntlets_of_Valor_V2</DESCRIPTION>
+		<FILE>Models/Others/H_M_Gauntlets_of_Valor_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>874</ID>
+		<DESCRIPTION>H_Male_LegsOfHonor_Pants_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Male_LegsOfHonor_Pants_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>875</ID>
+		<DESCRIPTION>H_M_Solerete_V2</DESCRIPTION>
+		<FILE>Models/Others/H_M_Solerete_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>876</ID>
+		<DESCRIPTION>H_M_CLoak_Compassion_V2</DESCRIPTION>
+		<FILE>Models/Others/H_M_CLoak_Compassion_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+<!------------------------------------ # 8th Anniversary edition end -->
+
   <CHARACTER>
     <DESCRIPTION>E_Male_Leather01_Gorget_V2</DESCRIPTION>
     <FILE>Models/Others/E_Male_Leather01_Gorget_V2_lod2.grn</FILE>
@@ -2734,6 +2801,45 @@
     <ID>886</ID>
     <ASSIGN>400</ASSIGN>
   </CHARACTER>
+
+<!------------------------------------ # 8th Anniversary edition ----->
+	<CHARACTER>
+		<ID>887</ID>
+		<DESCRIPTION>E_QuiverOfInfinity_V2</DESCRIPTION>
+		<FILE>Models/Others/E_QuiverOfInfinity_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>2848</ID>
+		<DESCRIPTION>H_Male_LegsOfHonor_Pants_Mid_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Male_LegsOfHonor_Pants_Mid_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>2849</ID>
+		<DESCRIPTION>H_Male_LegsOfHonor_Pants_Thigh_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Male_LegsOfHonor_Pants_Thigh_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>2850</ID>
+		<DESCRIPTION>H_Male_LegsOfHonor_Pants_Calf_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Male_LegsOfHonor_Pants_Calf_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>2873</ID>
+		<DESCRIPTION>H_M_Gauntlets_of_Valor_Hands_V2</DESCRIPTION>
+		<FILE>Models/Others/H_M_Gauntlets_of_Valor_Hands_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+	</CHARACTER>
+<!------------------------------------ # 8th Anniversary edition end -->
+
   <CHARACTER>
     <DESCRIPTION>E_Male_Hair05_V2</DESCRIPTION>
     <FILE>Models/Others/E_Male_Hair05_V2_lod2.grn</FILE>
@@ -4298,7 +4404,7 @@
     <ASSIGN>400</ASSIGN>
   </CHARACTER>
 
-  <!-- Equipment Female -->
+  <!---------------------- Equipment Female --------------------------->
   <CHARACTER>
     <DESCRIPTION>H_Female_Hat_Floppy_V2</DESCRIPTION>
     <FILE>Models/Others/H_Female_Hat_Floppy_V2_lod2.grn</FILE>
@@ -5486,6 +5592,116 @@
     <ID>1762</ID>
     <ASSIGN>401</ASSIGN>
   </CHARACTER>
+
+<!------------------------------ # 8th Anniversary edition ------------------>
+	<CHARACTER>
+		<ID>1866</ID>
+		<DESCRIPTION>H_Female_HelmOfSwiftness_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Female_HelmOfSwiftness_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>1869</ID>
+		<DESCRIPTION>H_F_HelmSpirituality_V2</DESCRIPTION>
+		<FILE>Models/Others/H_F_HelmSpirituality_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>1870</ID>
+		<DESCRIPTION>Female_Gorget_of_Truth_V2</DESCRIPTION>
+		<FILE>Models/Others/Female_Gorget_of_Truth_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>1871</ID>
+		<DESCRIPTION>Female_BreastplateOfJustice_V2</DESCRIPTION>
+		<FILE>Models/Others/Female_BreastplateOfJustice_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>1872</ID>
+		<DESCRIPTION>H_F_ArmsOfCompassion_V2</DESCRIPTION>
+		<FILE>Models/Others/H_F_ArmsOfCompassion_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>1873</ID>
+		<DESCRIPTION>H_F_Gauntlets_of_Valor_V2</DESCRIPTION>
+		<FILE>Models/Others/H_F_Gauntlets_of_Valor_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>1874</ID>
+		<DESCRIPTION>H_Female_LegsOfHonor_Pants_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Female_LegsOfHonor_Pants_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>1875</ID>
+		<DESCRIPTION>H_M_Solerete_V2</DESCRIPTION>
+		<FILE>Models/Others/H_M_Solerete_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>1876</ID>
+		<DESCRIPTION>H_F_Cloak_Humility_V2</DESCRIPTION>
+		<FILE>Models/Others/H_F_Cloak_Humility_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+
+	<CHARACTER>
+		<ID>1887</ID>
+		<DESCRIPTION>E_QuiverOfInfinity_V2</DESCRIPTION>
+		<FILE>Models/Others/E_QuiverOfInfinity_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>1888</ID>
+		<DESCRIPTION>H_M_DupreShield_V2</DESCRIPTION>
+		<FILE>Models/Others/H_M_DupreShield_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>3848</ID>
+		<DESCRIPTION>H_Female_LegsOfHonor_Pants_Mid_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Female_LegsOfHonor_Pants_Mid_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>3849</ID>
+		<DESCRIPTION>H_Female_LegsOfHonor_Pants_Thigh_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Female_LegsOfHonor_Pants_Thigh_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>3850</ID>
+		<DESCRIPTION>H_Female_LegsOfHonor_Pants_Calf_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Female_LegsOfHonor_Pants_Calf_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>3873</ID>
+		<DESCRIPTION>H_F_Gauntlets_of_Valor_Hands_V2</DESCRIPTION>
+		<FILE>Models/Others/H_F_Gauntlets_of_Valor_Hands_V2_lod2.grn</FILE>
+		<ANIMSET>1</ANIMSET>
+		<ASSIGN>401</ASSIGN>
+	</CHARACTER>
+<!------------------------------ # 8th Anniversary edition end -------------->
+
   <CHARACTER>
     <DESCRIPTION>E_Female_Hair05_V2</DESCRIPTION>
     <FILE>Models/Others/E_Female_Hair05_V2_lod2.grn</FILE>
@@ -7697,6 +7913,82 @@
     <ASSIGN>400</ASSIGN>
     <HAND>right</HAND>
   </CHARACTER>
+
+<!------------------------------------ # 8th Anniversary edition -->
+	<CHARACTER>
+		<ID>877</ID>
+		<DESCRIPTION>H_Book01_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Book01_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+		<HAND>right</HAND>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>878</ID>
+		<DESCRIPTION>H_Book02_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Book02_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+		<HAND>right</HAND>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>879</ID>
+		<DESCRIPTION>H_Book03_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Book03_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+		<HAND>right</HAND>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>880</ID>
+		<DESCRIPTION>H_Book04_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Book04_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+		<HAND>right</HAND>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>881</ID>
+		<DESCRIPTION>H_Book05_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Book05_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+		<HAND>right</HAND>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>882</ID>
+		<DESCRIPTION>H_Book06_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Book06_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+		<HAND>right</HAND>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>883</ID>
+		<DESCRIPTION>H_Book07_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Book07_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+		<HAND>right</HAND>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>884</ID>
+		<DESCRIPTION>H_Book08_V2</DESCRIPTION>
+		<FILE>Models/Others/H_Book08_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+		<HAND>right</HAND>
+	</CHARACTER>
+	<CHARACTER>
+		<ID>888</ID>
+		<DESCRIPTION>H_M_DupreShield_V2</DESCRIPTION>
+		<FILE>Models/Others/H_M_DupreShield_V2_lod2.grn</FILE>
+		<ANIMSET>0</ANIMSET>
+		<ASSIGN>400</ASSIGN>
+		<HAND>left</HAND>
+	</CHARACTER>
+<!------------------------------------ # 8th Anniversary edition end -->
+
   <CHARACTER>
     <ID>930</ID>
     <DESCRIPTION>Weapon_Scythe</DESCRIPTION>
