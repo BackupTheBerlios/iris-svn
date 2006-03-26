@@ -103,7 +103,7 @@ void cTextElement::setText( const char *text, unsigned short hueId, unsigned sho
 
 	if ( hueId != 0 )
 	{
-		hue = pHueLoader.getHue( hueId - 1 );
+		hue = pHueLoader.getHue( hueId );
 	}
 
 	while ( text[i] != 0 )
@@ -454,7 +454,7 @@ void cTextElement::setTextTTF (const char *text, unsigned short hue,
 
   const struct stHue *sthue = NULL;
   if (hue != 0)
-    sthue = pHueLoader.getHue (hue - 1);
+    sthue = pHueLoader.getHue ( hue );
 
   if (sthue)
       {

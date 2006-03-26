@@ -101,6 +101,9 @@ void cHueLoader::DeInit ()
 
 const stHue *cHueLoader::getHue (unsigned short id)
 {
+  //this fixes the hue colors
+  id--;
+
   std::map < unsigned short, stHue >::iterator it = hues.find (id);
 
   if (it == hues.end ())

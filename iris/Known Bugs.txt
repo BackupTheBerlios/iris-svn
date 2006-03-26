@@ -9,8 +9,7 @@
 - When dclicking the candle on backpack it equips but does not disapear from backpack (SiENcE)	- Needs fixing
 - Remove fountain effect from candle since it was for debug purposes (SiENcE)			- Needs fixing
 - Creating a character you can not choose your skills (they are choosen for you)		- Needs fixing
-- HUE color bug											- Needs fixing
-
+- UOX3 crashes Iris when server sends new music title						- Needs fixing
 
 - Fix for walking code (still messed up with RunUO) (SiENcE)					- Needs testing
 - Fix click/target bugs (sometimes click is not detected and statics height is not detected when click on ground) (SiENcE) - Needs testing
@@ -26,7 +25,6 @@ restarting iris)
 - Fog rendering is wrong (new distance formular)						- Needs testing
 - crash when RunUO-Server uses KnivesChat 2.xx							- Needs testing
 - shadow is too small when mounted / also too big for Birds 					- Needs testing
-
 
 - On login menu, after the music has stopped it does not start again (loop).			- New Feature
 - Hide cursor when changing the view (SiENcE)							- New Feature
@@ -75,3 +73,4 @@ restarting iris)
 - If Config.xml user/pass is empty when you try to write it under login screen it crashes	- FIXED
 - Mouse move over the char does not highlight it (SiENcE)					- FIXED
 - Crash on exit											- FIXED
+- HUE color bug											- FIXED
