@@ -16,97 +16,101 @@
  *
  *****/
 
-
 #include "gui/InputField.h"
-#include "gui/TextManager.h"
-#include "loaders/FontLoader.h"
 
-InputField::~InputField ()
+
+InputField::InputField ( int x, int y, unsigned int width, unsigned int height, const char *text, 
+						unsigned short hue, unsigned char font, char passwordChar )
+{
+	OnKeyPress( NULL );
+	this->x = x;
+	this->y = y;
+	this->_passwordChar = passwordChar;
+	_width = width;
+
+	if ( height != 0 )
+	{
+		_height = height;
+	}
+	else
+	{
+		const stFont *pFont = pFontLoader.getFont( font );
+
+		if ( pFont )
+		{
+			_height = pFont->maxHeight;
+		}
+	}
+
+	// 2 * _height
+	data = new unsigned int[_height * 2];
+
+	for ( int i = 0; i < _height * 2; ++i )
+	{
+		data[i] = 0x7FFFFFFF;
+	}
+
+	caret = new Texture();
+	caret->LoadFromData( data, 2, _height, 32, GL_NEAREST );
+
+	_caretPos = _text.length();
+	xCropOffset = 0;
+
+	_hue = hue;
+	_font = font;
+	tElement = 0;
+	generated = false;
+
+	SetFlags( GUMPFLAG_FOCUSABLE );
+
+	control_type = CONTROLTYPE_INPUTFIELD;
+
+	IgnoreCursorKeys = false;
+
+	setText( (char *)text );
+}
+
+
+InputField::~InputField()
 {
 	SAFE_DELETE( tElement );
 	SAFE_DELETE( caret );
 	SAFE_DELETE_ARRAY( data );
 }
 
-InputField::InputField (int x, int y, unsigned int width, unsigned int height,
-                        const char *text, unsigned short hue,
-                        unsigned char font, char passwordChar)
+
+void InputField::setText( char *text )
 {
-  OnKeyPress (NULL);
-  this->x = x;
-  this->y = y;
-  this->_passwordChar = passwordChar;
-  _width = width;
+	if ( text )
+	{
+		_text = text;
+	}
+	else
+	{
+		_text = "";
+	}
 
-  if (height != 0)
-      {
-        _height = height;
-      }
-  else
-      {
-        const stFont *pFont = pFontLoader.getFont (font);
+	SAFE_DELETE( tElement );
 
-        if (pFont)
-          _height = pFont->maxHeight;
-      }
+	if ( _passwordChar )
+	{
+		// Create a masked text
+		char *pText = new char[_text.length() + 1];
 
-  // 2 * _height
-  data = new unsigned int[_height * 2];
+		pText[_text.length()] = 0;
+		memset( pText, _passwordChar, _text.length() );
+		tElement = new cTextElement( pText, _hue, _font );
 
-  for (int i = 0; i < _height * 2; ++i)
-    data[i] = 0x7FFFFFFF;
+		SAFE_DELETE_ARRAY( pText );
+	}
+	else
+	{
+		tElement = new cTextElement( _text.c_str(), _hue, _font );
+	}
 
-  caret = new Texture();
-  caret->LoadFromData( data, 2, _height, 32, GL_NEAREST );
+	_caretPos = _text.length();
 
-  _caretPos = _text.length ();
-  xCropOffset = 0;
-
-  _hue = hue;
-  _font = font;
-  tElement = 0;
-  generated = false;
-
-  SetFlags (GUMPFLAG_FOCUSABLE);
-
-  control_type = CONTROLTYPE_INPUTFIELD;
-
-  IgnoreCursorKeys = false;
-
-  setText ((char *) text);
-}
-
-void InputField::setText (char *text)
-{
-  if (text)
-      {
-        _text = text;
-      }
-  else
-      {
-        _text = "";
-      }
-
-  delete tElement;
-
-  if (_passwordChar)
-      {
-        // Create a masked text
-        char *pText = new char[_text.length () + 1];
-
-        pText[_text.length ()] = 0;
-        memset (pText, _passwordChar, _text.length ());
-        tElement = new cTextElement (pText, _hue, _font);
-        // Do NOT delete pText since it was memset()..
-      }
-  else
-      {
-        tElement = new cTextElement (_text.c_str (), _hue, _font);
-      }
-
-  _caretPos = _text.length ();
-
-  recalcXCrop ();
+	recalcXCrop();
 }
 
 void InputField::regenerate ()
@@ -121,7 +125,7 @@ void InputField::regenerate ()
         pText[_text.length ()] = 0;
         memset (pText, _passwordChar, _text.length ());
         tElement = new cTextElement (pText, _hue, _font);
-        // Do _NOT_ try to delete pText, since you have done memset()...
+        SAFE_DELETE_ARRAY( pText );
       }
   else
       {
@@ -141,6 +145,7 @@ void InputField::regenerate ()
 
   generated = true;
 }
+
 
 void InputField::recalcXCrop ()
 {
@@ -172,7 +177,7 @@ void InputField::recalcXCrop ()
         pText[_text.length ()] = 0;
         memset (pText, _passwordChar, _text.length ());
         relX = pTextManager->getTextWidth (pText, _font) - 1;
-        // Do NOT delete pText since it was memset()..
+        SAFE_DELETE_ARRAY( pText );
       }
   else
       {
@@ -215,6 +220,7 @@ void InputField::recalcXCrop ()
 
   caretX = x + relX - xCropOffset;
 }
+
 
 void InputField::Draw (GumpHandler * gumps)
 {

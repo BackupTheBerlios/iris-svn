@@ -20,24 +20,9 @@
  *
  *****/
 
-
-#include "iris_endian.h"
-#include <assert.h>
 #include "loaders/StaticTextureLoader.h"
-#include "Logger.h"
-#include "Exception.h"
-#include "uotype.h"
-#include <string.h>
-
-#include "SDL/SDL_image.h"
-
-using namespace std;
-
-cStaticTextureLoader *pStaticTextureLoader = NULL;
 
 char FILEID_GAMEMODELTEXTURE[] = "UI3F";
-
-#define TEXTUREFLAG_COLORKEY 1
 
 struct sTextureFileHeader
 {
@@ -104,8 +89,8 @@ void cStaticTexture::LoadTexture (std::ifstream * stream)
   int oldpos = stream->tellg ();
 
   //ENDIANNESS ? Prolly yes
-  stream->seekg (m_stream_start, ios::beg);
-  stream->read (tempdata, m_stream_length);
+  stream->seekg( m_stream_start, std::ios::beg );
+  stream->read( tempdata, m_stream_length );
   /*
      for( int ii=0; ii<m_stream_length/4; ii++)
      tempdata = (char *) IRIS_SwapU32( (unsigned int) tempdata+ii*4);
@@ -119,7 +104,7 @@ void cStaticTexture::LoadTexture (std::ifstream * stream)
   free (tempdata);
 
   if (!image)
-    THROWEXCEPTION (string ("IMG_Load_RW: ") + string (IMG_GetError ()));
+	  THROWEXCEPTION (std::string ("IMG_Load_RW: ") + std::string (IMG_GetError ()));
 
   m_texture = new Texture;
 
@@ -130,8 +115,9 @@ void cStaticTexture::LoadTexture (std::ifstream * stream)
 
   SDL_FreeSurface (image);
 
-  stream->seekg (oldpos, ios::beg);
+  stream->seekg( oldpos, std::ios::beg );
 }
+
 
 void cStaticTexture::SetColorKey (Uint32 colorkey)
 {
@@ -140,166 +126,179 @@ void cStaticTexture::SetColorKey (Uint32 colorkey)
 }
 
 
-cStaticTextureLoader::cStaticTextureLoader ()
+cStaticTextureLoader::cStaticTextureLoader( std::ifstream *stream, Uint32 length ) : modelstream( stream )
 {
-    modelstream = NULL;
+	std::map <std::string, Uint32> texture_md5_map;
+	unsigned int index;
+
+	std::string md5str;
+
+	ASSERT( stream );
+	texturestream_start = stream->tellg ();
+	texturestream_length = length;
+	texturestream_end = texturestream_start + texturestream_length;
+
+	sTextureFileHeader header;
+
+	if ( texturestream_length < sizeof(header) )
+	{
+		THROWEXCEPTION ("invalid texture stream size (<headersize)");
+	}
+
+	modelstream->read( (char *)&header, sizeof(header) );
+	header.Length = IRIS_SwapU32( header.Length );
+	header.Version = IRIS_SwapU32( header.Version );
+	header.TextureTableStart = IRIS_SwapU32( header.TextureTableStart );
+	header.TextureTableCount = IRIS_SwapU32( header.TextureTableCount );
+	header.GroundTableStart = IRIS_SwapU32( header.GroundTableStart );
+	header.GroundTableCount = IRIS_SwapU32( header.GroundTableCount );
+
+	for ( int ii = 0; ii < 9; ii++ )
+	{
+		header.Reserved[ii] = IRIS_SwapU32( header.Reserved[ii] );
+	}
+
+	/* Check some header information */
+	if ( !CheckHeaderID( header.Sign, FILEID_GAMEMODELTEXTURE ) )
+	{
+		THROWEXCEPTION( "invalid texture stream" );
+	}
+	if ( header.Version != GAMEMODEL_VERSION )
+	{
+		THROWEXCEPTION( "texture stream has an invalid version!" );
+	}
+
+	/*
+	if ( texturestream_length != header.Length )
+	{
+	THROWEXCEPTION( "invalid texture stream size" );
+	}
+	*/
+
+	if ( ( (texturestream_end + texturestream_start) < header.TextureTableStart ) 
+		|| ( (texturestream_end + texturestream_start) < 
+		(header.TextureTableStart + header.TextureTableCount * sizeof(sTextureTableEntry) ) ) )
+	{
+		THROWEXCEPTION( "invalid texture stream" );
+	}
+
+	sTextureTableEntry entry;
+	for ( index = 0; index < header.TextureTableCount; index++ )
+	{
+		modelstream->seekg( header.TextureTableStart + index * sizeof(entry) + texturestream_start, std::ios::beg );
+		modelstream->read( (char *)&entry, sizeof(entry) );
+		entry.start = IRIS_SwapU32( entry.start );
+		entry.length = IRIS_SwapU32( entry.length );
+
+		/* don't trust anything :) */
+		if ( (texturestream_end < entry.start) ||
+			(texturestream_end < entry.start + entry.length) ||
+			(entry.length < sizeof(sTextureFileEntry) ) )
+		{
+			THROWEXCEPTION( "invalid texture stream" );
+		}
+
+		sTextureFileEntry fileentry;
+		modelstream->seekg( entry.start + texturestream_start, std::ios::beg );
+		modelstream->read( (char *)&fileentry, sizeof(fileentry) );
+		fileentry.Width = IRIS_SwapU32( fileentry.Width );
+		fileentry.Height = IRIS_SwapU32( fileentry.Height );
+		fileentry.Length = IRIS_SwapU32( fileentry.Length );
+		fileentry.ColorKey = IRIS_SwapU32( fileentry.ColorKey );
+		fileentry.Flags = IRIS_SwapU32( fileentry.Flags );
+
+		for ( int ii = 0; ii < 3; ii++ )
+		{
+			fileentry.Reserved[ii] = IRIS_SwapU32( fileentry.Reserved[ii] );
+		}
+
+		if ( fileentry.Length + sizeof(fileentry) != entry.length )
+		{
+			THROWEXCEPTION( "invalid texture stream" );
+		}
+
+		cStaticTexture *texture = new cStaticTexture( entry.start + sizeof(fileentry) + texturestream_start, fileentry.Length );
+		if ( fileentry.Flags & TEXTUREFLAG_COLORKEY )
+		{
+			texture->SetColorKey (fileentry.ColorKey);
+		}
+
+		// Generate MD5 lookup list
+		md5str = "";
+		for (int i = 0; i < 32; i++)
+		{
+			md5str += tolower( fileentry.md5sum[i] );
+		}
+		texture_md5_map.insert( std::make_pair( md5str, textures.size() ) );
+
+		textures.push_back( texture );
+	}
+
+	// load ground replacement list
+	ground_texture_map.clear();
+	for ( index = 0; index < header.GroundTableCount; index++ )
+	{
+		sGroundTextureTableEntry groundentry;
+		modelstream->seekg( header.GroundTableStart + index * sizeof(groundentry) + texturestream_start, std::ios::beg );
+		modelstream->read( (char *)&groundentry, sizeof(groundentry) );
+
+		md5str = "";
+		for ( int i = 0; i < 32; i++ )
+		{
+			md5str += tolower( groundentry.md5sum[i] );
+		}
+
+		// find texture
+		std::map<std::string, Uint32>::iterator iter = texture_md5_map.find( md5str );
+
+		// if texture can be found, add to ground_texture_map
+		if ( iter != texture_md5_map.end() )
+		{
+			ground_texture_map.insert( std::make_pair( IRIS_SwapU32( groundentry.id ), iter->second ) );
+			// printf( "%i: %s (%i)\n", groundentry.id, md5str.c_str(), iter->second ); 
+		}
+	}
+
+	texture_md5_map.clear();
 }
 
-cStaticTextureLoader::~cStaticTextureLoader ()
+cStaticTextureLoader::~cStaticTextureLoader()
 {
-    DeInit ();
+	for ( unsigned int index = 0; index < textures.size(); index++ )
+	{
+		SAFE_DELETE( textures[index] );
+	}
+	textures.clear();
+
+	modelstream = NULL;
+	ground_texture_map.clear();
 }
 
-void cStaticTextureLoader::Init (ifstream * stream, Uint32 length)
+
+Texture *cStaticTextureLoader::GetTexture( Uint32 index )
 {
-  map < string, Uint32 > texture_md5_map;
-  unsigned int index;
-
-  DeInit ();
-
-  string md5str;
-
-  ASSERT (stream);
-  modelstream = stream;
-  texturestream_start = stream->tellg ();
-  texturestream_length = length;
-  texturestream_end = texturestream_start + texturestream_length;
-
-  sTextureFileHeader header;
-
-  if (texturestream_length < sizeof (header))
-    THROWEXCEPTION ("invalid texture stream size (<headersize)");
-
-  modelstream->read ((char *) &header, sizeof (header));
-  header.Length = IRIS_SwapU32 (header.Length);
-  header.Version = IRIS_SwapU32 (header.Version);
-  header.TextureTableStart = IRIS_SwapU32 (header.TextureTableStart);
-  header.TextureTableCount = IRIS_SwapU32 (header.TextureTableCount);
-  header.GroundTableStart = IRIS_SwapU32 (header.GroundTableStart);
-  header.GroundTableCount = IRIS_SwapU32 (header.GroundTableCount);
-  for (int ii = 0; ii < 9; ii++)
-    header.Reserved[ii] = IRIS_SwapU32 (header.Reserved[ii]);
-
-  /* Check some header information */
-  if (!CheckHeaderID (header.Sign, FILEID_GAMEMODELTEXTURE))
-    THROWEXCEPTION ("invalid texture stream");
-  if (header.Version != GAMEMODEL_VERSION)
-    THROWEXCEPTION ("texture stream has an invalid version!");
-//    if (texturestream_length != header.Length)
-//        THROWEXCEPTION ("invalid texture stream size");
-
-  if (((texturestream_end + texturestream_start) < header.TextureTableStart)
-      || ((texturestream_end + texturestream_start) <
-          (header.TextureTableStart +
-           header.TextureTableCount * sizeof (sTextureTableEntry))))
-    THROWEXCEPTION ("invalid texture stream");
-
-  sTextureTableEntry entry;
-  for (index = 0; index < header.TextureTableCount; index++)
-      {
-        modelstream->seekg (header.TextureTableStart +
-                            index * sizeof (entry) + texturestream_start,
-                            ios::beg);
-        modelstream->read ((char *) &entry, sizeof (entry));
-        entry.start = IRIS_SwapU32 (entry.start);
-        entry.length = IRIS_SwapU32 (entry.length);
-
-        /* don't trust anything :) */
-        if ((texturestream_end < entry.start) ||
-            (texturestream_end < entry.start + entry.length) ||
-            (entry.length < sizeof (sTextureFileEntry)))
-          THROWEXCEPTION ("invalid texture stream");
-
-        sTextureFileEntry fileentry;
-        modelstream->seekg (entry.start + texturestream_start, ios::beg);
-        modelstream->read ((char *) &fileentry, sizeof (fileentry));
-        fileentry.Width = IRIS_SwapU32 (fileentry.Width);
-        fileentry.Height = IRIS_SwapU32 (fileentry.Height);
-        fileentry.Length = IRIS_SwapU32 (fileentry.Length);
-        fileentry.ColorKey = IRIS_SwapU32 (fileentry.ColorKey);
-        fileentry.Flags = IRIS_SwapU32 (fileentry.Flags);
-        for (int ii = 0; ii < 3; ii++)
-          fileentry.Reserved[ii] = IRIS_SwapU32 (fileentry.Reserved[ii]);
-
-        if (fileentry.Length + sizeof (fileentry) != entry.length)
-          THROWEXCEPTION ("invalid texture stream");
-
-        cStaticTexture *texture =
-          new cStaticTexture (entry.start + sizeof (fileentry) +
-                              texturestream_start, fileentry.Length);
-        if (fileentry.Flags & TEXTUREFLAG_COLORKEY)
-          texture->SetColorKey (fileentry.ColorKey);
-
-        // Generate MD5 lookup list
-        md5str = "";
-        for (int i = 0; i < 32; i++)
-          md5str += tolower (fileentry.md5sum[i]);
-        texture_md5_map.insert (make_pair (md5str, textures.size ()));
-
-        textures.push_back (texture);
-      }
-
-  // load ground replacement list
-  ground_texture_map.clear ();
-  for (index = 0; index < header.GroundTableCount; index++)
-      {
-        sGroundTextureTableEntry groundentry;
-        modelstream->seekg (header.GroundTableStart +
-                            index * sizeof (groundentry) +
-                            texturestream_start, ios::beg);
-        modelstream->read ((char *) &groundentry, sizeof (groundentry));
-
-        md5str = "";
-        for (int i = 0; i < 32; i++)
-          md5str += tolower (groundentry.md5sum[i]);
-        // find texture
-        map < string, Uint32 >::iterator iter = texture_md5_map.find (md5str);
-
-        if (iter != texture_md5_map.end ())
-            {                   // if texture can be found, add to ground_texture_map
-              ground_texture_map.
-                insert (make_pair
-                        (IRIS_SwapU32 (groundentry.id), iter->second));
-//                printf("%i: %s (%i)\n", groundentry.id, md5str.c_str(), iter->second); 
-            }
-      }
-
-
-  texture_md5_map.clear ();
-
-}
-
-void cStaticTextureLoader::DeInit ()
-{
-  for (unsigned int index = 0; index < textures.size (); index++)
-    delete textures[index];
-  textures.clear ();
-
-  modelstream = NULL;
-  ground_texture_map.clear ();
-
-}
-
-Texture *cStaticTextureLoader::GetTexture (Uint32 index)
-{
-  ASSERT (modelstream);
-  ASSERT (index < textures.size ());
+	ASSERT( modelstream );
+	ASSERT( index < textures.size() );
   
-  Texture *result = textures[index]->texture ();
-  if (!result)
-      {
-        textures[index]->LoadTexture (modelstream);
-        result = textures[index]->texture ();
-      }
-  assert (result);
-  return result;
+	Texture *result = textures[index]->texture();
+	if ( !result )
+	{
+		textures[index]->LoadTexture( modelstream );
+		result = textures[index]->texture();
+	}
+	assert( result );
+
+	return result;
 }
 
-Texture *cStaticTextureLoader::GetGroundTexture (Uint32 id)
+
+Texture *cStaticTextureLoader::GetGroundTexture( Uint32 id )
 {
-  std::map < Uint32, Uint32 >::iterator iter = ground_texture_map.find (id);
-  if (iter != ground_texture_map.end ())
-    return GetTexture (iter->second);
-  else
-    return NULL;
+	std::map<Uint32, Uint32>::iterator iter = ground_texture_map.find( id );
+	if ( iter != ground_texture_map.end() )
+	{
+		return GetTexture( iter->second );
+	}
+
+	return NULL;
 }

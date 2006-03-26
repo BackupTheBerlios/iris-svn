@@ -53,7 +53,7 @@
 
 #include "xml.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 extern GUIHandler pUOGUI;
 
@@ -124,10 +124,8 @@ ZString api_control_getid(ZCsl* aCsl)
 	return get_controlid(name.buffer());
 }
 
-ZString api_gui_addform (ZCsl* aCsl)
+ZString api_gui_addform( ZCsl *aCsl )
 {
-
-
 	clear_controlid_list();
 
 	int argCount = aCsl->get("argCount").asInt();
@@ -143,7 +141,8 @@ ZString api_gui_addform (ZCsl* aCsl)
 	XML::Parser parser;
 	XML::Node* form=NULL,* document=NULL;
 	
-	try	{
+	try
+	{
 		parser.loadData(gfm_file);
 		document = parser.parseDocument();
 
@@ -152,7 +151,10 @@ ZString api_gui_addform (ZCsl* aCsl)
 		std::string onclick, onclose, onmouseup, onmousedown, onkeypressed;
 		
 		form = document->findNode("form");
-		if (!form) throw;
+		if ( !form )
+		{
+			throw;
+		}
 		
 		form->lookupAttribute("width", width);
 		form->lookupAttribute("height", height);
@@ -161,14 +163,16 @@ ZString api_gui_addform (ZCsl* aCsl)
 		form->lookupAttribute("shape", shape);
 
 		XML::Node* fade_node = form->findNode("fade");
-		if (fade_node) {
+		if (fade_node)
+		{
 			fade_node->lookupAttribute("alpha", fade_alpha);
 			fade_node->lookupAttribute("time", fade_time);
 		}
 
 		XML::Node* event_node = form->findNode("event");
 
-		if (event_node) {
+		if (event_node)
+		{
 			event_node->lookupAttribute("onclick", onclick);
 			event_node->lookupAttribute("onclose", onclose);
 			event_node->lookupAttribute("onmouseup", onmouseup);
@@ -176,7 +180,8 @@ ZString api_gui_addform (ZCsl* aCsl)
 			event_node->lookupAttribute("onkeypressed", onkeypressed);
 		}	
 
-		if (is_container) {
+		if (is_container)
+		{
 			container = new Container();
 			container->SetPosition(x,y);
 			container->SetSize(width, height);
@@ -184,9 +189,9 @@ ZString api_gui_addform (ZCsl* aCsl)
 			if (fade_time != 0) 
 				container->FadeTo(fade_alpha, fade_time);
 
-			x=0,y=0;
+			x = 0, y = 0;
 			
-			api_addcontrol(container);
+			api_addcontrol( container );
 
 			Control* control=container;
 			if (!onclose.empty()) {
@@ -351,7 +356,10 @@ ZString api_gui_addform (ZCsl* aCsl)
 				}
 		}
 
-		if (!control) continue;
+		if ( !control )
+		{
+			continue;
+		}
 
 		api_addcontrol(control);
 
@@ -371,14 +379,16 @@ ZString api_gui_addform (ZCsl* aCsl)
 		}
 	}
 
-	//delete document;
-	document=NULL;
+	document = NULL;
 
-	if (container) {
-		if (!shape.empty())
-			container->SetShape(get_controlid(shape));
+	if ( container )
+	{
+		if ( !shape.empty() )
+		{
+			container->SetShape( get_controlid( shape ) );
+		}
 		act_container_id = 0;
-		return ZString(container->GetID());
+		return ZString( container->GetID() );
 	}
 
 	return "0";

@@ -20,57 +20,59 @@
  *
  *****/
 
-#ifndef _MODELINFO_LOADER_
-#define _MODELINFO_LOADER_
+#ifndef _MODELINFOLOADER_H_
+#define _MODELINFOLOADER_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
-#include "SDL/SDL.h"
+#include "Common.h"
+#include <iostream>
 #include <string>
 #include <map>
+#include "SDL/SDL.h"
+#include "Logger.h"
+#include "xml.h"
+#include "iris_endian.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 class cModelInfoEntry
 {
-   private:
-     int m_id;
-     float m_scalex;
-     float m_scaley;
-     float m_scalez;
-     int m_alpha;
-     int m_defhue;
-     int m_alt_body;
-   public:
-      cModelInfoEntry (int id, float scalex, float scaley, float scalez, int alpha, int defhue, int alt_body);
-      int id ();
-      float scalex ();
-      float scaley ();
-      float scalez ();
-      int alpha ();
-      int defhue ();
-      int alt_body ();   
+public:
+	cModelInfoEntry( int id, float scalex, float scaley, float scalez, int alpha, int defhue, int alt_body );
+
+	int id();
+	float scalex();
+	float scaley();
+	float scalez();
+	int alpha();
+	int defhue();
+	int alt_body();
+
+private:
+	int m_id;
+	float m_scalex;
+	float m_scaley;
+	float m_scalez;
+	int m_alpha;
+	int m_defhue;
+	int m_alt_body;
 };
 
-class cModelInfoLoader
+class ModelInfoLoader
 {
- private:
-     std::map<int, cModelInfoEntry *> model_infos;
-     float m_scale_factor;
- public:
-  cModelInfoLoader();
-  ~cModelInfoLoader();
+public:
+	ModelInfoLoader( std::string filename );
+	~ModelInfoLoader();
 
-  void Init (std::string filename);
-  void DeInit ();
+	static ModelInfoLoader *GetInstance();
   
-  float getScaleFactor();
+	float getScaleFactor();
   
-  cModelInfoEntry * GetModelEntry(int id);   
+	cModelInfoEntry *GetModelEntry( int id );
+
+private:
+	static ModelInfoLoader *m_sgModelInfoLoader;
+	std::map<int, cModelInfoEntry *> model_infos;
+	float m_scale_factor;
 };
 
-extern cModelInfoLoader pModelInfoLoader;
-
-#endif
+#endif	// _MODELINFOLOADER_H_

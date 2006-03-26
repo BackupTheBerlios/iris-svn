@@ -60,6 +60,12 @@ ArtLoader::~ArtLoader()
 	SAFE_DELETE( m_kArtFile );
 	m_kArtIndex->close();
 	SAFE_DELETE( m_kArtIndex );
+
+	// Delete all created textures
+	for ( unsigned int i = 0; i < m_vTextures.size(); i++ )
+	{
+		SAFE_DELETE( m_vTextures[i] );
+	}
 }
 
 
@@ -226,6 +232,7 @@ Texture *ArtLoader::LoadGroundArt( int index )
 	SAFE_DELETE( data );
 	SAFE_DELETE( rdata );
 	SAFE_DELETE( imagecolors );
+	m_vTextures.push_back( kTexture );
 
 	return kTexture;
 }
@@ -358,6 +365,7 @@ Texture *ArtLoader::LoadStaticArt( int index, bool is2D, bool isCursor )
 
 	SAFE_DELETE_ARRAY( lookuptable );
 	SAFE_DELETE_ARRAY( data );
+	m_vTextures.push_back( kTexture );
 
 	return kTexture;
 }

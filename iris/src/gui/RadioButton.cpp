@@ -21,96 +21,90 @@
  *****/
 
 #include "gui/RadioButton.h"
-#include "gui/Checkbox.h"
-#include "gui/Container.h"
-#include "Logger.h"
-#include "Config.h"
-#include "gui/GUIHandler.h"
-using namespace std;
 
-RadioButton::RadioButton (int checkedpic, int uncheckedpic):Checkbox (checkedpic,
-          uncheckedpic)
+
+RadioButton::RadioButton( int iUnChecked, int iChecked ) : Checkbox( iUnChecked, iChecked )
 {
-  __group = 0;
+	m_iGroup = 0;
 }
 
 
-RadioButton::RadioButton (int x, int y, int checkedpic, int uncheckedpic,
-                          bool checked):Checkbox (x, y, checkedpic,
-                                                  uncheckedpic, checked)
+RadioButton::RadioButton( int iX, int iY, int iUnChecked, int iChecked, bool bChecked ) : 
+			Checkbox( iX, iY, iUnChecked, iChecked, bChecked )
 {
-  __group = 0;
+	m_iGroup = 0;
 }
 
 
-RadioButton::~RadioButton ()
+RadioButton::~RadioButton()
 {
 }
 
 
-
-
-void RadioButton::SetGroup (int groupid)
+void RadioButton::SetGroup( int iGroupId )
 {
-  __group = groupid;
-
+	m_iGroup = iGroupId;
 }
 
 
-int RadioButton::GetGroup (void)
+int RadioButton::GetGroup()
 {
-  return __group;
+	return m_iGroup;
 }
 
 
-int RadioButton::HandleMessage (gui_message * msg)
+int RadioButton::HandleMessage( gui_message *kMsg )
 {
-  if (!msg)
-      {
-        Logger::WriteLine ("NULL msg in RadioButton::HandleMessage(gui_message *)",
-                    __FILE__, __LINE__, LEVEL_ERROR);
-        return false;
-      }
+	if ( !kMsg )
+	{
+		Logger::WriteLine( "NULL msg in RadioButton::HandleMessage(gui_message *)", __FILE__, __LINE__, LEVEL_ERROR );
+		return false;
+	}
 
-  switch (msg->type)
-      {
-      case MESSAGE_MOUSEDOWN:
-        if (MouseIsOver (msg->mouseevent.x, msg->mouseevent.y))
-            {
-              if (!IsChecked ())
-                  {
-                    SetChecked (true);
+	switch ( kMsg->type )
+	{
+	case MESSAGE_MOUSEDOWN:
+		if ( MouseIsOver( kMsg->mouseevent.x, kMsg->mouseevent.y ) )
+		{
+			printf( "%d %d %d\n", x, y, IsChecked() );
+			if ( !IsChecked() )
+			{
+				// Now uncheck all other radios in group:
+				ControlList_t *list = NULL;
+				ControlList_t::iterator iter;
 
-                    //now uncheck all other radios in group:
-                    ControlList_t *list = NULL;
-                    ControlList_t::iterator iter;
+				if ( parent == NULL )
+				{
+					list = pUOGUI.GetControlList();
+				}
+				else
+				{
+					list = parent->GetControlList();
+				}
 
-                    if (parent == NULL)
-                        {
-                          list = pUOGUI.GetControlList ();
+				for ( iter = list->begin(); iter != list->end(); iter++ )
+				{
+					if ( dynamic_cast<RadioButton *>( iter->second ) )
+					{
+						RadioButton *kRadio = (RadioButton *)iter->second;
+						if ( kRadio->GetGroup() == GetGroup() )
+						{
+							kRadio->SetChecked( false );
+						}
+					}
+				}
 
-                        }
-                    else
-                        {
-                          list = parent->GetControlList ();
-                        }
+				// I know I am repeating this instruction but it's the fastest way!
+				SetChecked( true );
 
-                    for (iter = list->begin (); iter != list->end (); iter++)
-                        {
-                          if (dynamic_cast < RadioButton * >(iter->second) &&
-                              iter->second->GetID () != GetID ())
-                              {
-                                RadioButton *r = (RadioButton *) iter->second;
-                                if (r->GetGroup () == GetGroup ())
-                                  r->SetChecked (false);
-                              }
-                        }
-                    return true;
-                  }
-            }
-        break;
-      default:
-        return Control::HandleMessage (msg);
-      }
-  return false;
+				return true;
+			}
+		}
+		break;
+
+	default:
+		return Checkbox::HandleMessage( kMsg );
+	}
+
+	return false;
 }

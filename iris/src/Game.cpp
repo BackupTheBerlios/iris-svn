@@ -22,7 +22,7 @@
 #include "Game.h"
 #include "renderer/3D/Renderer3D.h"
 
-//#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 //#include "../Tests/Profiler.h"
 
@@ -72,6 +72,10 @@ Game::Game()
 	pMultisLoader = NULL;
 	pTextManager = NULL;
 	m_kMapBuffer3D = NULL;
+	m_kMapInfoLoader = NULL;
+	m_kStaticModelLoader = NULL;
+	m_kModelInfoLoader = NULL;
+	m_kTextureBuffer = NULL;
 }
 
 
@@ -146,10 +150,7 @@ void OnDeleteCharacter( cCharacter * character )
 
 bool Game::Init( void )
 {
-	//SiENcE: just to verify that everything is correct deinit; Logout is normally done via iris.csl script
-	//DeInit();
-
-	////Profiler::Init();
+	//Profiler::Init();
 	//Profiler::Begin("Game");
 
 	Logger::WriteLine( "SYS | Initializing Iris...." );
@@ -194,15 +195,15 @@ bool Game::Init( void )
 
 void Game::InitRenderer( std::string sMulPath )
 {
-	string sMulMap0 = sMulPath + "map0.mul";
-	string sMulStatics0 = sMulPath + "statics0.mul";
-	string sMulStaidx0 = sMulPath + "staidx0.mul";
-	string sMulTexmaps = sMulPath + "texmaps.mul";
-	string sMulTexidx = sMulPath + "texidx.mul";
+	std::string sMulMap0 = sMulPath + "map0.mul";
+	std::string sMulStatics0 = sMulPath + "statics0.mul";
+	std::string sMulStaidx0 = sMulPath + "staidx0.mul";
+	std::string sMulTexmaps = sMulPath + "texmaps.mul";
+	std::string sMulTexidx = sMulPath + "texidx.mul";
 
 	//Profiler::Begin( "Map Info" );
 	Logger::WriteLine( "\t| -> mapinfo" );
-	pMapInfoLoader.Init( "xml/Maps.xml" );
+	m_kMapInfoLoader = new MapInfoLoader( "xml/Maps.xml" );
 	//Profiler::End();
 
 	//Profiler::Begin( "Map" );
@@ -281,7 +282,7 @@ void Game::InitRenderer( std::string sMulPath )
 	// Needs tweaking (It's killing performance)
 	//Profiler::Begin( "3D Static Models" );
 	Logger::WriteLine( "\t| -> 3D static models" );
-	pStaticModelLoader.Init( "./data/models.uim" );
+	m_kStaticModelLoader = new StaticModelLoader( "./data/models.uim" );
 	//Profiler::End();
 
 	if ( Config::GetAOS() )
@@ -303,9 +304,15 @@ void Game::InitRenderer( std::string sMulPath )
 		//Profiler::End();
     }
 
+	//Profiler::Begin( "Texture Buffer" );
+	Logger::WriteLine( "\t| -> Texture Buffer" );
+	m_kTextureBuffer = new TextureBuffer();
+	//Profiler::End();
+	
+
 	//Profiler::Begin( "Model infos" );
 	Logger::WriteLine( "\t| -> model infos" );
-	pModelInfoLoader.Init( "xml/ModelsInfo.xml" );
+	m_kModelInfoLoader = new ModelInfoLoader( "xml/ModelsInfo.xml" );
 	//Profiler::End();
 
 	//Profiler::Begin( "Multis" );
@@ -329,7 +336,7 @@ void Game::InitRenderer( std::string sMulPath )
 void Game::DeInitRenderer( void )
 {
 	Logger::WriteLine( "\t| -> mapinfo" );
-	pMapInfoLoader.DeInit();
+	SAFE_DELETE( m_kMapInfoLoader );
 
 	Logger::WriteLine( "\t| -> map" );
 	SAFE_DELETE( pMapLoader );
@@ -372,12 +379,13 @@ void Game::DeInitRenderer( void )
 	SAFE_DELETE( pGrannyLoader );
 
 	Logger::WriteLine( "\t| -> 3D static models" );
-	pStaticModelLoader.DeInit();
+	SAFE_DELETE( m_kStaticModelLoader );
 
 	Logger::WriteLine( "\t| -> macros" );
 	SAFE_DELETE( pMacroLoader );
 
-	pTextureBuffer.Clear();		// ?!? This should be here?
+	Logger::WriteLine( "\t| -> Texture Buffer" );
+	SAFE_DELETE( m_kTextureBuffer );
 
 	pLightManager.Clear();
 
@@ -395,7 +403,7 @@ void Game::DeInitRenderer( void )
 	}
 	
 	Logger::WriteLine( "\t| -> model infos" );
-	pModelInfoLoader.DeInit();
+	SAFE_DELETE( m_kModelInfoLoader );
 
 	Logger::WriteLine( "\t| -> multis" );
 	SAFE_DELETE( pMultisLoader );

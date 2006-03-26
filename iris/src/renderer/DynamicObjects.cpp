@@ -333,7 +333,7 @@ cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
   result->direction = direction;
   result->flag = flag;
 
-        cStaticModel *static_model = pStaticModelLoader.getModel (model);
+  cStaticModel *static_model = StaticModelLoader::GetInstance()->getModel (model);
         if (static_model)
             {
               int blockx = x / 8;

@@ -70,7 +70,7 @@ void GUIHandler::Reset()
 
 void GUIHandler::DeInit()
 {
-	//ClearControls();
+	ClearControls();
 	
 	// SAFE_DELETE_ARRAY( tex_cursors );
 
@@ -98,10 +98,7 @@ void GUIHandler::ClearControls( void )
 
 	for ( iter = control_root.begin(); iter != control_root.end(); iter++ )
 	{
-		// Memory leak here! -> Trying to delete a Button which was already deleted
-		// or which does not exist, needs debugging.
-
-		// SAFE_DELETE( (*iter).second );
+		SAFE_DELETE( (*iter).second );
 	}
 
 	control_root.clear();

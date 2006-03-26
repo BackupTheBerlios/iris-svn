@@ -552,7 +552,7 @@ void cStaticModel::Render (float x, float y, float z, Uint8 alpha)
                   GetGLTex ();
               else
                 face->m_gl_texture =
-                  pTextureBuffer.GetArtTexture (-face->m_texture +
+                  TextureBuffer::GetInstance()->GetArtTexture (-face->m_texture +
                                                  16384)->GetGLTex (); // Not good, can cause texture errors
             }
 

@@ -20,59 +20,60 @@
  *
  *****/
 
-#ifndef _MAPINFO_
-#define _MAPINFO_
+#ifndef _MAPINFO_H_
+#define _MAPINFO_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
+#include "Common.h"
 #include <string>
 #include <map>
+#include <iostream>
+#include <assert.h>
+#include "xml.h"
+#include "Exception.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 class cMapInfoEntry
 {
-    private:
-        int m_id;
-        int m_width;
-        int m_height;
-        std::string m_name;
-        std::string m_skybox;
-        int m_base_id;
-        int m_fog_r;
-        int m_fog_g;
-        int m_fog_b;
-    public:
-       int id ();
-       int width ();
-       int height ();
-       int base_id ();
-       std::string name ();
-       std::string skybox ();
-       
-       int fog_r();
-       int fog_g();
-       int fog_b();
-       
-       cMapInfoEntry (int id, int width, int height, std::string name, std::string skybox, int base_id, int r, int g, int b);
+public:
+	cMapInfoEntry( int id, int width, int height, std::string name, std::string skybox, int base_id, int r, int g, int b );
+
+	int id();
+	int width();
+	int height();
+	int base_id();
+	std::string name();
+	std::string skybox();
+
+	int fog_r();
+	int fog_g();
+	int fog_b();
+
+private:
+	int m_id;
+	int m_width;
+	int m_height;
+	std::string m_name;
+	std::string m_skybox;
+	int m_base_id;
+	int m_fog_r;
+	int m_fog_g;
+	int m_fog_b;
 };
 
-class cMapInfoLoader
+class MapInfoLoader
 {
- private:
-     std::map<int, cMapInfoEntry*> maps;
- public:
-  cMapInfoLoader();
-  ~cMapInfoLoader();
+public:
+	MapInfoLoader( std::string sFileName );
+	~MapInfoLoader();
 
-  void Init (std::string filename);
-  void DeInit ();
+	static MapInfoLoader *GetInstance();
 
-  cMapInfoEntry * GetMapInfo(int id);   
+	cMapInfoEntry *GetMapInfo( int id );
+
+private:
+	static MapInfoLoader *m_sgMapInfoLoader;
+	std::map<int, cMapInfoEntry *> m_vMaps;
 };
 
-extern cMapInfoLoader pMapInfoLoader;
-
-#endif
+#endif	// _MAPINFO_H_

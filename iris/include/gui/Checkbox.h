@@ -23,40 +23,33 @@
 #ifndef _CHECKBOX_H_
 #define _CHECKBOX_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
-#include "SDL/SDL.h"
 #include "Control.h"
 
-////#include "../Fluid/mmgr.h"
+// // #include "../Fluid/mmgr.h"
 
-#define CHECKBOX_CHECKED   1
 #define CHECKBOX_UNCHECKED 0
+#define CHECKBOX_CHECKED   1
 
-//CHECKBOX X Y SELECTEDPIC UNSELECTEDPIC STARTSTATE IDNR
+// CHECKBOX X Y UNSELECTEDPIC SELECTEDPIC STARTSTATE IDNR
 
 class Checkbox : public Control
 {
- public:
-  Checkbox(int checkedpic, int uncheckedpic);
-  Checkbox(int x, int y, int checkedpic, int uncheckedpic, bool startstate = false);
-  virtual ~Checkbox ();
+public:
+	Checkbox( int iCheckedPic, int iUncheckedPic );
+	Checkbox( int iX, int iY, int iCheckedPic, int iUnCheckedPic, bool bStartState );
+	virtual ~Checkbox();
 
-  void SetGump(int type, int gump);
-  void SetChecked(bool _checked);
-  bool IsChecked(void);
+	void SetGump( int iType, int iGump );
+	void SetChecked( bool bChecked );
+	bool IsChecked();
 
-  virtual int HandleMessage(gui_message * msg);
-  virtual void Draw(GumpHandler * gumps);
-  
-   
- private:
-  int __checked_gump;
-  int __unchecked_gump;
-  bool __checked;
+	virtual int HandleMessage( gui_message *kMsg );
+	virtual void Draw( GumpHandler *kGumps );
+
+private:
+	int m_iCheckedGump;
+	int m_iUncheckedGump;
+	bool m_bChecked;
 };
 
-
-#endif
+#endif	// _CHECKBOX_H_

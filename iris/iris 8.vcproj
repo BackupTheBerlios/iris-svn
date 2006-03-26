@@ -354,50 +354,34 @@
 				<File
 					RelativePath=".\xml\config.xml"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\xml\granny.xml"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\xml\granny_aos.xml"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\xml\ground.xml"
+					RelativePath=".\xml\Macros.xml"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\xml\Maps.xml"
+					>
+				</File>
+				<File
+					RelativePath=".\xml\ModelsInfo.xml"
+					>
+				</File>
+				<File
+					RelativePath=".\xml\MusicList.xml"
+					>
+				</File>
+				<File
+					RelativePath=".\xml\particles.xml"
+					>
 				</File>
 			</Filter>
 			<Filter
@@ -477,6 +461,10 @@
 				</File>
 				<File
 					RelativePath=".\src\gui\GUIHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\gui\GUIInput.cpp"
 					>
 				</File>
 				<File
@@ -561,6 +549,10 @@
 				</File>
 				<File
 					RelativePath=".\include\gui\GUIHandler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\gui\GUIInput.h"
 					>
 				</File>
 				<File
@@ -986,54 +978,6 @@
 			</File>
 			<File
 				RelativePath=".\include\granny\grnunhandled.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="net"
-			>
-			<File
-				RelativePath=".\src\net\Client.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\net\Client.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\net\netconfig.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\net\Packet.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\net\Packet.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\net\SDLUtils.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\net\unicode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\net\unicode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\net\uo_huffman.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\net\uo_huffman.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\net\uoproto.h"
 				>
 			</File>
 		</Filter>
@@ -1876,6 +1820,54 @@
 					</FileConfiguration>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="net"
+			>
+			<File
+				RelativePath=".\src\net\Client.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\net\Client.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\net\netconfig.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\net\Packet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\net\Packet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\net\SDLUtils.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\net\unicode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\net\unicode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\net\uo_huffman.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\net\uo_huffman.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\net\uoproto.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\src\main.cpp"

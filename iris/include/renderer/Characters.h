@@ -40,7 +40,7 @@
 #include "renderer/3D/CharacterLight.h"
 #include "uotype.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 struct sSkillEntry {
 	Uint16 value;

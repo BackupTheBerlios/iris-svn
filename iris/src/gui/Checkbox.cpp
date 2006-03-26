@@ -21,108 +21,109 @@
  *****/
 
 #include "gui/Checkbox.h"
-#include "Logger.h"
-#include "Config.h"
-
-using namespace std;
 
 
-Checkbox::Checkbox (int checkedpic, int uncheckedpic)
+Checkbox::Checkbox( int iUnCheckedPic, int iCheckedPic ) : m_bChecked( false )
 {
-  Control::Control ();
-  SetGump (CHECKBOX_CHECKED, checkedpic);
-  SetGump (CHECKBOX_UNCHECKED, uncheckedpic);
-  __checked = false;
-  SetFlag (GUMPFLAG_MOVABLE, false);
+	Control::Control();
+	SetGump( CHECKBOX_CHECKED, iCheckedPic );
+	SetGump( CHECKBOX_UNCHECKED, iUnCheckedPic );
+	SetFlag( GUMPFLAG_MOVABLE, false );
 }
 
 
-Checkbox::Checkbox (int x, int y, int checkedpic, int uncheckedpic,
-                    bool checked)
+Checkbox::Checkbox( int iX, int iY, int iUnCheckedPic, int iCheckedPic, bool bChecked ) : m_bChecked( bChecked )
 {
-  SetGump (CHECKBOX_CHECKED, checkedpic);
-  SetGump (CHECKBOX_UNCHECKED, uncheckedpic);
-  SetPosition (x, y);
-  SetFlag (GUMPFLAG_MOVABLE, false);
-  __checked = checked;
+	SetGump( CHECKBOX_CHECKED, iCheckedPic );
+	SetGump( CHECKBOX_UNCHECKED, iUnCheckedPic );
+	SetPosition( iX, iY );
+	SetFlag( GUMPFLAG_MOVABLE, false );
 }
 
 
-Checkbox::~Checkbox ()
+Checkbox::~Checkbox()
 {
 }
 
 
-void Checkbox::SetGump (int type, int gump)
+void Checkbox::SetGump( int iType, int iGump )
 {
-  if (type == CHECKBOX_CHECKED)
-      {
-        this->__checked_gump = gump;
-      }
-  else if (type == CHECKBOX_UNCHECKED)
-      {
-        this->__unchecked_gump = gump;
-      }
-  else
-      {
-        char errorStr[512];
-        sprintf (errorStr, "Illegal Checkbox state: %d", type);
-        Logger::WriteLine (errorStr, __FILE__, __LINE__, LEVEL_ERROR);
-      }
+	if ( iType == CHECKBOX_CHECKED )
+	{
+		m_iCheckedGump = iGump;
+	}
+	else if ( iType == CHECKBOX_UNCHECKED )
+	{
+		m_iUncheckedGump = iGump;
+	}
+	else
+	{
+		char errorStr[512];
+		sprintf( errorStr, "Illegal Checkbox state: %d", iType );
+        Logger::WriteLine( errorStr, __FILE__, __LINE__, LEVEL_ERROR );
+	}
 }
 
 
-void Checkbox::SetChecked (bool checked)
+void Checkbox::SetChecked( bool bChecked )
 {
-  __checked = checked;
-
-}
-
-bool Checkbox::IsChecked (void)
-{
-  return __checked;
+	m_bChecked = bChecked;
 }
 
 
-void Checkbox::Draw (GumpHandler * gumps)
+bool Checkbox::IsChecked()
 {
-  Control::Draw (gumps);
-  Texture *texture = NULL;
-  if (__checked)
-      {
-        texture = LoadGump (__checked_gump, gumps, false);
-      }
-  else
-      {
-        texture = LoadGump (__unchecked_gump, gumps, false);
-      }
-  if (!GetWidth () || !GetHeight ())
-    SetSize (texture->GetRealWidth (), texture->GetRealHeight ());
-  DrawRect (GetX (), GetY (), GetWidth (), GetHeight (), texture);
-
+	return m_bChecked;
 }
 
 
-int Checkbox::HandleMessage (gui_message * msg)
+void Checkbox::Draw( GumpHandler *kGumps )
 {
-  if (!msg)
-      {
-        Logger::WriteLine ("NULL msg in Checkbox::HandleMessage(gui_message *)",
-                    __FILE__, __LINE__, LEVEL_ERROR);
-        return false;
-      }
+	Control::Draw( kGumps );
+	Texture *texture = NULL;
+	if ( m_bChecked )
+	{
+		texture = LoadGump( m_iCheckedGump, kGumps, false );
+	}
+	else
+	{
+		texture = LoadGump( m_iUncheckedGump, kGumps, false );
+	}
 
-  switch (msg->type)
-      {
-      case MESSAGE_MOUSEDOWN:
-        if (MouseIsOver (msg->mouseevent.x, msg->mouseevent.y))
-            {
-              __checked = !__checked;
-              return true;
-            }
-        break;
-      default:
-        Control::HandleMessage (msg);
-      }
-  return false;
+	int iWidth = GetWidth();
+	int iHeight = GetHeight();
+	if ( !iWidth || !iHeight )
+	{
+		SetSize( texture->GetRealWidth(), texture->GetRealHeight() );
+	}
+
+	DrawRect( GetX(), GetY(), iWidth, iHeight, texture );
+}
+
+
+int Checkbox::HandleMessage( gui_message *kMsg )
+{
+	if ( !kMsg )
+	{
+		Logger::WriteLine( "NULL msg in Checkbox::HandleMessage(gui_message *)", __FILE__, __LINE__, LEVEL_ERROR );
+
+		return false;
+	}
+
+	switch ( kMsg->type )
+	{
+	case MESSAGE_MOUSEDOWN:
+		if ( MouseIsOver( kMsg->mouseevent.x, kMsg->mouseevent.y ) )
+		{
+			m_bChecked = !m_bChecked;
+
+			return true;
+		}
+		break;
+
+	default:
+		Control::HandleMessage( kMsg );
+	}
+
+	return false;
 }

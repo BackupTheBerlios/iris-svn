@@ -16,16 +16,17 @@
  *
  *****/
 
-#if !defined( __LABEL_H__ )
-#define __LABEL_H__
+#ifndef _LABEL_H_
+#define _LABEL_H_
 
-#include "Control.h"
-
-#include "TextManager.h"
+#include "Common.h"
+#include <iostream>
 #include <vector>
-//class cTextElement;
+#include "Control.h"
+#include "TextManager.h"
+#include "gui/TextManager.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 #define ALIGN_LEFT  0
 #define ALIGN_CENTER  1
@@ -33,25 +34,6 @@
 
 class Label : public Control
 {
-private:
-	char *_text;
-	unsigned short _hue;
-	unsigned char _font;
-	unsigned int timeout;
-	unsigned int creation_time;
-	unsigned int _align;
-
-    bool rgbcolor;
-    float _r, _g, _b;
-    int _style;
-    bool _wrapped;
-    
-	cTextElement *element;
-    std::vector<cTextElement*> wrapped_text;
-	void refresh();
-	
-	//void cropped;
-	//int crop_w, crop_y;
 public:
 	Label( int x, int y, const char *text, unsigned short hue = 0, unsigned char font = 3 );
 	~Label();
@@ -81,6 +63,23 @@ public:
 	void SetStyle(int style);
 	int Wrap(int width);
 	virtual bool MouseIsOver( int x, int y);
+
+private:
+	char *_text;
+	unsigned short _hue;
+	unsigned char _font;
+	unsigned int timeout;
+	unsigned int creation_time;
+	unsigned int _align;
+
+	bool rgbcolor;
+	float _r, _g, _b;
+	int _style;
+	bool _wrapped;
+
+	cTextElement *element;
+	std::vector<cTextElement*> wrapped_text;
+	void refresh();
 };
 
-#endif
+#endif	// _LABEL_H_

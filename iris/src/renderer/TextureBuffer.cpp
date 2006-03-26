@@ -20,99 +20,105 @@
  *
  *****/
 
-
 #include "renderer/TextureBuffer.h"
-#include "loaders/GroundTextures.h"
 #include "loaders/StaticModelLoader.h"
 #include "loaders/ArtLoader.h"
-#include "Logger.h"
-#include "Config.h"
 
-using namespace std;
+TextureBuffer *TextureBuffer::m_sgTextureBuffer = NULL;
 
-TextureBuffer pTextureBuffer;
 
-TextureBuffer::TextureBuffer ()
+TextureBuffer::TextureBuffer()
 {
-  groundTiles.setMaxSize (1000);
-  groundTiles.setCacheSize (0x4000);
-  groundTiles.setAutofree (true);
+	assert( m_sgTextureBuffer == NULL );
+	m_sgTextureBuffer = this;
 
-  artTiles.setMaxSize (500);
-  artTiles.setCacheSize (0x4000);
-  artTiles.setAutofree (true);
+	groundTiles.setMaxSize( 1000 );
+	groundTiles.setCacheSize( 0x4000 );
+
+	artTiles.setMaxSize( 500 );
+	artTiles.setCacheSize( 0x4000 );
 }
 
-TextureBuffer::~TextureBuffer ()
+
+TextureBuffer::~TextureBuffer()
 {
-    Clear ();
+	assert( m_sgTextureBuffer != NULL );
+	m_sgTextureBuffer = NULL;
+
+	artTiles.Clear();
+	groundTiles.Clear();
 }
 
-Texture *TextureBuffer::GetGroundTexture (int index)
+
+TextureBuffer *TextureBuffer::GetInstance()
 {
+	return m_sgTextureBuffer;
+}
 
-  if ((index < 0) || (index >= 0x4000))
-    return NULL;
 
+Texture *TextureBuffer::GetGroundTexture( int index )
+{
+	if ( ( index < 0 ) || ( index >= 0x4000 ) )
+	{
+		return NULL;
+	}
 
-  Texture * result;
-
-  result = pStaticModelLoader.GetGroundTexture (index);
-  if (result)
-        return result;
+	Texture * result;
+	
+	result = StaticModelLoader::GetInstance()->GetGroundTexture( index );
+	if ( result )
+	{
+		return result;
+	}
  
-  result = groundTiles.findEntry (index);
+	result = groundTiles.findEntry( index );
 
-  if (!result)
-      {
-        result = pGroundTextureLoader.LoadTexture (index);
+	if ( !result )
+	{
+		result = pGroundTextureLoader.LoadTexture( index );
 
-        if (!result)
-            {
-				result = ArtLoader::GetInstance()->LoadArt (index);
-            }
+		if ( !result )
+		{
+			result = ArtLoader::GetInstance()->LoadArt( index );
+		}
 
-        if (!result)
-          result = new Texture;
-        groundTiles.addEntry (index, result);
+		if (!result)
+		{
+			result = new Texture();
+		}
+		groundTiles.addEntry( index, result );
+	}
 
-      }
-
-  return result;
+	return result;
 }
 
-Texture *TextureBuffer::GetArtTexture (int index)
+
+Texture *TextureBuffer::GetArtTexture( int index )
 {
+	if ( ( index < 0x4000 ) && ( index >= 0 ) )
+	{
+		return GetGroundTexture( index );
+	}
 
-  if ((index < 0x4000) && (index >= 0))
-    return GetGroundTexture (index);
+	if ( ( index < 0x0 ) || ( index >= 65536 ) )
+	{
+		return NULL;
+	}
 
-  if ((index < 0x0) || (index >= 65536))
-    return NULL;
+	Texture *result = NULL;
 
-  Texture *result = NULL;
+	result = artTiles.findEntry( index - 0x4000 );
 
-  result = artTiles.findEntry (index - 0x4000);
+	if ( !result )
+	{
+		result = ArtLoader::GetInstance()->LoadArt( index, false );
+        
+		if ( !result )
+		{
+			result = new Texture();
+		}
+		artTiles.addEntry( index - 0x4000, result );
+	}
 
-  if (!result)
-      {
-
-		  result = ArtLoader::GetInstance()->LoadArt (index, false);
-        if (!result)
-            {
-              result = new Texture;
-            }
-        artTiles.addEntry (index - 0x4000, result);
-      }
-
-  return result;
+	return result;
 }
-
-
-void TextureBuffer::Clear ()
-{
-      artTiles.Clear ();
-      groundTiles.Clear ();
-      
-}
-

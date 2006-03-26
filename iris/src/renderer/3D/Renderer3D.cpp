@@ -180,7 +180,7 @@ void Renderer3D::LoadSkyboxTextures (int map)
   string skyboxtemp = "./textures/skybox/skybox";
   string skyboxtype;
 
-  cMapInfoEntry * mapinfo_entry = pMapInfoLoader.GetMapInfo(map);
+  cMapInfoEntry * mapinfo_entry = MapInfoLoader::GetInstance()->GetMapInfo(map);
   if(!mapinfo_entry)
    THROWEXCEPTION ("unknown map!");
 
@@ -699,7 +699,7 @@ void Renderer3D::RenderDynamics (bool do_culling)
                   }
 
               cStaticModel *model =
-                pStaticModelLoader.getModel (object->model);
+				  StaticModelLoader::GetInstance()->getModel (object->model);
               if (model)
                   {
 
@@ -754,14 +754,14 @@ void Renderer3D::RenderCharacters (bool do_culling)
             && (character->x () <= max_x) && (character->y () <= max_y))
             {
 
-              cModelInfoEntry * modelinfo = pModelInfoLoader.GetModelEntry(character->body());
+				cModelInfoEntry * modelinfo = ModelInfoLoader::GetInstance()->GetModelEntry(character->body());
 
               float alpha = 1.0f;
               float scalex = 1.0f, scaley = 1.0f, scalez = 1.0f;
               
-              scalex = pModelInfoLoader.getScaleFactor();
-              scaley = pModelInfoLoader.getScaleFactor();
-              scalez = pModelInfoLoader.getScaleFactor();
+              scalex = ModelInfoLoader::GetInstance()->getScaleFactor();
+              scaley = ModelInfoLoader::GetInstance()->getScaleFactor();
+              scalez = ModelInfoLoader::GetInstance()->getScaleFactor();
               
               int defhue = 0, altbody = 0;
               
@@ -1053,7 +1053,7 @@ void Renderer3D::RenderDragModel ()
   int blockx = pCamera.GetBlockX () * 8;
   int blocky = pCamera.GetBlockY () * 8;
 
-  cStaticModel *model = pStaticModelLoader.getModel (drag_model);
+  cStaticModel *model = StaticModelLoader::GetInstance()->getModel (drag_model);
   if (model)
     model->Render (dragposition[0] - blockx, dragposition[1] - blocky,
                    dragposition[2] * 0.1f, 255);
@@ -1109,7 +1109,7 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
     for (iter = dynamics->begin (); iter != dynamics->end (); iter++)
         {
           cDynamicObject *object = iter->second;
-          cStaticModel *model = pStaticModelLoader.getModel (object->model);
+		  cStaticModel *model = StaticModelLoader::GetInstance()->getModel (object->model);
           if (model && (object->alpha == 255))
               {
                 if (model->

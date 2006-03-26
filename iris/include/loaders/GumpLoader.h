@@ -23,46 +23,44 @@
 #ifndef _GUMPLOADER_H_
 #define _GUMPLOADER_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #include "Common.h"
 #include <iostream>
 #include <fstream>
-#include <cstring>
+#include <string.h>
 #include "include.h"
 #include "../renderer/Texture.h"
+#include "loaders/VerdataLoader.h"
+#include "Exception.h"
+#include "Logger.h"
+#include "uotype.h"
+#include "iris_endian.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
-class cGumpLoader
+class GumpLoader
 {
-private:
-	std::ifstream * gumpfile;
-	std::ifstream * gumpindex;
-	unsigned int gump_count;
-	
 public:
-    cGumpLoader ();
-   ~cGumpLoader ();
+	GumpLoader();
+	~GumpLoader();
 
-   void Init (std::string filename, std::string indexname);
-   void DeInit ();
-   
-   Texture * LoadGump(int index);
-   Texture * LoadGumpTiled(int index, int width, int height);
-   void GetGumpSize(int index, int &r_width, int &r_height);
-   int GetGumpWidth(int index);
-   int GetGumpHeight(int index);
-   bool CheckGump(int index);
-	
-   Uint32 * LoadGumpRaw (int index, int &tex_width, int &tex_height, int &real_width, int &real_height);
+	void Init( std::string filename, std::string indexname );
+	void DeInit();
 
-protected:
+	Texture *LoadGump( int index );
+	Texture *LoadGumpTiled( int index, int width, int height );
+	void GetGumpSize( int index, int &r_width, int &r_height );
+	int GetGumpWidth( int index );
+	int GetGumpHeight( int index );
+	bool CheckGump( int index );
 
+	Uint32 *LoadGumpRaw( int index, int &tex_width, int &tex_height, int &real_width, int &real_height );
+
+private:
+	std::ifstream *gumpfile;
+	std::ifstream *gumpindex;
+	unsigned int gump_count;
 };
 
-extern cGumpLoader pGumpLoader;
+extern GumpLoader pGumpLoader;
 
 #endif //_GROUNDTEXTURES_H_

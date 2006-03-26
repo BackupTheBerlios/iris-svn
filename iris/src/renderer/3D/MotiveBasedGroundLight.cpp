@@ -152,8 +152,7 @@ void cMotiveBasedGroundLight::CalcAmbientLight (sColor ambient_color,
         for (index = 0; index < 81; index++)
             {
               float intensity = 1.0f;
-              shader_matrix->CheckRay (index % 9, index / 9, v->z * 10.0f,
-                                       direction, intensity);
+              shader_matrix->CheckRay ( (float) (index % 9), index / 9.0, v->z * 10.0f, direction, intensity);
               if (intensity <= 0.0f)
                 *color_iter = ambient_color;
               else

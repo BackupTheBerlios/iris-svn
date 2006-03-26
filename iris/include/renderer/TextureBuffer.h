@@ -24,28 +24,29 @@
 #define _TEXTUREBUFFER_H_
 
 #include "SDL/SDL.h"
-#include "Texture.h"
-#include "../Cache.h"
-#include "../Buffer.h"
+#include "loaders/GroundTextures.h"
 
-////#include "../Fluid/mmgr.h"
+#include "Texture.h"
+#include "Cache.h"
+#include "Buffer.h"
+
+// #include "../Fluid/mmgr.h"
 
 class TextureBuffer  
 {
 public:
-   TextureBuffer ();
-   virtual ~TextureBuffer ();
+	TextureBuffer();
+	virtual ~TextureBuffer();
 
-   Texture * GetGroundTexture(int index);
-   Texture * GetArtTexture(int index);
+	static TextureBuffer *GetInstance();
 
-   void Clear ();
+	Texture *GetGroundTexture( int index );
+	Texture *GetArtTexture( int index );
 
 protected:
-	Cache< Texture > groundTiles;
-	Cache< Texture > artTiles;
+	static TextureBuffer *m_sgTextureBuffer;
+	Cache<Texture> groundTiles;
+	Cache<Texture> artTiles;
 };
 
-extern	TextureBuffer pTextureBuffer;
-
-#endif //_GROUND_H_
+#endif //_TEXTUREBUFFER_H_

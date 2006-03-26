@@ -56,7 +56,7 @@ UOMapLoader::UOMapLoader( char *mapfile, char *staticfile, char *staidx, int typ
 		THROWEXCEPTION( "Could not load static index file: " + std::string( staidx ) );
 	}
 
-	cMapInfoEntry *mapinfo_entry = pMapInfoLoader.GetMapInfo( type );
+	cMapInfoEntry *mapinfo_entry = MapInfoLoader::GetInstance()->GetMapInfo( type );
 	if ( !mapinfo_entry )
 	{
           THROWEXCEPTION( "Tried to load unknown map file" );

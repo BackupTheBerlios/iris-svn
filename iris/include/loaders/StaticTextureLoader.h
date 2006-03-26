@@ -23,64 +23,58 @@
 #ifndef _STATICTEXTURELOADER_H_
 #define _STATICTEXTURELOADER_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
 #include "Common.h"
-#include "irisgl.h"
-
+#include <iostream>
+#include <fstream>
 #include <map>
 #include <vector>
 #include <string>
-
+#include <assert.h>
 #include "SDL/SDL.h"
+#include "SDL/SDL_image.h"
+#include "Exception.h"
+#include "renderer/Texture.h"
+#include "iris_endian.h"
 #include "uotype.h"
 
-#include <iostream>
-#include <fstream>
+// // #include "../Fluid/mmgr.h"
 
-#include "renderer/Texture.h"
-
-////#include "../Fluid/mmgr.h"
+#define TEXTUREFLAG_COLORKEY 1
 
 class cStaticTexture
 {
-private:
-    Uint32 m_stream_start, m_stream_length;
-    bool m_hascolorkey;
-    Uint32 m_colorkey;
-    Texture * m_texture;
 public:
-    cStaticTexture (Uint32 stream_start, Uint32 stream_length);
-    ~cStaticTexture ();
-    void LoadTexture (std::ifstream * stream);
-    Texture * texture () { return m_texture; }
-    void SetColorKey (Uint32 colorkey);
+	cStaticTexture( Uint32 stream_start, Uint32 stream_length );
+	~cStaticTexture();
+
+	void LoadTexture( std::ifstream *stream );
+	Texture * texture() { return m_texture; }
+	void SetColorKey( Uint32 colorkey );
+
+private:
+	Uint32 m_stream_start, m_stream_length;
+	bool m_hascolorkey;
+	Uint32 m_colorkey;
+	Texture *m_texture;
 };
 
 class cStaticTextureLoader
 {
-private:
-    std::ifstream * modelstream;
-    Uint32 texturestream_start;
-    Uint32 texturestream_length;
-    Uint32 texturestream_end;
-    std::vector <cStaticTexture *> textures;
-
-    std::map <Uint32, Uint32> ground_texture_map;
-
 public:
-    cStaticTextureLoader ();
-   ~cStaticTextureLoader ();
+	cStaticTextureLoader( std::ifstream *stream, Uint32 length );
+	~cStaticTextureLoader();
 
-   void Init (std::ifstream * stream, Uint32 length);
-   void DeInit ();
+	Texture *GetTexture( Uint32 index );
+	Texture *GetGroundTexture( Uint32 id ); // Get replaced ground texture
 
-   Texture * GetTexture (Uint32 index);
-   Texture * GetGroundTexture (Uint32 id); // Get replaced ground texture
+private:
+	std::ifstream *modelstream;
+	Uint32 texturestream_start;
+	Uint32 texturestream_length;
+	Uint32 texturestream_end;
+	std::vector<cStaticTexture *> textures;
 
-protected:
+	std::map <Uint32, Uint32> ground_texture_map;
 };
 
 #endif //_STATICTEXTURELOADER_H_

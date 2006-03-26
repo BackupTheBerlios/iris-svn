@@ -23,58 +23,64 @@
 #ifndef _STATICMODELLOADER_H_
 #define _STATICMODELLOADER_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
-#include "irisgl.h"
-
-#include <map>
-#include <string>
-
 #include "SDL/SDL.h"
-#include "uotype.h"
-
 #include <iostream>
 #include <fstream>
-
+#include <map>
+#include <string>
+#include "Logger.h"
+#include "Exception.h"
+#include "uotype.h"
+#include "iris_endian.h"
 #include "StaticModels.h"
 #include "StaticTextureLoader.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
-struct sModelTableEntry {
-  Uint32 id;
-  Uint32 start;
-  Uint32 length;
-  Uint8 md5sum[16];
+
+struct sModelTableEntry
+{
+	Uint32 id;
+	Uint32 start;
+	Uint32 length;
+	Uint8 md5sum[16];
+} STRUCT_PACKED;
+
+struct sModelCollectionHeader
+{
+	char Sign[4];
+	Uint32 Length;
+	Uint32 Version;
+	Uint32 ModelTableStart;
+	Uint32 ModelTableCount;
+	Uint32 TextureStart;
+	Uint32 TextureLength;
+	Uint32 Reserved[9];
 } STRUCT_PACKED;
 
 
-class cStaticModelLoader
+class StaticModelLoader
 {
-private:
-    std::map <Uint32, sModelTableEntry> model_entries;
-    std::map <Uint32, cStaticModel *> models;
-    
-    std::ifstream * modelstream;
-    Uint32 modelstream_size;
-
-    cStaticTextureLoader static_texture_loader;
-    
 public:
-    cStaticModelLoader ();
-   ~cStaticModelLoader ();
+	StaticModelLoader( std::string filename );
+   ~StaticModelLoader();
 
-   void Init (std::string filename);
-   void DeInit ();
-   
-   cStaticModel * getModel (Uint32 id);
-   Texture * GetGroundTexture (Uint32 id); // Get replaced ground texture
+   static StaticModelLoader *GetInstance();
 
-protected:
+   cStaticModel *getModel( Uint32 id );
+   Texture *GetGroundTexture( Uint32 id ); // Get replaced ground texture
+
+private:
+	static StaticModelLoader *m_sgStaticModelLoader;
+	std::map<Uint32, sModelTableEntry> model_entries;
+	std::map<Uint32, cStaticModel *> models;
+
+	std::ifstream *modelstream;
+	Uint32 modelstream_size;
+
+	cStaticTextureLoader *static_texture_loader;
 };
 
-extern	cStaticModelLoader pStaticModelLoader;
+extern	StaticModelLoader pStaticModelLoader;
 
 #endif //_STATICMODELLOADER_H_

@@ -77,13 +77,13 @@ void ImageArt::Draw (GumpHandler * gumps)
 
         //if (texid >= 16384) 
 
-        //    texture = pTextureBuffer->GetArtTexture(texid);
+        //    texture = TextureBuffer::GetInstance()->GetArtTexture(texid);
         //texture = ArtLoader::GetInstance()->LoadArt(texid + 16384, true, false, 0);
 //    else
 
-        //    texture = pTextureBuffer->GetGroundTexture(texid);
+        //    texture = TextureBuffer::GetInstance()->GetGroundTexture(texid);
 
-        texture = pTextureBuffer.GetArtTexture (texid + 16384);
+        texture = TextureBuffer::GetInstance()->GetArtTexture (texid + 16384);
 
         if (texture)
             {

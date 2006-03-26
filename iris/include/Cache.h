@@ -16,37 +16,57 @@
  *
  *****/
 
-#if !defined( __CACHE_H__ )
-#define __CACHE_H__
+#ifndef _CACHE_H_
+#define _CACHE_H_
 
 #include <vector>
 #include <map>
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 template< class C >
 class Cache
 {
 private:
-	std::vector< unsigned int > cache_history;
+	std::vector<unsigned int> cache_history;
 	C ** cache;
 	unsigned short cachesize; // How many elements are available
 
 	unsigned int _maxsize;
-	bool _autofree;
+
 public:
-	
+	Cache()
+	{
+		_maxsize = 1;
+
+		cachesize = 0;
+		cache = 0;
+	}
+
+
+	~Cache()
+	{
+		for ( unsigned int i = 0; i < cachesize; ++i )
+		{
+			SAFE_DELETE( cache[i] );
+		}
+
+		SAFE_DELETE_ARRAY( cache );
+	}
+
+
 	void addEntry( unsigned int id, C *data )
 	{
-		if( id >= cachesize )
+		if ( id >= cachesize )
+		{
 			return;
+		}
 
-		while( cache_history.size() > _maxsize )
+		while ( cache_history.size() > _maxsize )
 		{
 			unsigned int id = *( cache_history.begin() );
-			
-			if( _autofree )
-				delete cache[id];
+
+			SAFE_DELETE( cache[id] );
 
 			cache[id] = 0;
 			cache_history.erase( cache_history.begin() );
@@ -56,60 +76,49 @@ public:
 		cache_history.push_back( id );
 	}
 
+
 	C *findEntry( unsigned int id )
 	{
-		if( id >= cachesize )
+		if ( id >= cachesize )
+		{
 			return 0;
+		}
 
 		return cache[id];
 	}
 
+
 	void setCacheSize( unsigned short elements ) 
 	{
-		if( autofree() )
-		{
-			for( unsigned int i = 0; i < cachesize; ++i )
-				delete cache[i];
-		}
+		//for ( unsigned int i = 0; i < cachesize; ++i )
+		//{
+		//	SAFE_DELETE( cache[i] );
+		//}
 
-		delete [] cache; cache = NULL;
+		SAFE_DELETE_ARRAY( cache );
 
 		cachesize = elements;
 		cache = new C*[ elements ];
 		memset( cache, 0, elements * sizeof( C* ) );
-   	}
-
-	Cache()
-	{
-		_autofree = false;
-		_maxsize = 1;
-
-		cachesize = 0;
-		cache = 0;
 	}
 
-	void setMaxSize( unsigned int data ) { _maxsize = data; }
-	unsigned int maxSize() const { return _maxsize; }
 
-	virtual ~Cache()
+	void setMaxSize( unsigned int data )
 	{
-		if( _autofree )
-		{
-			for( unsigned int i = 0; i < cachesize; ++i )
-				delete cache[i];
-		}
-		
-		delete [] cache; cache = NULL;
+		_maxsize = data;
+	}
+	
+	
+	unsigned int maxSize() const
+	{
+		return _maxsize;
 	}
 
-	void setAutofree( bool autofree ) { _autofree = autofree; }
-	bool autofree() const { return _autofree; }
 
-  void Clear ()
-  {
-        setCacheSize (cachesize);
-  }
-  
+	void Clear()
+	{
+		setCacheSize( cachesize );
+	}
 };
 
-#endif
+#endif	// _CACHE_H_

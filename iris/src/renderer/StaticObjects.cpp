@@ -37,8 +37,10 @@ cStaticObjectList::cStaticObjectList ()
 
 cStaticObjectList::~cStaticObjectList ()
 {
+	free( m_current_array );
+/*
   for (unsigned int index = 0; index < cache.size (); index++)    // Free all arrays
-    free (cache[index]);
+    free (cache[index]);*/
   cache.clear ();
 }
 

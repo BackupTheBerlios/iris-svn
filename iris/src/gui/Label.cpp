@@ -18,53 +18,56 @@
 
 
 #include "gui/Label.h"
-#include "gui/TextManager.h"
-#include <iostream>
 
-using namespace std;
-
-Label::Label (int x, int y, const char *text, unsigned short hue,
-              unsigned char font)
+Label::Label( int x, int y, const char *text, unsigned short hue, unsigned char font )
 {
-  SetPosition (x, y);
+	SetPosition (x, y);
 
-  element = 0;
-  timeout = 0;
-  creation_time = SDL_GetTicks ();
-  _text = (char *) malloc (strlen (text) + 1);
-  strcpy (_text, text);
-  _hue = hue;
-  _font = font;
-  _align = ALIGN_LEFT;
-  _style = 0;
-  rgbcolor = false;
-  _r = 0.0f;
-  _g = 0.0f;
-  _b = 0.0f;
-  control_type = CONTROLTYPE_LABEL;
-  _wrapped = false;
-  SetFlag(GUMPFLAG_MOVABLE, 0);
-  refresh ();
+	element = 0;
+	timeout = 0;
+	creation_time = SDL_GetTicks();
+	_text = (char *)malloc( strlen( text ) + 1 );
+	strcpy (_text, text);
+	_hue = hue;
+	_font = font;
+	_align = ALIGN_LEFT;
+	_style = 0;
+	rgbcolor = false;
+	_r = 0.0f;
+	_g = 0.0f;
+	_b = 0.0f;
+	control_type = CONTROLTYPE_LABEL;
+	_wrapped = false;
+	SetFlag( GUMPFLAG_MOVABLE, 0 );
+	refresh();
 }
 
-Label::~Label ()
+
+Label::~Label()
 {
-  if (_text)
-    free(_text);
-  if (element)
-    delete element;
- for(unsigned int i = 0; i < wrapped_text.size(); i++)
-  delete wrapped_text.at(i);
+	if ( _text )
+	{
+		free( _text );
+	}
+	SAFE_DELETE( element );
+
+	for ( unsigned int i = 0; i < wrapped_text.size(); i++ )
+	{
+		SAFE_DELETE( wrapped_text.at( i ) );
+	}
 }
 
-void Label::setText (char *text)
-{
-  if (_text)
-    free(_text);
 
-  _text = (char *) malloc (strlen (text) + 1);
-  strcpy (_text, text);
-  refresh ();
+void Label::setText( char *text )
+{
+	if ( _text )
+	{
+		free( _text );
+	}
+
+	_text = (char *)malloc( strlen( text ) + 1 );
+	strcpy( _text, text );
+	refresh();
 }
 
 void Label::setHue (unsigned short hue)
@@ -81,12 +84,13 @@ void Label::setFont (unsigned char font)
 
 void Label::refresh ()
 {
-  delete element;
-  int hue = _hue;
-  if (rgbcolor)
-    hue = 0;
-  element = new cTextElement (_text, hue, _font, _style);
-
+	SAFE_DELETE( element );
+	int hue = _hue;
+	if ( rgbcolor )
+	{
+		hue = 0;
+	}
+	element = new cTextElement( _text, hue, _font, _style );
 }
 
 void Label::Draw (GumpHandler * gumps)
@@ -252,7 +256,7 @@ int Label::Wrap (int width)
   int croppedsize = width / fontsize;
 
   int lines = element->width () / width;  // / (int)strlen((const char*)_text);
-  std::string str = string (_text);
+  std::string str = std::string( _text );
 
   cTextElement *wrap_elem;
   int hue = _hue;

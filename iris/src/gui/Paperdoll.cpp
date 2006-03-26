@@ -30,59 +30,57 @@ using namespace std;
 
 Paperdoll::Paperdoll ()
 {
-  Control::Control ();
-  texture = NULL;
-  control_type = CONTROLTYPE_PAPERDOLL;
-  layermap = new char[256 * 256];
-  drag_id = 0;
-  clickdown_x = 0;
-  clickdown_y = 0;
-  last_click = 0;
-  last_click_id = 0;
-  character_id = 0;
-  drop_id = 0;
-  SetSize (256, 256);
+	Control::Control ();
+	texture = NULL;
+	control_type = CONTROLTYPE_PAPERDOLL;
+	layermap = new char[256 * 256];
+	drag_id = 0;
+	clickdown_x = 0;
+	clickdown_y = 0;
+	last_click = 0;
+	last_click_id = 0;
+	character_id = 0;
+	drop_id = 0;
+	SetSize (256, 256);
 }
 
 Paperdoll::Paperdoll (int x, int y)
 {
-  Control::Control ();
-  SetPosition (x, y);
-  texture = NULL;
-  control_type = CONTROLTYPE_PAPERDOLL;
-  layermap = new char[256 * 256];
-  drag_id = 0;
-  clickdown_x = 0;
-  clickdown_y = 0;
-  last_click = 0;
-  last_click_id = 0;
-  character_id = 0;
-  SetSize (256, 256);
+	Control::Control ();
+	SetPosition (x, y);
+	texture = NULL;
+	control_type = CONTROLTYPE_PAPERDOLL;
+	layermap = new char[256 * 256];
+	drag_id = 0;
+	clickdown_x = 0;
+	clickdown_y = 0;
+	last_click = 0;
+	last_click_id = 0;
+	character_id = 0;
+	SetSize (256, 256);
 }
 
 Paperdoll::Paperdoll (int x, int y, int flags)
 {
-  Control::Control ();
-  SetPosition (x, y);
-  SetFlags (flags);
-  texture = NULL;
-  control_type = CONTROLTYPE_PAPERDOLL;
-  layermap = new char[256 * 256];
-  drag_id = 0;
-  clickdown_x = 0;
-  clickdown_y = 0;
-  last_click = 0;
-  last_click_id = 0;
-  character_id = 0;
-  SetSize (256, 256);
+	Control::Control ();
+	SetPosition (x, y);
+	SetFlags (flags);
+	texture = NULL;
+	control_type = CONTROLTYPE_PAPERDOLL;
+	layermap = new char[256 * 256];
+	drag_id = 0;
+	clickdown_x = 0;
+	clickdown_y = 0;
+	last_click = 0;
+	last_click_id = 0;
+	character_id = 0;
+	SetSize (256, 256);
 }
 
 Paperdoll::~Paperdoll ()
 {
-  delete texture;
-  texture = NULL;
-  delete layermap;
-  layermap = NULL;
+	SAFE_DELETE( texture );
+	SAFE_DELETE_ARRAY( layermap );
 }
 
 
@@ -107,7 +105,7 @@ void Paperdoll::AssignChar (cCharacter * character)
   character_id = character->id ();
   memset (layermap, 0, 256 * 256);
 
-  delete texture;
+  SAFE_DELETE( texture );
 
   cPaperdollBuilder *builder = new cPaperdollBuilder();
   assert (builder);
@@ -162,7 +160,7 @@ void Paperdoll::AssignChar (cCharacter * character)
       }
   texture = builder->CreateTexture();
 
-  delete builder;
+  SAFE_DELETE( builder );
 
 }
 

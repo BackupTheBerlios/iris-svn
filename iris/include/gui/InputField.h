@@ -20,35 +20,17 @@
 #define _INPUTFIELD_H_
 
 #include "Common.h"
-#include "Control.h"
 #include <string>
+#include "gui/TextManager.h"
+#include "loaders/FontLoader.h"
+#include "Control.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 class cTextElement;
 
 class InputField : public Control
 {
-private:
-	int _width;
-	int _height; // Automatically calculated (if height == 0)
-
-	unsigned short _hue;
-	unsigned short _font;
-	unsigned int *data;
-	bool generated;
-	std::string _text;
-	cTextElement *tElement;
-	unsigned int xCropOffset;
-	char _passwordChar;
-	bool IgnoreCursorKeys;
-
-	// Caret information and positioning information
-	unsigned int _caretPos;
-	Texture *caret;
-    unsigned int caretX;
-	void recalcXCrop();
-	int (*callback_OnKeyPress) (Control *sender, unsigned short key);
 public:
 	InputField( int x, int y, unsigned int width, unsigned int height, const char *text = 0, unsigned short hue = 0, unsigned char font = 3, char passwordChar = 0 );
 	~InputField();
@@ -72,9 +54,30 @@ public:
 	void regenerate();
 	void Draw( GumpHandler *gumps );
 	int HandleMessage( gui_message *msg );
-  	void OnKeyPress (int (*callback) (Control *sender, unsigned short key));
+	void OnKeyPress (int (*callback) (Control *sender, unsigned short key));
 	void SetIgnoreCursorKeys(bool IgnoreCursorKeys);
-        void DoOnKeyPress (int key);
+	void DoOnKeyPress (int key);
+
+private:
+	int _width;
+	int _height; // Automatically calculated (if height == 0)
+
+	unsigned short _hue;
+	unsigned short _font;
+	unsigned int *data;
+	bool generated;
+	std::string _text;
+	cTextElement *tElement;
+	unsigned int xCropOffset;
+	char _passwordChar;
+	bool IgnoreCursorKeys;
+
+	// Caret information and positioning information
+	unsigned int _caretPos;
+	Texture *caret;
+	unsigned int caretX;
+	void recalcXCrop();
+	int (*callback_OnKeyPress) (Control *sender, unsigned short key);
 };
 
 #endif

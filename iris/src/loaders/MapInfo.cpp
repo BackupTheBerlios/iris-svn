@@ -23,18 +23,7 @@
 
 #include "loaders/MapInfo.h"
 
-#include "Config.h"
-#include "Logger.h"
-#include <iostream>
-#include "xml.h"
-
-#include "Exception.h"
-
-using namespace std;
-
-
-
-cMapInfoLoader pMapInfoLoader;
+MapInfoLoader *MapInfoLoader::m_sgMapInfoLoader = NULL;
 
 cMapInfoEntry::cMapInfoEntry (int id, int width, int height, std::string name, std::string skybox, int base_id,
                               int r, int g, int b)
@@ -96,86 +85,103 @@ int cMapInfoEntry::fog_b()
 }
 
 
-cMapInfoLoader::cMapInfoLoader()
+MapInfoLoader::MapInfoLoader( std::string sFileName )
 {
-}
-  
-cMapInfoLoader::~cMapInfoLoader()
-{
-    DeInit ();
-}
-  
-void cMapInfoLoader::Init (std::string filename)
-{
-    XML::Parser parser;
-	  XML::Node *mapentries, *document;
+	assert( m_sgMapInfoLoader == NULL );
+	m_sgMapInfoLoader = this;
 
-     try
-     {
-		  parser.loadData(filename);
-		  document = parser.parseDocument();
-		  
-		  mapentries = document->findNode( "MAPS" );
-     }
-     catch (...) {
-			  THROWEXCEPTION ("Couldn't find maps.xml");
-     }
+	XML::Parser parser;
+	XML::Node *mapentries, *document;
 
-         if (!mapentries)
-			  THROWEXCEPTION ("Couldn't find maps node.");
-	  
-  
-       XML::Node *map_node, *value; 
-       
-         int idx = 0;
-     
-	  while ((map_node = mapentries->findNode("MAP", idx))) { 
- 	      int id = map_node->findInteger("ID");
-         if (!id) id = idx; // default value
+	try
+	{
+		parser.loadData( sFileName );
+		document = parser.parseDocument();
 
-          int width = map_node->findInteger("WIDTH");;
-          int height = map_node->findInteger("HEIGHT");
-          std::string name = map_node->findString("NAME");
-          std::string skybox = map_node->findString("SKYBOX");
-          
-          int base_id = -1;
-          
-          if ((value = map_node->findNode("BASE_ID")))
-				base_id = value->asInteger();
-		  int r=255, g=255, b=255;
-          	
-		  if((value = map_node->findNode("FOG_COLOR")))
-          {
-           
-           value->lookupAttribute("red", r);
-           value->lookupAttribute("blue", b);
-           value->lookupAttribute("green", g); 
-                 
-          }	
+		mapentries = document->findNode( "MAPS" );
+	}
+	catch (...)
+	{
+		THROWEXCEPTION( "Couldn't find maps.xml" );
+	}
 
-      
-           cMapInfoEntry * map_entry = new cMapInfoEntry (id, width, height, name, skybox, base_id,r,g,b);
-           maps.insert(make_pair(id, map_entry));
-             idx++;
-       }
-      }
+	if ( !mapentries )
+	{
+		THROWEXCEPTION( "Couldn't find maps node." );
+	}
 
-void cMapInfoLoader::DeInit ()    
-{
- std::map<int, cMapInfoEntry*>::iterator iter;
- for(iter = maps.begin(); iter != maps.end(); iter++)
-  delete iter->second;
-  maps.clear();
+
+	XML::Node *map_node, *value; 
+
+	int idx = 0;
+
+	while ( ( map_node = mapentries->findNode( "MAP", idx ) ) )
+	{ 
+		int id = map_node->findInteger( "ID" );
+		if ( !id )
+		{
+			id = idx; // default value
+		}
+
+		int width = map_node->findInteger( "WIDTH" );;
+		int height = map_node->findInteger( "HEIGHT" );
+		std::string name = map_node->findString( "NAME" );
+		std::string skybox = map_node->findString( "SKYBOX" );
+
+		int base_id = -1;
+
+		if ( ( value = map_node->findNode( "BASE_ID" ) ) )
+		{
+			base_id = value->asInteger();
+		}
+		int r = 255, g = 255, b = 255;
+
+		if ( ( value = map_node->findNode( "FOG_COLOR" ) ) )
+		{
+			value->lookupAttribute( "red", r );
+			value->lookupAttribute( "blue", b );
+			value->lookupAttribute( "green", g ); 
+		}
+
+		cMapInfoEntry *map_entry = new cMapInfoEntry( id, width, height, name, skybox, base_id, r, g, b );
+		m_vMaps.insert( std::make_pair( id, map_entry ) );
+		idx++;
+	}
 }
 
-cMapInfoEntry * cMapInfoLoader::GetMapInfo(int id)
+
+MapInfoLoader::~MapInfoLoader()
 {
- std::map<int, cMapInfoEntry*>::iterator iter;
- iter = maps.find(id);
- if(iter != maps.end())
-  return iter->second;
- else
-  return NULL; 
+	assert( m_sgMapInfoLoader != NULL );
+	m_sgMapInfoLoader = NULL;
+
+	std::map<int, cMapInfoEntry*>::iterator iter;
+	for(iter = m_vMaps.begin(); iter != m_vMaps.end(); iter++)
+	{
+		SAFE_DELETE( iter->second );
+	}
+	m_vMaps.clear();
+}
+
+
+MapInfoLoader *MapInfoLoader::GetInstance()
+{
+	return m_sgMapInfoLoader;
+}
+
+
+cMapInfoEntry *MapInfoLoader::GetMapInfo( int iId )
+{
+	std::map<int, cMapInfoEntry*>::iterator iter;
+	iter = m_vMaps.find( iId );
+	if ( iter != m_vMaps.end() )
+	{
+		return iter->second;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
        		

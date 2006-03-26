@@ -298,7 +298,7 @@ bool cMapblock3D::Generate (cLightNodeEnvironment & environment)
             }
         else
             {
-              model = pStaticModelLoader.getModel (statics_p->TileID);
+				model = StaticModelLoader::GetInstance()->getModel (statics_p->TileID);
               if (model)
                   {
                     struct sStaticObject *object = objects.Add ();
@@ -375,7 +375,7 @@ bool cMapblock3D::Generate (cLightNodeEnvironment & environment)
   for (unsigned int i = 0; i < objects.count (); i++)
       {
         struct sStaticObject *object = objects.Get (i);
-        model = pStaticModelLoader.getModel (object->tileid);
+		model = StaticModelLoader::GetInstance()->getModel (object->tileid);
         if (model)
           if (model->GetLightSourceInfo ())
             pLightManager.AddDefinedStaticLightSource (object->x +
@@ -473,7 +473,7 @@ void cMapblock3D::Render (int x, int y, bool do_culling, float move_x,
           for (int ty = 0; ty < 8; ty++)
               {
                 int texid = 0;
-                  texture = pTextureBuffer.GetGroundTexture (groundids[ty][tx]);
+                  texture = TextureBuffer::GetInstance()->GetGroundTexture (groundids[ty][tx]);
                 if (texture)
                   texid = texture->GetGLTex ();
                 add_quad_to_vertex_buffer (&ground_vertieces[ty][tx],
@@ -509,7 +509,7 @@ void cMapblock3D::Render (int x, int y, bool do_culling, float move_x,
                   }
 
               cStaticModel *model =
-                pStaticModelLoader.getModel (object->tileid);
+				  StaticModelLoader::GetInstance()->getModel (object->tileid);
               if ((model) && (!object->clip))
                   {
                     object->light->PrepareModelForRendering ();
@@ -634,7 +634,7 @@ sStaticObject *cMapblock3D::CheckRay (float vecOrigin[3], float vecDir[3],
                   if (act_dist < (object->sphere[4] * object->sphere[4]))
                       {
                         cStaticModel *model =
-                          pStaticModelLoader.getModel (object->tileid);
+							StaticModelLoader::GetInstance()->getModel (object->tileid);
                         if (model)
                             {
                               if (model->
@@ -742,7 +742,7 @@ void cMapblock3D::SetRecalcAmbientLightFlag ()
 void cMapblock3D::AddMultiObject(Uint32 id, Uint16 tileid, Uint16 dye, int x, int y, int z)
 {
 
-  cStaticModel *model = pStaticModelLoader.getModel (tileid);
+	cStaticModel *model = StaticModelLoader::GetInstance()->getModel (tileid);
   if (!model) return;
   struct sStaticObject *object = objects.Add ();
   object->hue = dye;

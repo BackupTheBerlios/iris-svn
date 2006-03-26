@@ -32,7 +32,7 @@
 #include "Logger.h"
 #include "Config.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 
 #define GUMPFLAG_MOVABLE 1
@@ -83,11 +83,14 @@ public:
 	virtual void SetAlpha( unsigned char alpha );
 	void SetTag( void *tag );
 	void SetData( int slot, int tag );
-
 	void SetParent( Container * );
-	Container *GetParent( void );
 
+	void RemoveFlag( int flag );
+	
+	Container *GetParent( void );
+	
 	void GetPosition( int * x, int * y );
+	
 	int GetX( void );
 	int GetY( void );
 	int GetZ( void );

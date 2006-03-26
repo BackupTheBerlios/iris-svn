@@ -72,8 +72,8 @@ Control::~Control()
 
 void Control::SetPosition (int x, int y)
 {
-  this->x = x;
-  this->y = y;
+	this->x = x;
+	this->y = y;
 }
 
 void Control::SetSize (int width, int height)
@@ -141,6 +141,11 @@ void Control::SetAlpha (unsigned char alpha)
 void Control::SetParent (Container * cont)
 {
   parent = cont;
+}
+
+void Control::RemoveFlag( int flag )
+{
+	flags ^= flag;
 }
 
 Container *Control::GetParent (void)

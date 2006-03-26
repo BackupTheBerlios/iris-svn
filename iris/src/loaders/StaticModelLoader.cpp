@@ -20,34 +20,11 @@
  *
  *****/
 
-
-#include "iris_endian.h"
 #include "loaders/StaticModelLoader.h"
-#include "loaders/StaticTextureLoader.h"
-#include "Logger.h"
-#include "Exception.h"
-#include "uotype.h"
-#include <string.h>
 
-using namespace std;
-
-//#include "../Fluid/mmgr.h"
-
-cStaticModelLoader pStaticModelLoader;
+StaticModelLoader *StaticModelLoader::m_sgStaticModelLoader = NULL;
 
 char FILEID_GAMEMODELCOLLECTION[] = "UI3D";
-
-struct sModelCollectionHeader
-{
-	char Sign[4];
-	Uint32 Length;
-	Uint32 Version;
-	Uint32 ModelTableStart;
-	Uint32 ModelTableCount;
-	Uint32 TextureStart;
-	Uint32 TextureLength;
-	Uint32 Reserved[9];
-} STRUCT_PACKED;
 
 
 bool CheckHeaderID( char *ID1, char *ID2 )
@@ -64,24 +41,12 @@ bool CheckHeaderID( char *ID1, char *ID2 )
 }
 
 
-cStaticModelLoader::cStaticModelLoader()
+StaticModelLoader::StaticModelLoader( std::string filename ) : modelstream( NULL ), modelstream_size( 0 )
 {
-    modelstream = NULL;
-    modelstream_size = 0;
-}
-
-
-cStaticModelLoader::~cStaticModelLoader()
-{
-    DeInit();
-}
-
-
-void cStaticModelLoader::Init( string filename )
-{
-	// DeInit();
+	assert( m_sgStaticModelLoader == NULL );
+	m_sgStaticModelLoader = this;
 	modelstream = new std::ifstream( filename.c_str (), std::ios::in | std::ios::binary );
-	
+
 	if ( !modelstream->is_open() )
 	{
 		THROWEXCEPTION( std::string( "model file not found: " ) + filename );
@@ -133,7 +98,8 @@ void cStaticModelLoader::Init( string filename )
 	}
 
 	modelstream->seekg( header.TextureStart, std::ios::beg );
-	static_texture_loader.Init( modelstream, header.TextureLength );
+
+	static_texture_loader = new cStaticTextureLoader( modelstream, header.TextureLength );
 
 	modelstream->seekg( header.ModelTableStart, std::ios::beg );
 	sModelTableEntry entry;
@@ -151,15 +117,18 @@ void cStaticModelLoader::Init( string filename )
 	for ( iter = model_entries.begin(); iter != model_entries.end(); iter++ )
 	{
 		modelstream->seekg( iter->second.start, std::ios::beg );
-		
-		cStaticModel *model = new cStaticModel( modelstream, iter->second.length, &static_texture_loader );
+
+		cStaticModel *model = new cStaticModel( modelstream, iter->second.length, static_texture_loader );
 		models.insert( std::make_pair( iter->second.id, model ) );
 	}
 }
 
 
-void cStaticModelLoader::DeInit()
+StaticModelLoader::~StaticModelLoader()
 {
+	assert( m_sgStaticModelLoader != NULL );
+	m_sgStaticModelLoader = NULL;
+
 	std::map<Uint32, cStaticModel *>::iterator iter;
 	for ( iter = models.begin(); iter != models.end(); iter++ )
 	{
@@ -167,13 +136,19 @@ void cStaticModelLoader::DeInit()
 	}
 	models.clear();
 
-	static_texture_loader.DeInit();
+	SAFE_DELETE( static_texture_loader );
 
 	SAFE_DELETE( modelstream );
 }
 
 
-cStaticModel *cStaticModelLoader::getModel( Uint32 id )
+StaticModelLoader *StaticModelLoader::GetInstance()
+{
+	return m_sgStaticModelLoader;
+}
+
+
+cStaticModel *StaticModelLoader::getModel( Uint32 id )
 {
 	ASSERT( modelstream );
   
@@ -189,7 +164,7 @@ cStaticModel *cStaticModelLoader::getModel( Uint32 id )
 }
 
 
-Texture * cStaticModelLoader::GetGroundTexture( Uint32 id ) // Get replaced ground texture
+Texture *StaticModelLoader::GetGroundTexture( Uint32 id ) // Get replaced ground texture
 {
-	return static_texture_loader.GetGroundTexture( id );
+	return static_texture_loader->GetGroundTexture( id );
 }

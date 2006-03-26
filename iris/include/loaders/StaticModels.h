@@ -50,7 +50,7 @@
 #include "renderer/3D/SceneMaker.h"
 #include "loaders/StaticTextureLoader.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 #define FACEFLAG_BACKFACE 1
 
@@ -162,7 +162,26 @@ class cStaticModelFace {
 
 
 class cStaticModel
-{
+{  
+public:
+	cStaticModel( std::ifstream *stream, Uint32 length, cStaticTextureLoader *texture_loader );
+	~cStaticModel();
+
+	Uint32 modelid() { return m_modelid; }
+
+	void Render( float x, float y, float z, Uint8 alpha );
+	float *getBoundingSphere() { return bounding_sphere; }
+	tStaticNodes *nodes() { return &m_nodes; }
+	tStaticPointLightNodes *point_light_nodes() { return &m_point_light_nodes; }
+	tStaticFaceLightNodes *face_light_nodes() { return &m_face_light_nodes; }
+	vertex * vertieces() { return m_vertieces; }
+	bool flag( Uint32 flag_mask ) { return m_flags & flag_mask; }
+
+	cStaticModelLightSourceInfo *GetLightSourceInfo();
+	cStaticModelParticleEffectInfo *GetParticleEffectInfo();
+	cStaticModelRaster *raster() { return &m_raster; }
+	bool CheckRay( float vecOrigin[3], float vecDir[3], float deltax, float deltay, float deltaz, float &lambda );
+
 private:
 	Uint32 m_modelid;
 	tStaticNodes m_nodes;
@@ -174,32 +193,13 @@ private:
 	vertex *m_vertieces;
 	cStaticModelLightSourceInfo *light_source_info;
 	cStaticModelParticleEffectInfo *particle_effect_info;
-        
+
 	cStaticModelRaster m_raster;
 	cStaticTextureLoader *texture_loader;
 
 	float bounding_sphere[4];
-        
+
 	void CreateVertieces();
-        
-public:
-	cStaticModel( std::ifstream *stream, Uint32 length, cStaticTextureLoader *texture_loader );
-	~cStaticModel();
-        
-	Uint32 modelid() { return m_modelid; }
-        
-	void Render( float x, float y, float z, Uint8 alpha );
-	float *getBoundingSphere() { return bounding_sphere; }
-	tStaticNodes *nodes() { return &m_nodes; }
-	tStaticPointLightNodes *point_light_nodes() { return &m_point_light_nodes; }
-	tStaticFaceLightNodes *face_light_nodes() { return &m_face_light_nodes; }
-	vertex * vertieces() { return m_vertieces; }
-	bool flag( Uint32 flag_mask ) { return m_flags & flag_mask; }
-        
-	cStaticModelLightSourceInfo *GetLightSourceInfo();
-	cStaticModelParticleEffectInfo *GetParticleEffectInfo();
-	cStaticModelRaster *raster() { return &m_raster; }
-	bool CheckRay( float vecOrigin[3], float vecDir[3], float deltax, float deltay, float deltaz, float &lambda );
 };
 
 #endif //_STATICMODELS_H_

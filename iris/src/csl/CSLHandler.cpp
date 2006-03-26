@@ -61,7 +61,7 @@
 #include "include.h"
 #include "sound/SoundMixer.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 int gamestate = GAMESTATE_MENU;
 
@@ -684,30 +684,33 @@ void edit_handler_position_reply (int x, int y, int z)
   return;
 }
 
-void api_addcontrol (Control * control)
+void api_addcontrol( Control *control )
 {
-  control->OnClose (on_closehandler);
-  control->OnMouseDown (on_mousedownhandler);
-  control->OnMouseUp (on_mouseuphandler);
-        Container *container = NULL;
+	control->OnClose( on_closehandler );
+	control->OnMouseDown( on_mousedownhandler );
+	control->OnMouseUp( on_mouseuphandler );
+	Container *container = NULL;
 
-        if (act_container_id)
-            {
-              Control *ccontrol = pUOGUI.GetControl (act_container_id);
-              if (ccontrol)
-                if (ccontrol->getType () == CONTROLTYPE_CONTAINER)
-                  container = (Container *) ccontrol;
-            }
+	if ( act_container_id )
+	{
+		Control *ccontrol = pUOGUI.GetControl( act_container_id );
+		if ( ccontrol )
+		{
+			if ( ccontrol->getType() == CONTROLTYPE_CONTAINER )
+			{
+				container = (Container *)ccontrol;
+			}
+		}
+	}
 
-        if (container)
-            {
-              container->AddControl (control);
-            }
-        else
-            {
-              pUOGUI.AddControl (control);
-            }
-
+	if ( container )
+	{
+		container->AddControl( control );
+	}
+	else
+	{
+		pUOGUI.AddControl( control );
+	}
 }
 
 static ZString api_iris_log (ZCsl * aCsl)

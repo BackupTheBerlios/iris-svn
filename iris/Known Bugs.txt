@@ -1,4 +1,4 @@
-- When clicking self it opens the tooltips but if you click somewhere it doesn't go away	- Needs debug
+- When clicking self it opens the tooltips but if you click somewhere it doesn't go away	- Needs fixing
 - Options "Music Off" does not work								- Needs fixing
 - When opening the "Bag" you can get multiple bags						- Needs fixing
 - When login then log out and exit Iris crashes							- Needs fixing
@@ -8,11 +8,60 @@
 - When puting a candle on floor and turning it on/off the effect remains on floor (SiENcE)	- Needs fixing
 - When dclicking the candle on backpack it equips but does not disapear from backpack (SiENcE)	- Needs fixing
 - Remove fountain effect from candle since it was for debug purposes (SiENcE)			- Needs fixing
+- Creating a character you can not choose your skills (they are choosen for you)		- Needs fixing
+- HUE color bug											- Needs fixing
+
+
+- Fix for walking code (still messed up with RunUO) (SiENcE)					- Needs testing
+- Fix click/target bugs (sometimes click is not detected and statics height is not detected when click on ground) (SiENcE) - Needs testing
+- MapBuffer Error (only happends with RunUO 1.0)						- Needs testing
+- Fix some bad renderings with corpses								- Needs testing
+- Fix alpha switch for ghosts(after death) (transparence changes are applied only after		- Needs testing
+restarting iris)
+- if Char. starts inhouse, roof is faded correct but Items/Models remain above the roof (only when game starts)	- Needs testing
+- chatbar: " " isn't accepted as character (like you want to add a special name with space... you do a [set name "Name here") - Needs testing
+- fix getzpositionforwalk that blocks your character when moving to Z > or < 8 			- Needs testing
+- fix particle rendering (effects are rendered wrong)						- Needs testing
+- fix for using cleaver or dagger (the client crash) 						- Needs testing
+- Fog rendering is wrong (new distance formular)						- Needs testing
+- crash when RunUO-Server uses KnivesChat 2.xx							- Needs testing
+- shadow is too small when mounted / also too big for Birds 					- Needs testing
+
 
 - On login menu, after the music has stopped it does not start again (loop).			- New Feature
 - Hide cursor when changing the view (SiENcE)							- New Feature
 - Hide cursor under First Person View (SiENcE)							- New Feature
 - Unicode support.										- New Feature
+- Under Create character -> Body / Clothes / etc color						- New Feature
+- When logging in save username/password							- New Feature
+- Speech.mul support (with config option to enable/disable speech.mul)				- New Feature
+- Complete boats with all boats models, boats.xml file						- New Feature
+- mounts.xml file with the ability to add custom mounts						- New Feature
+- better character handling (stitchin, mounts, modelinfo moved to Characters.cpp and client.cpp for better performance) - New Feature
+- new mouse/keyboard controls configurable by controls.xml 					- New Feature
+- new iris gui with 3 pre-made guis: classic UO, UO TD, Iris (custom modern gui) switchable by scriptpath (in config.xml) - New Feature
+- different Profiles for Shards (maybe a Shard selection)					- New Feature
+- custom textures for grannys and characters particles added to modelinfo.xml			- New Feature
+- ability to save desktop (gui) into an xml file on iris quit					- New Feature
+- option window and ability to handle macros by option window and save config by option window	- New Feature
+- custom houses (server side custom houses) ?							- New Feature
+- TargetMulti support										- New Feature
+- ability to set starting with 1st person in config.xml						- New Feature
+- rain/snow											- New Feature
+- lightlevel restore										- New Feature
+- season packet support										- New Feature
+- new skyboxes 											- New Feature
+- Custom packets:										- New FeatureS
+      -character alpha
+      -character scale
+      -skyboxes change
+      -fog change
+      -execute script
+      -sea texture/wave control
+      -custom textures
+      -custom mounts
+- Removing the 8 direction limit (providing patches for Emus (RunUO/Pol) and for Iris)		- New Feature
+- Exchange CSL for LUA										- New Feature
 
 
 - Beeing able to stop the Music.								- ADDED

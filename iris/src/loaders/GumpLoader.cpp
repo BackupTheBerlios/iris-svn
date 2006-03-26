@@ -20,39 +20,27 @@
  *
  *****/
 
-
-#include "iris_endian.h"
 #include "loaders/GumpLoader.h"
-#include "loaders/VerdataLoader.h"
-#include "Exception.h"
-#include "Logger.h"
-#include "uotype.h"
-#include <string.h>
-#include <iostream>
 
-using namespace std;
+GumpLoader pGumpLoader;
 
-cGumpLoader pGumpLoader;
-
-cGumpLoader::cGumpLoader ()
+GumpLoader::GumpLoader() : gumpfile( NULL ), gumpindex( NULL )
 {
-    gumpfile = NULL;
-    gumpindex = NULL;
 }
 
-cGumpLoader::~cGumpLoader ()
+GumpLoader::~GumpLoader()
 {
-    DeInit ();
+    DeInit();
 }
 
-void cGumpLoader::Init (std::string filename, std::string indexname)
+void GumpLoader::Init (std::string filename, std::string indexname)
 {
-  string errstr;
+	std::string errstr;
 
   DeInit ();
 
-  gumpfile = new ifstream (filename.c_str (), ios::in | ios::binary);
-  gumpindex = new ifstream (indexname.c_str (), ios::in | ios::binary);
+  gumpfile = new std::ifstream (filename.c_str (), std::ios::in | std::ios::binary);
+  gumpindex = new std::ifstream (indexname.c_str (), std::ios::in | std::ios::binary);
 
   errstr = "Could not load ground texture file: ";
   if (!gumpfile->is_open ())
@@ -75,12 +63,12 @@ void cGumpLoader::Init (std::string filename, std::string indexname)
         THROWEXCEPTION (errstr);
       }
 
-  gumpindex->seekg (0, ios::end);
+  gumpindex->seekg (0, std::ios::end);
   unsigned long idxE = gumpindex->tellg ();
   gump_count = idxE / 12;
 }
 
-void cGumpLoader::DeInit ()
+void GumpLoader::DeInit ()
 {
   delete gumpfile;
   gumpfile = NULL;
@@ -88,7 +76,7 @@ void cGumpLoader::DeInit ()
   gumpindex = NULL;
 }
 
-Uint32 *cGumpLoader::LoadGumpRaw (int index, int &tex_width, int &tex_height,
+Uint32 *GumpLoader::LoadGumpRaw (int index, int &tex_width, int &tex_height,
                                   int &real_width, int &real_height)
 {
   ASSERT (gumpfile);
@@ -113,7 +101,7 @@ Uint32 *cGumpLoader::LoadGumpRaw (int index, int &tex_width, int &tex_height,
   else
       {
         patch.file = gumpfile;
-        gumpindex->seekg (index * 12, ios::beg);
+		gumpindex->seekg (index * 12, std::ios::beg);
         gumpindex->read ((char *) &idx, sizeof (struct stIndexRecord));
         idx.offset = IRIS_SwapU32 (idx.offset);
         idx.length = IRIS_SwapU32 (idx.length);
@@ -141,15 +129,14 @@ Uint32 *cGumpLoader::LoadGumpRaw (int index, int &tex_width, int &tex_height,
   memset (data, 0, w * h * 4);
   Uint32 *heightTable = new Uint32[height];
 
-  patch.file->seekg (idx.offset, ios::beg);
+  patch.file->seekg (idx.offset, std::ios::beg);
   patch.file->read ((char *) heightTable, height * 4);
 
   unsigned int rle = 0;
 
   for (unsigned short y = 0; y < height; y++)
       {
-        gumpfile->seekg (IRIS_SwapU32 (heightTable[y]) * 4 + idx.offset,
-                         ios::beg);
+		  gumpfile->seekg (IRIS_SwapU32 (heightTable[y]) * 4 + idx.offset, std::ios::beg);
 
         unsigned short x = 0;
 
@@ -185,7 +172,7 @@ Uint32 *cGumpLoader::LoadGumpRaw (int index, int &tex_width, int &tex_height,
 
 }
 
-Texture *cGumpLoader::LoadGump (int index)
+Texture *GumpLoader::LoadGump (int index)
 {
   int w, h, width, height;
 
@@ -205,7 +192,7 @@ Texture *cGumpLoader::LoadGump (int index)
   return texture;
 }
 
-Texture *cGumpLoader::LoadGumpTiled( int index, int width, int height )
+Texture *GumpLoader::LoadGumpTiled( int index, int width, int height )
 {
 	int tex_width, tex_height, gump_width, gump_height;
 
@@ -284,7 +271,7 @@ Texture *cGumpLoader::LoadGumpTiled( int index, int width, int height )
 }
 
 
-bool cGumpLoader::CheckGump (int index)
+bool GumpLoader::CheckGump (int index)
 {
   ASSERT (gumpfile);
   ASSERT (gumpindex);
@@ -304,7 +291,7 @@ bool cGumpLoader::CheckGump (int index)
   else
       {
         patch.file = gumpfile;
-        gumpindex->seekg (index * 12, ios::beg);
+		gumpindex->seekg (index * 12, std::ios::beg);
         gumpindex->read ((char *) &idx, sizeof (struct stIndexRecord));
         idx.offset = IRIS_SwapU32 (idx.offset);
         idx.length = IRIS_SwapU32 (idx.length);
@@ -316,7 +303,7 @@ bool cGumpLoader::CheckGump (int index)
   return true;
 }
 
-void cGumpLoader::GetGumpSize (int index, int &r_width, int &r_height)
+void GumpLoader::GetGumpSize (int index, int &r_width, int &r_height)
 {
   ASSERT (gumpfile);
   ASSERT (gumpindex);
@@ -340,7 +327,7 @@ void cGumpLoader::GetGumpSize (int index, int &r_width, int &r_height)
   else
       {
         patch.file = gumpfile;
-        gumpindex->seekg (index * 12, ios::beg);
+		gumpindex->seekg (index * 12, std::ios::beg);
         gumpindex->read ((char *) &idx, sizeof (struct stIndexRecord));
         idx.offset = IRIS_SwapU32 (idx.offset);
         idx.length = IRIS_SwapU32 (idx.length);
@@ -360,7 +347,7 @@ void cGumpLoader::GetGumpSize (int index, int &r_width, int &r_height)
 
 }
 
-int cGumpLoader::GetGumpWidth (int index)
+int GumpLoader::GetGumpWidth (int index)
 {
   int width, height;
 
@@ -368,7 +355,7 @@ int cGumpLoader::GetGumpWidth (int index)
   return width;
 }
 
-int cGumpLoader::GetGumpHeight (int index)
+int GumpLoader::GetGumpHeight (int index)
 {
   int width, height;
   GetGumpSize (index, width, height);

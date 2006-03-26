@@ -23,30 +23,27 @@
 #ifndef _RADIOBUTTON_H_
 #define _RADIOBUTTON_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
+#include "gui/Checkbox.h"
+#include "gui/Container.h"
+#include "gui/GUIHandler.h"
 
-#include "SDL/SDL.h"
-#include "Checkbox.h"
+// // #include "../Fluid/mmgr.h"
 
-////#include "../Fluid/mmgr.h"
-
-//RADIO X Y SELECTEDPIC UNSELECTEDPIC STARTSTATE IDNR
+// RADIO X Y UNSELECTEDPIC SELECTEDPIC STARTSTATE IDNR
 
 class RadioButton : public Checkbox
 {
- public:
-  RadioButton(int checkedpic, int uncheckedpic);
-  RadioButton(int x, int y, int checkedpic, int uncheckedpic, bool checked = false);
-  ~RadioButton ();
-  void SetGroup(int groupid);
-  int GetGroup(void);
-  virtual int HandleMessage(gui_message * msg);
-      
- private:
-  int __group;
+public:
+	RadioButton( int iUnChecked, int iChecked );
+	RadioButton( int iX, int iY, int iUnChecked, int iChecked, bool bChecked );
+	~RadioButton();
+
+	void SetGroup( int iGroupId );
+	int GetGroup();
+	virtual int HandleMessage( gui_message *kMsg );
+
+private:
+	int m_iGroup;
 };
 
-
-#endif
+#endif	// _RADIOBUTTON_H_

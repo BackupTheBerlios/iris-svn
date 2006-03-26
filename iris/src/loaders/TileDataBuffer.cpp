@@ -36,7 +36,6 @@ TileDataBuffer::TileDataBuffer ()
 {
   entries.setMaxSize (1000);
   entries.setCacheSize (0x4000);
-  entries.setAutofree (true);
 }
 
 TileDataBuffer::~TileDataBuffer ()

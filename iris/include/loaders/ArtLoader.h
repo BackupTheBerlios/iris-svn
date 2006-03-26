@@ -38,7 +38,7 @@
 #include "loaders/VerdataLoader.h"
 #include "../renderer/Texture.h"
 
-////#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 class ArtLoader
 {
@@ -59,6 +59,7 @@ private:
 	std::ifstream *m_kArtFile;
 	std::ifstream *m_kArtIndex;
 	unsigned int m_uiArtCount;
+	std::vector<Texture *> m_vTextures;	// < Keeps our textures, and deletes all of them on destructor.
 
 private:
 	Texture *LoadGroundArt( int index );

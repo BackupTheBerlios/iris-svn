@@ -48,6 +48,8 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
 	MultiLabelComponent component;
 	std::string text = "";
 
+	Logger::WriteDebug( html_text.c_str() );
+
 	char apices[2];
 	apices[0] = 34; // "
 	apices[1] = 0;
@@ -75,8 +77,6 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
 		//printf ("Tag: %s\n", tag);
 		tag = strtok (NULL, "<>");
 	}
-
-	free(tags); tags = NULL;
 
 	int line = 0;
 	int center = 0;

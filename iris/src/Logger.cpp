@@ -202,14 +202,12 @@ void Logger::WriteLine()
 
 
 /// Write to screen when on debugging mode a message.
-
 void Logger::WriteDebug( std::string sMessage )
 {
 	#ifdef _DEBUG
 	Write( ( sMessage + "\n" ) );
 	#endif
 }
-
 
 
 /// Get Logging level

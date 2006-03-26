@@ -329,7 +329,7 @@ cClient::cClient (void (*error_callback) (unsigned int error))
   last_attack = 0;
   m_wait_for_target = "";
 
-  cMapInfoEntry * actualmap = pMapInfoLoader.GetMapInfo(0);
+  cMapInfoEntry * actualmap = MapInfoLoader::GetInstance()->GetMapInfo(0);
 
   if(actualmap)
   {
@@ -2225,349 +2225,360 @@ void cClient::Act_AOSTooltip (cPacket * packet)
 
 }
 
-void cClient::Act_GumpDialog (cPacket * packet)
+
+void cClient::Act_GumpDialog( cPacket *packet )
 {
 /*
-0xB0 Packet
-Last Modified on Tuesday, 20-Apr-1999
-Send Gump Menu Dialog (Variable # of bytes)
-*       BYTE cmd
-*       BYTE[2] blockSize
-*       BYTE[4] id
-*       BYTE[4] gumpid
-*       BYTE[4] x
-*       BYTE[4] y
-*       BYTE[2] command section length
-*       BYTE[?] commands (zero terminated)
-*       BYTE[2] numTextLines
-*       BYTE[2] text length (in unicode (2 byte) characters.)
-*       BYTE[?] text (in unicode)
-*/
-  packet->SetPosition (1);
-  Uint16 size = packet->GetWord ();
-  Uint32 id = packet->GetDword ();
-  Uint32 gumpid = packet->GetDword ();
-  Uint32 px = packet->GetDword ();
-  Uint32 py = packet->GetDword ();
+ * 0xB0 Packet
+ * Last Modified on Tuesday, 20-Apr-1999
+ * Send Gump Menu Dialog (Variable # of bytes)
+ *	BYTE cmd
+ *	BYTE[2] blockSize
+ *	BYTE[4] id
+ *	BYTE[4] gumpid
+ *	BYTE[4] x
+ *	BYTE[4] y
+ *	BYTE[2] command section length
+ *	BYTE[?] commands (zero terminated)
+ *	BYTE[2] numTextLines
+ *	BYTE[2] text length (in unicode (2 byte) characters.)
+ *	BYTE[?] text (in unicode)
+ */
+	packet->SetPosition( 1 );
+	Uint16 size = packet->GetWord();
+	Uint32 id = packet->GetDword();
+	Uint32 gumpid = packet->GetDword();
+	Uint32 px = packet->GetDword();
+	Uint32 py = packet->GetDword();
 
+	printf( "[GumpDialog (Size: %d, ID: %d, GumpID: %d, Position(%d, %d))]\n", size, id, gumpid, px, py );
 
-  printf ("[GumpDialog (Size: %d, ID: %d, GumpID: %d, Position(%d, %d))]\n",
-          size, id, gumpid, px, py);
+	// parse gump commando-lines
+	Uint16 cmds_len = packet->GetWord();
 
-  //parse gump commando-lines
-  Uint16 cmds_len = packet->GetWord ();
+	// printf( "Command Length: %d\n", cmds_len ); // 676 -> DEBUG <-
 
-  char *cmds = new char[cmds_len+1];
-  memset(cmds,0,cmds_len+1);
-  packet->GetData (cmds, cmds_len);
+	char *cmds = new char[cmds_len + 1];
+	memset( cmds, 0, cmds_len + 1 );
+	packet->GetData( cmds, cmds_len );
 
-  //converts cmds to lowerspace
-  char *conv = cmds;
-  while (*conv)
-      {
-        if ((*conv >= 65) && (*conv <= 90))
-            {
-              *conv += 32;
-            }
-        conv++;
-      }
+	//converts cmds to lowerspace
+	char *conv = cmds;
+	// printf( "Conv: %s\n", conv ); -> DEBUG <-
+	while ( *conv )
+	{
+		if ( ( *conv >= 65 ) && ( *conv <= 90 ) )
+		{
+			*conv += 32;
+		}
+		conv++;
+	}
 
-  list < string > cmds_list;
-  char *token = strtok (cmds, "{}");
+	std::list<std::string> cmds_list;
+	char *token = strtok( cmds, "{}" );
 
-  while (token != NULL)
-      {
-        cmds_list.push_back (string (token));   //add command line to list
-        token = strtok (NULL, "{}");
-      }
-  delete[]cmds;
+	while ( token != NULL )
+	{
+		cmds_list.push_back( std::string( token ) );   //add command line to list
+		token = strtok( NULL, "{}" );
+	}
+	SAFE_DELETE_ARRAY( cmds );
 
-  //parse gump text-lines
-  Uint16 txt_lines = packet->GetWord ();
-  vector < string > texts_vector (txt_lines);
+	//parse gump text-lines
+	Uint16 txt_lines = packet->GetWord();
+	std::vector<std::string> texts_vector( txt_lines );
 
 /*
-  Uint16 line_len = 0;
-  for (int i = 0; i < txt_lines; i++)
-      {
-        line_len = packet->GetWord ();    //get length of line
+	Uint16 line_len = 0;
+	for ( int i = 0; i < txt_lines; i++ )
+	{
+		line_len = packet->GetWord ();    //get length of line
 
-        if(line_len>0) 
-        { 
-          char *line = new char[line_len * 2];  
-          packet->GetData (line, line_len * 2);    
-          cUnicode unistring((NCHAR*) line,line_len * 2);  
-          if(strlen(unistring.m_charBuf) > 0)
-              texts_vector[i] = string(unistring.m_charBuf);  
-          else
-              texts_vector[i] = string(" "); 
-          delete[]line; 
-        }
-        else
-          texts_vector[i] = string(" ");
-      }
+		if(line_len>0) 
+		{ 
+			char *line = new char[line_len * 2];  
+			packet->GetData (line, line_len * 2);    
+			cUnicode unistring((NCHAR*) line,line_len * 2);  
+			if(strlen(unistring.m_charBuf) > 0)
+			{
+				texts_vector[i] = string(unistring.m_charBuf);
+			}
+			else
+			{
+				texts_vector[i] = string(" ");
+			}
+			SAFE_DELETE_ARRAY( line );
+		}
+		else
+		{
+			texts_vector[i] = string(" ");
+		}
+	}
 */
- Uint16 line_len = 0;
- for (int i = 0; i < txt_lines; i++)
- {
-  line_len = packet->GetWord ();    //get length of line
+	Uint16 line_len = 0;
+	for ( int i = 0; i < txt_lines; i++ )
+	{
+		line_len = packet->GetWord();    //get length of line
  
-  if(line_len>0)
-  {
-   char *line = new char[line_len * 2]; 
-   packet->GetData (line, line_len * 2);    
-   //HARKON: bug fixed - ansi len : line_len*2, unicode len: line_len
-   //cUnicode unistring((NCHAR*) line,line_len * 2); 
-   cUnicode unistring((NCHAR*) line,line_len);  
-   
- 
-  if(strlen(unistring.m_charBuf) > 0)
-    texts_vector[i] = string(unistring.m_charBuf); 
-   else
-    texts_vector[i] = string(" ");
-   delete[]line;
-  }
-  else
-   texts_vector[i] = string(" ");
- }
+		if ( line_len > 0 )
+		{
+			char *line = new char[line_len * 2]; 
+			packet->GetData( line, line_len * 2 );
+			//HARKON: bug fixed - ansi len : line_len*2, unicode len: line_len
+			//cUnicode unistring((NCHAR*) line,line_len * 2); 
+			cUnicode unistring( (NCHAR*)line, line_len );  
 
-  Container *dialog = new Container ();
+			if ( strlen( unistring.m_charBuf ) > 0 )
+			{
+				texts_vector[i] = std::string( unistring.m_charBuf );
+			}
+			else
+			{
+				texts_vector[i] = std::string(" ");
+			}
+			SAFE_DELETE_ARRAY( line );
+		}
+		else
+		{
+			texts_vector[i] = std::string( " " );
+		}
+	}
 
-  dialog->SetSize (100, 100);
-  dialog->SetPosition (px, py);
-  dialog->
-    SetFlags (GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE);
+	Container *dialog = new Container();
 
-  dialog->SetGumpID ((int) gumpid);
-  dialog->SetPlayerID ((int) id);
+	dialog->SetSize (100, 100);
+	dialog->SetPosition (px, py);
+	dialog->SetFlags (GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE);
+	dialog->SetGumpID ((int) gumpid);
+	dialog->SetPlayerID ((int) id);
 
-  int target_page = 0;
-  int cur_radio_group = 0;
-  list < string >::iterator it;
+	int target_page = 0;
+	int cur_radio_group = 0;
+	std::list<std::string>::iterator it;
 
-  for (it = cmds_list.begin (); it != cmds_list.end (); it++)
-      {
-        //SiENcE: params has false value in it, don't know why
+	for ( it = cmds_list.begin(); it != cmds_list.end(); it++ )
+	{
+		//SiENcE: params has false value in it, don't know why
 
-        stringstream stream;
-        string command;
-        stream << (*it);
-        vector < int >params;
-        stream >> command;
-        while (!stream.eof ())
-            {
-              int tmp;
-              stream >> tmp;
-              params.push_back (tmp);
-            }
-        Control *control = NULL;
+		std::stringstream stream;
+		std::string command;
+		stream << (*it);
+		std::vector<int> params;
+		stream >> command;
 
-        if (command == "page")
+		// Crash bug (gumppic) 3rd
+		while ( !stream.eof() )
+		{
+			int tmp;
+			stream >> tmp;
+			params.push_back( tmp );
+		}
+		Control *control = NULL;
 
-            {
-              target_page = params[0];
-              /*if(target_page == 0)
-                 target_page = 1; */
-            }
-        else if (command == "group")
-            {
-              cur_radio_group = params[0];
+		if ( command == "page" )
+		{
+			target_page = params[0];
+			
+			/*
+			if ( target_page == 0 )
+			{
+                 target_page = 1;
+			}
+			*/
+		}
+		else if ( command == "group" )
+		{
+			cur_radio_group = params[0];
+		}
+		else if ( command == "resizepic" )
+		{
+			Border *border = new Border( params[0], params[1], params[2], 0 );
+			border->SetSize( params[3], params[4] );
+			control = border;
+		}
+		else if ( command == "text" )
+		{
+			Label *label = new Label( params[0], params[1], texts_vector[params[3]].c_str(), params[2] );
+			label->setHue( params[2] );	// maybe cause some errors
+			
+			control = label;
 
-            }
-        else if (command == "resizepic")
-            {
-              Border *border =
-                new Border (params[0], params[1], params[2], 0);
-              border->SetSize (params[3], params[4]);
-              control = border;
+			printf( "label: %s 0x%x", texts_vector[params[3]].c_str(), params[2] );
+		}
+		else if ( command == "croppedtext" )
+		{
+			int hue = params[4];
+			if ( hue == 0 )
+			{
+				hue = 1;
+			}
+			Label *label = new Label( params[0], params[1], texts_vector[params[5]].c_str(), hue );
+			label->Crop( params[2], params[3] );
+			control = label;
 
-            }
-        else if (command == "text")
-            {
-	      Label *label = new Label (params[0], params[1],
-                                        texts_vector[params[3]].c_str (), params[2]);
-              label->setHue (params[2]);  //mayb cause some errors
-              control = label;
+			printf( "croppedtext:%s(%d)\n", texts_vector[params[5]].c_str(), hue );
+		}
+		else if ( command == "gumppic" )
+		{
+			Image *image = new Image( params[0], params[1], params[2] );
+			control = image;
+			/* TILEPIC X Y TILENR */
+			/* TODO: loading art textures */
+		}
+		else if (command == "gumppictiled")
+		{
+			Image *image = new Image( params[0], params[1], params[4] );
+			image->SetTiled( params[2], params[3] );
+			control = image;
+		}
+		/* TODO (ArTiX#1#): temporarily disabled to fix some ugly bugs */
+		//Artix fix removed -- startline
+        else if ( command == "htmlgump" )
+		{
+			cMultiLabel *label = new cMultiLabel( params[0], params[1], params[2], params[3], params[6] );
+			cHTMLGumpParser parser;
+			parser.Parse( texts_vector[params[4]], label );
+			label->Create();
+			control = label;
+		}
+		else if ( command == "xmfhtmlgump" )
+		{
+			if ( !Config::GetClilocs() )
+			{
+				continue;
+			}
+			cMultiLabel *label = new cMultiLabel( params[0], params[1], params[2], params[3], params[6] );
+			cHTMLGumpParser parser;
+			parser.Parse( pClilocLoader.GetMessage( params[4] ), label );
+			label->Create ();
+			control = label;
+		}
+		else if ( command == "xmfhtmlgumpcolor" )
+		{
+			if ( !Config::GetClilocs() )
+			{
+				continue;
+			}
+			cMultiLabel *label = new cMultiLabel( params[0], params[1], params[2], params[3], params[6] );
+			cHTMLGumpParser parser;
+			parser.setDefaultColor( params[7] );
+			parser.Parse( pClilocLoader.GetMessage( params[4] ), label );
+			label->Create();
+			control = label;
+		}
+		//Artix fix removed -- endline
+		else if ( command == "tilepic" )
+		{
+			ImageArt *image = new ImageArt( params[0], params[1], params[2] );
+			// image->SetPage (target_page);
+			// dialog->AddControl (image);
+			control = image;
 
-            }
-        else if (command == "croppedtext")
-            {
-              int hue = params[4];
-              if (hue == 0)
-              hue = 1;
-	      Label *label = new Label (params[0], params[1],
-                                        texts_vector[params[5]].c_str (), hue);
+			/* TEXTENTRY X Y Width Height Color storageID Default_text */
+			/* TODO: storage id */
+		}
+		else if ( command == "textentry" )
+		{
+			InputField *inputfield = new InputField( params[0], params[1], params[2], 
+				params[3], texts_vector.at( params[6] ).c_str(), params[4] );
+			// inputfield->setText ("AAA");
+			control = inputfield;
+		}
+		else if ( command == "checkertrans" )
+		{
+			int alphax, alphay, alphaw, alphah;
 
-	      label->Crop (params[2], params[3]);
-              control = label;
-            }
-        else if (command == "gumppic")
-            {
-              Image *image = new Image (params[0], params[1], params[2]);
-              control = image;
-              /* TILEPIC X Y TILENR */
-              /* TODO: loading art textures */
-            }
-        else if (command == "gumppictiled")
-            {
-              Image *image = new Image (params[0], params[1], params[4]);
-              image->SetTiled (params[2], params[3]);
-              control = image;
+			alphax = params[0];
+			alphay = params[1];
+			alphaw = params[2];
+			alphah = params[3];
 
-            
-            }
-/* TODO (ArTiX#1#): temporarily disabled to fix some ugly bugs */
-//Artix fix removed -- startline
-        else if (command == "htmlgump")
-            {
-              cMultiLabel *label =
-                new cMultiLabel (params[0], params[1], params[2], params[3],
-                                 params[6]);
-              cHTMLGumpParser parser;
-              parser.Parse (texts_vector[params[4]], label);
-              label->Create ();
-              control = label;
+			ControlList_t *the_list = dialog->GetControlList();
+			
+			ControlList_t::iterator iter;
+			for ( iter = the_list->begin(); iter != the_list->end(); iter++ )
+			{
+				//if
+				iter->second->SetAlpha( 120 );
+			}
 
-            }
-        else if (command == "xmfhtmlgump")
-            {
-              if ( !Config::GetClilocs() )
-                continue;
-              cMultiLabel *label =
-                new cMultiLabel (params[0], params[1], params[2], params[3],
-                                 params[6]);
-              cHTMLGumpParser parser;
-              parser.Parse (pClilocLoader.GetMessage (params[4]), label);
-              label->Create ();
-              control = label;
+			//dialog->SetAlpha(120);
 
-            }
-        else if (command == "xmfhtmlgumpcolor")
-            {
-              if ( !Config::GetClilocs() )
-                continue;
-              cMultiLabel *label =
-                new cMultiLabel (params[0], params[1], params[2], params[3],
-                                 params[6]);
-              cHTMLGumpParser parser;
-              parser.setDefaultColor (params[7]);
-              parser.Parse (pClilocLoader.GetMessage (params[4]), label);
-              label->Create ();
-              control = label;
+			/* BUTTON X Y DOWNID UPID PAGESEL? DESTPAGENR BUTTONID */
+			/* TODO: buttonid */
+		}
+		else if ( command == "button" )
+		{
+			Button *button = new Button( params[0], params[1] );
+			button->SetButton( BUTTONGUMP_NORMAL, params[2] );
+			button->SetButton( BUTTONGUMP_MOUSEOVER, params[2] );
+			button->SetButton( BUTTONGUMP_PRESSED, params[3] );
+			if ( params[4] != 0 )   //is it a page selector button?
+			{
+				gui_message *gmess;
+				gmess = new gui_message();
+				gmess->type = MESSAGE_CLOSEGUMP;
+				button->SetClickMessage( gmess );
+				button->HandleMessage( gmess );
+				button->SetReturnMsg( params[6] );
+				button->SetCloseGump( true );
+			}
+			if ( params[5] != 0 )   //is it a page selector button?
+			{
+				button->SetPageSelector( true );
+				button->SetDestinationPage( params[5] );
+			}
+			button->OnClick( HandleGumpDialogEvent );
+			control = button;
 
-            }
-//Artix fix removed -- endline
-        else if (command == "tilepic")
-            {
-              ImageArt *image =
-                new ImageArt (params[0], params[1], params[2]);
-              //image->SetPage (target_page);
-              //dialog->AddControl (image);
-              control = image;
-
-              /* TEXTENTRY X Y Width Height Color storageID Default_text */
-              /* TODO: storage id */
-            }
-        else if (command == "textentry")
-            {
-              InputField *inputfield =
-                new InputField (params[0], params[1], params[2], params[3],
-                                texts_vector.at (params[6]).c_str (),
-                                params[4]);
-              //inputfield->setText ("AAA");
-              control = inputfield;
-            }
-        else if (command == "checkertrans")
-            {
-
-              int alphax, alphay, alphaw, alphah;
-
-              alphax = params[0];
-              alphay = params[1];
-              alphaw = params[2];
-              alphah = params[3];
-
-              ControlList_t *the_list = dialog->GetControlList ();
-              ControlList_t::iterator iter;
-
-              for (iter = the_list->begin (); iter != the_list->end ();
-                   iter++)
-                  {
-                    //if
-                    iter->second->SetAlpha (120);
-                  }
-
-              //dialog->SetAlpha(120);
-
-              /* BUTTON X Y DOWNID UPID PAGESEL? DESTPAGENR BUTTONID */
-              /* TODO: buttonid */
-            }
-        else if (command == "button")
-            {
-              Button *button = new Button (params[0], params[1]);
-              button->SetButton (BUTTONGUMP_NORMAL, params[2]);
-              button->SetButton (BUTTONGUMP_MOUSEOVER, params[2]);
-              button->SetButton (BUTTONGUMP_PRESSED, params[3]);
-              if (params[4] != 0)   //is it a page selector button?
-                  {
-                    gui_message *gmess;
-                    gmess = new gui_message;
-                    gmess->type = MESSAGE_CLOSEGUMP;
-                    button->SetClickMessage (gmess);
-                    button->HandleMessage (gmess);
-
-                    button->SetReturnMsg (params[6]);
-                    button->SetCloseGump (true);
-                  }
-              if (params[5] != 0)   //is it a page selector button?
-                  {
-                    button->SetPageSelector (true);
-                    button->SetDestinationPage (params[5]);
-                  }
-              button->OnClick (HandleGumpDialogEvent);
-              control = button;
-
-              /* CHECKBOX X Y SELECTEDPIC UNSELECTEDPIC STARTSTATE IDNR */
-              /* TODO: idnr */
-
-            }
-        else if (command == "checkbox")
-            {
+			/* CHECKBOX X Y SELECTEDPIC UNSELECTEDPIC STARTSTATE IDNR */
+			/* TODO: idnr */
+		}
+		else if ( command == "checkbox" )
+		{
+			Logger::WriteDebug( "Trying to add a check box (DISABLED): " + command );
 /*
-            Checkbox *checkbox = new Checkbox(params[0], params[1], params[2], params[3]);
-            if (params[4]) checkbox->SetChecked(true);
-            control = checkbox;
+			Checkbox *checkbox = new Checkbox( params[0], params[1], params[2], params[3], params[4] );
+			control = checkbox;
 */
-            }
-        else if (command == "radio")
-            {
-/*
-            RadioButton *radio = new RadioButton(params[0], params[1], params[2], params[3]);
-            if (params[4]) radio->SetChecked(true);
-            radio->SetPage(target_page);
+		}
+		else if ( command == "radio" )
+		{
+			// TODO: Fix first time, it shows the wrong option checked but on click fixes (needs debugging).
+
+			printf( "DEBUG - params: %d %d %d %d %d\n", params[0], params[1], params[2], params[3], params[4] );
+
+            RadioButton *radio = new RadioButton( params[0], params[1], params[2], params[3], params[4] );
+
+            radio->SetPage( target_page );
             control = radio;
-*/
+		}
+		else if ( command == "noresize" )
+		{
+			dialog->RemoveFlag( GUMPFLAG_MOVABLE );
+		}
+		else if ( command == "noclose" )
+		{
+			dialog->RemoveFlag( GUMPFLAG_CLOSABLE );
+		}
+		else
+		{
+			Logger::WriteDebug( "-> Unhandled gump dialog statement " + command );
+		}
 
-            }
-        else
-            {
+		//add the constructed control to the dialog:
+		if ( control != NULL )
+		{
+			control->SetPage( target_page );
 
-              //pDebug() << "unhandled gump dialog statement: " << command << "\n";
-            }
-
-        //add the constructed control to the dialog:
-        if (control != NULL)
-            {
-              control->SetPage (target_page);
-
-              control->SetFlags (0);
-              dialog->AddControl (control);
-            }
-
-      }
-  dialog->SetCurrentPage (1);
-  pUOGUI.AddControl (dialog);
+			control->SetFlags( 0 );
+			dialog->AddControl( control );
+		}
+	}
+	dialog->SetCurrentPage( 1 );
+	pUOGUI.AddControl( dialog );
 }
+
 
 void cClient::Act_MapDisplay (cPacket * packet)
 {
@@ -2710,7 +2721,7 @@ void cClient::Act_SubCommands (cPacket * packet)
 	
 		  pMapbufferHandler.buffer ()->Clear();
   
-				cMapInfoEntry * mapinfo_entry = pMapInfoLoader.GetMapInfo(mapID);
+		  cMapInfoEntry * mapinfo_entry = MapInfoLoader::GetInstance()->GetMapInfo(mapID);
 				if(!mapinfo_entry)
 					THROWEXCEPTION ("Wanted to change to an unknown map!");
           

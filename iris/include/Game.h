@@ -75,9 +75,7 @@
 
 #include "csl/CSLHandler.h"
 
-////#include "../Fluid/mmgr.h"
-
-
+// #include "../Fluid/mmgr.h"
 
 #define CLICK_NORMAL     0
 #define CLICK_TARGET_ID  1
@@ -167,6 +165,10 @@ private:	// Member variables
 	Mapbuffer3D *m_kMapBuffer3D;
 	ArtLoader *m_kArtLoader;
 	SpeechLoader *m_kSpeechLoader;
+	MapInfoLoader *m_kMapInfoLoader;
+	StaticModelLoader *m_kStaticModelLoader;
+	ModelInfoLoader *m_kModelInfoLoader;
+	TextureBuffer *m_kTextureBuffer;
 	bool m_paused;
 	bool m_AOSToolTip;
 

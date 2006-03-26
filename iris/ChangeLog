@@ -1,18 +1,41 @@
+26.03.2006
+Changes by Nuno Ramiro
+	- Stability: More memory leaks.
+	- Code cleanup.
+	- Loading improvements.
+	- Fixed: Gump Memory leak.
+
+25.03.2006
+Changes by Nuno Ramiro
+	- Stability: Fixed more memory leaks.
+
+24.03.2006
+Changes by Nuno Ramiro	
+	- Changed: More debug under RadioBoxes / Checkboxes.
+	- Added: Gumps can now have flag "noclose".
+
+23.03.2006
+Changes by Nuno Ramiro
+	- Changed: RadioBoxes should now show (work in progress).
+	- Added: Gumps can now have the flag "noresize".
+
 24.03.2006
 Changes by Florian Fischer (SiENcE)
 	- updated granny_aos.xml to support 8th Aniv. additions
 
 22.03.2006
 Changes by Nuno Ramiro
-	- FIXED: 110k Memory leaks (No joking) under Granny models.
-	- FIXED: Granny Bones memory leak.
-	- FIXED: Linux compatibility.
+	- Fixed: 110k Memory leaks (No joking) under Granny models.
+	- Fixed: Granny Bones memory leak.
+	- Fixed: Linux compatibility.
+	- Added: RemoveFlag( int flag ) under control.
+	- Added: Act_GumpDialog's noresize handler.
 
 21.03.2006
 Changes by Nuno Ramiro
-	- ADDED: Pause() and Stop() under Music.
-	- FIXED: Many Drag&Drop memory leaks.
-	- FIXED: Texture/Bitmask memory leak.
+	- Added: Pause() and Stop() under Music.
+	- Fixed: Many Drag&Drop memory leaks.
+	- Fixed: Texture/Bitmask memory leak.
 
 14.03.2006
 Changes by Nuno Ramiro
