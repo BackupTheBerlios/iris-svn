@@ -10,6 +10,9 @@
 - Remove fountain effect from candle since it was for debug purposes (SiENcE)			- Needs fixing
 - Creating a character you can not choose your skills (they are choosen for you)		- Needs fixing
 - UOX3 crashes Iris when server sends new music title						- Needs fixing
+- Skills show everything with 0's								- Needs fixing
+- Skills can not be used (like meditation/taming/hide/etc)					- Needs fixing
+- When connecting with a wrong username the engine crashes					- Needs fixing
 
 - Fix for walking code (still messed up with RunUO) (SiENcE)					- Needs testing
 - Fix click/target bugs (sometimes click is not detected and statics height is not detected when click on ground) (SiENcE) - Needs testing
@@ -60,6 +63,7 @@ restarting iris)
       -custom mounts
 - Removing the 8 direction limit (providing patches for Emus (RunUO/Pol) and for Iris)		- New Feature
 - Exchange CSL for LUA										- New Feature
+- Paging system											- New Feature
 
 
 - Beeing able to stop the Music.								- ADDED
