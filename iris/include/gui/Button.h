@@ -30,7 +30,7 @@
 #include "SDL/SDL.h"
 #include "Image.h"
 
-#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 #define BUTTONGUMP_NORMAL    0
 #define BUTTONGUMP_MOUSEOVER 1

@@ -125,7 +125,7 @@ ZString ZProfile::getOs2Error () const const
 #define NO_STRICT
 #include <windows.h>
 
-#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 // string constants
 static const char ValueNotFound[] = "value not found";

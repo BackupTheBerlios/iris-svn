@@ -58,7 +58,6 @@ cDynamicObject::cDynamicObject()
 
 cDynamicObject::~cDynamicObject()
 {
-	// SAFE_DELETE( m_motive );
   if (m_light_source)
     pLightManager.UnRegisterLight (m_light_source);
   if (m_particle_effect_handle)
@@ -70,9 +69,9 @@ void cDynamicObject::setMotive (cMotiveBasedLight * motive)
 	m_motive = motive;
 }
 
-cMotiveBasedLight *cDynamicObject::motive ()
+cMotiveBasedLight *cDynamicObject::motive()
 {
-  return m_motive;
+	return m_motive;
 }
 
 void cDynamicObject::setLightSource (cLight3D * light_source)

@@ -35,7 +35,7 @@
 #include "loaders/MapInfo.h"
 #include "Exception.h"
 
-#include "../Fluid/mmgr.h"
+// #include "../Fluid/mmgr.h"
 
 #define UOMAP_MAP0  1
 #define UOMAP_MAP2  2
