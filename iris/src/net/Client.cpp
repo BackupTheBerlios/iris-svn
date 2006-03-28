@@ -3594,9 +3594,9 @@ OnOpenSpellBook (void (*callback)
   callback_OnOpenSpellBook = callback;
 }
 
-cCharacter *cClient::player_character ()
+cCharacter *cClient::player_character()
 {
-  return pCharacterList.Get (player_char);
+	return pCharacterList.Get( player_char );
 }
 
 bool cClient::Walk_Simple (Uint8 action)

@@ -3,6 +3,7 @@ Changes by Nuno Ramiro
 	- Fixed: Client crash.
 	- Changed: Small changes under Client (packets).
 	- Fixed: Sound has been fixed.
+	- Fixed: Light bug created by the last patch.
 
 27.03.2006
 Changes by Nuno Ramiro

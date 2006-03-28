@@ -100,7 +100,6 @@ private:
     dynamiclist_t dynamiclist;
     int m_roof_z;
     cDynamicObject * Add (Uint32 id);
-	cMotiveBasedLight *light;
 public:
     cDynamicObjectList ();    
    ~cDynamicObjectList ();

@@ -109,14 +109,13 @@ Uint32 cDynamicObject::GetParticleEffectHandle ()
 cDynamicObjectList pDynamicObjectList;
 
 
-cDynamicObjectList::cDynamicObjectList() : m_roof_z( ROOF_NONE ), callback_OnAdd( NULL ), callback_OnDelete( NULL ), light( NULL )
+cDynamicObjectList::cDynamicObjectList() : m_roof_z( ROOF_NONE ), callback_OnAdd( NULL ), callback_OnDelete( NULL )
 {
 }
 
 
 cDynamicObjectList::~cDynamicObjectList()
 {
-	SAFE_DELETE( light );
 	Clear();
 }
 
@@ -326,8 +325,8 @@ cDynamicObject *cDynamicObjectList::AddWorldItem( Uint32 id, Uint16 model, Uint1
 	{
 		int blockx = x / 8;
 		int blocky = y / 8;
-		SAFE_DELETE( light );
-		light = new cMotiveBasedLight_Entity( (float)(x % 8), (float)(y % 8), (float)z, blockx, blocky, static_model );
+		// SAFE_DELETE( light );
+		cMotiveBasedLight *light = new cMotiveBasedLight_Entity( (float)(x % 8), (float)(y % 8), (float)z, blockx, blocky, static_model );
 		result->setMotive( light );
 		if ( static_model->GetLightSourceInfo() )
 		{

@@ -100,8 +100,8 @@ void SoundMix::PlaySound (int sound, int volume, char flags, int x, int y, int z
   if (!wave)
     return;
 
-  cCharacter *mychar = pClient->player_character ();
-  assert (mychar);
+	cCharacter *mychar = pClient->player_character ();
+	assert( mychar );
 
   int my_x = mychar->x ();
   int my_y = mychar->y ();
