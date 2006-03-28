@@ -669,54 +669,47 @@ void Renderer3D::RenderWater (bool do_culling)
 }
 
 
-void Renderer3D::RenderDynamics (bool do_culling)
+void Renderer3D::RenderDynamics( bool do_culling )
 {
+	int blockx = pCamera.GetBlockX();
+	int blocky = pCamera.GetBlockY();
 
+	int min_x = (blockx - view_distance) * 8;
+	int min_y = (blocky - view_distance) * 8;
+	int max_x = (blockx + view_distance) * 8;
+	int max_y = (blocky + view_distance) * 8;
+	int dx = blockx * 8;
+	int dy = blocky * 8;
 
-  int blockx = pCamera.GetBlockX ();
-  int blocky = pCamera.GetBlockY ();
+	dynamiclist_t *dynamics = pDynamicObjectList.GetList();
+	dynamiclist_t::iterator iter;
 
-  int min_x = (blockx - view_distance) * 8;
-  int min_y = (blocky - view_distance) * 8;
-  int max_x = (blockx + view_distance) * 8;
-  int max_y = (blocky + view_distance) * 8;
-  int dx = blockx * 8;
-  int dy = blocky * 8;
+	for ( iter = dynamics->begin(); iter != dynamics->end(); iter++ )
+	{
+		cDynamicObject *object = iter->second;
+		if ( ( object->x >= min_x ) && ( object->y >= min_y ) && ( object->x <= max_x ) && ( object->y <= max_y ) )
+		{
+			if ( object->fader )
+			{
+				int act_alpha = (int)( object->fader->value() + 0.5f );
+				object->alpha = act_alpha;
+			}
 
-  dynamiclist_t *dynamics = pDynamicObjectList.GetList ();
-  dynamiclist_t::iterator iter;
-
-  for (iter = dynamics->begin (); iter != dynamics->end (); iter++)
-      {
-        cDynamicObject *object = iter->second;
-        if ((object->x >= min_x) && (object->y >= min_y)
-            && (object->x <= max_x) && (object->y <= max_y))
-            {
-              if (object->fader)
-                  {
-                    int act_alpha = (int) (object->fader->value () + 0.5f);
-                    object->alpha = act_alpha;
-                  }
-
-              cStaticModel *model =
-				  StaticModelLoader::GetInstance()->getModel (object->model);
-              if (model)
-                  {
-
-                    if (object->motive ())
-                        {
-                          if (object->RecalcAmbientLightFlag ())
-                            object->motive ()->
-                              CalcAmbientLight (ambient_color, sun_color,
-                                                light_direction);
-                          object->motive ()->PrepareModelForRendering ();
-                        }
-                    model->Render (object->x - dx, object->y - dy,
-                                   object->z * 0.1f, object->alpha);
-                  }
-
-            }
-      }
+			cStaticModel *model = StaticModelLoader::GetInstance()->getModel( object->model );
+			if ( model )
+			{
+				if ( object->motive() )
+				{
+					if ( object->RecalcAmbientLightFlag() )
+					{
+						object->motive()->CalcAmbientLight( ambient_color, sun_color, light_direction );
+					}
+					object->motive()->PrepareModelForRendering();
+				}
+				model->Render( object->x - dx, object->y - dy, object->z * 0.1f, object->alpha );
+			}
+		}
+	}
 }
 
 
@@ -754,7 +747,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
             && (character->x () <= max_x) && (character->y () <= max_y))
             {
 
-				cModelInfoEntry * modelinfo = ModelInfoLoader::GetInstance()->GetModelEntry(character->body());
+				cModelInfoEntry *modelinfo = ModelInfoLoader::GetInstance()->GetModelEntry(character->body());
 
               float alpha = 1.0f;
               float scalex = 1.0f, scaley = 1.0f, scalez = 1.0f;

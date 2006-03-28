@@ -1869,6 +1869,22 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Fluid"
+			>
+			<File
+				RelativePath=".\Fluid\mmgr.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Fluid\mmgr.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Fluid\nommgr.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\src\main.cpp"
 			>

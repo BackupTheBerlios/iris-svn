@@ -24,7 +24,7 @@
 #include <vector>
 #include "gui/MultiLabel.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 class cHTMLGumpParser
 {

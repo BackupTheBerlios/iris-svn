@@ -31,7 +31,7 @@
 #include "Control.h"
 #include <map>
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 
 class Container : public Control

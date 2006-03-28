@@ -303,20 +303,21 @@ bool cMapblock3D::Generate (cLightNodeEnvironment & environment)
                   {
                     struct sStaticObject *object = objects.Add ();
                     object->hue = statics_p->Hue;
-                    CreateObject (object, x + statics_p->x, y + statics_p->y,
-                                  statics_p->z, statics_p->TileID, model);
+                    CreateObject (object, x + statics_p->x, y + statics_p->y, statics_p->z, statics_p->TileID, model);
 
-                    if (model->flag (MODELFLAG_TILEABLE))
-                      object->light =
-                        new cMotiveBasedLight_Tile (object->x, object->y,
-                                                    object->z, m_blockx,
-                                                    m_blocky, model,
-                                                    environment);
+					SAFE_DELETE( object->light );
+					if (model->flag (MODELFLAG_TILEABLE))
+					{
+						object->light = new cMotiveBasedLight_Tile( object->x, object->y, object->z, 
+										m_blockx, m_blocky, model, environment );
+					}
                     else
+					{
                       object->light =
                         new cMotiveBasedLight_Entity (object->x, object->y,
                                                       object->z, m_blockx,
                                                       m_blocky, model);
+					}
 
                     for (int new_x = -1; new_x <= 1; new_x++)
                       for (int new_y = -1; new_y <= 1; new_y++)

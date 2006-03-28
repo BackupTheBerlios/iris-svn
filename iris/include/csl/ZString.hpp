@@ -30,6 +30,7 @@
 #include <iostream>
 #include <fstream>
 #include <ZBase.hpp>
+#include "Common.h"
 
 class ZStringBuffer : public ZBase
 {

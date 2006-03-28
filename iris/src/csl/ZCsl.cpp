@@ -53,7 +53,7 @@
 
 #include "Internal.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 using namespace std;
 
@@ -329,6 +329,7 @@ ZExport(ZString) ZCsl::call(
    } // catch
    iStat = saveStat;
    iState = saveState;
+   SAFE_DELETE_ARRAY( aArgs );
    return ret;
 } // call
 

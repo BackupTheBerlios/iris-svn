@@ -31,7 +31,7 @@
 #include "xml.h"
 #include "Exception.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 class cMapInfoEntry
 {

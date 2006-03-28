@@ -229,9 +229,9 @@ Texture *ArtLoader::LoadGroundArt( int index )
 	Texture *kTexture = new Texture();
 	kTexture->LoadFromData( rdata, 44, 44, 32, GL_LINEAR );
 
-	SAFE_DELETE( data );
-	SAFE_DELETE( rdata );
-	SAFE_DELETE( imagecolors );
+	SAFE_DELETE_ARRAY( data );
+	SAFE_DELETE_ARRAY( rdata );
+	SAFE_DELETE_ARRAY( imagecolors );
 	m_vTextures.push_back( kTexture );
 
 	return kTexture;

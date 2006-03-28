@@ -42,7 +42,7 @@
 #include "renderer/Characters.h"
 #include "math.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 class SoundMix : public Music, public SoundLoader
 {

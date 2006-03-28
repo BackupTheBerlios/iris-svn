@@ -34,7 +34,7 @@
 #include <ZCsl.hpp>
 #include "Internal.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 static ZString decodeString (char *s)
 {

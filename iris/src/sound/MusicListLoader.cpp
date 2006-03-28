@@ -30,7 +30,7 @@
 #include <cassert>
 #include "iris_endian.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 cMusicListLoader *pMusicListLoader = NULL;
 

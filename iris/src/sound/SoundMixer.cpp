@@ -20,16 +20,18 @@
 
 SoundMix *SoundMix::m_sgSoundMix = NULL;
 
-//SoundMix *pSoundMix = NULL;
-
 
 SoundMix::SoundMix() : wave( NULL )
 {
+	assert( m_sgSoundMix == NULL );
+	m_sgSoundMix = this;
 }
 
 
-SoundMix::~SoundMix ()
+SoundMix::~SoundMix()
 {
+	assert( m_sgSoundMix != NULL );
+	m_sgSoundMix = NULL;
 	SAFE_DELETE( wave );
 	SDL_QuitSubSystem( SDL_INIT_AUDIO );
 	m_sgSoundMix = NULL;
@@ -41,7 +43,8 @@ SoundMix *SoundMix::GetInstance()
 	return m_sgSoundMix;
 }
 
-void SoundMix::Init ()
+
+void SoundMix::Init()
 {
   int stereo_channels = MIX_DEFAULT_CHANNELS;
 

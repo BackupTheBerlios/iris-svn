@@ -40,7 +40,7 @@
 #include <ZRegEx.h>
 #endif
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 ZExport0 ZRegularExpression::ZRegularExpression (const ZString & aExpression,
                                                  int aOpenFlags)

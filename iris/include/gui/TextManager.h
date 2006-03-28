@@ -28,7 +28,7 @@
 #include "renderer/Texture.h"
 #include "SDL/SDL_ttf.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 /*
 	Class for external Text

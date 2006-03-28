@@ -304,102 +304,100 @@ void cClient::sell (Uint32 id)
 }
 
 
-cClient::cClient (void (*error_callback) (unsigned int error))
+cClient::cClient( void (*error_callback)(unsigned int error) )
 {
-  copier = new DecompressingCopier();
-  socket = NULL;
-  decompress = false;
-  connected = false;
-  walk_sequence = 0;
-  walk_direction = 0;
-  m_warmode = false;
-  data_buffer_pos = 0;
-  in_game = false;
-  m_popupx = 0;
-  m_popupy = 0;
-  enemy = 0;
-  last_footstep_sound = 0;
+	copier = new DecompressingCopier();
+	socket = NULL;
+	decompress = false;
+	connected = false;
+	walk_sequence = 0;
+	walk_direction = 0;
+	m_warmode = false;
+	data_buffer_pos = 0;
+	in_game = false;
+	m_popupx = 0;
+	m_popupy = 0;
+	enemy = 0;
+	last_footstep_sound = 0;
   
-  last_spell = 0;
-  last_object = 0;
-  /* TODO (ArTiX#1#): Add checks for UOX3 */
+	last_spell = 0;
+	last_object = 0;
+	/* TODO (ArTiX#1#): Add checks for UOX3 */
         
-  last_target = 0;
-  last_skill = 0;
-  last_attack = 0;
-  m_wait_for_target = "";
+	last_target = 0;
+	last_skill = 0;
+	last_attack = 0;
+	m_wait_for_target = "";
 
-  cMapInfoEntry * actualmap = MapInfoLoader::GetInstance()->GetMapInfo(0);
+	cMapInfoEntry * actualmap = MapInfoLoader::GetInstance()->GetMapInfo(0);
 
-  if(actualmap)
-  {
-   GLfloat fogColor[4] = {(float) actualmap->fog_r() / 255.0f, (float) actualmap->fog_g() / 255.0f,(float) actualmap->fog_b() / 255.0f, 1.0 };
-   glFogfv(GL_FOG_COLOR, fogColor);
-  }
+	if ( actualmap )
+	{
+		GLfloat fogColor[4] = {(float) actualmap->fog_r() / 255.0f, (float) actualmap->fog_g() / 255.0f,(float) actualmap->fog_b() / 255.0f, 1.0 };
+		glFogfv(GL_FOG_COLOR, fogColor);
+	}
 
-  callback_OnGameStart = NULL;
-  callback_OnTeleport = NULL;
-  callback_OnServerList = NULL;
-  callback_OnCharList = NULL;
-  callback_OnNetError = error_callback;
-  callback_OnLightLevel = NULL;
-  callback_OnStatus = NULL;
-  callback_OnSpeech = NULL;
-  callback_OnStatChange = NULL;
-  callback_OnContainerContent = NULL;
-  callback_OnOpenContainer = NULL;
-  callback_OnSkill = NULL;
-  callback_OnDragCancel = NULL;
-  callback_OnTarget = NULL;
-  callback_OnPaperdoll = NULL;
-  callback_OnAttackReply = NULL;
-  callback_OnDyeWindow = NULL;
-  callback_OnWarmode = NULL;
-  callback_OnPopupDisplay = NULL;
-  callback_OnMenuItems = NULL;
-  callback_OnOpenSpellBook = NULL;
-  callback_OnBuyWindowOpen = NULL;
-  callback_OnBuyWinAdd = NULL;
-  callback_OnSellWindowOpen = NULL;
-  callback_OnSellWinAdd = NULL;
-  callback_OnTradeStart = NULL;
-  callback_OnTradeCheck = NULL;
-  callback_OnTradeAdd = NULL;
+	callback_OnGameStart = NULL;
+	callback_OnTeleport = NULL;
+	callback_OnServerList = NULL;
+	callback_OnCharList = NULL;
+	callback_OnNetError = error_callback;
+	callback_OnLightLevel = NULL;
+	callback_OnStatus = NULL;
+	callback_OnSpeech = NULL;
+	callback_OnStatChange = NULL;
+	callback_OnContainerContent = NULL;
+	callback_OnOpenContainer = NULL;
+	callback_OnSkill = NULL;
+	callback_OnDragCancel = NULL;
+	callback_OnTarget = NULL;
+	callback_OnPaperdoll = NULL;
+	callback_OnAttackReply = NULL;
+	callback_OnDyeWindow = NULL;
+	callback_OnWarmode = NULL;
+	callback_OnPopupDisplay = NULL;
+	callback_OnMenuItems = NULL;
+	callback_OnOpenSpellBook = NULL;
+	callback_OnBuyWindowOpen = NULL;
+	callback_OnBuyWinAdd = NULL;
+	callback_OnSellWindowOpen = NULL;
+	callback_OnSellWinAdd = NULL;
+	callback_OnTradeStart = NULL;
+	callback_OnTradeCheck = NULL;
+	callback_OnTradeAdd = NULL;
 
-  player_char = 0;
-  for (int i = 0; i < 3; i++)
-    player_position[i] = 0;
+	player_char = 0;
+	for (int i = 0; i < 3; i++)
+		player_position[i] = 0;
 
 
-  printf ("Connecting to %s:%d\n", (char *) Config::GetServer().c_str (),
-          Config::GetServerPort());
-  Connect ( (char *)Config::GetServer().c_str (), Config::GetServerPort() );
-  if (!connected)
-      {
-        Logger::WriteLine ("NET | Could not Connect");
-        return;
-      }
+	printf( "Connecting to %s:%d\n", (char *)Config::GetServer().c_str(), Config::GetServerPort() );
+	if ( !Connect( (char *)Config::GetServer().c_str(), Config::GetServerPort() ) )
+	{
+		Logger::WriteLine ("NET | Could not Connect");
+		return;
+	}
 
-  unsigned int sign = Config::GetClientKey();
-  Send (&sign, 4);
+	unsigned int sign = Config::GetClientKey();
+	Send( &sign, 4 );
 
-  cPacket packet;
-  packet.FillPacket (PCK_ServersReq);
-  strncpy (packet.packet.LoginRequest.m_username, Config::GetLogin().c_str (),
-           29);
-  strncpy (packet.packet.LoginRequest.m_password, Config::GetPassword().c_str (),
-           29);
-  packet.packet.LoginRequest.m_unknown = 1;
-  Send (&packet);
+	cPacket packet;
+	packet.FillPacket( PCK_ServersReq );
+	strncpy( packet.packet.LoginRequest.m_username, Config::GetLogin().c_str(), 29);
+	strncpy( packet.packet.LoginRequest.m_password, Config::GetPassword().c_str(), 29);
+	packet.packet.LoginRequest.m_unknown = 1;
+	Send( &packet );
 }
 
-cClient::~cClient ()
+cClient::~cClient()
 {
-  if (connected)
-    Disconnect ();
-  walk_stack.clear ();
-  ClearLoginLists ();
-  delete copier;
+	if ( connected )
+	{
+		Disconnect();
+	}
+	walk_stack.clear();
+	ClearLoginLists();
+	SAFE_DELETE( copier );
 }
 
 void cClient::ClearLoginLists ()
@@ -413,54 +411,68 @@ void cClient::ClearLoginLists ()
   login_server_list.clear ();
 }
 
-bool cClient::Connect (char *address, Uint16 port)
+
+bool cClient::Connect( char *address, Uint16 port )
 {
-  if (connected)
-    Disconnect ();
-  connected = false;
+	if ( connected )
+	{
+		// This should _NEVER_ happen
+		Logger::WriteDebug( "Something is wrong, we are disconnecting on connect." );
+		Disconnect ();
+	}
+	connected = false;
 
-  IPaddress ip;
+	IPaddress ip;
 
-  if (SDLNet_ResolveHost (&ip, address, port) == -1)
-      {
-        Logger::WriteLine ("SDLNet_ResolveHost: " + string (SDLNet_GetError ()));
-        if (callback_OnNetError)
-          callback_OnNetError (NETERROR_UNKNOWNHOST);
-        return false;
-      }
+	if ( SDLNet_ResolveHost( &ip, address, port ) == -1 )
+	{
+		Logger::WriteLine( "SDLNet_ResolveHost: " + std::string( SDLNet_GetError() ) );
+		if ( callback_OnNetError )
+		{
+			callback_OnNetError( NETERROR_UNKNOWNHOST );
+		}
+		return false;
+	}
 
-  socketset = SDLNet_AllocSocketSet (1);
-  if (!socketset)
-      {
-        Logger::WriteLine ("SDLNet_AllocSocketSet: " + string (SDLNet_GetError ()));
-        if (callback_OnNetError)
-          callback_OnNetError (NETERROR_SOCKET);
-        return false;
-      }
+	socketset = SDLNet_AllocSocketSet( 1 );
+	if ( !socketset )
+	{
+		Logger::WriteLine( "SDLNet_AllocSocketSet: " + std::string( SDLNet_GetError() ) );
+		if ( callback_OnNetError )
+		{
+			callback_OnNetError( NETERROR_SOCKET );
+		}
+		return false;
+	}
 
-  socket = SDLNet_TCP_Open (&ip);
-  if (!socket)
-      {
-        if (callback_OnNetError)
-          callback_OnNetError (NETERROR_NOCONNECTION);
-        Logger::WriteLine ("SDLNet_TCP_Open: " + string (SDLNet_GetError ()));
-        SDLNet_FreeSocketSet (socketset);
-        return false;
-      }
+	socket = SDLNet_TCP_Open( &ip );
+	if ( !socket )
+	{
+		if ( callback_OnNetError )
+		{
+			callback_OnNetError( NETERROR_NOCONNECTION );
+		}
+		Logger::WriteLine( "SDLNet_TCP_Open: " + std::string( SDLNet_GetError() ) );
+		SDLNet_FreeSocketSet( socketset );
+		return false;
+	}
 
-  int numused = SDLNet_TCP_AddSocket (socketset, socket);
-  if (numused == -1)
-      {
-        if (callback_OnNetError)
-          callback_OnNetError (NETERROR_SOCKET);
-        Logger::WriteLine ("SDLNet_AddSocket: " + string (SDLNet_GetError ()));
-        SDLNet_FreeSocketSet (socketset);
-        SDLNet_TCP_Close (socket);
-        return false;
-      }
-  connected = true;
-  return true;
+	int numused = SDLNet_TCP_AddSocket( socketset, socket );
+	if ( numused == -1 )
+	{
+		if ( callback_OnNetError )
+		{
+			callback_OnNetError( NETERROR_SOCKET );
+		}
+		Logger::WriteLine( "SDLNet_AddSocket: " + std::string( SDLNet_GetError() ) );
+		SDLNet_FreeSocketSet( socketset );
+		SDLNet_TCP_Close( socket );
+		return false;
+	}
+	connected = true;
+	return true;
 }
+
 
 void cClient::Disconnect ()
 {
@@ -474,51 +486,56 @@ void cClient::Disconnect ()
   connected = false;
 }
 
-void cClient::Poll ()
+void cClient::Poll()
 {
-  if (!connected)
-    return;
+	if ( !connected )
+	{
+		return;
+	}
 
-  if(!socketset)
-    return;
+	if ( !socketset )
+	{
+		return;
+	}
 
-  char packet[MAX_PACKET_LEN];
+	char packet[MAX_PACKET_LEN];
 
-  int len;
+	int len;
 
-  bool do_poll = true;
-  int poll_pos = 0;
+	bool do_poll = true;
+	int poll_pos = 0;
 
-  while (do_poll)
-      {
-        do_poll = false;
-        const int numready = SDLNet_CheckSockets (socketset, 0);
+	while (do_poll)
+	{
+		do_poll = false;
+		const int numready = SDLNet_CheckSockets( socketset, 0 );
 
-        if (numready == -1)
-            {
-              Logger::WriteLine ("SDLNet_CheckSockets: " +
-                          string (SDLNet_GetError ()));
-              return;
-            }
+        if ( numready == -1 )
+		{
+			Logger::WriteLine( "SDLNet_CheckSockets: " + std::string( SDLNet_GetError() ) );
+			return;
+		}
 
-        if (numready && SDLNet_SocketReady(socket))
-            {
-              len = SDLNet_TCP_Recv (socket, packet + poll_pos, MAX_PACKET_LEN);
-              if (len <= 0 )
-              {
-                Logger::WriteLine ("SDLNet_TCP_Recv: " + string (SDLNet_GetError ()));
-                return;
-              }
-              if (len > 0)
-              {
-                do_poll = true;
-                poll_pos += len;
-              }
-            }
-      }
+		if ( numready && SDLNet_SocketReady( socket ) )
+		{
+			len = SDLNet_TCP_Recv( socket, packet + poll_pos, MAX_PACKET_LEN );
+			if ( len <= 0 )
+			{
+				Logger::WriteLine( "SDLNet_TCP_Recv: " + std::string( SDLNet_GetError() ) );
+				return;
+			}
+			if ( len > 0 )
+			{
+				do_poll = true;
+				poll_pos += len;
+			}
+		}
+	}
 
-  if (poll_pos > 0)
-    OnData (packet, poll_pos);
+	if ( poll_pos > 0 )
+	{
+		OnData( packet, poll_pos );
+	}
 }
 
 void LogStream(void* data, int orig_len, bool dir)
@@ -2288,33 +2305,6 @@ void cClient::Act_GumpDialog( cPacket *packet )
 	Uint16 txt_lines = packet->GetWord();
 	std::vector<std::string> texts_vector( txt_lines );
 
-/*
-	Uint16 line_len = 0;
-	for ( int i = 0; i < txt_lines; i++ )
-	{
-		line_len = packet->GetWord ();    //get length of line
-
-		if(line_len>0) 
-		{ 
-			char *line = new char[line_len * 2];  
-			packet->GetData (line, line_len * 2);    
-			cUnicode unistring((NCHAR*) line,line_len * 2);  
-			if(strlen(unistring.m_charBuf) > 0)
-			{
-				texts_vector[i] = string(unistring.m_charBuf);
-			}
-			else
-			{
-				texts_vector[i] = string(" ");
-			}
-			SAFE_DELETE_ARRAY( line );
-		}
-		else
-		{
-			texts_vector[i] = string(" ");
-		}
-	}
-*/
 	Uint16 line_len = 0;
 	for ( int i = 0; i < txt_lines; i++ )
 	{
@@ -2346,11 +2336,11 @@ void cClient::Act_GumpDialog( cPacket *packet )
 
 	Container *dialog = new Container();
 
-	dialog->SetSize (100, 100);
-	dialog->SetPosition (px, py);
-	dialog->SetFlags (GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE);
-	dialog->SetGumpID ((int) gumpid);
-	dialog->SetPlayerID ((int) id);
+	dialog->SetSize( 100, 100 );
+	dialog->SetPosition( px, py );
+	dialog->SetFlags( GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE );
+	dialog->SetGumpID( (int)gumpid );
+	dialog->SetPlayerID( (int)id );
 
 	int target_page = 0;
 	int cur_radio_group = 0;
@@ -2373,6 +2363,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 			stream >> tmp;
 			params.push_back( tmp );
 		}
+
 		Control *control = NULL;
 
 		if ( command == "page" )
@@ -2555,7 +2546,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		}
 		else if ( command == "noresize" )
 		{
-			dialog->RemoveFlag( GUMPFLAG_MOVABLE );
+			// dialog->RemoveFlag( GUMPFLAG_MOVABLE );
 		}
 		else if ( command == "noclose" )
 		{
@@ -2672,17 +2663,15 @@ void cClient::Act_ContAdd (cPacket * packet)
 
 }
 
-void cClient::Act_Sound (cPacket * packet)
+void cClient::Act_Sound( cPacket *packet )
 {
 	if ( SoundMix::GetInstance() )
-      {
-		  SoundMix::GetInstance()->PlaySound ((int) packet->packet.Sound.m_sound,
-                              (int) packet->packet.Sound.m_volume,
-                              (char) packet->packet.Sound.m_flags,
-                              (int) packet->packet.Sound.m_x,
-                              (int) packet->packet.Sound.m_y,
-                              (int) packet->packet.Sound.m_z);
-      }
+	{
+		SoundMix::GetInstance()->PlaySound( (int)packet->packet.Sound.m_sound, 
+			(int)packet->packet.Sound.m_volume, (char)packet->packet.Sound.m_flags,
+			(int)packet->packet.Sound.m_x, (int)packet->packet.Sound.m_y,
+			(int)packet->packet.Sound.m_z );
+	}
 }
 
 void cClient::Act_CharAction (cPacket * packet)

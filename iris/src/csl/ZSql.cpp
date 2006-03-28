@@ -32,7 +32,7 @@
 #include <ZSql.hpp>
 #include <string.h>
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 ZEXCLASSIMPLEMENT (ZSqlError, ZException);
 

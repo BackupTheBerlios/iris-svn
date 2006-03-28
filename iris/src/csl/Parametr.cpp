@@ -30,7 +30,7 @@
 
 #include <ZCsl.hpp>
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 ZCsl::Parameter::Parameter (const ZString & aName,
                             ZBoolean aIsConst,

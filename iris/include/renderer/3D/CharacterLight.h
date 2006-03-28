@@ -41,7 +41,7 @@
 #include "renderer/3D/Light3D.h"
 #include "uotype.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 // contains information about character lighting, for more information see engine doc
 class cCharacterLight {

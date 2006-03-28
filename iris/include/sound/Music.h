@@ -32,7 +32,7 @@
 #include "smpeg/smpeg.h"
 #endif
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 class Music
 {

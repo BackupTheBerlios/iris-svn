@@ -1,7 +1,6 @@
 - When clicking self it opens the tooltips but if you click somewhere it doesn't go away	- Needs fixing
 - Options "Music Off" does not work								- Needs fixing
 - When opening the "Bag" you can get multiple bags						- Needs fixing
-- When login then log out and exit Iris crashes							- Needs fixing
 - When logging in the shard name and char name does not display correctly (wrong font?)		- Needs fixing
 - Mouse cursor is bugged (doesn't change as it should) (SiENcE)					- Needs fixing
 - Tooltips are bugged under RunUO, doesn't display the font (cliloc?) (SiENcE)			- Needs fixing
@@ -77,4 +76,6 @@ restarting iris)
 - If Config.xml user/pass is empty when you try to write it under login screen it crashes	- FIXED
 - Mouse move over the char does not highlight it (SiENcE)					- FIXED
 - Crash on exit											- FIXED
+- When login then log out and exit Iris crashes							- FIXED
 - HUE color bug											- FIXED
+- Sound was not working.									- FIXED

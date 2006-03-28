@@ -32,9 +32,7 @@
 #include "renderer/particles/ParticleEngine.h"
 
 
-using namespace std;
-
-cDynamicObject::cDynamicObject ()
+cDynamicObject::cDynamicObject()
 {
   id = 0;
   x = 0;
@@ -58,11 +56,9 @@ cDynamicObject::cDynamicObject ()
 }
 
 
-cDynamicObject::~cDynamicObject ()
+cDynamicObject::~cDynamicObject()
 {
-  if (m_motive)
-    delete m_motive;
-  m_motive = NULL;
+	// SAFE_DELETE( m_motive );
   if (m_light_source)
     pLightManager.UnRegisterLight (m_light_source);
   if (m_particle_effect_handle)
@@ -71,9 +67,7 @@ cDynamicObject::~cDynamicObject ()
 
 void cDynamicObject::setMotive (cMotiveBasedLight * motive)
 {
-  if (m_motive)
-    delete m_motive;
-  m_motive = motive;
+	m_motive = motive;
 }
 
 cMotiveBasedLight *cDynamicObject::motive ()
@@ -116,17 +110,15 @@ Uint32 cDynamicObject::GetParticleEffectHandle ()
 cDynamicObjectList pDynamicObjectList;
 
 
-cDynamicObjectList::cDynamicObjectList ()
+cDynamicObjectList::cDynamicObjectList() : m_roof_z( ROOF_NONE ), callback_OnAdd( NULL ), callback_OnDelete( NULL ), light( NULL )
 {
-  m_roof_z = ROOF_NONE;
-  callback_OnAdd = NULL;
-  callback_OnDelete = NULL;
 }
 
 
-cDynamicObjectList::~cDynamicObjectList ()
+cDynamicObjectList::~cDynamicObjectList()
 {
-  Clear ();
+	SAFE_DELETE( light );
+	Clear();
 }
 
 
@@ -300,77 +292,75 @@ cDynamicObject *cDynamicObjectList::AddContainerContent (Uint32 id,
   return result;
 }
 
-cDynamicObject *cDynamicObjectList::AddWorldItem (Uint32 id, Uint16 model,
-                                                  Uint16 dye, int x, int y,
-                                                  int z, int itemcount,
-                                                  int incrcounter,
-                                                  int direction, int flag)
+cDynamicObject *cDynamicObjectList::AddWorldItem( Uint32 id, Uint16 model, Uint16 dye, int x, int y, int z, 
+												  int itemcount, int incrcounter, int direction, int flag )
 {
-  cDynamicObject *result = Get (id);
-  // much more better with that check!
-  if(!(result && result->x == x && result->y == y && result->z == z))
-    result = Add (id);
+	cDynamicObject *result = Get( id );
+	// much better with that check!
+	if ( !( result && result->x == x && result->y == y && result->z == z ) )
+	{
+		result = Add( id );
+	}
 
-  //result = Add (id);
-  assert (result);
-  result->id = id;
+	// result = Add( id );
+	assert( result );
+	result->id = id;
+	result->type = DYNAMICTYPE_WORLD;
+	result->model = model;
 
-  result->type = DYNAMICTYPE_WORLD;
-  result->model = model;
+	// SiENcE: just for debugging
+	// char msg[128];
+	// sprintf (msg, "ModelID: %i\n", model);
+	// printf(msg);
 
-//SiENcE: just for debugging
-//char msg[128];
-//sprintf (msg, "ModelID: %i\n", model);
-//printf(msg);
+	result->x = x;
+	result->y = y;
+	result->z = z;
+	result->itemcount = itemcount;
+	result->incrcounter = incrcounter;
+	result->dye = dye;
+	result->direction = direction;
+	result->flag = flag;
 
-  result->x = x;
+	cStaticModel *static_model = StaticModelLoader::GetInstance()->getModel( model );
+	if ( static_model )
+	{
+		int blockx = x / 8;
+		int blocky = y / 8;
+		SAFE_DELETE( light );
+		light = new cMotiveBasedLight_Entity( (float)(x % 8), (float)(y % 8), (float)z, blockx, blocky, static_model );
+		result->setMotive( light );
+		if ( static_model->GetLightSourceInfo() )
+		{
+			result->setLightSource( pLightManager.AddDefinedStaticLightSource( x, y, z,static_model->GetLightSourceInfo() ) );
+		}
 
-  result->y = y;
-  result->z = z;
-  result->itemcount = itemcount;
-  result->incrcounter = incrcounter;
-  result->dye = dye;
-  result->direction = direction;
-  result->flag = flag;
+		std::list<cLight3D *> static_light_list = pLightManager.static_light_list();
+		std::list<cLight3D *>::iterator light_iter;
+		for ( light_iter = static_light_list.begin(); light_iter != static_light_list.end(); light_iter++ )
+		{
+			if ( (*light_iter)->light_in_block( blockx, blocky ) )
+			{
+				light->AddLight( *light_iter );
+			}
 
-  cStaticModel *static_model = StaticModelLoader::GetInstance()->getModel (model);
-        if (static_model)
-            {
-              int blockx = x / 8;
-              int blocky = y / 8;
-              cMotiveBasedLight *light = new cMotiveBasedLight_Entity( (float)(x % 8), (float)(y % 8), (float)z, blockx, blocky, static_model);
-              result->setMotive (light);
-              if (static_model->GetLightSourceInfo ())
-                result->setLightSource (pLightManager.
-                                        AddDefinedStaticLightSource (x, y, z,
-                                                                     static_model->
-                                                                     GetLightSourceInfo
-                                                                     ()));
-
-              std::list < cLight3D * >static_light_list =
-                pLightManager.static_light_list ();
-
-              std::list < cLight3D * >::iterator light_iter;
-
-              for (light_iter = static_light_list.begin ();
-                   light_iter != static_light_list.end (); light_iter++)
-                if ((*light_iter)->light_in_block (blockx, blocky))
-                    {
-                      light->AddLight (*light_iter);
-                    }
-
-              if (static_model->GetParticleEffectInfo ())
-              {
-                printf("Effect");
-                result->SetParticleEffectHandle( pParticleEngine.AddEffect( static_model->GetParticleEffectInfo(), 
+			if ( static_model->GetParticleEffectInfo() )
+			{
+				printf("Effect");
+				result->SetParticleEffectHandle( pParticleEngine.AddEffect( static_model->GetParticleEffectInfo(), 
 					(float)x, (float)y, z * 0.1f ) );
-              }
-      }
+			}
+		}
+	}
 
-  if (callback_OnAdd)
-    callback_OnAdd (result);
-  return result;
+	if ( callback_OnAdd )
+	{
+		callback_OnAdd( result );
+	}
+
+	return result;
 }
+
 
 void cDynamicObjectList::CalcAmbientLight (sColor ambient_color,
                                            sColor sun_color,

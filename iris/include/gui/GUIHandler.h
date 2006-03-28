@@ -34,7 +34,7 @@
 #include "renderer/Texture.h"
 #include "SDLEvent.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 class GUIHandler
 {

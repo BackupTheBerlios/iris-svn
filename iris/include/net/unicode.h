@@ -31,7 +31,7 @@
 #include <stdio.h>
 #include "uoproto.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 class	cUnicode
 {

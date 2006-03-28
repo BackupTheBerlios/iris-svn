@@ -26,7 +26,7 @@
 #include "TextManager.h"
 #include "gui/TextManager.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 #define ALIGN_LEFT  0
 #define ALIGN_CENTER  1

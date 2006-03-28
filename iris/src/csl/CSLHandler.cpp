@@ -61,7 +61,7 @@
 #include "include.h"
 #include "sound/SoundMixer.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 int gamestate = GAMESTATE_MENU;
 
@@ -727,21 +727,24 @@ static ZString api_iris_disconnect (ZCsl * aCsl)
 
 static ZString api_iris_deinit (ZCsl * aCsl)
 {
-  //Game::GetInstance()->DeInit ();
+	Logger::WriteDebug( "Game.DeInit() - This should never happen." );
+	//Game::GetInstance()->DeInit ();
 	return "";
 }
 
 static ZString api_iris_init (ZCsl * aCsl)
 {
-  Game::GetInstance()->Init ();
-  return "";
+	// Needs recoding
+	Logger::WriteDebug( "Game.Init() - This should never happen." );
+	Game::GetInstance()->Init ();
+	return "";
 }
 
 static ZString api_iris_connect (ZCsl * aCsl)
 {
-  Game::GetInstance()->Connect (net_handler_error);
-  pCSLHandler.InitNet ();
-  return "";
+	Game::GetInstance()->Connect( net_handler_error );
+	pCSLHandler.InitNet();
+	return "";
 }
 
 static ZString api_iris_setlightlevel (ZCsl * aCsl)

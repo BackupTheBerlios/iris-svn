@@ -264,11 +264,11 @@ void Camera::GetGamePosition (unsigned int &x, unsigned int &y, int &z)
   z = -(int) GetZ ();
 }
 
-void Camera::GetGamePosition (float &x, float &y, float &z)
+void Camera::GetGamePosition( float &x, float &y, float &z )
 {
-  x = GetBlockX () * 8.0 - GetX ();
-  y = GetBlockY () * 8.0 - GetY ();
-  z = -(int) GetZ ();
+  x = GetBlockX() * 8.0 - GetX();
+  y = GetBlockY() * 8.0 - GetY();
+  z = -GetZ();
 }
 
 void Camera::GetCameraState (struct CameraState &state)

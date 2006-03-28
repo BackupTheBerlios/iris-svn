@@ -43,7 +43,7 @@
 #include "renderer/3D/LightNodeEnvironment.h"
 #include "uotype.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 // A light motive contains information in which way a light source influences an object
 class cLightMotive {
@@ -63,49 +63,56 @@ class cLightMotive {
 };
 
 // This list of light motives handles the link between an object and the lights which are reaching the object
-class cMotiveBasedLight {
-    protected: // child classes may access
-       std::list <cLightMotive *> motives;  // list of motives
-       cStaticModel * m_model; // model of the object
-       sColor * ambient_color_array; // each point has a specific ambient color
-       float m_x, m_y, m_z; // position of the object
-    public:
-       cMotiveBasedLight (float x, float y, float z, int blockx, int blocky,  cStaticModel * model);
-       virtual ~cMotiveBasedLight ();
-       
-       // Calculates the ambient light of the object
-       virtual void CalcAmbientLight (sColor ambient_color, sColor sun_color, float direction [3]) = 0;
-       
-       // Adds a new light source to the object
-       void AddLight (cLight3D * light);
-       
-       // Removes an existing light source from the object
-       void RemoveLight (cLight3D * light);
-       
-       // Sums the different light sources (motives) and calculates a color for each point
-       // Call this immediately before rendering
-       void PrepareModelForRendering ();
+class cMotiveBasedLight
+{
+protected: // child classes may access
+	std::list <cLightMotive *> motives;  // list of motives
+	cStaticModel *m_model; // model of the object
+	sColor *ambient_color_array; // each point has a specific ambient color
+	float m_x, m_y, m_z; // position of the object
+
+public:
+	cMotiveBasedLight( float x, float y, float z, int blockx, int blocky,  cStaticModel *model );
+	virtual ~cMotiveBasedLight();
+
+	// Calculates the ambient light of the object
+	virtual void CalcAmbientLight( sColor ambient_color, sColor sun_color, float direction [3] ) = 0;
+
+	// Adds a new light source to the object
+	void AddLight( cLight3D *light );
+
+	// Removes an existing light source from the object
+	void RemoveLight( cLight3D *light );
+
+	// Sums the different light sources (motives) and calculates a color for each point
+	// Call this immediately before rendering
+	void PrepareModelForRendering();
 };
 
 
 /*  There are two different types of object lighting which only differ by the kind of ambient lighting */
 
 // Entity lighting is the general form of ambient lighting
-class cMotiveBasedLight_Entity : public cMotiveBasedLight {
-    public:
-       cMotiveBasedLight_Entity (float x, float y, float z, int blockx, int blocky, cStaticModel * model);
-       virtual void CalcAmbientLight (sColor ambient_color, sColor sun_color, float direction [3]);
+class cMotiveBasedLight_Entity : public cMotiveBasedLight
+{
+public:
+	cMotiveBasedLight_Entity (float x, float y, float z, int blockx, int blocky, cStaticModel * model);
+	~cMotiveBasedLight_Entity() { }
+
+	virtual void CalcAmbientLight (sColor ambient_color, sColor sun_color, float direction [3]);
 };
 
 // Tile lighting needs more memory and costs more speed, but it looks alot better vor tileable items 
 // (like walls / stairs / roofs and so on)
-class cMotiveBasedLight_Tile : public cMotiveBasedLight {
-    protected:
-        sLightNode * * light_node_list;
-    public:
-       cMotiveBasedLight_Tile (float x, float y, float z, int blockx, int blocky, cStaticModel * model, cLightNodeEnvironment & node_environment);
-       ~cMotiveBasedLight_Tile ();
-       virtual void CalcAmbientLight (sColor ambient_color, sColor sun_color, float direction [3]);
+class cMotiveBasedLight_Tile : public cMotiveBasedLight
+{
+protected:
+	sLightNode * * light_node_list;
+public:
+	cMotiveBasedLight_Tile (float x, float y, float z, int blockx, int blocky, cStaticModel * model, cLightNodeEnvironment & node_environment);
+	~cMotiveBasedLight_Tile ();
+
+	virtual void CalcAmbientLight (sColor ambient_color, sColor sun_color, float direction [3]);
 };
 
  

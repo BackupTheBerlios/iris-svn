@@ -37,7 +37,7 @@
 #include "renderer/3D/MotiveBasedLight.h"
 
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 #define DYNAMICTYPE_WORLD 0
 #define DYNAMICTYPE_CONTAINER 1
@@ -100,6 +100,7 @@ private:
     dynamiclist_t dynamiclist;
     int m_roof_z;
     cDynamicObject * Add (Uint32 id);
+	cMotiveBasedLight *light;
 public:
     cDynamicObjectList ();    
    ~cDynamicObjectList ();

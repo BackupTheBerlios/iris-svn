@@ -167,11 +167,11 @@ ModelInfoLoader::~ModelInfoLoader()
 	m_sgModelInfoLoader = NULL;
 
 	std::map<int, cModelInfoEntry*>::iterator iter;
-	for (iter = model_infos.begin(); iter != model_infos.end(); iter++ )
+	for ( iter = model_infos.begin(); iter != model_infos.end(); iter++ )
 	{
 		SAFE_DELETE( iter->second );
 	}
-	
+
 	model_infos.clear();
 }
 
@@ -184,7 +184,7 @@ ModelInfoLoader *ModelInfoLoader::GetInstance()
 
 cModelInfoEntry *ModelInfoLoader::GetModelEntry( int id )
 {
-	std::map < int, cModelInfoEntry * >::iterator iter;
+	std::map<int, cModelInfoEntry *>::iterator iter;
 	
 	iter = model_infos.find( id );
 	if ( iter != model_infos.end() )

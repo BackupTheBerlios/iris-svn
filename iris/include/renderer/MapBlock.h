@@ -33,7 +33,7 @@
 #include "renderer/StaticObjects.h"
 #include "renderer/DynamicObjects.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 class cMapblock
 {

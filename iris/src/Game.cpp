@@ -22,7 +22,7 @@
 #include "Game.h"
 #include "renderer/3D/Renderer3D.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 //#include "../Tests/Profiler.h"
 
@@ -753,13 +753,20 @@ void game_OnTarget( unsigned int cursorid, unsigned int type )
 
 void Game::Connect( void (*error_callback)(unsigned int error) )
 {
-	Disconnect();
-	pClient = new cClient( error_callback );
+	// This should be replaced by a kClient = new Client( .. ); if ( !kClient->Connect() ) Disconnect();
+	try
+	{
+		pClient = new cClient( error_callback );
+	}
+	catch ( ... )
+	{
+		Disconnect();
+	}
 	pClient->OnGameStart( game_OnGameStart );
 	pClient->OnTeleport( game_OnTeleport );
 	pClient->OnDragCancel( game_OnDragCancel );
 	pClient->OnTarget( game_OnTarget );
-	
+
 	pUOGUI.OnDrag( game_OnDrag );
 	pUOGUI.OnItemClick( game_OnItemClick );
 }

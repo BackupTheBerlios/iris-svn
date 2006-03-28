@@ -30,7 +30,7 @@
 
 #include <ZExcept.hpp>
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 ZExport0 ZPointerlist::ZPointerlist ():iCount (0), iSize (0), iList (0)
 {

@@ -1,7 +1,18 @@
+28.03.2006
+Changes by Nuno Ramiro
+	- Fixed: Client crash.
+	- Changed: Small changes under Client (packets).
+	- Fixed: Sound has been fixed.
+
+27.03.2006
+Changes by Nuno Ramiro
+	- Fixed: Memory leak under ArtLoader.
+	- Fixed: Memory leak under MotiveBasedLight.
+
 26.03.2006
 Changes by Florian Fischer (SiENcE)
-	- Huecolor Bug fixed: just added id--; to cHueLoader::getHue
-	- removed several hue-1 hacks from TextManager.cpp
+	- Huecolor Bug fixed: just added id--; to cHueLoader::getHue.
+	- removed several hue-1 hacks from TextManager.cpp.
 
 26.03.2006
 Changes by Nuno Ramiro

@@ -38,7 +38,7 @@
 #include "Exception.h"
 #include "renderer/SDLScreen.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 
 /// \brief ParseData structure, parses all needed data from the file.

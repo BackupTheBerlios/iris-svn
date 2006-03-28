@@ -32,12 +32,13 @@
 #include "xml.h"
 #include "iris_endian.h"
 
-// #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 class cModelInfoEntry
 {
 public:
 	cModelInfoEntry( int id, float scalex, float scaley, float scalez, int alpha, int defhue, int alt_body );
+	~cModelInfoEntry() { }
 
 	int id();
 	float scalex();

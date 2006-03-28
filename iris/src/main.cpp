@@ -41,7 +41,7 @@
 
 // #include "Engine.h"
 
-// // #include "../Fluid/mmgr.h"
+#include "../Fluid/mmgr.h"
 
 #if defined( _WIN32 ) && !defined( _DEBUG )
 #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
@@ -99,9 +99,10 @@ int main( int argc, char **args )
 		Config::RegisterFonts();
 
 		// Initialize SDL_music
-		SoundMix *pSoundMix = new SoundMix();
+		SoundMix *pSoundMix;
 		if ( Config::GetMusic() || Config::GetSound() )
         {
+			pSoundMix = new SoundMix();
 			pSoundMix->Init();
 
 			pMusicListLoader = new cMusicListLoader();

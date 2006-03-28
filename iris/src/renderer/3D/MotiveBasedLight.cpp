@@ -113,29 +113,32 @@ float *cLightMotive::factor_array ()
 
 
 
-cMotiveBasedLight::cMotiveBasedLight (float x, float y, float z, int blockx,
-                                      int blocky, cStaticModel * model)
+cMotiveBasedLight::cMotiveBasedLight( float x, float y, float z, int blockx, int blocky, cStaticModel *model )
 {
-  assert (model);
-  m_x = blockx * 8 + x;
-  m_y = blocky * 8 + y;
-  m_z = z;
-  m_model = model;
+	assert( model );
+	m_x = blockx * 8 + x;
+	m_y = blocky * 8 + y;
+	m_z = z;
+	m_model = model;
 
-  int nodecount = (model->nodes ())->size ();
-  ambient_color_array = (sColor *) malloc (nodecount * sizeof (sColor));
-  memset (ambient_color_array, 0xff, nodecount * sizeof (sColor));
+	int nodecount = (model->nodes())->size();
+	ambient_color_array = (sColor *)malloc( nodecount * sizeof(sColor) );
+	memset( ambient_color_array, 0xff, nodecount * sizeof(sColor) );
 }
 
-cMotiveBasedLight::~cMotiveBasedLight ()
-{
-  free (ambient_color_array);
-  ambient_color_array = NULL;
 
-  list < cLightMotive * >::iterator iter;
-  for (iter = motives.begin (); iter != motives.end (); iter++)
-    delete (*iter);
-  motives.clear ();
+cMotiveBasedLight::~cMotiveBasedLight()
+{
+	free( ambient_color_array );
+	ambient_color_array = NULL;
+
+	std::list<cLightMotive *>::iterator iter;
+	for ( iter = motives.begin(); iter != motives.end(); iter++ )
+	{
+		SAFE_DELETE( *iter );
+	}
+
+	motives.clear();
 }
 
 
@@ -295,25 +298,21 @@ void cMotiveBasedLight_Entity::CalcAmbientLight (sColor ambient_color,
 }
 
 
-cMotiveBasedLight_Tile::cMotiveBasedLight_Tile (float x, float y, float z,
-                                                int blockx, int blocky,
-                                                cStaticModel * model,
-                                                cLightNodeEnvironment &
-                                                node_environment):cMotiveBasedLight
-  (x, y, z, blockx, blocky, model)
+cMotiveBasedLight_Tile::cMotiveBasedLight_Tile( float x, float y, float z, int blockx, int blocky, cStaticModel *model, 
+					cLightNodeEnvironment &node_environment ) : cMotiveBasedLight( x, y, z, blockx, blocky, model )
 {
-  assert (model);
-  int nodecount = (model->nodes ())->size ();
-  light_node_list =
-    (sLightNode * *)malloc (nodecount * sizeof (sLightNode *));
+	assert( model );
+	int nodecount = (model->nodes())->size();
+	light_node_list = (sLightNode **)malloc( nodecount * sizeof(sLightNode *) );
 
-  cLightNodeHandler *node_handler = node_environment.get (0, 0);  // get center handler
-  node_handler->AddModel (model, x, y, z, light_node_list, node_environment);
+	cLightNodeHandler *node_handler = node_environment.get( 0, 0 );  // get center handler
+	node_handler->AddModel( model, x, y, z, light_node_list, node_environment );
 }
 
-cMotiveBasedLight_Tile::~cMotiveBasedLight_Tile ()
+
+cMotiveBasedLight_Tile::~cMotiveBasedLight_Tile()
 {
-  free (light_node_list);
+	free( light_node_list );
 }
 
 void cMotiveBasedLight_Tile::CalcAmbientLight (sColor ambient_color,

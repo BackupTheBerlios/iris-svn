@@ -117,7 +117,7 @@ void Control::SetTag (void *tag)
   this->tag = tag;
 }
 
-void Control::SetFlag (int flag, int value)
+void Control::SetFlag( int flag, int value )
 {
   switch (flag)
       {
