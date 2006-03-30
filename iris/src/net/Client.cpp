@@ -385,7 +385,7 @@ cClient::cClient( void (*error_callback)(unsigned int error) )
 	packet.FillPacket( PCK_ServersReq );
 	strncpy( packet.packet.LoginRequest.m_username, Config::GetLogin().c_str(), 29);
 	strncpy( packet.packet.LoginRequest.m_password, Config::GetPassword().c_str(), 29);
-	packet.packet.LoginRequest.m_unknown = 1;
+	packet.packet.LoginRequest.m_unknown = 0x5D;    //client 3.0.8S T2A sends 0x5D
 	Send( &packet );
 }
 
@@ -2166,6 +2166,7 @@ void cClient::Act_Dye (cPacket * packet)
 
 void cClient::Act_AOSTooltip (cPacket * packet)
 {
+
   if (!Config::GetAOSToolTips())
     return;
   if ( !Config::GetClilocs() )
@@ -2176,8 +2177,8 @@ void cClient::Act_AOSTooltip (cPacket * packet)
   Uint32 listID = packet->GetDword ();
   cCharacter *character = NULL;
   cDynamicObject *obj = NULL;
-  character = pCharacterList.Get (id);
 
+  character = pCharacterList.Get (id);
   obj = pDynamicObjectList.Get (id);
 
   if (character)
@@ -2197,6 +2198,7 @@ void cClient::Act_AOSTooltip (cPacket * packet)
         clilocID = packet->GetDword ();
         if (!clilocID)
           break;
+
         Uint16 textlen = packet->GetWord ();
 
         char *arguments;
@@ -2854,8 +2856,7 @@ void cClient::Send_RequestChars (Uint32 account)
   packet.FillPacket (PCK_CharListReq);
   packet.packet.CharListReq.m_account = account;
   strncpy (packet.packet.CharListReq.m_username, Config::GetLogin().c_str (), 29);
-  strncpy (packet.packet.CharListReq.m_password, Config::GetPassword().c_str (),
-           29);
+  strncpy (packet.packet.CharListReq.m_password, Config::GetPassword().c_str (), 29);
   Send (&packet);
 }
 
@@ -2874,18 +2875,58 @@ void cClient::SendSecureTradeCheck (Uint32 id, Uint32 check1, Uint32 check2)
 
 }
 
-void cClient::Send_SelectChar (Uint32 index)
+//new for cClient::Send_SelectChar (maybe put into network class
+Uint32 cClient::Get_Local_IP()
+{
+#ifndef MAXHOSTNAMELEN
+#define MAXHOSTNAMELEN 256
+#endif
+      char buff[MAXHOSTNAMELEN]="\0";
+      struct hostent *local;
+      static unsigned long myAddr;
+
+      // determine my name & address
+      myAddr = 0;
+      int hostnameres = gethostname(buff, MAXHOSTNAMELEN);
+
+      if ( 0 == hostnameres )
+      {
+       local = gethostbyname(buff);
+       if ( local )
+       {
+        myAddr = *reinterpret_cast<int *>(local->h_addr_list[0]);
+       }
+       else
+       {
+        Logger::WriteLine ("ANET_Init: Unable to determine IP adress.\n");
+        return 0;
+       }
+      }
+      else
+      {
+       Logger::WriteLine ("ANET_Init: Unable to determine hostname.\n");
+       return 0;
+      }
+
+      if ( myAddr == 0 )
+      {
+       myAddr = inet_addr("127.0.0.1");
+      }
+      return myAddr;
+}
+
+
+void cClient::Send_SelectChar (Uint8 index)
 {
   cPacket packet;
   packet.FillPacket (PCK_CharPlay);
   packet.packet.CharPlay.m_edededed = 0xedededed;
-  packet.packet.CharPlay.m_ip = 0;
-  packet.packet.CharPlay.m_slot = (Uint8) index;
   strncpy (packet.packet.CharPlay.m_username, Config::GetLogin().c_str (), 29);
-  strncpy (packet.packet.CharPlay.m_password, Config::GetPassword().c_str (), 29);
+//  strncpy (packet.packet.CharPlay.m_password, "", 32);
+  packet.packet.CharPlay.m_slot = index;
+  packet.packet.CharPlay.m_ip = SDL_Swap32( Get_Local_IP() );  //send IP in reverse order
   Send (&packet);
   ClearLoginLists ();
-
 }
 
 void cClient::Send_CreateChar (sNewCharSettings settings)

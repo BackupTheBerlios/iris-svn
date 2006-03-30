@@ -65,6 +65,8 @@ int Music::PlayMusic( std::string sMusicName, int iVolume )
 		{
 			SMPEG_stop( m_kMpeg );
 			SMPEG_delete( m_kMpeg );
+		//SiENcE
+			Mix_HookMusic(NULL, NULL);
 		}
 		m_kMpeg = SMPEG_new( sFileName.c_str(), &m_kInfo, 0 );
 
@@ -179,6 +181,8 @@ int Music::PlayMusic( int iId, int iFormat, int iVolume )
 			Logger::WriteLine( "PLAYING" );
 			SMPEG_stop( m_kMpeg );
 			SMPEG_delete( m_kMpeg );
+		//SiENcE
+			Mix_HookMusic(NULL, NULL);
 		}
 		m_kMpeg = SMPEG_new( sFileName.c_str(), &m_kInfo, 0 );
 

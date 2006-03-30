@@ -240,6 +240,7 @@ public:
 
    bool Connect (char * address, Uint16 port);
    void Disconnect ();
+   Uint32 Get_Local_IP();
    void Poll ();
 
    void Send (cPacket * packet);
@@ -248,7 +249,7 @@ public:
    void CastSpell(int spellid);
    void Send_SelectServer(Uint32 index);
    void Send_RequestChars(Uint32 account);
-   void Send_SelectChar(Uint32 index);
+   void Send_SelectChar(Uint8 index);
    void Send_CreateChar(sNewCharSettings settings);
    void Send_DeleteChar(Uint32 id);
    bool Send_Walk(Uint8 direction);

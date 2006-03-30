@@ -511,12 +511,12 @@ struct	ClientPack_s
 		// PCK_CharPlay (0x5d)
 		struct 
 		{
-			NBYTE	m_cmd;
-			NDWORD	m_edededed;
-			char	m_name[30];
-			char	m_pass[30];
-			NDWORD	m_slot;
-			NDWORD	m_ip;
+			NBYTE		m_cmd;
+			NDWORD		m_edededed;
+			char		m_name[30];
+			char        m_pass[33];	//not_pass byte[33] Mostly 0's
+			NBYTE		m_slot;
+			NDWORD      m_ip;
 		} CharPlay;
 
 		#define MAX_BOOK_PAGES 64   // arbitrary max number of pages.

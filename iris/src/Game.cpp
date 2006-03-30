@@ -558,13 +558,13 @@ void Game::HandleMouseMotion( SDL_MouseMotionEvent * event )
 					if ( character )
 					{
 						int count = character->aostooltips_count();
-						callback_OnAOSTooltip( character->id (), count, cursorx, cursory );
+						callback_OnAOSTooltip( character->id (), count, cursorx +10, cursory +10);
 					}
 					
 					if ( object )
 					{
 						int count = object->aostooltips_count();
-						callback_OnAOSTooltip( object->id, count, cursorx, cursory );
+						callback_OnAOSTooltip( object->id, count, cursorx +10, cursory +10);
 					}
 
 					m_AOSToolTip = true;

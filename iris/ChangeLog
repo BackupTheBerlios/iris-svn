@@ -1,3 +1,11 @@
+30.03.2006
+Changes by Florian Fischer (SiENcE)
+	-changed tooltip position
+	-changed api_net_selectchar in cslhandler.cpp
+	-changed login procedure
+	-added cClient::Get_Local_IP() for Send_SelectChar packet
+	-added Mix_HookMusic(NULL, NULL) in Music.cpp
+
 28.03.2006
 Changes by Nuno Ramiro
 	- Fixed: Client crash.

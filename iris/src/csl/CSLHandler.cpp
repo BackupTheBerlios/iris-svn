@@ -2099,7 +2099,7 @@ static ZString api_net_updateselllist (ZCsl * aCsl)
 
 static ZString api_net_selectchar (ZCsl * aCsl)
 {
-  int id = aCsl->get ("id").asInt ();
+  Uint8 id = (Uint8) aCsl->get ("id").asInt ();
 
   if (pClient)
     pClient->Send_SelectChar (id);
