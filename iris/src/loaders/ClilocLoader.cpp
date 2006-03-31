@@ -47,7 +47,7 @@ typedef unsigned int     Unicode4Bytes;
 void UTF8Decode2BytesUnicode(const std::vector< byte > &input,
 							 std::vector< Unicode2Bytes >& output)
 {
-	for(int i=0; i < input.size();)
+	for(unsigned int i=0; i < input.size();)
 	{
 		Unicode2Bytes ch;
 

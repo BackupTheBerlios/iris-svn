@@ -181,7 +181,7 @@ MacroLoader::~MacroLoader()
  std::multimap<int, MacroEntry*>::iterator iter;
  for(iter = macros.begin(); iter!= macros.end(); iter++)
    {
-    for(int i=0; i < iter->second->parameters.size(); i++)
+    for( unsigned int i=0; i < iter->second->parameters.size(); i++)
             delete iter->second->parameters.at(i);
     delete iter->second; 
    }

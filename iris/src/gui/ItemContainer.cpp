@@ -40,27 +40,26 @@ bool c_aostooltip = false;
 cItemContainerEntry::cItemContainerEntry (Uint32 id, Uint16 model, int x,
                                           int y, Uint16 hue)
 {
-  cDynamicObject *obj = pDynamicObjectList.Get (id);
-  int count = obj->itemcount;
-  if (model == 0xEEA || model == 0xEED || model == 0xEF0)
-      {
-        if (count > 9 && count < 20)
-          model++;
-        else if (count >= 20)
-          model += 2;
-      }
-  m_texture = ArtLoader::GetInstance()->LoadArt (model + 16384, true, false, hue);
-  m_id = id;
-  m_model = model;
-  m_x = x;
-  m_y = y;
+	cDynamicObject *obj = pDynamicObjectList.Get (id);
+	int count = obj->itemcount;
+	if (model == 0xEEA || model == 0xEED || model == 0xEF0)
+	{
+		if (count > 9 && count < 20)
+			model++;
+		else if (count >= 20)
+			model += 2;
+	}
+	m_texture = ArtLoader::GetInstance()->LoadArt( model + 16384, true, false, hue );
+	m_id = id;
+	m_model = model;
+	m_x = x;
+	m_y = y;
 }
 
 
 cItemContainerEntry::~cItemContainerEntry ()
 {
-  delete m_texture;
-  m_texture = NULL;
+	SAFE_DELETE( m_texture );
 }
 
 ItemContainer::ItemContainer ()

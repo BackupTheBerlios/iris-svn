@@ -30,7 +30,6 @@ restarting iris)
 
 - On login menu, after the music has stopped it does not start again (loop).			- New Feature
 - Hide cursor when changing the view (SiENcE)							- New Feature
-- Hide cursor under First Person View (SiENcE)							- New Feature
 - Unicode support.										- New Feature
 - Under Create character -> Body / Clothes / etc color						- New Feature
 - When logging in save username/password							- New Feature

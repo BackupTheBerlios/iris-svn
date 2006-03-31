@@ -103,7 +103,7 @@ SpeechLoader *SpeechLoader::GetInstance()
 
 Uint16 SpeechLoader::GetID( std::string keyword )
 {
-	for ( int i = 0; i < m_languages.size(); i++ )
+	for ( unsigned int i = 0; i < m_languages.size(); i++ )
 	{
 		speech_language act_lang = m_languages.at( i );       
 		std::map<std::string, Uint16>::iterator iter;
@@ -123,7 +123,7 @@ std::vector<Uint16> SpeechLoader::GetIDs( std::string keyword )
 {
 	std::vector<Uint16> result;
 
-	for ( int i = 0; i < m_languages.size(); i++ )
+	for ( unsigned int i = 0; i < m_languages.size(); i++ )
 	{
 		speech_language act_lang = m_languages.at( i );       
 		std::map<std::string, Uint16>::iterator iter;

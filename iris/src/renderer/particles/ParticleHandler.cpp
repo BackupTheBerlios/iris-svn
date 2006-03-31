@@ -231,18 +231,23 @@ namespace Particle
      Stop();
 
     std::list < cParticle * >::iterator iter;   // Handle particles
-    for (iter = particles.begin (); iter != particles.end (); iter++)
-        {
-          (*iter)->Handle (time_fac);
-          if ((*iter)->time () < 0.0f)
-              {
-                std::list < cParticle * >::iterator nextiter = iter;
-                nextiter++;
-                delete (*iter);
-                particles.erase (iter);
-                iter = nextiter;
-              }
-        }
+	// There _IS_ a problem with this.
+	// TODO: Fix this (Crash bug).
+	for ( iter = particles.begin(); iter != particles.end(); iter++ )
+	{
+		(*iter)->Handle (time_fac);
+		if ( (*iter)->time() < 0.0f )
+		{
+			std::list<cParticle *>::iterator nextiter = iter;
+			nextiter++;
+			if ( nextiter != particles.end() )
+			{
+				SAFE_DELETE( *iter );
+				particles.erase( iter );
+				iter = nextiter;	// Probably here
+			}
+		}
+	}
 
 
     if ((m_nextemission < currenttick) && m_active)

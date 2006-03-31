@@ -60,22 +60,17 @@ ArtLoader::~ArtLoader()
 	SAFE_DELETE( m_kArtFile );
 	m_kArtIndex->close();
 	SAFE_DELETE( m_kArtIndex );
-
-	// Delete all created textures
-	for ( unsigned int i = 0; i < m_vTextures.size(); i++ )
-	{
-		SAFE_DELETE( m_vTextures[i] );
-	}
 }
 
 
-// Note that it MUST be created first (by using constructor which is being done under Game).
+/// Note that it MUST be created first (by using constructor which is being done under Game).
 ArtLoader *ArtLoader::GetInstance()
 {
 	return m_sgArtLoader;
 }
 
 
+/// Note that when using this functions _YOU_ are responsible for deleting.
 Texture *ArtLoader::LoadArt( int index, bool is2D, bool isCursor, Uint16 hue )
 {
 	ASSERT( m_kArtFile );

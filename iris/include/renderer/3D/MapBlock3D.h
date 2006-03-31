@@ -30,11 +30,13 @@
 #include "irisgl.h"
 
 #include <iostream>
+#include <assert.h>
 #include "renderer/StaticObjects.h"
 #include "renderer/DynamicObjects.h"
 #include "renderer/MapBlock.h"
 #include "renderer/3D/SceneMaker.h"
 
+#include "renderer/3D/SceneMaker.h"
 #include "renderer/3D/Light3D.h"
 #include "renderer/3D/LightNodes.h"
 #include "renderer/3D/LightNodeEnvironment.h"
@@ -46,35 +48,6 @@
 
 class cMapblock3D : public cMapblock
 {
-protected:
- //float groundtiles[8*8*4*3];
- float groundnormals[9][9][3];
- //float groundtexs[8*8*4*2];
- //unsigned short ground_indices[8*8*6];
-
- //float groundspheres[8][8][4];
-
- //char hash[64];
- 
- int watermap[8][8];
- int cullmode;
- float sphere[4];
- 
- void CreateFrustum(float x, float y);
-
- //cNodeList nodes;
- //cNodeQuadList nodequads;
- cLightNodeHandler nodehandler;
- 
- bool _transparent;
- bool m_recalc_ambient_light;
- 
- vertex ground_vertieces[9][9];
- Uint8 ground_colors[9][9][2][3]; // [y][x][mode (0 = drawn light, 1 = static light)][rgb]
- 
- cMotiveBasedGroundLight * light_handler;
- cShaderMatrixBlock shader_matrix;
- 
 public:
    cMapblock3D (int blockx, int blocky);
    virtual ~cMapblock3D ();
@@ -95,6 +68,37 @@ public:
    cShaderMatrixBlock * GetShaderMatrix () { return &shader_matrix; }
    void SetRecalcAmbientLightFlag ();
    void AddMultiObject(Uint32 id, Uint16 tileid, Uint16 dye, int x, int y, int z);
+
+protected:
+	//float groundtiles[8*8*4*3];
+	float groundnormals[9][9][3];
+	//float groundtexs[8*8*4*2];
+	//unsigned short ground_indices[8*8*6];
+
+	//float groundspheres[8][8][4];
+
+	//char hash[64];
+
+	std::vector<cMotiveBasedLight *> m_vLights;
+
+	int watermap[8][8];
+	int cullmode;
+	float sphere[4];
+
+	void CreateFrustum(float x, float y);
+
+	//cNodeList nodes;
+	//cNodeQuadList nodequads;
+	cLightNodeHandler nodehandler;
+
+	bool _transparent;
+	bool m_recalc_ambient_light;
+
+	vertex ground_vertieces[9][9];
+	Uint8 ground_colors[9][9][2][3]; // [y][x][mode (0 = drawn light, 1 = static light)][rgb]
+
+	cMotiveBasedGroundLight * light_handler;
+	cShaderMatrixBlock shader_matrix;
 };
 
 

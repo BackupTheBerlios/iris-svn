@@ -15,16 +15,12 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  *****/
-#include <stdlib.h>
-#include <iostream>
-#include <cassert>
 
+#include <stdlib.h>
+#include <cassert>
 #include "granny/grntype.h"
 #include "granny/grnbones.h"
 
-
-
-using namespace std;
 
 Bone::Bone ()
 {
@@ -40,12 +36,15 @@ Bones::Bones ()
 
 Bones::~Bones ()
 {
-	for_each(bones.begin(),bones.end(),my_delete<Bone*>);
+	for ( unsigned int i = 0; i < bones.size(); i++ )
+	{
+		SAFE_DELETE( bones[i] );
+	}
+
 	bones.clear();
 }
 
-void Bones::load (cGrannyStream * file, dword boneOffset, dword baseOffset,
-                  dword peers)
+void Bones::load( cGrannyStream * file, dword boneOffset, dword baseOffset, dword peers)
 {
   assert (file);
   int x;
@@ -93,8 +92,8 @@ void Bones::load (cGrannyStream * file, dword boneOffset, dword baseOffset,
               break;
 
             default:
-              hex (cerr);
-              cerr << "Unknown Bones chunk: " << chunk << endl;
+				std::hex( std::cerr );
+			  std::cerr << "Unknown Bones chunk: " << chunk << std::endl;
               exit (1);
             }
         i += children + 1;

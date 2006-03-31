@@ -574,6 +574,11 @@ int Config::GetMouseMotionTimer()
 	return m_iMouseMotionTimer;
 }
 
+void Config::SetCursor( int iCursor )
+{
+	m_iCursor = iCursor;
+}
+
 void Config::SetBrightness( int iBrightness )
 {
 	m_iBrightness = iBrightness;

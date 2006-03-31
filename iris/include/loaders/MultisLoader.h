@@ -97,7 +97,7 @@ public:
 		if(id >= MULTI_ID) id-=MULTI_ID;
 		if (id >= MAX_MULTIS)
 			return false;
-		return MultiList[id].multiParts.size();
+		return (MultiList[id].multiParts.size() ? true : false);
 	}
 
 	stMultiList* GetMulti(unsigned short id)

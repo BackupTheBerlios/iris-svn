@@ -221,6 +221,8 @@ public:
 
 	// Setters
 
+	/// Sets Cursor
+	static void SetCursor( int iCursor );
 	/// Sets Brightness.
 	static void SetBrightness( int iBrightness );
 	/// Sets using First Person.

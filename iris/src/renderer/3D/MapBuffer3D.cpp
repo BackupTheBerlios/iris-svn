@@ -20,37 +20,40 @@
  *
  *****/
 
-
 #include "renderer/3D/MapBuffer3D.h"
 
 
-cMapblock *Mapbuffer3D::CreateBlock (int x, int y)
+cMapblock *Mapbuffer3D::CreateBlock( int x, int y )
 {
-  cMapblock3D *block;
-  cLightNodeEnvironment environment;
+	cMapblock3D *block;
+	cLightNodeEnvironment environment;
 
-  if ((x < 0) || (y < 0))
-    return NULL;
+	if ( (x < 0) || (y < 0) )
+	{
+		return NULL;
+	}
 
-  block = (cMapblock3D *) Get (x, y);
+	block = (cMapblock3D *)Get( x, y );
 
-  if (!block)
-      {
-        block = new cMapblock3D (x, y);
-        Add (block);
-      }
+	if ( !block )
+	{
+		block = new cMapblock3D( x, y );
+		Add( block );
+	}
 
-  if (!block->generated ())
-      {
-        GetEnvironment (x, y, environment);
-        //fprintf(stderr, "Generating %i %i\n", x, y);
-        block->Generate (environment);
+	if ( !block->generated() )
+	{
+		GetEnvironment( x, y, environment );
+		//fprintf(stderr, "Generating %i %i\n", x, y);
+		block->Generate( environment );
 
-        if (m_roof_z != ROOF_NONE)
-          block->SetAlpha (m_roof_z, Config::GetRoofFadeAlpha(), false);
-      }
+		if ( m_roof_z != ROOF_NONE )
+		{
+			block->SetAlpha( m_roof_z, Config::GetRoofFadeAlpha(), false );
+		}
+	}
 
-  return block;
+	return block;
 }
 
 

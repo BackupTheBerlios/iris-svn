@@ -44,6 +44,7 @@
 
 
 #include "net/uo_huffman.h"
+#include "net/netconfig.h"
 
 #include "renderer/DynamicObjects.h"
 #include "renderer/Characters.h"

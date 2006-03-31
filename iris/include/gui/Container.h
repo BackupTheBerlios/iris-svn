@@ -37,8 +37,8 @@
 class Container : public Control
 {
  public:
-  Container ();
-  ~Container ();
+  Container();
+  ~Container();
 
   virtual void Draw(GumpHandler * gumps);
   virtual int HandleMessage(gui_message * msg);

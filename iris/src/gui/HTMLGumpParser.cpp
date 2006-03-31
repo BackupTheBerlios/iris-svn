@@ -127,7 +127,7 @@ bool cHTMLGumpParser::Parse (std::string html_text, cMultiLabel * label)
 
 
 	//  for (int i = 0; i < words.size (); i++)
-	int i=0;
+	unsigned int i=0;
 
 	while( (closetag==false) && (i < words.size ()) )
 	{

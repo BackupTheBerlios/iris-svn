@@ -20,13 +20,9 @@
  *
  *****/
 
-
-#include <iostream>
 #include "renderer/3D/MapBlock3D.h"
-#include "Logger.h"
 #include "include.h"
 #include "math.h"
-#include "Config.h"
 #include "uotype.h"
 #include "loaders/Map.h"
 #include "renderer/TextureBuffer.h"
@@ -36,13 +32,7 @@
 #include "loaders/MultisLoader.h"
 #include "Geometry.h"
 #include "renderer/MapBuffer.h"
-#include "renderer/3D/SceneMaker.h"
-#include "renderer/3D/Light3D.h"
-#include <cassert>
 
-using namespace std;
-
-//extern SDLScreen *SDLscreen;
 
 
 int GroundCoords[4][2] = { {0, 1}, {1, 1}, {1, 0}, {0, 0} };
@@ -55,19 +45,22 @@ int environment_table[8][2] =
   { {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1} };
 
 
-cMapblock3D::cMapblock3D (int blockx, int blocky):cMapblock (blockx, blocky)
+cMapblock3D::cMapblock3D( int blockx, int blocky ) : cMapblock( blockx, blocky )
 {
-  cullmode = 0;
-  _generated = false;
+	cullmode = 0;
+	_generated = false;
 
-  light_handler =
-    new cMotiveBasedGroundLight (blockx, blocky, &ground_vertieces[0][0],
-                                 (float *) &groundnormals);
+	light_handler = new cMotiveBasedGroundLight( blockx, blocky, &ground_vertieces[0][0], (float *)&groundnormals );
 }
 
-cMapblock3D::~cMapblock3D ()
+cMapblock3D::~cMapblock3D()
 {
-  delete light_handler;
+	for ( unsigned int i = 0; i < m_vLights.size(); i++ )
+	{
+		SAFE_DELETE( m_vLights[i] );
+	}
+
+	SAFE_DELETE( light_handler );
 }
 
 
@@ -136,242 +129,219 @@ sColor sun_color;
 
 float light_direction[3];
 
-bool cMapblock3D::Generate (cLightNodeEnvironment & environment)
+
+bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 {
-  if (_generated)
-    return false;
+	if ( _generated )
+	{
+		return false;
+	}
+	ambient_color.colorRGB.r = 80;
+	ambient_color.colorRGB.g = 90;
+	ambient_color.colorRGB.b = 90;
+	sun_color.colorRGB.r = 400;
+	sun_color.colorRGB.g = 400;
+	sun_color.colorRGB.b = 420;
+
+	shader_matrix.setBlock( m_blockx, m_blocky );
+
+	cStaticModel *model;
+	float heightmap[10][10];
+	float tilemap[4][3];
+	//  float groundnormals[9][9][3];
+
+	_generated = true;
+	
+	//light_vector[2] *= 10.0f;
+	NormalizeVector( light_vector );
 
 
-  ambient_color.colorRGB.r = 80;
-  ambient_color.colorRGB.g = 90;
-  ambient_color.colorRGB.b = 90;
-  sun_color.colorRGB.r = 400;
-  sun_color.colorRGB.g = 400;
-  sun_color.colorRGB.b = 420;
+/*
+	cNodeList * env_nodes [8];
+	for (int i = 0; i < 8; i++) {
+		if(environment[i])
+			env_nodes[i] = environment[i]->nodelist();
+		else
+			env_nodes[i] = NULL;
+	}
+*/
 
-  shader_matrix.setBlock (m_blockx, m_blocky);
+	// bool flag;
 
+	if ( !pMapLoader )
+	{
+		return false;
+	}
 
-  cStaticModel *model;
-  float heightmap[10][10];
-  float tilemap[4][3];
-//  float groundnormals[9][9][3];
+	memset( watermap, 0, 64 * 4 );
+	memset( ground_vertieces, 0, 9 * 9 * sizeof(vertex) );
 
-  _generated = true;
+	struct MulBlock block;
 
-  //light_vector[2] *= 10.0f;
-  NormalizeVector (light_vector);
+	pMapLoader->LoadMapBlock (m_blockx, m_blocky, &block);
 
-  /*cNodeList * env_nodes [8];
-     for (int i = 0; i < 8; i++) {
-     if(environment[i])
-     env_nodes[i] = environment[i]->nodelist();
-     else
-     env_nodes[i] = NULL;
-     } */
+	int x, y;
 
-  //bool flag;
+	for ( y = 0; y < 8; y++ )
+		for ( x = 0; x < 8; x++ )
+			FilterWater( &block.cells[y][x], &heightmap[y][x], &groundids[y][x], &watermap[y][x] );
 
-  if (!pMapLoader)
-    return false;
+	pMapLoader->LoadMapBlock( m_blockx + 1, m_blocky, &block );
+	for ( x = 0; x < 2; x++ )
+		for ( y = 0; y < 8; y++ )
+			FilterWater( &block.cells[y][x], &heightmap[y][8 + x], NULL, NULL );
 
+	pMapLoader->LoadMapBlock( m_blockx, m_blocky + 1, &block );
+	for ( y = 0; y < 2; y++ )
+		for ( x = 0; x < 8; x++ )
+			FilterWater( &block.cells[y][x], &heightmap[8 + y][x], NULL, NULL );
 
+	pMapLoader->LoadMapBlock( m_blockx + 1, m_blocky + 1, &block );
+	for ( y = 0; y < 2; y++ )
+		for ( x = 0; x < 2; x++ )
+			FilterWater( &block.cells[y][x], &heightmap[8 + y][8 + x], NULL, NULL );
 
-  memset (watermap, 0, 64 * 4);
-  memset (ground_vertieces, 0, 9 * 9 * sizeof (vertex));
+	int i;
+	int vertex;
 
-  struct MulBlock block;
-
-
-
-  pMapLoader->LoadMapBlock (m_blockx, m_blocky, &block);
-
-  int x, y;
-
-  for (y = 0; y < 8; y++)
-    for (x = 0; x < 8; x++)
-      FilterWater (&block.cells[y][x], &heightmap[y][x], &groundids[y][x],
-                   &watermap[y][x]);
-
-  pMapLoader->LoadMapBlock (m_blockx + 1, m_blocky, &block);
-  for (x = 0; x < 2; x++)
-    for (y = 0; y < 8; y++)
-      FilterWater (&block.cells[y][x], &heightmap[y][8 + x], NULL, NULL);
-
-  pMapLoader->LoadMapBlock (m_blockx, m_blocky + 1, &block);
-  for (y = 0; y < 2; y++)
-    for (x = 0; x < 8; x++)
-      FilterWater (&block.cells[y][x], &heightmap[8 + y][x], NULL, NULL);
-
-  pMapLoader->LoadMapBlock (m_blockx + 1, m_blocky + 1, &block);
-  for (y = 0; y < 2; y++)
-    for (x = 0; x < 2; x++)
-      FilterWater (&block.cells[y][x], &heightmap[8 + y][8 + x], NULL, NULL);
-
-  int i;
-  int vertex;
-
-  float zmin = 10000.0f;
-  float zmax = -10000.0f;
+	float zmin = 10000.0f;
+	float zmax = -10000.0f;
 
 
-  /* Calculate Ground Quads */
-  for (y = 0; y < 9; y++)
-    for (x = 0; x < 9; x++)
-        {
+	/* Calculate Ground Quads */
+	for ( y = 0; y < 9; y++ )
+		for ( x = 0; x < 9; x++ )
+		{
+			if ( (float)heightmap[y][x] > zmax )
+			{
+				zmax = heightmap[y][x];
+			}
+			if ( (float)heightmap[y][x] < zmin )
+			{
+				zmin = heightmap[y][x];
+			}
 
-          if ((float) heightmap[y][x] > zmax)
-            zmax = heightmap[y][x];
-          if ((float) heightmap[y][x] < zmin)
-            zmin = heightmap[y][x];
+			for ( vertex = 0; vertex < 4; vertex++ )
+			{
+				tilemap[vertex][0] = (float)GroundCoords[vertex][0] + (float)x;
+				tilemap[vertex][1] = (float)GroundCoords[vertex][1] + (float)y;
+				tilemap[vertex][2] = heightmap[y + GroundCoords[vertex][1]][x + GroundCoords[vertex][0]] * 0.1f;
+			}
 
-          for (vertex = 0; vertex < 4; vertex++)
-              {
-                tilemap[vertex][0] =
-                  (float) GroundCoords[vertex][0] + (float) x;
-                tilemap[vertex][1] =
-                  (float) GroundCoords[vertex][1] + (float) y;
-                tilemap[vertex][2] =
-                  heightmap[y + GroundCoords[vertex][1]][x +
-                                                         GroundCoords[vertex]
-                                                         [0]] * 0.1f;
-              }
+			groundmap[y][x] = (signed char) (heightmap[y][x]);
 
-          groundmap[y][x] = (signed char) (heightmap[y][x]);
+			CalcNormal( tilemap[2], tilemap[1], tilemap[0], groundnormals[y][x] );
+			NormalizeVector( groundnormals[y][x] );
 
-          CalcNormal (tilemap[2], tilemap[1], tilemap[0],
-                      groundnormals[y][x]);
-          NormalizeVector (groundnormals[y][x]);
+			float *gnormal = groundnormals[y][x];
+			float light_fac = gnormal[0] * light_direction[0] + gnormal[1] * 
+				light_direction[1] + gnormal[2] * light_direction[2];
 
-          float *gnormal = groundnormals[y][x];
-          float light_fac =
-            gnormal[0] * light_direction[0] +
-            gnormal[1] * light_direction[1] + gnormal[2] * light_direction[2];
+			ground_vertieces[y][x].x = (float)x;
+			ground_vertieces[y][x].y = (float)y;
+			ground_vertieces[y][x].z = heightmap[y][x] * 0.1f;
+			ground_vertieces[y][x].u = (float)x;
+			ground_vertieces[y][x].v = (float)y;
 
-          ground_vertieces[y][x].x = (float) x;
-          ground_vertieces[y][x].y = (float) y;
-          ground_vertieces[y][x].z = heightmap[y][x] * 0.1f;
-          ground_vertieces[y][x].u = (float) x;
-          ground_vertieces[y][x].v = (float) y;
+			for ( int i = 0; i < 3; i++ )
+			{
+				int value =	ambient_color.color_array[i] + 
+					(int)( (float) sun_color.color_array[i] * ((light_fac > 0.0f) ? light_fac : 0.0f) );
+				ground_vertieces[y][x].color.color_array[i] = (value < 255) ? value : 255;
+				// printf("%i\n", value);
+			}
+			/*
+			ground_vertieces[y][x].color.colorRGB.r = 255;
+			ground_vertieces[y][x].color.colorRGB.g = 128;
+			ground_vertieces[y][x].color.colorRGB.b = 128;
+			*/
+			ground_vertieces[y][x].color.colorRGB.a = 255;
+		}
 
-          for (int i = 0; i < 3; i++)
-              {
-                int value =
-                  ambient_color.color_array[i] +
-                  (int) ((float) sun_color.color_array[i] *
-                         ((light_fac > 0.0f) ? light_fac : 0.0f));
-                ground_vertieces[y][x].color.color_array[i] =
-                  (value < 255) ? value : 255;
-                //printf("%i\n", value);
-              }
-          /*ground_vertieces[y][x].color.colorRGB.r = 255;
-             ground_vertieces[y][x].color.colorRGB.g = 128;
-             ground_vertieces[y][x].color.colorRGB.b = 128; */
-          ground_vertieces[y][x].color.colorRGB.a = 255;
-        }
+		zmin *= 0.1f;
+		zmax *= 0.1f;
 
+		sphere[0] = 4.0f;
+		sphere[1] = 4.0f;
+		sphere[2] = (zmin + zmax) * 0.5f;
+		sphere[3] = sqrt( (zmin - sphere[2]) * (zmin - sphere[2]) + 16.0f + 16.0f );
 
-  zmin *= 0.1f;
-  zmax *= 0.1f;
+		int staticcount = 0;
+		struct staticinfo *statics = pMapLoader->LoadStatics( m_blockx, m_blocky, staticcount );
+		struct staticinfo *statics_p = statics;
+		x = m_blockx * 8;
+		y = m_blocky * 8;
 
-  sphere[0] = 4.0f;
-  sphere[1] = 4.0f;
-  sphere[2] = (zmin + zmax) * 0.5f;
-  sphere[3] = sqrt ((zmin - sphere[2]) * (zmin - sphere[2]) + 16.0f + 16.0f);
-
-
-
-
-  int staticcount = 0;
-  struct staticinfo *statics =
-    pMapLoader->LoadStatics (m_blockx, m_blocky, staticcount);
-  struct staticinfo *statics_p = statics;
-  x = m_blockx * 8;
-  y = m_blocky * 8;
-
-  for (i = 0; i < staticcount; i++)
-      {
-        if ((statics_p->TileID >= 6038) && (statics_p->TileID <= 6066))
-            {                   // Filter out water 
-              watermap[(int) statics_p->y][(int) statics_p->x] =
-                (int) statics_p->z + 128 | 1024;
-            }
-        else
+		for ( i = 0; i < staticcount; i++ )
+		{
+			if ( (statics_p->TileID >= 6038) && (statics_p->TileID <= 6066) )
+			{                   // Filter out water 
+				watermap[(int)statics_p->y][(int) statics_p->x] = (int) statics_p->z + 128 | 1024;
+			}
+			else
             {
-				model = StaticModelLoader::GetInstance()->getModel (statics_p->TileID);
-              if (model)
-                  {
-                    struct sStaticObject *object = objects.Add ();
-                    object->hue = statics_p->Hue;
-                    CreateObject (object, x + statics_p->x, y + statics_p->y, statics_p->z, statics_p->TileID, model);
+				model = StaticModelLoader::GetInstance()->getModel( statics_p->TileID );
+				if ( model )
+				{
+					struct sStaticObject *object = objects.Add();
+					object->hue = statics_p->Hue;
+					CreateObject( object, x + statics_p->x, y + statics_p->y, statics_p->z, statics_p->TileID, model );
 
-					SAFE_DELETE( object->light );
-					if (model->flag (MODELFLAG_TILEABLE))
+					if ( model->flag( MODELFLAG_TILEABLE ) )
 					{
-						object->light = new cMotiveBasedLight_Tile( object->x, object->y, object->z, 
-										m_blockx, m_blocky, model, environment );
+						object->light = new cMotiveBasedLight_Tile( object->x, object->y, object->z, m_blockx, m_blocky, model, environment );
 					}
-                    else
+					else
 					{
-                      object->light =
-                        new cMotiveBasedLight_Entity (object->x, object->y,
-                                                      object->z, m_blockx,
-                                                      m_blocky, model);
+						object->light =	new cMotiveBasedLight_Entity( object->x, object->y, object->z, m_blockx, m_blocky, model );
 					}
+					m_vLights.push_back( object->light );
 
-                    for (int new_x = -1; new_x <= 1; new_x++)
-                      for (int new_y = -1; new_y <= 1; new_y++)
-                          {
-                            cMapblock *block =
-                              pMapbufferHandler.buffer()->Get (m_blockx + new_x,
-                                               m_blocky + new_y);
-                            if (block)
-                                {
-                                  ((cMapblock3D *) block)->
-                                    GetShaderMatrix ()->AddModel (object->x -
-                                                                  new_x * 8,
-                                                                  object->y -
-                                                                  new_y * 8,
-                                                                  object->z,
-                                                                  model);
-                                }
-                          }
+					for ( int new_x = -1; new_x <= 1; new_x++ )
+						for ( int new_y = -1; new_y <= 1; new_y++ )
+						{
+							cMapblock *block = pMapbufferHandler.buffer()->Get (m_blockx + new_x, m_blocky + new_y);
+							if ( block )
+							{
+								((cMapblock3D *)block)->GetShaderMatrix()->AddModel (object->x - new_x * 8, object->y - new_y * 8, 
+									object->z, model );
+							}
+						}
 
-
-                    //nodehandler.AddModel(model, object->x, object->y, object->z);
-                    //                  if (model->modelflags & MODELFLAG_TILEABLE) {
-                    //model->AddToNodes(statics_p->x, statics_p->y, statics_p->z, &nodes, &nodequads, object, env_nodes);
-                    //                  }
-                  }
+						//nodehandler.AddModel(model, object->x, object->y, object->z);
+						//                  if (model->modelflags & MODELFLAG_TILEABLE) {
+						//model->AddToNodes(statics_p->x, statics_p->y, statics_p->z, &nodes, &nodequads, object, env_nodes);
+						//                  }
+				}
             }
-        statics_p++;
-      }
+			statics_p++;
+		}
 
-  free (statics);
+		free( statics );
 
-  shader_matrix.AddGround (&groundmap[0][0]);
+		shader_matrix.AddGround( &groundmap[0][0] );
 
-  nodehandler.CalcNormals ();
-  std::list < cLight3D * >static_light_list =  pLightManager.static_light_list ();
-  std::list < cLight3D * >::iterator light_iter;
+		nodehandler.CalcNormals();
 
-  for (unsigned int i = 0; i < objects.count (); i++)
-      {
-        struct sStaticObject *object = objects.Get (i);
-        //object->light->CalcAmbientLight (ambient_color, sun_color, light_direction);
+		std::list<cLight3D *>static_light_list = pLightManager.static_light_list();
+		std::list<cLight3D *>::iterator light_iter;
+		for ( unsigned int i = 0; i < objects.count(); i++ )
+		{
+			struct sStaticObject *object = objects.Get (i);
+			//object->light->CalcAmbientLight (ambient_color, sun_color, light_direction);
 
-        for (light_iter = static_light_list.begin ();
-             light_iter != static_light_list.end (); light_iter++)
-          if ((*light_iter)->light_in_block (m_blockx, m_blocky))
-              {
-                object->light->AddLight (*light_iter);
-              }
-      }
+			for (light_iter = static_light_list.begin ();
+				light_iter != static_light_list.end (); light_iter++)
+				if ((*light_iter)->light_in_block (m_blockx, m_blocky))
+				{
+					object->light->AddLight (*light_iter);
+				}
+		}
 
-  for (light_iter = static_light_list.begin ();
-       light_iter != static_light_list.end (); light_iter++)
-    if ((*light_iter)->light_in_block (m_blockx, m_blocky))
-      light_handler->AddLight (*light_iter);
+		for (light_iter = static_light_list.begin ();
+			light_iter != static_light_list.end (); light_iter++)
+			if ((*light_iter)->light_in_block (m_blockx, m_blocky))
+				light_handler->AddLight (*light_iter);
 
   for (unsigned int i = 0; i < objects.count (); i++)
       {

@@ -23,7 +23,7 @@
 #include <iostream>
 #include <cassert>
 
-using namespace std;
+//using namespace std;
 
 BoneAnim::BoneAnim() : id(0), length(0), numTranslates(0), numQuaternions(0), numUnknowns(0)
 {
@@ -114,6 +114,12 @@ Animations::Animations ()
 
 Animations::~Animations ()
 {
+	for ( unsigned int i = 0; i < bones.size(); i++ )
+	{
+		SAFE_DELETE( bones[i] );
+	}
+
+	bones.clear();
 }
 
 void Animations::load (cGrannyStream * file, dword aOffset, dword baseOffset,
@@ -140,11 +146,11 @@ void Animations::load (cGrannyStream * file, dword aOffset, dword baseOffset,
             case 0xCA5E1204:   //bone animation data
               bone = new BoneAnim ();
               bone->load (file, offset, baseOffset, children);
-              bones.push_back (*bone);
+              bones.push_back (bone);
               break;
             default:
-              hex (cerr);
-              cerr << "Unknown Animations Chunk: " << chunk << endl;
+				std::hex (std::cerr);
+				std::cerr << "Unknown Animations Chunk: " << chunk << std::endl;
               exit (1);
             }
         i += children + 1;
@@ -153,7 +159,7 @@ void Animations::load (cGrannyStream * file, dword aOffset, dword baseOffset,
 
 BoneAnim & Animations::getBoneAnim (dword id)
 {
-  return bones[id];
+  return *bones[id];
 }
 
 float Animations::length ()
@@ -163,8 +169,8 @@ float Animations::length ()
 
   float result = 100000000.0f;
   for (unsigned int i = 0; i < bones.size (); i++)
-    if (bones[i].length < result)
-      result = bones[i].length;
+    if (bones[i]->length < result)
+      result = bones[i]->length;
 
   return result;
 }

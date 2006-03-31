@@ -936,18 +936,16 @@ static ZString api_camera_firstperson(ZCsl* aCsl)
 {
 //if(!pCamera)
  //return "-1";
- int selfview = aCsl->get("selfview").asInt();
-   float actualzoom = pCamera.GetZoom();
-   float angle_x = pCamera.GetAngleX();
-   pCamera.ChangeZoom(-actualzoom);
-   if( !Config::GetHideSelf() )
-    pCamera.Rotate(-45.0f, 0.0f, -0 / 3.0f);
- 
-           
-           if(selfview)
-            pCamera.ChangeZoom(-3.4f);
+	int selfview = aCsl->get("selfview").asInt();
+	float actualzoom = pCamera.GetZoom();
+	float angle_x = pCamera.GetAngleX();
+	pCamera.ChangeZoom(-actualzoom);
+	if( !Config::GetHideSelf() )
+		pCamera.Rotate(-45.0f, 0.0f, -0 / 3.0f);
+	if(selfview)
+		pCamera.ChangeZoom(-3.4f);
 
- return "0";
+	return "0";
 }
 
 static ZString api_camera_reset(ZCsl * aCsl)

@@ -950,9 +950,9 @@ void cClient::Act_ClientState (cPacket * packet)
   sprintf (msg, "World entering Error: %i\n", pack->ClientState.m_type);
   Logger::WriteLine (msg);
 
-  switch (pack->ClientState.m_type)
+/*  switch (pack->ClientState.m_type)
       {
-/*
+
       case NO_CHARACTER:
         callback_OnCharError (NO_CHARACTER);
         break;            
@@ -977,10 +977,11 @@ void cClient::Act_ClientState (cPacket * packet)
       case CANT_CONNECT3:
         callback_OnCharError (CANT_CONNECT3);
         break;            
-*/
+
       default:
         callback_OnNetError (NETERROR_UNKNOWN);
-      }
+      }*/
+  callback_OnNetError (NETERROR_UNKNOWN);
 }
 
 void cClient::Act_Relay (cPacket * packet)
@@ -2303,7 +2304,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 	}
 	SAFE_DELETE_ARRAY( cmds );
 
-	//parse gump text-lines
+	// parse gump text-lines
 	Uint16 txt_lines = packet->GetWord();
 	std::vector<std::string> texts_vector( txt_lines );
 

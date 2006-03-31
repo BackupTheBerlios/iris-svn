@@ -19,10 +19,11 @@
 #ifndef __GRNBONES_H__
 #define __GRNBONES_H__
 
+#include <iostream>
 #include <vector>
 #include "grnmatrix.h"
 #include "GrannyStream.h"
-
+#include "Common.h"
 
 // #include "../Fluid/mmgr.h"
 
@@ -31,6 +32,7 @@ class Bone
 public:
 	Bone();
 	~Bone();
+
 	dword parent,id;
 	Point translate;
 	Point quaternion;
@@ -42,10 +44,11 @@ public:
 class Bones
 {
 public:
-  Bones();
-  ~Bones();
-  void load( cGrannyStream * file,dword offset,dword baseOffset,dword children);
-  std::vector<Bone *>bones;
+	Bones();
+	~Bones();
+
+	void load( cGrannyStream * file,dword offset,dword baseOffset,dword children);
+	std::vector<Bone *>bones;
 private:
 };
 

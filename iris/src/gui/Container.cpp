@@ -37,9 +37,9 @@ Container::Container ()
   control_type = CONTROLTYPE_CONTAINER;
 }
 
-Container::~Container ()
+Container::~Container()
 {
-  ClearControls ();
+	ClearControls();
 }
 
 
@@ -146,17 +146,17 @@ void Container::HandleMessageQueues (void)
         }
 }
 
-void Container::ClearControls (void)
+void Container::ClearControls(void)
 {
-  ControlList_t::iterator iter;
+	ControlList_t::iterator iter;
 
-  for (iter = control_root.begin (); iter != control_root.end (); iter++)
-      {
-        iter->second->DoOnClose ();
-        delete (*iter).second;
-      }
+	for ( iter = control_root.begin (); iter != control_root.end (); iter++ )
+	{
+		iter->second->DoOnClose();
+		SAFE_DELETE( (*iter).second );
+	}
 
-  control_root.clear ();
+	control_root.clear ();
 }
 
 Control *Container::GetControl (int controlid)
@@ -170,13 +170,12 @@ Control *Container::GetControl (int controlid)
     return (*iter).second;
 }
 
-void Container::AddControl (Control * control)
+void Container::AddControl( Control *control )
 {
-  control->SetID (idcounter | (GetID () << 16));
-  control->SetParent (this);
-  control_root.
-    insert (make_pair ((Uint32) idcounter | (GetID () << 16), control));
-  idcounter++;
+	control->SetID( idcounter | ( GetID() << 16 ) );
+	control->SetParent( this );
+	control_root.insert( std::make_pair( (Uint32)idcounter | ( GetID() << 16 ), control ) );
+	idcounter++;
 }
 
 void Container::AddControl (Control * control, int page)

@@ -92,7 +92,7 @@ void cGrannyFile::initBone()
 	int temp_lhand_bone = -1, temp_rhand_bone = -1;
 	master_bone = left_hand_bone = right_hand_bone = -1;
 
-	for (int i = 0; i < bones.size(); i++) {
+	for (unsigned int i = 0; i < bones.size(); i++) {
 		Bone* bone = bones[i];
 		// bonetie.boneObjPtr: connect bone.id to boneObj
 		dword objptr = boneObjPtrs[bone->id];
@@ -134,7 +134,7 @@ int cGrannyFile::getBoneID(const char *name)
 	if (isMasterName(name)) 
 		return master_bone;
 
-	for (int i = 0; i < bones.size(); i++) {
+	for (unsigned int i = 0; i < bones.size(); i++) {
 		Bone* bone = bones[i];
 		if (_stricmp(bone->name.c_str(), name) == 0)
 			return bone->id;
@@ -601,7 +601,7 @@ void cGrannyAnimation::Assign (cGrannyFile * model)
 	BoneTies &boneTies = getTies();
 	BoneTies &boneLodTies = model->getTies();
 	Animations &anims = getAnimations();
-	vector<BoneAnim> &animBones = anims.bones;
+	std::vector<BoneAnim *> &animBones = anims.bones;
 
 	dword anmNm = findString("__ObjectName");
 	dword lodNm = model->findString("__ObjectName");
@@ -609,10 +609,10 @@ void cGrannyAnimation::Assign (cGrannyFile * model)
 	m_animBones.assign(model->getBones().bones.size(), (dword)-1);
 
 	// for each animation bone
-	for (int i = 0; i < animBones.size(); i++)
+	for (unsigned int i = 0; i < animBones.size(); i++)
 	{
 		dword boneId = 0;
-		dword animId = animBones[i].id; // objptr
+		dword animId = animBones[i]->id; // objptr
 		dword id = boneTies.boneObjects[ animId - 1 ]; // object
 		dword textId = getValue( id, anmNm );
 		std::string boneStr = findID( textId );

@@ -122,128 +122,161 @@ cDynamicObjectList::~cDynamicObjectList()
 
 void cDynamicObjectList::Clear ()
 {
-  dynamiclist_t::iterator iter;
-  for (iter = dynamiclist.begin (); iter != dynamiclist.end (); iter++)
-    delete iter->second;
-  dynamiclist.clear ();
+	for ( unsigned int i = 0; i < vLights.size(); i++ )
+	{
+		SAFE_DELETE( vLights[i] );
+	}
+	vLights.clear();
+
+	dynamiclist_t::iterator iter;
+	for ( iter = dynamiclist.begin(); iter != dynamiclist.end(); iter++ )
+	{
+		SAFE_DELETE( iter->second );
+	}
+	dynamiclist.clear();
 }
 
 
-cDynamicObject *cDynamicObjectList::Add (Uint32 id)
+cDynamicObject *cDynamicObjectList::Add( Uint32 id )
 {
-  dynamiclist_t::iterator iter;
-  iter = dynamiclist.find (id);
+	dynamiclist_t::iterator iter;
+	iter = dynamiclist.find( id );
 
-  if (iter != dynamiclist.end ())
-      {
-        if (callback_OnDelete && (iter->second->type == DYNAMICTYPE_WORLD))
-          callback_OnDelete (iter->second);
-        delete iter->second;
-        dynamiclist.erase (iter);
-      }
+	if ( iter != dynamiclist.end() )
+	{
+		if ( callback_OnDelete && ( iter->second->type == DYNAMICTYPE_WORLD ) )
+		{
+			callback_OnDelete (iter->second);
+		}
+		SAFE_DELETE( iter->second );
+		dynamiclist.erase( iter );
+	}
 
+	cDynamicObject *result = new cDynamicObject();
+	if ( ( m_roof_z != ROOF_NONE ) && ( result->z >= m_roof_z ) )
+	{
+		result->alpha = Config::GetRoofFadeAlpha();
+	}
 
-  cDynamicObject *result = new cDynamicObject;
-  if ((m_roof_z != ROOF_NONE) && (result->z >= m_roof_z))
-    result->alpha = Config::GetRoofFadeAlpha();
+	dynamiclist.insert( std::make_pair( id, result ) );
+	result->id = id;
 
-  dynamiclist.insert (std::make_pair (id, result));
-  result->id = id;
-  return result;
+	return result;
 }
 
 
-cDynamicObject *cDynamicObjectList::Get (unsigned int id)
+cDynamicObject *cDynamicObjectList::Get( unsigned int id )
 {
-  dynamiclist_t::iterator iter;
-  iter = dynamiclist.find (id);
+	dynamiclist_t::iterator iter;
+	iter = dynamiclist.find( id );
 
-  if (iter != dynamiclist.end ())
-    return iter->second;
-  else
-    return NULL;
+	if ( iter != dynamiclist.end() )
+	{
+		return iter->second;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
-void cDynamicObjectList::Delete (unsigned int id)
+
+void cDynamicObjectList::Delete( unsigned int id )
 {
-  cDynamicObject *object = Get (id);
-  if (object)
-      {
-        if (callback_OnDelete && (object->type == DYNAMICTYPE_WORLD))
-          callback_OnDelete (object);
-        delete object;
-        dynamiclist.erase (id);
-      }
+	cDynamicObject *object = Get( id );
+	if ( object )
+	{
+		if ( callback_OnDelete && ( object->type == DYNAMICTYPE_WORLD ) )
+		{
+			callback_OnDelete( object );
+		}
+        SAFE_DELETE( object );
+		dynamiclist.erase( id );
+	}
 }
 
 
-int cDynamicObjectList::UpdateFader (int min_z, Uint8 alpha, cFader * fader,
-                                     bool below)
+int cDynamicObjectList::UpdateFader( int min_z, Uint8 alpha, cFader *fader, bool below )
 {
-  int count = 0;
-  dynamiclist_t::iterator iter;
-  for (iter = dynamiclist.begin (); iter != dynamiclist.end (); iter++)
-      {
-        bool ok = (((iter->second->z >= min_z) && (!below)) ||
-                   ((iter->second->z < min_z) && (below)));
-        if (ok && (iter->second->alpha == alpha))
-            {
-              iter->second->fader = fader;
-              count++;
-            }
-
-      }
-  return count;
+	int count = 0;
+	dynamiclist_t::iterator iter;
+	bool ok;
+	for ( iter = dynamiclist.begin(); iter != dynamiclist.end(); iter++ )
+	{
+		ok = ( ( (iter->second->z >= min_z) && (!below)) || 
+			( (iter->second->z < min_z) && (below) ) );
+		if ( ok && (iter->second->alpha == alpha) )
+		{
+			iter->second->fader = fader;
+			count++;
+		}
+	}
+	return count;
 }
+
 
 void cDynamicObjectList::ResetFader (cFader * fader)
 {
-  dynamiclist_t::iterator iter;
-  for (iter = dynamiclist.begin (); iter != dynamiclist.end (); iter++)
-      {
-        if (iter->second->fader)
-          iter->second->alpha = (int) (iter->second->fader->value () + 0.5f);
-        if (iter->second->fader == fader)
-          iter->second->fader = NULL;
-      }
+	dynamiclist_t::iterator iter;
+	for ( iter = dynamiclist.begin(); iter != dynamiclist.end(); iter++ )
+	{
+		if ( iter->second->fader )
+		{
+			iter->second->alpha = (int)(iter->second->fader->value() + 0.5f);
+		}
+		if ( iter->second->fader == fader )
+		{
+			iter->second->fader = NULL;
+		}
+	}
 }
 
 
-int cDynamicObjectList::GetRoofHeight (int x, int y, int z)
+int cDynamicObjectList::GetRoofHeight( int x, int y, int z )
 {
-  int roof = ROOF_NONE;
+	int roof = ROOF_NONE;
 
-  dynamiclist_t::iterator iter;
-  for (iter = dynamiclist.begin (); iter != dynamiclist.end (); iter++)
-      {
-        cDynamicObject *object = iter->second;
-        if (!object) continue;
-				
-        if (object->model>=MULTI_ID && pMultisLoader->MultiExists(object->model))
-        {
-          stMultiList* MultiList = pMultisLoader->GetMulti(object->model);
-          MultiIter elem = MultiList->multiParts.begin();
-          for(; elem!=MultiList->multiParts.end();elem++)
-          {
-            stMultiPart multi = *elem;
-            int mz = object->z + multi.z;
-            if (object->x + multi.x == x && object->y + multi.y == y && mz > z)
-            {
-              if (mz < roof)
-                roof = mz;
-            }
-          }
-          continue;
-        }
-        if ((object->x == x) && (object->y == y) && (object->z > z))
-        {
-          if (object->z < roof)
-            roof = object->z;
-        }
-      }
+	dynamiclist_t::iterator iter;
+	cDynamicObject *object;
+	for ( iter = dynamiclist.begin(); iter != dynamiclist.end(); iter++ )
+	{
+		object = iter->second;
+		if ( !object )
+		{
+			continue;
+		}
 
-  return roof;
+		if ( object->model>=MULTI_ID && pMultisLoader->MultiExists( object->model ) )
+		{
+			stMultiList* MultiList = pMultisLoader->GetMulti( object->model );
+			MultiIter elem = MultiList->multiParts.begin();
+			for ( ; elem != MultiList->multiParts.end(); elem++ )
+			{
+				stMultiPart multi = *elem;
+				int mz = object->z + multi.z;
+				if ( object->x + multi.x == x && object->y + multi.y == y && mz > z )
+				{
+					if ( mz < roof )
+					{
+						roof = mz;
+					}
+				}
+			}
+			continue;
+		}
+		
+		if ( (object->x == x) && (object->y == y) && (object->z > z) )
+		{
+			if ( object->z < roof )
+			{
+				roof = object->z;
+			}
+		}
+	}
+
+	return roof;
 }
+
 
 void cDynamicObjectList::OnAdd (void (*callback) (cDynamicObject * object))
 {
@@ -325,8 +358,9 @@ cDynamicObject *cDynamicObjectList::AddWorldItem( Uint32 id, Uint16 model, Uint1
 	{
 		int blockx = x / 8;
 		int blocky = y / 8;
-		// SAFE_DELETE( light );
+
 		cMotiveBasedLight *light = new cMotiveBasedLight_Entity( (float)(x % 8), (float)(y % 8), (float)z, blockx, blocky, static_model );
+		vLights.push_back( light );
 		result->setMotive( light );
 		if ( static_model->GetLightSourceInfo() )
 		{

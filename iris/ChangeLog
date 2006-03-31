@@ -1,3 +1,11 @@
+31.03.2006
+Changes by Nuno Ramiro
+	- Fixed: More memory leaks under MapBlock3D (FPS Improvement).
+	- Fixed: Linux compatibility.
+	- Fixed: Memory leak under grnbones and grnanim.
+	- Fixed: Particle Effect crash bug (iterator going out of scope).
+	- Fixed: Memory leaks under Textures (FPS Improvement).
+
 30.03.2006
 Changes by Florian Fischer (SiENcE)
 	-changed tooltip position

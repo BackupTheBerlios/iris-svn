@@ -513,7 +513,8 @@ void DecompressingCopier::operator () (char * dest, const char * src,
     int len = src_size; // len will decrease
     int dest_index = 0;
 
-    while(true)
+	bool cycle = true;
+    while ( cycle )
     {
         if(bit_num == 8)
         {
@@ -522,7 +523,8 @@ void DecompressingCopier::operator () (char * dest, const char * src,
             {
                 dest_size = dest_index;
                 // src_size is unchanged
-                return;
+                cycle = false;
+				continue;
             }
             len--;
             value = *psrc++;
@@ -548,7 +550,8 @@ void DecompressingCopier::operator () (char * dest, const char * src,
             {
                 dest_size = dest_index;
                 src_size = psrc - src2;
-                return;
+                cycle = false;
+				continue;
             }
             pdest[dest_index++] = -treepos;   // data is negative value
             treepos = 0;      // start on tree top again

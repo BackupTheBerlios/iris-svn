@@ -27,7 +27,7 @@
 #include "loaders/HueLoader.h"
 
 
-Control::Control ()
+Control::Control()
 {
 	x = 0;
 	y = 0;
@@ -48,7 +48,7 @@ Control::Control ()
 	parent = NULL;
 	__page = 0;
 
-	script_funcs = (char **) malloc (SCRIPT_FUNC_COUNT * sizeof (char *));
+	script_funcs = (char **) malloc( SCRIPT_FUNC_COUNT * sizeof(char *) );
 	int i;
 	for ( i = 0; i < SCRIPT_FUNC_COUNT; i++ )
 	{

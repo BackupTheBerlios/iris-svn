@@ -55,6 +55,7 @@ ImageArt::ImageArt (int x, int y, int texid, int flags)
 
 ImageArt::~ImageArt ()
 {
+	SAFE_DELETE( texture );
 }
 
 void ImageArt::SetTexID (int texid)
@@ -73,7 +74,7 @@ void ImageArt::Draw (GumpHandler * gumps)
   Control::Draw (gumps);
 
 
-        Texture *texture;
+        SAFE_DELETE( texture );
 
         //if (texid >= 16384) 
 

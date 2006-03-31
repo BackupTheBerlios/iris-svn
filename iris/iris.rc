@@ -1,6 +1,6 @@
 // Microsoft Visual C++ generated resource script.
 //
-//#include "resource.h"
+#include "resource.h"
 
 #define APSTUDIO_READONLY_SYMBOLS
 /////////////////////////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// 한국어 resources
+// Korean resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
 #ifdef _WIN32
@@ -67,7 +67,7 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "041204b0"
+        BLOCK "080004b0"
         BEGIN
             VALUE "FileDescription", "ultima iris"
             VALUE "FileVersion", "0, 6, 0, 0"
@@ -80,7 +80,7 @@ BEGIN
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x412, 1200
+        VALUE "Translation", 0x800, 1200
     END
 END
 
@@ -92,8 +92,8 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_ICON1               ICON                    "devcpp\Ultima Iris.ico"
-#endif    // 한국어 resources
+IDI_ICON1               ICON                    "devcpp\\Ultima Iris.ico"
+#endif    // Korean resources
 /////////////////////////////////////////////////////////////////////////////
 
 

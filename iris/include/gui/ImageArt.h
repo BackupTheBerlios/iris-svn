@@ -46,9 +46,10 @@ class ImageArt : public Control
   int hue(){return m_hue;}
   virtual void Draw(GumpHandler * gumps);
 
- private:
-  int texid;
-  int m_hue;
+private:
+	 Texture *texture;
+	int texid;
+	int m_hue;
 };
 
 

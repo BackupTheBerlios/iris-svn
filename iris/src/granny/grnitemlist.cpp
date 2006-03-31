@@ -27,10 +27,12 @@ using namespace std;
 
 ItemList::ItemList ()
 {
+	bones = new Bones();
 }
 
 ItemList::~ItemList ()
 {
+	SAFE_DELETE( bones );
 }
 
 void ItemList::load (cGrannyStream * file)
@@ -69,7 +71,7 @@ void ItemList::loadList (dword peers, cGrannyStream * file)
               textureInfos.load (file, offset, listOffset, children);
               break;
             case 0xCA5E0507:
-              bones.load (file, offset, listOffset, children);
+              bones->load (file, offset, listOffset, children);
               break;
             case 0xCA5E0602:
               meshes.load (file, offset, listOffset, children);
@@ -135,7 +137,7 @@ Meshes & ItemList::getMeshes ()
 
 Bones & ItemList::getBones ()
 {
-  return bones;
+  return *bones;
 }
 
 BoneTies & ItemList::getTies ()

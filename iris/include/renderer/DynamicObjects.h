@@ -99,7 +99,9 @@ class cDynamicObjectList
 private:
     dynamiclist_t dynamiclist;
     int m_roof_z;
+	std::vector<cMotiveBasedLight *> vLights;
     cDynamicObject * Add (Uint32 id);
+
 public:
     cDynamicObjectList ();    
    ~cDynamicObjectList ();

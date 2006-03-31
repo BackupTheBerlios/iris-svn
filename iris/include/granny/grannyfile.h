@@ -16,8 +16,8 @@
 *
 *****/
 
-#ifndef __GRN_H__
-#define __GRN_H__
+#ifndef _GRANNYFILE_H_
+#define _GRANNYFILE_H_
 
 #define _stricmp strcasecmp
 #define _strdup strdup

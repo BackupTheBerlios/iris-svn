@@ -21,6 +21,7 @@
 
 #include <vector>
 #include "GrannyStream.h"
+#include "Common.h"
 
 // #include "../Fluid/mmgr.h"
 
@@ -49,7 +50,7 @@ public:
   ~Animations();
   void load( cGrannyStream * file,dword offset,dword baseOffset,dword children);
 	BoneAnim &getBoneAnim(dword id);
-	std::vector<BoneAnim>bones;
+	std::vector<BoneAnim *>bones;
   float length();
 private:
 };

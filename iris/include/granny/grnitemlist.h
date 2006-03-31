@@ -60,7 +60,7 @@ private:
 	TextChunk textChunk;
   Objects objects;
   Meshes meshes;
-  Bones bones;
+  Bones *bones;
 	BoneTies boneTies;
   TextureInfos textureInfos;
   Textures textures;
