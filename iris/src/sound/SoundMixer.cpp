@@ -93,14 +93,20 @@ void SoundMix::Init()
 		else
 		{
 			std::cout << "->Sound support disabled....\n";
+       		Config::SetSound( 0 );
 		}
-		Config::SetSound( 0 );
 	}
 }
 
 
 void SoundMix::PlaySound( int sound, int volume, char flags, int x, int y, int z )
 {
+
+	if (Config::GetSound()!=1)
+	{
+		return;
+	}
+
 	wave = Load( sound );
 
 	if ( !wave )
@@ -141,6 +147,12 @@ void SoundMix::PlaySound( int sound, int volume, char flags, int x, int y, int z
 
 void SoundMix::PlaySoundWithVolume( int sound, int volume )
 {
+
+	if (Config::GetSound()!=1)
+	{
+		return;
+	}
+
 	wave = Load( sound );
 
 	if ( !wave )

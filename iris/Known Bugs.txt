@@ -8,11 +8,15 @@
 - When dclicking the candle on backpack it equips but does not disapear from backpack (SiENcE)	- Needs fixing
 - Remove fountain effect from candle since it was for debug purposes (SiENcE)			- Needs fixing
 - Creating a character you can not choose your skills (they are choosen for you)		- Needs fixing
-- UOX3 crashes Iris when server sends new music title						- Needs fixing
 - Skills show everything with 0's								- Needs fixing
-- Skills can not be used (like meditation/taming/hide/etc)					- Needs fixing
 - When connecting with a wrong username the engine crashes					- Needs fixing
+- Font Color Black and White is vice versa							- Needs fixing
+- Polymorphing (".poly 12") doesn't work, old model remains until logout->login			- Needs fixing
+- Elfs don't wear clothes									- Needs fixing
+- tooltips don't shown in other containers than backpack, doesn't show in paperdoll		- Needs fixing
+- Iris chrashes receiving big gumps from the server						- Needs fixing
 
+- Skills can not be used (like meditation/taming/hide/etc) - (taming works!, SiENcE)		- Needs testing
 - Fix for walking code (still messed up with RunUO) (SiENcE)					- Needs testing
 - Fix click/target bugs (sometimes click is not detected and statics height is not detected when click on ground) (SiENcE) - Needs testing
 - MapBuffer Error (only happends with RunUO 1.0)						- Needs testing
@@ -78,3 +82,4 @@ restarting iris)
 - When login then log out and exit Iris crashes							- FIXED
 - HUE color bug											- FIXED
 - Sound was not working.									- FIXED
+- UOX3 crashes Iris when server sends new music title						- FIXED

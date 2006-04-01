@@ -101,7 +101,7 @@ int main( int argc, char **args )
 		// Initialize SDL_music
 		SoundMix *pSoundMix;
 		if ( Config::GetMusic() || Config::GetSound() )
-        {
+        	{
 			pSoundMix = new SoundMix();
 			pSoundMix->Init();
 
@@ -109,7 +109,7 @@ int main( int argc, char **args )
 
 			if ( Config::GetMusic() )
 			{
-				pSoundMix->PlayMusic( 8, Config::GetMP3(), Config::GetMusicVolume() );
+				pSoundMix->PlayMusic( 1, Config::GetMP3(), Config::GetMusicVolume() );
 			}
 		}
 		else

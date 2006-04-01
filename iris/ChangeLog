@@ -1,3 +1,12 @@
+01.04.2006
+Changes by Florian Fischer (SiENcE)
+	- Fixed: Soundbug fixed (now you can play soundeffects independet from music
+	- Added: check if sound is enabled, otherwise Iris crashes if sound is off and server sends sound packet
+	- Needs Fixing: if mp3 is 0 midi should be played -> don't work!
+	- Added: displaying of Elf Paperdolls
+	- Added: paperdoll support for Lord_British aso. (we should receive this from granny_aos.xml)
+	- Fixed: corrected constants.csl
+
 31.03.2006
 Changes by Nuno Ramiro
 	- Fixed: More memory leaks under MapBlock3D (FPS Improvement).
@@ -8,11 +17,11 @@ Changes by Nuno Ramiro
 
 30.03.2006
 Changes by Florian Fischer (SiENcE)
-	-changed tooltip position
-	-changed api_net_selectchar in cslhandler.cpp
-	-changed login procedure
-	-added cClient::Get_Local_IP() for Send_SelectChar packet
-	-added Mix_HookMusic(NULL, NULL) in Music.cpp
+	- Changed: tooltip position
+	- Changed: api_net_selectchar in cslhandler.cpp
+	- Changed: login procedure
+	- Added: cClient::Get_Local_IP() for Send_SelectChar packet
+	- Added: Mix_HookMusic(NULL, NULL) in Music.cpp
 
 28.03.2006
 Changes by Nuno Ramiro

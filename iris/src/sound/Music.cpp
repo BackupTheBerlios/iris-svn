@@ -35,6 +35,7 @@ Music::~Music()
 	{
 		SMPEG_stop( m_kMpeg );
 		SMPEG_delete( m_kMpeg );
+		Mix_HookMusic(NULL, NULL);
 	}
 #endif
 }
@@ -198,6 +199,10 @@ int Music::PlayMusic( int iId, int iFormat, int iVolume )
 
 		assert( m_kMpeg );
 		assert( m_kInfo.has_audio );
+
+        //SiENcE:
+		/* Play the movie, using SDL_mixer for audio */
+		SMPEG_enableaudio(m_kMpeg, 0);
 
 		// Tell SMPEG what the audio format is.
 		SDL_AudioSpec kAudioFmt;

@@ -112,16 +112,35 @@ void Paperdoll::AssignChar (cCharacter * character)
 
   int base_id = 50000;
 
+  //Human-Male Paperdoll
   if (character->body () == 400)
       {
         builder->AddGump (12, 0, layermap, character->hue ());
         base_id = 50000;
       }
-
-  if (character->body () == 401)
+//Human-Female Paperdoll
+  else if (character->body () == 401)
       {
         builder->AddGump (13, 0, layermap, character->hue ());
         base_id = 60000;
+      }
+  //Male-Elf Paperdoll
+  else if (character->body () == 605)
+      {
+        builder->AddGump (14, 0, layermap, character->hue ());
+        base_id = 50000;
+      }
+  //Female-Elf Paperdoll
+  else if (character->body () == 606)
+      {
+        builder->AddGump (15, 0, layermap, character->hue ());
+        base_id = 60000;
+      }
+  else if (character->body () == 990 || character->body () == 991 ||
+           character->body () == 994 || character->body () == 183)
+      {
+  //if nothing (maybe player is transformed into a creature display a male paperdoll
+        builder->AddGump (12, 0, layermap, character->hue ());
       }
 
   int layerOrder[0x18] = { 0x09,    // - N/A (not used)
