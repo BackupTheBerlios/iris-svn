@@ -23,34 +23,33 @@
 #ifndef _IMAGEART_H_
 #define _IMAGEART_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
-
-#include "SDL/SDL.h"
 #include "Control.h"
+#include "renderer/TextureBuffer.h"
 
 // #include "../Fluid/mmgr.h"
 
 
 class ImageArt : public Control
 {
- public:
-  ImageArt ();
-  ImageArt (int x, int y, int texid);
-  ImageArt (int x, int y, int texid, int flags);
-  ~ImageArt ();
-  void SetTexID (int texid);
-  int GetTexID(void);
-  void SetHue(int hue){m_hue = hue;}
-  int hue(){return m_hue;}
-  virtual void Draw(GumpHandler * gumps);
+public:
+	 ImageArt();
+	 ImageArt( int iX, int iY, int iTextId );
+	 ImageArt( int iX, int iY, int iTextId, int iFlags );
+	 ~ImageArt();
+
+	 void SetTexID( int iTextId );
+	 void SetHue( int iHue );
+	 
+	 int GetTexID() const;
+	 int GetHue() const;
+
+	 virtual void Draw( GumpHandler *kGumps );
 
 private:
-	 Texture *texture;
-	int texid;
-	int m_hue;
+	Texture *m_kTexture;
+	int m_iTextId;
+	int m_iHue;
+	std::vector<Texture *> m_vTextures;
 };
 
-
-#endif
+#endif	// _IMAGEART_H_

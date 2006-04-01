@@ -20,89 +20,88 @@
  *
  *****/
 
-#include "loaders/ArtLoader.h"
 #include "gui/ImageArt.h"
-#include "Logger.h"
-#include "Config.h"
-#include "renderer/TextureBuffer.h"
 
-using namespace std;
 
-ImageArt::ImageArt ()
+ImageArt::ImageArt() : m_iTextId( 0 ), m_iHue( 0 )
 {
-  Control::Control ();
-  texid = 0;
-  m_hue = 0;
+	Control::Control();
 }
 
-ImageArt::ImageArt (int x, int y, int texid)
+
+ImageArt::ImageArt( int iX, int iY, int iTextId ) : m_iHue( 0 ), m_iTextId( iTextId )
 {
-  Control::Control ();
-  SetTexID (texid);
-  SetPosition (x, y);
-  control_type = CONTROLTYPE_IMAGEART;
-  m_hue = 0;
+	Control::Control();
+	SetPosition( iX, iY );
+	control_type = CONTROLTYPE_IMAGEART;
 }
 
-ImageArt::ImageArt (int x, int y, int texid, int flags)
+
+ImageArt::ImageArt( int iX, int iY, int iTextId, int iFlags ) : m_iTextId( iTextId )
 {
-  Control::Control ();
-  SetTexID (texid);
-  SetPosition (x, y);
-  SetFlags (flags);
-  control_type = CONTROLTYPE_IMAGEART;
+	Control::Control();
+	SetPosition( iX, iY );
+	SetFlags( iFlags );
+	control_type = CONTROLTYPE_IMAGEART;
 }
 
-ImageArt::~ImageArt ()
+
+ImageArt::~ImageArt()
 {
-	SAFE_DELETE( texture );
+	for ( unsigned int i = 0; i < m_vTextures.size(); i++ )
+	{
+		SAFE_DELETE( m_vTextures[i] );
+	}
 }
 
-void ImageArt::SetTexID (int texid)
+
+void ImageArt::SetTexID( int iTextId )
 {
-  this->texid = texid;
+	m_iTextId = iTextId;
 }
 
-int ImageArt::GetTexID (void)
+
+void ImageArt::SetHue( int iHue )
 {
-  return texid;
+	m_iHue = iHue;
 }
 
-void ImageArt::Draw (GumpHandler * gumps)
+
+int ImageArt::GetTexID() const
 {
+	return m_iTextId;
+}
 
-  Control::Draw (gumps);
+
+int ImageArt::GetHue() const
+{
+	return m_iHue;
+}
 
 
-        SAFE_DELETE( texture );
+void ImageArt::Draw( GumpHandler *kGumps )
+{
+	Control::Draw( kGumps );
 
-        //if (texid >= 16384) 
+	m_kTexture = TextureBuffer::GetInstance()->GetArtTexture( m_iTextId + 16384 );
 
-        //    texture = TextureBuffer::GetInstance()->GetArtTexture(texid);
-        //texture = ArtLoader::GetInstance()->LoadArt(texid + 16384, true, false, 0);
-//    else
-
-        //    texture = TextureBuffer::GetInstance()->GetGroundTexture(texid);
-
-        texture = TextureBuffer::GetInstance()->GetArtTexture (texid + 16384);
-
-        if (texture)
-            {
-//Logger::WriteLine("TEXTURE OK");
-              if ((!GetWidth ()) || (!GetHeight ()))
-                  {             //Logger::WriteLine("TEXTURE RESIZE OK");
-                    SetSize (texture->GetRealWidth (),
-                             texture->GetRealHeight ());
-                  }
-              //DrawRect(10, 10, texture->GetWidth(), texture->GetHeight(), texture, 250, true);
-              //DrawRect(GetX(), GetY(), GetWidth(), GetHeight(), texture, GetAlpha(), true);
-              if (m_hue != 0)
-                DrawRectHued (GetX (), GetY (), texture->GetWidth (),
-                              texture->GetHeight (), texture, m_hue,
-                              GetAlpha (), true);
-              else
-                DrawRect (GetX (), GetY (), texture->GetWidth (),
-                          texture->GetHeight (), texture, GetAlpha (), true);
-            }
-
+	if ( m_kTexture )
+	{
+		m_vTextures.push_back( m_kTexture );
+		if ( !GetWidth() || !GetHeight() )
+		{
+			SetSize( m_kTexture->GetRealWidth(), m_kTexture->GetRealHeight() );
+		}
+		// DrawRect(10, 10, texture->GetWidth(), texture->GetHeight(), texture, 250, true);
+		// DrawRect(GetX(), GetY(), GetWidth(), GetHeight(), texture, GetAlpha(), true);
+		if ( m_iHue != 0 )
+		{
+			DrawRectHued( GetX(), GetY(), m_kTexture->GetWidth(), m_kTexture->GetHeight(), 
+				m_kTexture, m_iHue, GetAlpha(), true );
+		}
+		else
+		{
+			DrawRect( GetX(), GetY(), m_kTexture->GetWidth(), m_kTexture->GetHeight(), m_kTexture, GetAlpha(), true );
+		}
+	}
 }

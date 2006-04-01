@@ -1,6 +1,11 @@
 01.04.2006
+Changes by Nuno Ramiro
+	- Fixed: Crash bug (ImageArt).
+	- Refactoring: ImageArt & Container.
+
+01.04.2006
 Changes by Florian Fischer (SiENcE)
-	- Fixed: Soundbug fixed (now you can play soundeffects independet from music
+	- Fixed: Soundbug fixed (now you can play soundeffects independent from music)
 	- Added: check if sound is enabled, otherwise Iris crashes if sound is off and server sends sound packet
 	- Needs Fixing: if mp3 is 0 midi should be played -> don't work!
 	- Added: displaying of Elf Paperdolls

@@ -129,7 +129,7 @@ namespace XML
 		bool lookupAttribute( const std::string &name, int &data ) const;
 		bool lookupAttribute( const std::string &name, std::string &data ) const;
 
-		unsigned int getNodeCount() const { return nodes.size(); }
+		unsigned int getNodeCount() const { return (unsigned int)nodes.size(); }
 		Node *getNode( unsigned int index ) const;
 		unsigned int getTotalNodeCount() const;
 		
