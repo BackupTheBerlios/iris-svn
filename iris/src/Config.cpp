@@ -45,8 +45,6 @@ Config::m_iClientKey = 1, Config::m_iMusic = 1, Config::m_iSound = 1, Config::m_
 Config::m_iChunkSize = 1024, Config::m_iMusicVolume = 60, Config::m_iSoundVolume = 80, Config::m_iMP3 = 1,
 Config::m_iFootSteps = 0, Config::m_iMouseMotionTimer = 500;
 
-std::vector<FontInfo> Config::m_vFonts;
-
 
 #ifdef _DEBUG
 Config::Config()
@@ -184,36 +182,36 @@ bool Config::Init()
 	{
 		int idx = 0;
 		XML::Node *kFontNode = NULL;
-		FontInfo kFont;
+		FontInfo kFontInfo;
 
 		while ( ( kFontNode = kFontSet->findNode( "FONT", idx++ ) ) )
 		{
-			if ( !kFontNode->lookupAttribute( "ID", kFont.iId ) )
+			if ( !kFontNode->lookupAttribute( "ID", kFontInfo.iId ) )
 			{
 				continue;
 			}
 
-			if ( !kFontNode->lookupAttribute( "FILE", kFont.sFile ) )
+			if ( !kFontNode->lookupAttribute( "FILE", kFontInfo.sFileName ) )
 			{
 				continue;
 			}
 
-			if ( !kFontNode->lookupAttribute( "NAME", kFont.sName ) )
+			if ( !kFontNode->lookupAttribute( "NAME", kFontInfo.sFontName ) )
 			{
 				continue;
 			}
 
-			if ( !kFontNode->lookupAttribute( "SIZE", kFont.iSize ) )
+			if ( !kFontNode->lookupAttribute( "SIZE", kFontInfo.iSize ) )
 			{
 				continue;
 			}
 
-			if ( !kFontNode->lookupAttribute( "HUE",  kFont.iHue ) )
+			if ( !kFontNode->lookupAttribute( "HUE",  kFontInfo.iHue ) )
 			{
 				continue;
 			}
 
-			m_vFonts.push_back( kFont );
+			FontManager::GetInstance()->AddTTFFont( kFontInfo.iId, kFontInfo.sFileName, kFontInfo.sFontName, kFontInfo.iSize, kFontInfo.iHue );
 		}
 	}
 
@@ -275,28 +273,25 @@ bool Config::Init()
 }
 
 
-bool Config::RegisterFonts()
-{
-	if ( !SDLScreen::GetInstance() )
-	{
-		return false;
-	}
-
-	for ( unsigned int i = 0; i < m_vFonts.size(); i++ )
-	{
-		const FontInfo &kFont = m_vFonts[i];
-		SDLScreen::GetInstance()->RegisterFont( kFont.iId, kFont.sFile, kFont.iSize, kFont.iHue );
-	}
-
-	return true;
-}
+//bool Config::RegisterFonts()
+//{
+//	if ( !SDLScreen::GetInstance() )
+//	{
+//		return false;
+//	}
+//
+//	for ( unsigned int i = 0; i < m_vFonts.size(); i++ )
+//	{
+//		const FontInfo &kFont = m_vFonts[i];
+//		SDLScreen::GetInstance()->RegisterFont( kFont.iId, kFont.sFileName, kFont.iSize, kFont.iHue );
+//	}
+//
+//	return true;
+//}
 
 
 void Config::Close()
 {
-	m_vFonts.clear();
-	m_vFonts.empty();
-
 	m_vParserInfo.clear();
 	m_vParserInfo.empty();
 }

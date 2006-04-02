@@ -62,15 +62,9 @@ public:
 
 	void SetAlpha( Uint8 alpha, bool force = false);
 	void SetHue( Uint16 hue = 0 );
-  
-	void ClearFonts();
-	void RegisterFont( Uint32 id, std::string filename, Uint32 size, Uint16 defaulthue = 0 );
-	void UnregisterFont( Uint32 id );
-	TTF_Font *GetFont( Uint32 id );
 
 	Uint16 GetDefaultHue( Uint32 id );
 
-	void SetLight( float factor );
 
 public:
 	SDL_Surface *m_kScreen;

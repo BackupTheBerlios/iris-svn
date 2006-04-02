@@ -25,55 +25,54 @@
 
 #include "Control.h"
 #include "Logger.h"
-
-// #include "../Fluid/mmgr.h"
+#include <map>
 
 
 class Container : public Control
 {
 public:
 	Container();
-	~Container();
+	virtual ~Container();
 
 	virtual void Draw( GumpHandler *kGumps );
 	virtual int HandleMessage( gui_message *kMsg );
 
 	void ClearControls();
-	
+
 	void AddControl( Control *kControl );
 	void AddControl( Control *kControl, int iPage );
-	
+
 	Control *GetControl( int iControlId );
-	Control *GetNext();
 	ControlList_t *GetControlList();
+	Control *GetNext();
 	int GetCurrentPage() const;
 	int GetPlayerID() const;
 	int GetGumpID() const;
 
 	void SetCurrentPage( int iCurrentPage );
 	void SetFocus( int iControlId );
+	virtual void SetAlpha( unsigned char ucAlpha );
+	void SetShape( int iControlId );
 	void SetGumpID( int iId );
 	void SetPlayerID( int iId );
-	void SetShape( int iControlId );
-	virtual void SetAlpha( unsigned char ucAlpha );
 
 	void Rewind();
 
 	virtual bool CheckPixel( int iX, int iY );
 
-	virtual Uint32 FindDragContainer( int iX, int iY, int *iDropX, int *iDropY, Uint32 *uiCharId );
+	virtual Uint32 FindDragContainer( int iX, int iY, int *DropX, int *DropY, Uint32 *uiCharId );
 	//Control* RemoveControl(int controlid);
 	//Control* RemoveControl(Control *control);
 
 private:
-	ControlList_t kControlList;
-	int iIdCounter;
-	int iSearchIndex;
-	int iFocusId;
-	int iCurrentPage;
-	int iShapeId;
-	int iGumpId;
-	int iPlayerId;
+	ControlList_t control_root;
+	int idcounter;
+	int search_index;
+	int focusid;
+	int current_page;
+	int shape_id;
+	int gump_id;
+	int pl_id;   
 
 private:
 	int SendMessageToItems( gui_message *kMsg );

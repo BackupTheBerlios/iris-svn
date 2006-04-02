@@ -37,6 +37,7 @@
 #include "xml.h"
 #include "Exception.h"
 #include "renderer/SDLScreen.h"
+#include "FontManager.h"
 
 // #include "../Fluid/mmgr.h"
 
@@ -52,19 +53,6 @@ struct ParserData
 	std::string sName;
 	int iType;
 	void *pData;
-};
-
-
-/*
-* Our Font information structure.
-*/
-struct FontInfo
-{
-	int iId;
-	std::string sFile;
-	std::string sName;
-	int iSize;
-	int iHue;
 };
 
 
@@ -92,7 +80,7 @@ public:
 	/// Initializes/Gets values from xml, MUST be initialized before using otherwise you might get weird values.
 	static bool Init();
 	/// Registers needed fonts
-	static bool RegisterFonts();
+	//static bool RegisterFonts();
 	/// Deletes everything Config related
 	static void Close();
 
@@ -283,9 +271,6 @@ protected:
 	// Iris Client
 	static std::string m_sScriptPath;
 	static int m_iMouseMotionTimer;
-
-	// Font vector
-	static std::vector<FontInfo> m_vFonts;
 };
 
 #endif

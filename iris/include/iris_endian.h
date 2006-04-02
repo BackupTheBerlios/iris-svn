@@ -16,8 +16,8 @@
  *
  *****/
 
-#ifndef __IRIS_ENDIAN_H
-#define __IRIS_ENDIAN_H
+#ifndef _IRIS_ENDIAN_H_
+#define _IRIS_ENDIAN_H_
 
 #include "SDL/SDL_endian.h"
 //#include "Game.h"

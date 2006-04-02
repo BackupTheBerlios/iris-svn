@@ -34,7 +34,7 @@ InputField::InputField ( int x, int y, unsigned int width, unsigned int height, 
 	}
 	else
 	{
-		const stFont *pFont = pFontLoader.getFont( font );
+		const stFont *pFont = FontManager::GetInstance()->GetMulFont( font );
 
 		if ( pFont )
 		{
@@ -133,7 +133,7 @@ void InputField::regenerate ()
       }
 
 
-  const stFont *font = pFontLoader.getFont (_font);
+  const stFont *font = FontManager::GetInstance()->GetMulFont( _font );
 
   if (!font)
     return;
@@ -232,7 +232,7 @@ void InputField::Draw (GumpHandler * gumps)
     return;
 
   // Three levels of Height (First Row = y, Second Row = y + HeightOfBackground(), Third Row + y + HeightOfBackground() + HeightOfFont())
-  const stFont *font = pFontLoader.getFont (_font);
+  const stFont *font = FontManager::GetInstance()->GetMulFont( _font );
 
   if (!font)
     return;

@@ -19,7 +19,6 @@
 
 // Iris Includes
 #include "gui/TextManager.h"
-#include "loaders/FontLoader.h"
 #include "loaders/HueLoader.h"
 #include "renderer/Texture.h"
 #include "renderer/SDLScreen.h"
@@ -64,7 +63,7 @@ void cTextElement::setText( const char *text, unsigned short hueId, unsigned sho
 		p = NULL;
 	}
 
-	TTF_Font *ttf_font = SDLScreen::GetInstance()->GetFont( fontId );
+	TTF_Font *ttf_font = FontManager::GetInstance()->GetTTFFont( fontId );
 	
 	if ( ttf_font )
 	{
@@ -91,7 +90,7 @@ void cTextElement::setText( const char *text, unsigned short hueId, unsigned sho
 	unsigned int i = 0;
 
 	// Calculate the Width of the whole text first
-	const stFont *font = pFontLoader.getFont( fontId );
+	const stFont *font = FontManager::GetInstance()->GetMulFont( fontId );
 
 	// Simply don't render
 	if ( !font )
@@ -345,14 +344,14 @@ void cTextManager::draw ()
 unsigned char cTextManager::getTextHeight (const char *text,
                                            unsigned short fontId)
 {
-	TTF_Font *ttf_font = SDLScreen::GetInstance()->GetFont (fontId);
+	TTF_Font *ttf_font = FontManager::GetInstance()->GetTTFFont (fontId);
   if (ttf_font)
       {
         return getTextHeightTTF (text, ttf_font);
       }
 
   // Calculate the Width of the whole text first
-  const stFont *font = pFontLoader.getFont (fontId);
+  const stFont *font = FontManager::GetInstance()->GetMulFont( fontId );
 
   // Simply don't render
   if (!font)
@@ -381,14 +380,14 @@ unsigned int cTextManager::getTextWidth (const char *text,
                                          unsigned short fontId)
 {
 
-	TTF_Font *ttf_font = SDLScreen::GetInstance()->GetFont (fontId);
+	TTF_Font *ttf_font = FontManager::GetInstance()->GetTTFFont (fontId);
   if (ttf_font)
       {
         return getTextWidthTTF (text, ttf_font);
       }
 
   // Calculate the Width of the whole text first
-  const stFont *font = pFontLoader.getFont (fontId);
+  const stFont *font = FontManager::GetInstance()->GetMulFont( fontId );
 
   // Simply don't render
   if (!font)

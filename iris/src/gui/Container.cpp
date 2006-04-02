@@ -23,14 +23,18 @@
 #include "gui/Container.h"
 
 
-Container::Container() : iIdCounter( 1 ), iSearchIndex( 0 ), iFocusId( 0 ), iCurrentPage( 0 ), iShapeId( 0 )
+Container::Container()
 {
 	Control::Control();
+	idcounter = 1;
+	search_index = 0;
+	focusid = 0;
+	current_page = 0;
+	shape_id = 0;
 	control_type = CONTROLTYPE_CONTAINER;
 }
 
-
-Container::~Container()
+Container::~Container ()
 {
 	ClearControls();
 }
@@ -40,12 +44,12 @@ void Container::Draw( GumpHandler *kGumps )
 {
 	Control::Draw( kGumps );
 	glPushMatrix();
-	glTranslatef( (GLfloat)GetX(), (GLfloat)-GetY(), 0.0 );
+	glTranslatef( GetX(), -GetY(), 0.0 );
 
 	ControlList_t::iterator iter;
-	for ( iter = kControlList.begin(); iter != kControlList.end(); iter++ )
+	for ( iter = control_root.begin(); iter != control_root.end(); iter++ )
 	{
-		if ( iter->second->GetPage() == iCurrentPage || iter->second->GetPage() == 0 )
+		if ( iter->second->GetPage() == current_page || iter->second->GetPage() == 0 )
 		{
 			iter->second->Draw( kGumps );
 		}
@@ -112,23 +116,24 @@ int Container::HandleMessage( gui_message *kMsg )
 void Container::ClearControls()
 {
 	ControlList_t::iterator iter;
-	for ( iter = kControlList.begin(); iter != kControlList.end(); iter++ )
+	for ( iter = control_root.begin(); iter != control_root.end(); iter++ )
 	{
 		iter->second->DoOnClose();
 		SAFE_DELETE( (*iter).second );
 	}
 
-	kControlList.clear();
+	control_root.clear();
 }
 
 
 void Container::AddControl( Control *kControl )
 {
-	kControl->SetID( iIdCounter | ( GetID() << 16 ) );
+	kControl->SetID( idcounter | (GetID() << 16) );
 	kControl->SetParent( this );
-	kControlList.insert( std::make_pair( (Uint32)iIdCounter | ( GetID() << 16 ), kControl ) );
-	iIdCounter++;
+	control_root.insert( std::make_pair( (Uint32)idcounter | (GetID() << 16), kControl) );
+	idcounter++;
 }
+
 
 void Container::AddControl( Control *kControl, int iPage )
 {
@@ -140,97 +145,76 @@ void Container::AddControl( Control *kControl, int iPage )
 Control *Container::GetControl( int iControlId )
 {
 	ControlList_t::iterator iter;
-
-	iter = kControlList.find( (Uint32)iControlId );
-	if ( iter == kControlList.end() )
+	iter = control_root.find( (Uint32)iControlId );
+	if ( iter == control_root.end() )
 	{
 		return NULL;
 	}
-	
 	return (*iter).second;
+}
+
+
+ControlList_t *Container::GetControlList()
+{
+	return &control_root;
 }
 
 
 Control *Container::GetNext()
 {
 	ControlList_t::iterator iter;
-	if ( (iSearchIndex >= 0) && ((unsigned int)iSearchIndex < kControlList.size()) )
+
+	if ( (search_index >= 0) && ((unsigned int)search_index < control_root.size()) )
 	{
-		unsigned int i = iSearchIndex;
-		iSearchIndex++;
-		for ( iter = kControlList.begin(); (iter != kControlList.end()) && (i > 0); iter++ )
+		unsigned int i = search_index;
+		search_index++;
+		for ( iter = control_root.begin(); (iter != control_root.end()) && (i > 0); iter++ )
 		{
 			i--;
 		}
-		if ( iter != kControlList.end() )
+		if ( iter != control_root.end() )
 		{
 			return iter->second;
 		}
 	}
-
 	return NULL;
-}
-
-
-ControlList_t *Container::GetControlList()
-{
-	return &kControlList;
 }
 
 
 int Container::GetCurrentPage() const
 {
-	return iCurrentPage;
+	return current_page;
 }
 
 
 int Container::GetPlayerID() const
 {
-	return iPlayerId;
+	return pl_id;
 }
 
 
 int Container::GetGumpID() const
 {
-	return iGumpId;
+	return gump_id;
 }
 
 
 void Container::SetCurrentPage( int iCurrentPage )
 {
-	iCurrentPage = iCurrentPage;
+	current_page = iCurrentPage;
 }
 
 
 void Container::SetFocus( int iControlId )
 {
-	ReleaseFocus( iFocusId );
+	ReleaseFocus( focusid );
 	Control *control = GetControl( iControlId );
-
 	if ( !control )
 	{
 		return;
 	}
 	control->SetFocus( true );
-	iFocusId = iControlId;
-}
-
-
-void Container::SetGumpID( int iId )
-{
-	iGumpId = iId;
-}
-
-
-void Container::SetPlayerID( int iId )
-{
-	iPlayerId = iId;
-}
-
-
-void Container::SetShape( int iControlId )
-{
-	iShapeId = iControlId;
+	focusid = iControlId;
 }
 
 
@@ -238,24 +222,42 @@ void Container::SetAlpha( unsigned char ucAlpha )
 {
 	Control::SetAlpha( ucAlpha );
 	ControlList_t::iterator iter;
-	for ( iter = kControlList.begin(); iter != kControlList.end(); iter++ )
+	for ( iter = control_root.begin(); iter != control_root.end(); iter++ )
 	{
 		iter->second->SetAlpha( ucAlpha );
 	}
 }
 
 
+void Container::SetShape( int iControlId )
+{
+	shape_id = iControlId;
+}
+
+
+void Container::SetGumpID( int iId )
+{
+	gump_id = iId;
+}
+
+
+void Container::SetPlayerID( int iId )
+{
+	pl_id = iId;
+}
+
+
 void Container::Rewind()
 {
-	iSearchIndex = 0;
+	search_index = 0;
 }
 
 
 bool Container::CheckPixel( int iX, int iY )
 {
-	if ( iShapeId )
+	if ( shape_id )
 	{
-		Control *control = GetControl( iShapeId );
+		Control *control = GetControl( shape_id );
 		if ( control )
 		{
 			return control->CheckPixel( iX, iY );
@@ -265,20 +267,18 @@ bool Container::CheckPixel( int iX, int iY )
 }
 
 
-Uint32 Container::FindDragContainer( int iX, int iY, int *iDropX, int *iDropY, Uint32 *uiCharId )
+Uint32 Container::FindDragContainer( int iX, int iY, int *DropX, int *DropY, Uint32 *uiCharId )
 {
-	iX -= GetX();
-	iY -= GetY();
-	
+	x -= GetX();
+	y -= GetY();
 	ControlList_t::reverse_iterator iter;
-	for ( iter = kControlList.rbegin(); iter != kControlList.rend(); iter++ )
+	for ( iter = control_root.rbegin(); iter != control_root.rend(); iter++ )
 	{
 		if ( iter->second->MouseIsOver( iX, iY ) )
 		{
-			return iter->second->FindDragContainer( iX, iY, iDropX, iDropY, uiCharId );
+			return iter->second->FindDragContainer( iX, iY, DropX, DropY, uiCharId );
 		}
 	}
-
 	return 0;
 }
 
@@ -286,10 +286,9 @@ Uint32 Container::FindDragContainer( int iX, int iY, int *iDropX, int *iDropY, U
 int Container::SendMessageToItems( gui_message *kMsg )
 {
 	ControlList_t::reverse_iterator iter;
-	for ( iter = kControlList.rbegin(); iter != kControlList.rend(); iter++ )
+	for ( iter = control_root.rbegin(); iter != control_root.rend(); iter++ )
 	{
-		if ( ( iter->second->GetPage() == iCurrentPage ) 
-			|| ( iter->second->GetPage() == 0 ) )
+		if ( (iter->second->GetPage () == current_page) || (iter->second->GetPage() == 0) )
 		{
 			if ( iter->second->HandleMessage( kMsg ) )
 			{
@@ -306,41 +305,41 @@ void Container::ReleaseFocus( int iControlId )
 {
 	Control *control = GetControl( iControlId );
 
-	if ( control )
+	if (control)
 	{
 		control->SetFocus( false );
 	}
-	if ( iControlId == iFocusId )
+	if ( iControlId == focusid )
 	{
-		iFocusId = 0;
+		focusid = 0;
 	}
 }
 
 
 void Container::HandleMessageQueues()
 {
-	MessageStack kMessageStack;
-	gui_message kMsg;
+	MessageStack cont_stack;
+	gui_message msg;
 
 	ControlList_t::iterator iter;
-	for ( iter = kControlList.begin(); iter != kControlList.end(); iter++ )
+	for ( iter = control_root.begin(); iter != control_root.end(); iter++ )
 	{
-		while ( iter->second->stack.Pop( &kMsg ) )
+		while ( iter->second->stack.Pop( &msg ) )
 		{
-			kMessageStack.Push( kMsg );
+			cont_stack.Push( msg );
 		}
 	}
 
-	while ( kMessageStack.Pop( &kMsg ) )
+	while ( cont_stack.Pop( &msg ) )
 	{
-		switch ( kMsg.type )
+		switch ( msg.type )
 		{
 		case MESSAGE_SETFOCUS:
-			SetFocus( kMsg.windowaction.controlid );
+			SetFocus( msg.windowaction.controlid );
 			break;
 
 		case MESSAGE_RELEASEFOCUS:
-			ReleaseFocus( kMsg.windowaction.controlid );
+			ReleaseFocus( msg.windowaction.controlid );
 			break;
 
 		case MESSAGE_QUIT:
@@ -349,7 +348,7 @@ void Container::HandleMessageQueues()
 		case MESSAGE_ONCLICKITEM:
 		case MESSAGE_REFRESHREQUEST:
 		case MESSAGE_CALLBACK:
-			stack.Push( kMsg );
+			stack.Push( msg );
 			break;
 		}
 	}

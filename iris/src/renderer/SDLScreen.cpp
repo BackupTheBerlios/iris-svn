@@ -69,8 +69,6 @@ SDLScreen::~SDLScreen()
 		m_kScreen = NULL;
 	}
 
-	ClearFonts();
-	TTF_Quit();
 	SDL_QuitSubSystem( SDL_INIT_VIDEO );
 }
 
@@ -141,11 +139,6 @@ int SDLScreen::Init( int width, int height, int bpp )
 	{
 		std::cerr << "Setting keyboard repeat failed: " << SDL_GetError () << std::endl;
 		exit (1);
-	}
-
-	if ( TTF_Init() < 0 )
-	{
-		std::cerr << "TTF Initialisation failed: " << SDL_GetError () << std::endl;
 	}
 
 	SDL_EnableUNICODE( 1 );
@@ -324,7 +317,7 @@ void SDLScreen::DisplayFps()
 		SDL_WM_SetCaption( strFrameRate, NULL ); // The First argument is the window title
 		// Reset the frames per second
 		framesPerSecond = 0;
-	};
+	}
 }
 
 
@@ -486,94 +479,6 @@ void SDLScreen::SetHue( Uint16 hue )
 	glMaterialfv( GL_FRONT, GL_AMBIENT, hue_ambient );
 	glMaterialfv( GL_FRONT, GL_DIFFUSE, hue_diffuse );
 */
-}
-
-
-void SDLScreen::SetLight( float factor )
-{
-/*
-	GLfloat light[4];
-	int i;
-	for ( i = 0; i < 3; i++ )
-	{
-		light [i] = LightAmbient[i] * factor;
-	}
-	
-	light[3] = 1.0f;
-
-	glLightfv( GL_LIGHT0, GL_AMBIENT, light );
-	light_factor = factor * 1.5f;
-	light_factor += Config::GetBrightness() * 0.1f;
-	
-	if (light_factor > 1.5f)
-	{
-		light_factor = 1.5f;
-	}
-
-	for ( i = 0; i < 3; i++ )
-	{
-		fade_specular[i] = mat_specular[i] * light_factor;
-		fade_ambient[i] = mat_ambient[i] * light_factor;
-		fade_diffuse[i] = mat_diffuse[i] * light_factor;
-	}
-	SetAlpha( act_alpha, true );
-*/
-}
-
-
-void SDLScreen::ClearFonts()
-{
-	for ( std::map<Uint32, TTF_Font *>::iterator iter = fonts.begin(); iter != fonts.end(); iter++ )
-	{
-		TTF_CloseFont( iter->second );
-	}
-
-	fonts.clear();
-}
-
-
-void SDLScreen::RegisterFont( Uint32 id, std::string filename, Uint32 size, Uint16 defaulthue )
-{
-	UnregisterFont( id );
-	TTF_Font *font = TTF_OpenFont( filename.c_str(), size );
-	
-	if ( !font )
-	{
-		std::cerr << "TTF Load failed: " << SDL_GetError() << std::endl;
-		return;
-	}
-	fonts.insert( std::make_pair( id, font ) );
-
-	default_hues.erase( id );
-	if ( defaulthue )
-	{
-		default_hues.insert( std::make_pair( id, defaulthue ) );
-	}
-}
-
-
-void SDLScreen::UnregisterFont( Uint32 id )
-{
-	std::map<Uint32, TTF_Font *>::iterator iter;
-	iter = fonts.find( id );
-
-	if ( iter != fonts.end() )
-	{
-		TTF_CloseFont( iter->second );
-		fonts.erase( iter );
-	}
-}
-
-
-TTF_Font *SDLScreen::GetFont (Uint32 id)
-{
-	std::map<Uint32, TTF_Font *>::iterator iter;
-	iter = fonts.find( id );
-
-	if ( iter != fonts.end() )
-		return iter->second;
-    
-	return NULL;
 }
 
 

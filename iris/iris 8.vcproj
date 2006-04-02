@@ -217,6 +217,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\Font.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\FontManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Game.cpp"
 				>
 			</File>
@@ -284,6 +292,14 @@
 			</File>
 			<File
 				RelativePath=".\include\Engine.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\Font.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\FontManager.h"
 				>
 			</File>
 			<File
@@ -1002,14 +1018,6 @@
 			</File>
 			<File
 				RelativePath=".\include\loaders\ClilocLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\loaders\FontLoader.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\include\loaders\FontLoader.h"
 				>
 			</File>
 			<File

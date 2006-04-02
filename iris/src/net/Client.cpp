@@ -1144,7 +1144,7 @@ void cClient::Act_Speak( cPacket *packet )
 		callback_OnSpeech( msg, name, (Uint32)packet->packet.Speak.m_id, color );
 	}
 
-	// SAFE_DELETE( msg );
+	SAFE_DELETE_ARRAY( msg );
 }
 
 void cClient::Act_SpeakUnicode (cPacket * packet)

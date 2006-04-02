@@ -35,6 +35,7 @@
 #include "Common.h"
 #include "SDL/SDL.h"
 #include "Macros.h"
+#include "FontManager.h"
 
 #include "renderer/Renderer.h"
 #include "renderer/DynamicObjects.h"
@@ -53,7 +54,6 @@
 #include "loaders/UOMap.h"
 #include "loaders/GroundTextures.h"
 #include "loaders/GumpLoader.h"
-#include "loaders/FontLoader.h"
 #include "loaders/HueLoader.h"
 #include "loaders/SkillLoader.h"
 #include "loaders/TileDataLoader.h"

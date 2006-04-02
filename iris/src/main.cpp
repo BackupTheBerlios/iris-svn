@@ -38,6 +38,7 @@
 #include "csl/CSLHandler.h"
 #include "sound/SoundMixer.h"
 #include "sound/MusicListLoader.h"
+#include "FontManager.h"
 
 // #include "Engine.h"
 
@@ -69,12 +70,8 @@ int main( int argc, char **args )
 
 	try
 	{
-		// Try to load config file
-		if ( !Config::Init() )
-		{
-			Logger::WriteLine( "\t| ->Unable to load configuration file - Using defaults ",
-				__FILE__, __LINE__, LEVEL_WARNING );
-        }
+		// Initialize the Font System
+		FontManager *kFontManager = new FontManager();
 
 		// Initialize SDL
 		if ( SDL_Init( 0 ) == -1 )
@@ -88,6 +85,13 @@ int main( int argc, char **args )
 			Logger::WriteLine( "| -> Could not initialize SDLNet: " + std::string( SDL_GetError() ) );
 		}
 
+		// Try to load config file
+		if ( !Config::Init() )
+		{
+			Logger::WriteLine( "\t| ->Unable to load configuration file - Using defaults ",
+				__FILE__, __LINE__, LEVEL_WARNING );
+		}
+
 		/*
 		 * FIXME: do this after all heavy loading
 		 */
@@ -96,8 +100,6 @@ int main( int argc, char **args )
 		// Initialize Input(SDL) Event
 		SDLEvent *SDLevent = new SDLEvent();
  
-		Config::RegisterFonts();
-
 		// Initialize SDL_music
 		SoundMix *pSoundMix;
 		if ( Config::GetMusic() || Config::GetSound() )
@@ -165,6 +167,7 @@ int main( int argc, char **args )
 		pCSLHandler.DeInit();
 		pUOGUI.DeInit();
 
+		SAFE_DELETE( kFontManager );
 		SAFE_DELETE( SDLevent );
 		SAFE_DELETE( pSoundMix );
 	}
@@ -184,13 +187,13 @@ int main( int argc, char **args )
 	SAFE_DELETE( SDLscreen );
 	SAFE_DELETE( pMusicListLoader );
 
-	SDLNet_Quit();
-	SDL_Quit();
-
 	SAFE_DELETE( pGame );
 
 	Config::Close();
 	Logger::Close();
+
+	SDLNet_Quit();
+	SDL_Quit();
 
 	return 0;
 }

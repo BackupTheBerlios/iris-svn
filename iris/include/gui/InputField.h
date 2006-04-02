@@ -22,7 +22,6 @@
 #include "Common.h"
 #include <string>
 #include "gui/TextManager.h"
-#include "loaders/FontLoader.h"
 #include "Control.h"
 
 // #include "../Fluid/mmgr.h"

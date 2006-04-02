@@ -410,7 +410,6 @@ void Renderer3D::RenderScene( void )
 
 	SDLScreen::GetInstance()->ClearScreen();
 
-	// SDLScreen::GetInstance()->SetLight( m_lightlevel );
 	glDisable( GL_LIGHTING );
 
 

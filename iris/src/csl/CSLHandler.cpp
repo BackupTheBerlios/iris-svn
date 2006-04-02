@@ -2727,19 +2727,24 @@ static ZString api_font_register (ZCsl * aCsl)
   if (argCount == 4)
     defaulthue = aCsl->get ("defaulthue").asInt ();
 
-  if (SDLScreen::GetInstance())
-	  SDLScreen::GetInstance()->RegisterFont (aCsl->get ("id").asInt (),
-                             aCsl->get ("filename").buffer (),
-                             aCsl->get ("size").asInt (), defaulthue);
+	FontManager::GetInstance()->AddTTFFont( aCsl->get( "id" ).asInt(), aCsl->get( "filename" ).buffer(),
+		aCsl->get( "filename" ).buffer(), aCsl->get( "size" ).asInt(), defaulthue );
+  //if (SDLScreen::GetInstance())
+	 // SDLScreen::GetInstance()->RegisterFont (aCsl->get ("id").asInt (),
+  //                           aCsl->get ("filename").buffer (),
+  //                           aCsl->get ("size").asInt (), defaulthue);
 
   return "0";
 }
 
 static ZString api_font_unregister (ZCsl * aCsl)
 {
+	FontManager::GetInstance()->UnregisterTTFFont( aCsl->get( "id" ).asInt() );
+	// Disabled / Deprecated
+	/*
 	if (SDLScreen::GetInstance())
 		SDLScreen::GetInstance()->UnregisterFont (aCsl->get ("id").asInt ());
-
+*/
   return "0";
 }
 

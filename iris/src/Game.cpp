@@ -223,7 +223,7 @@ void Game::InitRenderer( std::string sMulPath )
 
 	//Profiler::Begin( "Fonts" );
 	Logger::WriteLine( "\t| -> fonts" );
-	pFontLoader.Init( sMulPath + "fonts.mul" );
+	FontManager::GetInstance()->AddMulFont( sMulPath + "fonts.mul" );
 	//Profiler::End();
 
 	//Profiler::Begin( "Hues" );
@@ -346,9 +346,6 @@ void Game::DeInitRenderer( void )
 
 	Logger::WriteLine( "\t| -> Art Loader" );
 	SAFE_DELETE( m_kArtLoader );
-
-	Logger::WriteLine( "\t| -> fonts" );
-	pFontLoader.DeInit();
 
 	Logger::WriteLine( "\t| -> hues" );
 	pHueLoader.DeInit();
