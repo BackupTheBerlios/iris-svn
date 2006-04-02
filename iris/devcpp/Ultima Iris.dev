@@ -1,7 +1,7 @@
 [Project]
 FileName=Ultima Iris.dev
 Name=Ultima Iris
-UnitCount=133
+UnitCount=134
 Type=1
 Ver=1
 ObjFiles=
@@ -25,7 +25,7 @@ CommandLine=
 IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000001001001000000000
+CompilerSettings=00000010010010000000c1
 UseCustomMakefile=0
 CustomMakefile=
 
@@ -460,16 +460,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit44]
-FileName=..\src\loaders\FontLoader.cpp
-CompileCpp=1
-Folder=loaders
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit45]
 FileName=..\src\loaders\GroundTextures.cpp
 CompileCpp=1
 Folder=loaders
@@ -479,7 +469,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit46]
+[Unit45]
 FileName=..\src\loaders\GumpLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -489,7 +479,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit47]
+[Unit46]
 FileName=..\src\loaders\HueLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -499,7 +489,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit48]
+[Unit47]
 FileName=..\src\loaders\PaperdollBuilder.cpp
 CompileCpp=1
 Folder=loaders
@@ -509,7 +499,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit49]
+[Unit48]
 FileName=..\src\loaders\SkillLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -519,8 +509,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit51]
-FileName=..\src\loaders\StaticModelLoader.cpp
+[Unit49]
+FileName=..\src\loaders\SoundLoader.cpp
 CompileCpp=1
 Folder=loaders
 Compile=1
@@ -529,7 +519,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit52]
+[Unit51]
 FileName=..\src\loaders\StaticModels.cpp
 CompileCpp=1
 Folder=loaders
@@ -539,7 +529,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit53]
+[Unit52]
 FileName=..\src\loaders\StaticTextureLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -549,7 +539,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit54]
+[Unit53]
 FileName=..\src\loaders\StitchinLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -559,7 +549,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit55]
+[Unit54]
 FileName=..\src\loaders\StreamLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -569,7 +559,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit56]
+[Unit55]
 FileName=..\src\loaders\TileDataBuffer.cpp
 CompileCpp=1
 Folder=loaders
@@ -579,7 +569,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit57]
+[Unit56]
 FileName=..\src\loaders\TileDataLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -589,7 +579,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit58]
+[Unit57]
 FileName=..\src\loaders\UOMap.cpp
 CompileCpp=1
 Folder=loaders
@@ -599,7 +589,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit59]
+[Unit58]
 FileName=..\src\loaders\VerdataLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -609,8 +599,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit61]
-FileName=..\src\net\Packet.cpp
+[Unit59]
+FileName=..\src\net\Client.cpp
 CompileCpp=1
 Folder=net
 Compile=1
@@ -619,7 +609,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit62]
+[Unit61]
 FileName=..\src\net\unicode.cpp
 CompileCpp=1
 Folder=net
@@ -629,7 +619,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit63]
+[Unit62]
 FileName=..\src\net\uo_huffman.cpp
 CompileCpp=1
 Folder=net
@@ -639,7 +629,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit64]
+[Unit63]
 FileName=..\src\renderer\Bitmask.cpp
 CompileCpp=1
 Folder=renderer
@@ -649,7 +639,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit65]
+[Unit64]
 FileName=..\src\renderer\Camera.cpp
 CompileCpp=1
 Folder=renderer
@@ -659,8 +649,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit65]
+FileName=..\src\renderer\Characters.cpp
+CompileCpp=1
+Folder=renderer
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit67]
-FileName=..\src\renderer\DynamicObjects.cpp
+FileName=..\src\renderer\Fade.cpp
 CompileCpp=1
 Folder=renderer
 Compile=1
@@ -670,16 +670,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit69]
-FileName=..\src\renderer\MapBlock.cpp
-CompileCpp=1
-Folder=renderer
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit70]
 FileName=..\src\renderer\MapBuffer.cpp
 CompileCpp=1
 Folder=renderer
@@ -689,7 +679,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit71]
+[Unit70]
 FileName=..\src\renderer\Renderer.cpp
 CompileCpp=1
 Folder=renderer
@@ -699,7 +689,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit72]
+[Unit71]
 FileName=..\src\renderer\SDLScreen.cpp
 CompileCpp=1
 Folder=renderer
@@ -709,7 +699,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit73]
+[Unit72]
 FileName=..\src\renderer\StaticObjects.cpp
 CompileCpp=1
 Folder=renderer
@@ -719,7 +709,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit74]
+[Unit73]
 FileName=..\src\renderer\Texture.cpp
 CompileCpp=1
 Folder=renderer
@@ -729,7 +719,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit75]
+[Unit74]
 FileName=..\src\renderer\TextureBuffer.cpp
 CompileCpp=1
 Folder=renderer
@@ -739,7 +729,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit76]
+[Unit75]
 FileName=..\src\renderer\3D\CharacterLight.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -749,7 +739,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit77]
+[Unit76]
 FileName=..\src\renderer\3D\Light3D.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -759,7 +749,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit78]
+[Unit77]
 FileName=..\src\renderer\3D\LightNodes.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -769,7 +759,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit79]
+[Unit78]
 FileName=..\src\renderer\3D\MapBlock3D.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -779,7 +769,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit80]
+[Unit79]
 FileName=..\src\renderer\3D\MapBuffer3D.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -789,7 +779,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit81]
+[Unit80]
 FileName=..\src\renderer\3D\MotiveBasedLight.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -799,7 +789,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit82]
+[Unit81]
 FileName=..\src\renderer\3D\Renderer3D.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -809,7 +799,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit83]
+[Unit82]
 FileName=..\src\renderer\3D\SceneMaker.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -819,7 +809,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit84]
+[Unit83]
 FileName=..\src\sound\Music.cpp
 CompileCpp=1
 Folder=sound
@@ -829,7 +819,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit85]
+[Unit84]
 FileName=..\src\sound\SoundMixer.cpp
 CompileCpp=1
 Folder=sound
@@ -839,7 +829,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit86]
+[Unit85]
 FileName=..\src\csl\CSLHandler.cpp
 CompileCpp=1
 Folder=csl
@@ -849,7 +839,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit87]
+[Unit86]
 FileName=..\src\csl\Block.cpp
 CompileCpp=1
 Folder=csl
@@ -859,7 +849,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit88]
+[Unit87]
 FileName=..\src\csl\Compile.cpp
 CompileCpp=1
 Folder=csl
@@ -869,7 +859,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit89]
+[Unit88]
 FileName=..\src\csl\Function.cpp
 CompileCpp=1
 Folder=csl
@@ -879,7 +869,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit90]
+[Unit89]
 FileName=..\src\csl\Input.cpp
 CompileCpp=1
 Folder=csl
@@ -889,7 +879,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit91]
+[Unit90]
 FileName=..\src\csl\Instruct.cpp
 CompileCpp=1
 Folder=csl
@@ -899,7 +889,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit92]
+[Unit91]
 FileName=..\src\csl\Interprt.cpp
 CompileCpp=1
 Folder=csl
@@ -909,7 +899,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit93]
+[Unit92]
 FileName=..\src\csl\Library.cpp
 CompileCpp=1
 Folder=csl
@@ -919,7 +909,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit94]
+[Unit93]
 FileName=..\src\csl\Parametr.cpp
 CompileCpp=1
 Folder=csl
@@ -929,7 +919,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit95]
+[Unit94]
 FileName=..\src\csl\Utility.cpp
 CompileCpp=1
 Folder=csl
@@ -939,7 +929,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit96]
+[Unit95]
 FileName=..\src\csl\Variable.cpp
 CompileCpp=1
 Folder=csl
@@ -949,7 +939,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit97]
+[Unit96]
 FileName=..\src\csl\ZAsync.cpp
 CompileCpp=1
 Folder=csl
@@ -959,7 +949,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit98]
+[Unit97]
 FileName=..\src\csl\ZCsl.cpp
 CompileCpp=1
 Folder=csl
@@ -969,7 +959,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit99]
+[Unit98]
 FileName=..\src\csl\ZDate.cpp
 CompileCpp=1
 Folder=csl
@@ -979,7 +969,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit100]
+[Unit99]
 FileName=..\src\csl\ZDynLink.cpp
 CompileCpp=1
 Folder=csl
@@ -989,8 +979,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit101]
+[Unit100]
 FileName=..\src\csl\ZExcept.cpp
+CompileCpp=1
+Folder=csl
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit101]
+FileName=..\src\csl\ZFile.cpp
 CompileCpp=1
 Folder=csl
 Compile=1
@@ -1003,7 +1003,7 @@ BuildCmd=
 Major=0
 Minor=6
 Release=5
-Build=435
+Build=438
 LanguageID=2057
 CharsetID=1252
 CompanyName=Iris Team
@@ -1018,16 +1018,6 @@ ProductVersion=
 AutoIncBuildNr=1
 
 [Unit102]
-FileName=..\src\csl\ZFile.cpp
-CompileCpp=1
-Folder=csl
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit103]
 FileName=..\src\csl\ZPlatfrm.cpp
 CompileCpp=1
 Folder=csl
@@ -1037,7 +1027,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit104]
+[Unit103]
 FileName=..\src\csl\ZProcess.cpp
 CompileCpp=1
 Folder=csl
@@ -1047,7 +1037,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit105]
+[Unit104]
 FileName=..\src\csl\ZProfile.cpp
 CompileCpp=1
 Folder=csl
@@ -1057,7 +1047,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit106]
+[Unit105]
 FileName=..\src\csl\ZPtrlist.cpp
 CompileCpp=1
 Folder=csl
@@ -1067,7 +1057,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit107]
+[Unit106]
 FileName=..\src\csl\ZResrce.cpp
 CompileCpp=1
 Folder=csl
@@ -1077,7 +1067,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit108]
+[Unit107]
 FileName=..\src\csl\ZSql.cpp
 CompileCpp=1
 Folder=csl
@@ -1087,7 +1077,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit109]
+[Unit108]
 FileName=..\src\csl\ZString.cpp
 CompileCpp=1
 Folder=csl
@@ -1097,7 +1087,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit110]
+[Unit109]
 FileName=..\src\csl\ZTrace.cpp
 CompileCpp=1
 Folder=csl
@@ -1107,7 +1097,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit111]
+[Unit110]
 FileName=..\src\renderer\3D\LightNodeEnvironment.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -1117,7 +1107,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit112]
+[Unit111]
 FileName=..\src\renderer\3D\MotiveBasedGroundLight.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -1127,7 +1117,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit113]
+[Unit112]
 FileName=..\include\net\Client.h
 CompileCpp=1
 Folder=net
@@ -1137,7 +1127,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit114]
+[Unit113]
 FileName=..\src\iris_endian.cpp
 CompileCpp=1
 Folder=
@@ -1147,7 +1137,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit115]
+[Unit114]
 FileName=..\src\loaders\StaticModelRaster.cpp
 CompileCpp=1
 Folder=loaders
@@ -1157,7 +1147,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit116]
+[Unit115]
 FileName=..\src\renderer\3D\ShaderMatrixBlock.cpp
 CompileCpp=1
 Folder=renderer/3D
@@ -1167,7 +1157,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit117]
+[Unit116]
 FileName=..\src\loaders\ClilocLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -1177,7 +1167,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit118]
+[Unit117]
 FileName=..\src\string_utils.cpp
 CompileCpp=1
 Folder=
@@ -1187,7 +1177,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit119]
+[Unit118]
 FileName=..\src\loaders\ModelInfoLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -1197,7 +1187,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit120]
+[Unit119]
 FileName=..\src\sound\MusicListLoader.cpp
 CompileCpp=1
 Folder=sound
@@ -1207,7 +1197,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit121]
+[Unit120]
 FileName=..\src\renderer\particles\ParticleEngine.cpp
 CompileCpp=1
 Folder=renderer/particles
@@ -1217,7 +1207,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit122]
+[Unit121]
 FileName=..\src\renderer\particles\ParticleHandler.cpp
 CompileCpp=1
 Folder=renderer/particles
@@ -1227,37 +1217,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit124]
-FileName=..\src\renderer\particles\ParticleTextures.cpp
-CompileCpp=1
-Folder=renderer/particles
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit125]
-FileName=..\src\gui\MultiLabel.cpp
-CompileCpp=1
-Folder=gui
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit126]
-FileName=..\src\gui\HTMLGumpParser.cpp
-CompileCpp=1
-Folder=gui
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit123]
+[Unit122]
 FileName=..\src\renderer\particles\ParticleLoader.cpp
 CompileCpp=1
 Folder=renderer/particles
@@ -1267,8 +1227,48 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit124]
+FileName=..\src\gui\MultiLabel.cpp
+CompileCpp=1
+Folder=gui
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit125]
+FileName=..\src\gui\HTMLGumpParser.cpp
+CompileCpp=1
+Folder=gui
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit126]
+FileName=..\src\csl\CSLForm.cpp
+CompileCpp=1
+Folder=csl
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit123]
+FileName=..\src\renderer\particles\ParticleTextures.cpp
+CompileCpp=1
+Folder=renderer/particles
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit128]
-FileName=..\src\loaders\MapInfo.cpp
+FileName=..\src\loaders\MultisLoader.cpp
 CompileCpp=1
 Folder=loaders
 Compile=1
@@ -1278,7 +1278,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit66]
-FileName=..\src\renderer\Characters.cpp
+FileName=..\src\renderer\DynamicObjects.cpp
 CompileCpp=1
 Folder=renderer
 Compile=1
@@ -1288,7 +1288,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit68]
-FileName=..\src\renderer\Fade.cpp
+FileName=..\src\renderer\MapBlock.cpp
 CompileCpp=1
 Folder=renderer
 Compile=1
@@ -1298,9 +1298,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit127]
-FileName=..\src\csl\CSLForm.cpp
+FileName=..\src\loaders\MapInfo.cpp
 CompileCpp=1
-Folder=csl
+Folder=loaders
 Compile=1
 Link=1
 Priority=1000
@@ -1330,16 +1330,6 @@ BuildCmd=
 =======
 
 [Unit129]
-FileName=..\src\loaders\MultisLoader.cpp
-CompileCpp=1
-Folder=loaders
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit130]
 FileName=..\src\Macros.cpp
 CompileCpp=1
 Folder=Ultima Iris
@@ -1348,9 +1338,8 @@ Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
->>>>>>> 1.3
 
-[Unit131]
+[Unit130]
 FileName=..\src\loaders\SpeechLoader.cpp
 CompileCpp=1
 Folder=loaders
@@ -1359,8 +1348,9 @@ Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+>>>>>>> 1.3
 
-[Unit132]
+[Unit131]
 FileName=..\src\main.cpp
 CompileCpp=1
 Folder=Ultima Iris
@@ -1370,8 +1360,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit133]
+[Unit132]
 FileName=..\src\Logger.cpp
+CompileCpp=1
+Folder=Ultima Iris
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit133]
+FileName=..\src\Font.cpp
 CompileCpp=1
 Folder=Ultima Iris
 Compile=1
@@ -1831,7 +1831,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit50]
-FileName=..\src\loaders\SoundLoader.cpp
+FileName=..\src\loaders\StaticModelLoader.cpp
 CompileCpp=1
 Folder=loaders
 Compile=1
@@ -1841,7 +1841,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit134]
-FileName=..\src\Logger.cpp
+FileName=..\src\FontManager.cpp
 CompileCpp=1
 Folder=Ultima Iris
 Compile=1
@@ -1851,7 +1851,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit60]
-FileName=..\src\net\Client.cpp
+FileName=..\src\net\Packet.cpp
 CompileCpp=1
 Folder=net
 Compile=1
