@@ -715,21 +715,21 @@ void api_addcontrol( Control *control )
 
 static ZString api_iris_log (ZCsl * aCsl)
 {
-	Logger::WriteLine ("CSL | " + std::string (aCsl->get ("text").buffer ()));
-  return "";
+       Logger::WriteLine ("CSL | " + std::string (aCsl->get ("text").buffer ()));
+       return "";
 }
 
 static ZString api_iris_disconnect (ZCsl * aCsl)
 {
-  Game::GetInstance()->Disconnect ();
-  return "";
+       Game::GetInstance()->Disconnect ();
+       return "";
 }
 
 static ZString api_iris_deinit (ZCsl * aCsl)
 {
-	Logger::WriteDebug( "Game.DeInit() - This should never happen." );
-	//Game::GetInstance()->DeInit ();
-	return "";
+       Logger::WriteDebug( "Game.DeInit() - This should never happen." );
+       //Game::GetInstance()->DeInit ();
+       return "";
 }
 
 static ZString api_iris_init (ZCsl * aCsl)
@@ -1007,7 +1007,8 @@ static ZString api_gui_addart (ZCsl * aCsl)
 {
   int argCount = aCsl->get ("argCount").asInt ();
   int flags = GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE;
-  int hue = 0;
+  int hue = 0xFFFF;
+
   if (argCount == 4)
     flags = aCsl->get ("flags").asInt ();
   if (argCount == 5)
@@ -1182,7 +1183,7 @@ static ZString api_gui_addinputfield (ZCsl * aCsl)
   int argCount = aCsl->get ("argCount").asInt ();
 
 
-        int hue = 0;
+	int hue = 0xFFFF;
         int font = 3;
         int passwordchar = 0;
 
@@ -1881,7 +1882,7 @@ static ZString api_art_setid (ZCsl * aCsl)
 static ZString api_textbox_addmessage (ZCsl * aCsl)
 {
   int id = aCsl->get ("id").asInt ();
-  int hue = 0;
+  int hue = 0xFFFF;
   int argcount = aCsl->get ("argCount").asInt ();
   if (argcount == 4)
     hue = aCsl->get ("hue").asInt ();
@@ -2702,7 +2703,7 @@ static ZString api_char_addtext (ZCsl * aCsl)
       {
         Uint32 id = aCsl->get ("id").asInt ();
         int argCount = aCsl->get ("argCount").asInt ();
-        int hue = 0;
+        int hue = 0xFFFF;
         int timeout = 5000;
         if (argCount >= 3)
           timeout = aCsl->get ("timeout").asInt ();
@@ -2723,7 +2724,7 @@ static ZString api_char_addtext (ZCsl * aCsl)
 static ZString api_font_register (ZCsl * aCsl)
 {
   int argCount = aCsl->get ("argCount").asInt ();
-  int defaulthue = 0;
+  int defaulthue = 0xFFFF;
   if (argCount == 4)
     defaulthue = aCsl->get ("defaulthue").asInt ();
 
@@ -2928,6 +2929,16 @@ static ZString api_net_senddoubleclick (ZCsl * aCsl)
   pClient->Send_DoubleClick ((Uint32) id);
   return "0";
 
+}
+
+static ZString api_loader_getmessage (ZCsl * aCsl)
+{
+	int id = aCsl->get ("id").asInt ();
+
+	if (!pClient)
+		return "";
+
+	return pClilocLoader.GetMessage(id).c_str();
 }
 
 CSLHandler::CSLHandler ()
@@ -3402,7 +3413,12 @@ void CSLHandler::InitAPI (void)
     
     // added in 0.8 Artix
     csl->addFunc (module, "camera_reset()", api_camera_reset);
+
+    // added in 0.86 SiENcE
+    //Harkon: get locale string from cliloc.*
+    csl->addFunc(module, "cliloc_getmessage(const id)", api_loader_getmessage);
   }
+
   catch (const ZException & err)
   {
     for (int i = 0; i < err.count (); i++)

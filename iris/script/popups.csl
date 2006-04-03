@@ -1,7 +1,7 @@
 /*
 -------------------------------------------------------------------------------------------------
 popups.csl
-Written by ArT-iX
+Written by ArT-iX, SiENcE & Harkon
 ------------------------------------------------------------------------------------------------
 */
 
@@ -50,9 +50,11 @@ net_displaypopup(const count, const x, const y)
 	{
 		control_close(active_popup);
 	}
+
 	resize popup_entries[count]; 
 	resize popup_tags[count]; 
 	popup_count = count;
+
 	for(var i = 0; i < count; i++)
 	{
 		popup_entries[i] = net_getpopupentry(i);
@@ -150,6 +152,16 @@ display_popup(var count)
 GetEntryString(var entry)
 {
 	var entrystr;
+	
+	// get locale string from cliloc.*
+	entrystr = cliloc_getmessage(3000000 + entry);
+	if (entrystr != "")
+	{
+		return entrystr;
+	}
+
+	// this switch could be deleted, because cliloc_getmessage finds the current popupstring
+/*
 	switch(entry)
 	{
 		case 0x17EB: entrystr = "Open Paperdoll"; break;
@@ -178,5 +190,6 @@ GetEntryString(var entry)
 		case 0x183A: entrystr = "Cancel Renewing Inventory Insurance"; break;
 		default: entrystr = "Not Defined";
 	}
-	return entrystr;
+*/
+	return entrystr = "Not Defined";
 }

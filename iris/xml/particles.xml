@@ -3,17 +3,16 @@
 <!--
 Spell ID's
 ----------
-----------
 Heal Spell	- StartEffectID: 9061 EndEffectID: 5005
-Magic Arrow	- StartEffectID: 9041 EndEffectID: no.moving effect
+Magic Arrow	- StartEffectID: 9041 EndEffectID: no	(moving effect)
 Nightsight	- StartEffectID: 9031 EndEffectID: 5007
 Harm		- StartEffectID: 9001 EndEffectID: 5013
 Strength	- StartEffectID: 9061 EndEffectID: 5017
 Fireball	- StartEffectID: 9041 EndEffectID: 9502 (moving effect)
 Poison		- StartEffectID: 9051 EndEffectID: 5021
-Teleport	- StartEffectID: 9031 EndEffectID: 2023 und 5023 oder 5039
+Teleport	- StartEffectID: 9031 EndEffectID: 2023 and 5023 or 5039
 Fire Field	- StartEffectID: 9041 EndEffectID: no
-Greater Heal- StartEffectID: 9061 EndEffectID: 5030
+Greater Heal	- StartEffectID: 9061 EndEffectID: 5030
 Lightning	- StartEffectID: 9021 EndEffectID: no
 -->
 

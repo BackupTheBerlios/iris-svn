@@ -101,7 +101,7 @@
 	<MUSIC>
 		<ID>17</ID>
 		<MP3>valoriapos.mp3</MP3>
-		<MIDI>minoc.mid</MIDI>
+		<MIDI>ocllo.mid</MIDI>
 		<LOOP>1</LOOP>
 	</MUSIC>
 	<MUSIC>
@@ -259,7 +259,7 @@
 	</MUSIC>
 	<MUSIC>
 		<ID>45</ID>
-		<MP3>Nujelm.mp3</MP3>
+		<MP3>nujelm.mp3</MP3>
 		<MIDI>nujelm.mid</MIDI>
 	</MUSIC>
 	<MUSIC>

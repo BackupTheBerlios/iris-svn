@@ -22,6 +22,8 @@ CSLHandler.cpp \
 Logger.cpp \
 DynamicObjects.cpp \
 Exception.cpp \
+Font.cpp \
+FontManager.cpp \
 Fade.cpp\
 Game.cpp \
 Geometry.cpp \

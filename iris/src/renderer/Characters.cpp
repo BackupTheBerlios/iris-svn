@@ -173,7 +173,7 @@ cCharacterText::cCharacterText (std::string text, Uint32 timeout)
 	m_done = false;
 	m_starttime = SDL_GetTicks ();
 	element = new cTextElement (text.c_str ());
-	m_hue = 100;
+	m_hue = Config::GetSpeechHue();
 }
 
 cCharacterText::~cCharacterText ()
@@ -909,8 +909,11 @@ cMount::cMount (Uint16 tileid)
         m_mounttype = 0xdb;
         m_mountcathegory = 3;
         break;
-/*	case 0x3f14: //drake
-                  m_mounttype = 0x3c; break;*/
+/*
+      case 0x3f14:		//drake
+	m_mounttype = 0x3c;
+	break;
+*/
       case 0x3ffb:
         m_mounttype = 213;
         m_mountcathegory = 1;
@@ -991,18 +994,18 @@ cMount::cMount (Uint16 tileid)
       case 0x3ebe:
         m_mounttype = 799;
         m_mountcathegory = 5;
-        break;                  // Armored Swamp Dragon
-      case 0x3e9e:
+        break;
+      case 0x3e9e:		// Armored Swamp Dragon
         m_mounttype = 190;
         m_mountcathegory = 1;
         break;
-      case 0x3E92:
+      case 0x3E92:		// MondainSteed01
         m_mounttype = 284;
         m_mountcathegory = 1;
-        break;                  // MondainSteed01
+        break;
 
       default:
-        std::cout << "Mount TileID: " << tileid << endl;
+        Logger::WriteLine("Mount TileID: "+ tileid);
       }
 }
 
@@ -1020,7 +1023,8 @@ int cMount::GetMountAnimation (int animtype)
 
 void cCharacter::setParticle(Uint32 particle_id)
 {
- if(particle_handler)
-  pParticleEngine.RemoveEffect(particle_handler);
- particle_handler  =  particle_id;  
+	if(particle_handler)
+		pParticleEngine.RemoveEffect(particle_handler);
+
+	particle_handler  =  particle_id;  
 }

@@ -109,6 +109,6 @@
 		<!-- set it to 0 if you don't want mouseover checks (this will disable
              characters highlight and aostooltips) set it to higher values
              (in milliseconds) if your mouse is too slow -->
-		<MOUSEOVER_TIMER>100</MOUSEOVER_TIMER>
+		<MOUSEOVER_TIMER>50</MOUSEOVER_TIMER>
 	</IRIS>     
 </CONFIG>

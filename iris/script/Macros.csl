@@ -1,9 +1,9 @@
 /*
 
- Macros.xml by ArT-iX
+ macros.xml by ArT-iX
 
  Warning:               macro functions can have no more than 4 parameters. Parameters (and function names)
-                        are set into Macros.xml. Put all your integer parameters before 
+                        are set into macros.xml. Put all your integer parameters before 
                         string parameters into function declaration. Do not invert or mess up
                         this order or your macro will not work!!
         
@@ -19,21 +19,24 @@ macro_say(const text)
 
 macro_open(const text)
 {
-	if(text == "backpack")
+	if((text == "backpack") && (backpackopen == 0))
+	{
 		net_openbackpack();
+		backpackopen = 1;
+	}
 	else
-		if(text=="paperdoll")
+		if((text=="paperdoll") && (paper_doll_open == 0))
+		{
 			display_player_paperdoll(net_getplayercharacter());
-				else
-					if(text=="skills")
-					{
-						if (skills_open == 0)
-						{
-							control_close(skills_min);
-							display_skills();
-							skills_open = 1;
-						}
-					} 
+			paper_doll_open = 1;
+		}
+		else
+			if((text=="skills") && (skills_open == 0))
+			{
+				control_close(skills_min);
+				display_skills();
+				skills_open = 1;
+			} 
 }
 
 

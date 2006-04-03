@@ -44,8 +44,7 @@ typedef unsigned char    byte;
 typedef unsigned short   Unicode2Bytes;
 typedef unsigned int     Unicode4Bytes;
 
-void UTF8Decode2BytesUnicode(const std::vector< byte > &input,
-							 std::vector< Unicode2Bytes >& output)
+void UTF8Decode2BytesUnicode(const std::vector< byte > &input, std::vector< Unicode2Bytes >& output)
 {
 	for(unsigned int i=0; i < input.size();)
 	{
@@ -212,9 +211,7 @@ std::string cClilocLoader::GetMessage (int id)
 	return string ("");
 }
 
-std::string cClilocLoader::GetMessageWithArguments (int id, int args_num,
-													vector < std::string >
-													&args)
+std::string cClilocLoader::GetMessageWithArguments (int id, int args_num, vector < std::string > &args)
 {
 
 	vector < std::string > splitted_str;

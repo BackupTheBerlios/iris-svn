@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Here you can override settings in granny_aos.xml (do not change anything in granny.xml/granny_aos.xml) file.
+	You can specify a global Scalefactor for all Granny models.
+	Example: <SCALE_FACTOR>0.9</SCALE_FACTOR>
+
+	Also you can specify different Settings for every Model:
+	Structure is like that:
+	<MODEL>
+		<ID> Model_ID </ID>						-taken from granny_aos.xml 
+		<SCALE_X>0.6</SCALE_X>						-choose on your own maybe look at UO/Models/Model.txt
+		<SCALE_Y>0.6</SCALE_Y>
+		<SCALE_Z>0.6</SCALE_Z>
+		<CUSTOM_TEXTURE>./skins/name_of_the_skin.tga</CUSTOM_TEXTURE>	-choose a custom Model Texture
+		<ALPHA> 100 </ALPHA>						-Transparency (0->100)
+		<ALT_BODY> 204 </ALT_BODY>					-Alternative Model_ID from granny_aos.xml
+		<DEFAULT_HUE>90</DEFAULT_HUE>					-choose Default Hue (Color)
+	</MODEL>
+
+	Remember: If you wanna use customized textures you must put them into a folder named "skins" into your Iris root!
+-->
+
 <MODELS>
       <SCALE_FACTOR>0.9</SCALE_FACTOR>
 	<!-- cat -->

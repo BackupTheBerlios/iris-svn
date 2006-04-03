@@ -1,5 +1,11 @@
 03.04.2006
 Changes by Nuno Ramiro
+	- some csl things cleaned
+	- cliloc_getmessage added to CSLHandler.cpp for PopUp-Menu
+	- Comments Added to Maps.xml & Macros.xml
+
+03.04.2006
+Changes by Nuno Ramiro
 	- Updated: Removed some files from makefile (still need to add Font.h/cpp and FontManager.h/cpp)
 	- Updated: VS 03 solution.
 	- Removed: Removed the CheckBox and RadioButton suport for this release since they were not working correctly.

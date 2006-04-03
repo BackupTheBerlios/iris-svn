@@ -1,31 +1,32 @@
 <!--
-                Used for game macros
-               	--------------------
+
+Used for game macros
+--------------------
 Tags:
 -----
-       NAME:	just the name of the macro..
+       NAME:		just the name of the macro..
 
        KEY:		the name of the keyboard key  associated to the macro(use names like space, backspace,esc, 
-				enter,ins, home, page_up, page_down, end, up, down,
-				left, right, F1, F2,...
-				or simply characters like a,b,c for characters keys)
+			enter, ins, home, page_up, page_down, end, up, down,
+			left, right, F1, F2,...
+			or simply characters like a,b,c for characters keys)
        
-       LEFT_SHIFT:		set 1 if you want the key to be pressed with right shift at the same time
+       LEFT_SHIFT:	set 1 if you want the key to be pressed with right shift at the same time
 
        RIGHT_SHIFT,
        LEFT_CONTROL,
        RIGHT_CONTROL,
        LEFT_ALT,
-       RIGHT_ALT:		same as above
+       RIGHT_ALT:	same as above
 
        SCRIPT_FUNCTION:	the name of the CSL function (usually in macros.csl, but could be everywhere) to be executed 
                         when the macro key is pressed.
 
        PARAMETER:	you can add up-to 4 parameters to be passed to the function. You must specify the parameter
-					type with the attribute TYPE(for example PARAMETER TYPE="string". Legal values for type
-					are only "string" and "integer"
+			type with the attribute TYPE(for example PARAMETER TYPE="string". Legal values for type
+			are only "string" and "integer"
 
-	   Note:		name attribute in parameter is not important, i used it just to let macros be more readable.
+       Note:		name attribute in parameter is not important, i used it just to let macros be more readable.
 -->
 
 <MACROS>

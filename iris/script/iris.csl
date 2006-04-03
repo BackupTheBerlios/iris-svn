@@ -28,6 +28,7 @@ var paperdoll_y = 200;
 var status_x = 340;
 var status_y = 5;
 
+var backpackopen = 0;
 var paper_doll_open = 0;
 var status_open = 0;
 var quit_open = 0;
@@ -60,8 +61,6 @@ var temp_speech[NUM_LAST_SPEECH];
 var aos_flag = 0;
 
 var statusInitialised = 0;
-
-//var playerchar;
 
 /*
 -------------------------------------------------------------------------------------------------
@@ -387,8 +386,7 @@ net_dyewindow(const id,const model)
 
 net_warmodechange(const mode)
 {
-	log ("Warmode Change");
-
+	log ("Warmode Change ..");
 	warmode = mode;
 
 	if(warmode == 1) {
@@ -407,6 +405,7 @@ net_warmodechange(const mode)
 		button_setgump(status_bar, 1, 0x803);
 		button_setgump(status_bar, 2, 0x803);
 	}
+//	gui_setcontainer();
 }
 
 net_attackreply(const id)
@@ -456,6 +455,7 @@ net_statchange(const charid, const type, const value, const maxvalue)
 
 net_onlightlevel (const level)
 {
+    log ("Script_Lightlevel: "+level);
     iris_setlightlevel(level);
 }
 
@@ -579,12 +579,10 @@ handler_deinit (const sender)
 	quit_open = 0;
 	reg_counter_open = 0;
 	statusInitialised = 0;
+	backpackopen = 0;
+
 	gui_clear();
 	iris_disconnect();
-
-//	iris_deinit();
-// added deinit and Init because of Errors if Iris connects to different Servers/Maps without quitting
-//	iris_init();
 
 	gui_translate((config_getvalue(CONFIG_WIDTH)-640)/2, (config_getvalue(CONFIG_HEIGHT)-480) /2);
 	display_main_menu();
@@ -597,7 +595,7 @@ handler_on_cancel (const sender)
 
 handler_on_warpeace_toggle(const sender)
 {
-	net_warmode (!warmode);
+		net_warmode (!warmode);
 }
 
 handler_on_menuitemclick (const sender)
@@ -638,9 +636,18 @@ handler_on_close_status (const sender)
 
 handler_on_backpack (const sender)
 {
+//Currently doesn't work; Backpack is Equipment; must be hardcoded
+//	if (backpackopen == 0)
+//	{
 		net_openbackpack();
+		backpackopen = 1;
+//	}
 }
 
+handler_on_close_backpack (const sender)
+{
+	backpackopen = 0;
+}
 
 handler_on_status (const sender)
 {
@@ -788,6 +795,7 @@ handler_on_enemy_status (const sender)
 	}
 }
 
+//Display Menu on 1st Startup
 display_game_ui()
 {
    	gui_translate(0, 0);
@@ -817,12 +825,20 @@ display_game_ui()
 
 	if(paper_doll_open == 0)
 	{
-    		var paperdoll_min = gui_addbutton(70, 64, 0x7ee, 0x7ee, 0x7ee);
+    		var paperdoll_min = gui_addbutton(70, 64, 0x07ee, 0x07ee, 0x07ee);
+
+//just for test custom textures
+//var newgump = gui_registergump("./textures/water1.png"); 
+//var paperdoll_min = gui_addgump(64, 64, newgump, 0);
+//control_setsize(paperdoll_min, 64, 64);
+
     		control_sethandler(paperdoll_min , FUNC_ONCLICK, "handler_on_paperdoll");
 	}
 
-	var backpack = gui_addbutton(7, 62, 0x050, 0x050, 0x050);
-	control_sethandler(backpack , FUNC_ONCLOSE, "handler_on_close_backpack");
+	// GUI: show Backpack
+	var backpack = gui_addbutton(7, 62, 0x0050, 0x0050, 0x0050);
+//unnessessary
+//	control_sethandler(backpack , FUNC_ONCLOSE, "handler_on_close_backpack");
 	control_sethandler(backpack , FUNC_ONCLICK, "handler_on_backpack");
 
 	console = gui_addtextbox();
@@ -847,6 +863,8 @@ display_game_ui()
 	net_statusrequest(charid, REQUEST_SKILLS);
 }
 
+
+//Display Healthbar on 1st Startup
 display_healthbar()
 {
 	var container = gui_addcontainer(50,200, 300, 150);
@@ -875,26 +893,6 @@ display_healthbar()
 	gui_setcontainer();
 }
 
-/* This don't work yet
-display_healthbar()
-{
-	var healthbar = gui_addform(0,0,"gfm/healthbar.gfm",1);
-
-//	control_setflags(healthbar, FLAG_FOCUSABLE);
-	gui_setcontainer(healthbar);
-
-	status_bar = control_getid("status_bar");
-	hitsbar = control_getid("hitsbar");
-	manabar = control_getid("manabar");
-	stambar = control_getid("stambar");
-	if (warmode == 1) {
-		button_setgump(status_bar, 0, 0x807);
-		button_setgump(status_bar, 1, 0x807);
-		button_setgump(status_bar, 2, 0x807);
-	}
-	gui_setcontainer();
-}
-*/
 display_player_paperdoll(var charid)
 {
 	var paperdoll = gui_addform(paperdoll_x, paperdoll_y, "gfm/player_paperdoll.gfm", 1);
@@ -907,16 +905,15 @@ display_player_paperdoll(var charid)
 	net_statusrequest(charid);
 	var paperdollid = control_getid("paperdoll");
 	paperdoll_refresh(paperdollid, charid);
-	
-	war_peace_button = control_getid("peace");
 
-	//If in Warmode -> Display War Button
+	war_peace_button = control_getid("peace");
 	if(warmode == 1) {
+		//war
 		button_setgump(war_peace_button, 0, 0x7e8);
 		button_setgump(war_peace_button, 1, 0x7ea);
 		button_setgump(war_peace_button, 2, 0x7e9);
 	}
-	
+
 	var label = control_getid("status_name");
 	label_settext(label, char_getstatus(charid, STATUS_NAME));
 	control_settag(paperdoll, 2, label);

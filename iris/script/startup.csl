@@ -834,6 +834,13 @@ display_main_menu()
 	input_settext(input_username, config_getvalue(CONFIG_LOGIN));
 	input_settext(input_password, config_getvalue(CONFIG_PASSWORD));
 	gui_setfocus(input_password);
+/*
+	if (config_getvalue(CONFIG_MUSIC) == 1)
+	{
+		iris_playmusic(1, config_getvalue(CONFIG_MP3), config_getvalue(CONFIG_MUSIC_VOLUME));
+		log("Music playing...");
+	}
+*/
 }
 
 display_loading()
