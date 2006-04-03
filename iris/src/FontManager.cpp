@@ -1,3 +1,19 @@
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 #include "FontManager.h"
 
 
@@ -52,7 +68,6 @@ FontManager *FontManager::GetInstance()
 void FontManager::AddTTFFont( int iId, std::string sFileName, std::string sFontName, int iSize, int iHue )
 {
 	UnregisterTTFFont( iId );
-	printf("Pushing back: %s", sFileName.c_str() );
 	m_vFonts.push_back( new Font( iId, sFileName, sFontName, iSize, iHue ) );
 }
 
@@ -153,7 +168,6 @@ TTF_Font *FontManager::GetTTFFont( int iId )
 {
 	for ( unsigned int i = 0; i < m_vFonts.size(); i++ )
 	{
-		printf("%d = %d ?", m_vFonts[i]->GetId(), iId );
 		if ( m_vFonts[i]->GetId() == iId )
 		{
 			return m_vFonts[i]->GetFont();

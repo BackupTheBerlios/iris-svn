@@ -57,7 +57,7 @@ am_ui3_OBJECTS = ArtLoader.$(OBJEXT) Bitmask.$(OBJEXT) \
 	Checkbox.$(OBJEXT) Client.$(OBJEXT) ClilocLoader.$(OBJEXT) \
 	Config.$(OBJEXT) Container.$(OBJEXT) Control.$(OBJEXT) \
 	CSLHandler.$(OBJEXT) Logger.$(OBJEXT) DynamicObjects.$(OBJEXT) \
-	Exception.$(OBJEXT) Fade.$(OBJEXT) FontLoader.$(OBJEXT) \
+	Exception.$(OBJEXT) Fade.$(OBJEXT) \
 	Game.$(OBJEXT) Geometry.$(OBJEXT) grannyfile.$(OBJEXT) \
 	GrannyLoader.$(OBJEXT) GrannyModelAOS.$(OBJEXT) \
 	GrannyModelTD.$(OBJEXT) GrannyStream.$(OBJEXT) \
@@ -250,7 +250,6 @@ Logger.cpp \
 DynamicObjects.cpp \
 Exception.cpp \
 Fade.cpp\
-FontLoader.cpp \
 Game.cpp \
 Geometry.cpp \
 grannyfile.cpp \
@@ -452,7 +451,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DynamicObjects.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Exception.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Fade.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FontLoader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Function.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GUIHandler.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Game.Po@am__quote@
