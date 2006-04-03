@@ -1,6 +1,8 @@
 03.04.2006
 Changes by Nuno Ramiro
 	- Updated: Removed some files from makefile (still need to add Font.h/cpp and FontManager.h/cpp)
+	- Updated: VS 03 solution.
+	- Removed: Removed the CheckBox and RadioButton suport for this release since they were not working correctly.
 
 02.04.2006
 Changes by Florian Fischer (SiENcE)

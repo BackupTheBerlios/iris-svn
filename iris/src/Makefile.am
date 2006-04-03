@@ -23,7 +23,6 @@ Logger.cpp \
 DynamicObjects.cpp \
 Exception.cpp \
 Fade.cpp\
-FontLoader.cpp \
 Game.cpp \
 Geometry.cpp \
 grannyfile.cpp \

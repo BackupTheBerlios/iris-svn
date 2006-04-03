@@ -151,6 +151,12 @@ imm32.lib smpeg.lib"
 				RelativePath=".\src\Exception.cpp">
 			</File>
 			<File
+				RelativePath=".\src\Font.cpp">
+			</File>
+			<File
+				RelativePath=".\src\FontManager.cpp">
+			</File>
+			<File
 				RelativePath=".\src\Game.cpp">
 			</File>
 			<File
@@ -193,6 +199,12 @@ imm32.lib smpeg.lib"
 			</File>
 			<File
 				RelativePath=".\include\csl\CSLHandler.h">
+			</File>
+			<File
+				RelativePath=".\include\Font.h">
+			</File>
+			<File
+				RelativePath=".\include\FontManager.h">
 			</File>
 			<File
 				RelativePath=".\include\Game.h">
@@ -716,12 +728,6 @@ imm32.lib smpeg.lib"
 			Name="net"
 			Filter="">
 			<File
-				RelativePath=".\src\net\btree.cpp">
-			</File>
-			<File
-				RelativePath=".\include\net\btree.h">
-			</File>
-			<File
 				RelativePath=".\src\net\Client.cpp">
 			</File>
 			<File
@@ -1136,9 +1142,6 @@ imm32.lib smpeg.lib"
 			</File>
 			<File
 				RelativePath=".\src\loaders\ClilocLoader.cpp">
-			</File>
-			<File
-				RelativePath=".\src\loaders\FontLoader.cpp">
 			</File>
 			<File
 				RelativePath=".\src\loaders\GroundTextures.cpp">

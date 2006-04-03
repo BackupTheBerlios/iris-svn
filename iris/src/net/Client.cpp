@@ -2530,7 +2530,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		}
 		else if ( command == "checkbox" )
 		{
-			Logger::WriteDebug( "Trying to add a check box (DISABLED): " + command );
+			std::cout << "Trying to add a CheckBox which is disabled on this version." << std::endl;
 /*
 			Checkbox *checkbox = new Checkbox( params[0], params[1], params[2], params[3], params[4] );
 			control = checkbox;
@@ -2538,6 +2538,8 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		}
 		else if ( command == "radio" )
 		{
+			std::cout << "Trying to add a Radio Button which is disabled on this version." << std::endl;
+			/*
 			// TODO: Fix first time, it shows the wrong option checked but on click fixes (needs debugging).
 
 			printf( "DEBUG - params: %d %d %d %d %d\n", params[0], params[1], params[2], params[3], params[4] );
@@ -2546,6 +2548,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 
             radio->SetPage( target_page );
             control = radio;
+			*/
 		}
 		else if ( command == "noresize" )
 		{
