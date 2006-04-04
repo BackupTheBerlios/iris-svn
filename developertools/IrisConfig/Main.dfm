@@ -1637,7 +1637,7 @@ object MainForm: TMainForm
     OnClick = Button2Click
   end
   object RadioButton1: TRadioButton
-    Left = 384
+    Left = 368
     Top = 168
     Width = 129
     Height = 17
@@ -1645,11 +1645,11 @@ object MainForm: TMainForm
     TabOrder = 1
   end
   object RadioButton2: TRadioButton
-    Left = 520
+    Left = 488
     Top = 168
-    Width = 129
+    Width = 161
     Height = 17
-    Caption = 'Age of Shadows (TM)'
+    Caption = 'Newer than Third Dawn (TM)'
     TabOrder = 2
   end
   object Edit3: TEdit
@@ -1690,6 +1690,7 @@ object MainForm: TMainForm
       'Sphere Classic'
       'Sphere Revision'
       'POL'
+      'UOX3'
       'Other')
   end
   object CheckBox2: TCheckBox

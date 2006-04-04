@@ -147,7 +147,7 @@ constructor TConfig.Create (FileName: String);
 var
   AStream: TStream;
   Node: TXMLNode;
-  isSphere, isSphere55R, isPOL, isRunUO: Boolean;
+  isSphere, isSphere55R, isPOL, isRunUO, isUOX3: Boolean;
 begin
   FServer := 'localhost';
   FPort := 2593;
@@ -158,6 +158,7 @@ begin
   FFullScreen := True;
 
   FEmulator := 0;
+  FAOS := True;
 
   try
     AStream := TFileStream.Create (FileName, fmOpenRead);
@@ -180,7 +181,7 @@ begin
       Node := FXMLFile.RootNode.FINDCHILD ('UO');
       if Assigned (Node) then begin
           FUOPath := Node.GetChildValue('MULPATH');
-          FAOS := StrToIntDef(Node.GetChildValue('AOS'), 0) <> 0;
+          FAOS := StrToIntDef(Node.GetChildValue('AOS'), 1) <> 0;
       end;
 
 
@@ -193,16 +194,19 @@ begin
           isSphere := StrToIntDef(Node.GetChildValue('IS_SPHERE'), 0) <> 0;
           isSphere55R := StrToIntDef(Node.GetChildValue('IS_SPHERE55R'), 0) <> 0;
           isPOL := StrToIntDef(Node.GetChildValue('IS_POL'), 0) <> 0;
+          isUOX3 := StrToIntDef(Node.GetChildValue('IS_UOX3'), 0) <> 0;
 
-          FEmulator := 4; // Find out emu types (Default: "Other");
-          if isRunUO and not isPOL and not isSphere and not isSphere55R then
+          FEmulator := 5; // Find out emu types (Default: "Other");
+          if isRunUO and not isPOL and not isSphere and not isSphere55R and not isUOX3 then
             FEmulator := 0; // RunUO
-          if not isRunUO and not isPOL and isSphere and not isSphere55R then
+          if not isRunUO and not isPOL and isSphere and not isSphere55R and not isUOX3  then
             FEmulator := 1; // Sphere Classic
-          if not isRunUO and not isPOL and isSphere55R then
+          if not isRunUO and not isPOL and isSphere55R and not isUOX3  then
             FEmulator := 2; // Sphere Revision
-          if not isRunUO and isPOL and not isSphere and not isSphere55R then
-            FEmulator := 3; // Sphere Revision
+          if not isRunUO and isPOL and not isSphere and not isSphere55R and not isUOX3  then
+            FEmulator := 3; // POL
+          if not isRunUO and not isPOL and not isSphere and not isSphere55R and isUOX3  then
+            FEmulator := 4; // UOX3
       end;
 
       Node := FXMLFile.RootNode.FINDCHILD ('GFX');
@@ -241,11 +245,12 @@ begin
   Node.SetChildValue('SERVER', Server);
   Node.SetChildValue('PORT', IntToStr(Port));
   Node.SetChildValue('LOGIN', Login);
-  if Emulator <> 4 then begin // not Other
+  if Emulator <> 5 then begin // not Other
     Node.SetChildValue('IS_RUNUO', IntToStr(Ord(Emulator = 0)));
     Node.SetChildValue('IS_SPHERE', IntToStr(Ord((Emulator = 1) or (Emulator = 2))));
     Node.SetChildValue('IS_SPHERE55R', IntToStr(Ord(Emulator = 2)));
     Node.SetChildValue('IS_POL', IntToStr(Ord(Emulator = 3)));
+    Node.SetChildValue('IS_UOX3', IntToStr(Ord(Emulator = 4)));
   end;
 
   Node := FXMLFile.RootNode.AddChild('GFX');
