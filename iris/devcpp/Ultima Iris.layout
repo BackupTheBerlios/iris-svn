@@ -165,7 +165,11 @@ Open=0
 Top=0
 [Editor_26]
 Open=0
-Top=0
+Top=0CursorCol=1
+CursorRow=1
+TopLine=85
+LeftChar=1
+
 [Editor_27]
 Open=0
 Top=0
@@ -369,9 +373,9 @@ LeftChar=1
 
 [Editor_58]
 Open=0
-Top=0CursorCol=23
-CursorRow=77
-TopLine=47
+Top=0CursorCol=2
+CursorRow=2535
+TopLine=2512
 LeftChar=1
 
 [Editor_59]
@@ -453,7 +457,11 @@ LeftChar=1
 
 [Editor_70]
 Open=0
-Top=0
+Top=0CursorCol=5
+CursorRow=230
+TopLine=214
+LeftChar=1
+
 [Editor_71]
 Open=0
 Top=0CursorCol=3

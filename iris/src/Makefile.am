@@ -80,6 +80,7 @@ ParticleTextures.cpp \
 RadioButton.cpp \
 Renderer.cpp \
 Renderer3D.cpp \
+WorldEnvironment.cpp \
 SceneMaker.cpp \
 SDLEvent.cpp \
 SDLScreen.cpp \

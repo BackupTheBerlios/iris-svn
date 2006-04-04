@@ -227,7 +227,8 @@ int SDLScreen::InitGL( GLvoid )
 
 	GLuint fogMode[] = { GL_EXP, GL_EXP2, GL_LINEAR }; // Storage For Three Types Of Fog
 	GLuint fogfilter = 2; // Which Fog To Use
-	GLfloat fogColor[4] = { 168.0f / 255.0f, 168.0f / 255.0f, 180.0f / 255.0f , 1.0f }; // skybox
+//  GLfloat fogColor[4] = { 53.0f / 255.0f, 66.0f / 255.0f, 98.0f / 255.0f , 1.0f }; // skybox
+//	GLfloat fogColor[4] = { 168.0f / 255.0f, 168.0f / 255.0f, 180.0f / 255.0f , 1.0f }; // skybox
 	glEnable( GL_FOG );
 	glClearColor( 0.5f, 0.5f, 0.5f, 1.0f ); // We'll Clear To The Color Of The Fog
 	glFogi( GL_FOG_MODE, fogMode[fogfilter] ); // Fog Mode
@@ -491,4 +492,11 @@ Uint16 SDLScreen::GetDefaultHue( Uint32 id )
 		return iter->second;
 
 	return 0;
+}
+
+void SDLScreen::SetFogColor (Uint8 r, Uint8 g, Uint8 b)
+{
+	GLfloat fogColor[4] = { ((float) r) / 255.0f, ((float) g) / 255.0f, ((float) b) / 255.0f , 1.0f }; 
+	glFogfv( GL_FOG_COLOR, fogColor ); // Set Fog Color
+	glClearColor( ((float) r) / 255.0f, ((float) g) / 255.0f, ((float) b) / 255.0f, 1.0f ); // We'll Clear To The Color Of The Fog
 }

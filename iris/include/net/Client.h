@@ -267,7 +267,7 @@ public:
    void Send_SkillLock(Uint32 skill, Uint32 lock);
    void Send_PickupRequest(Uint32 id, Uint16 count = 1);
    void Send_DropRequest(Uint32 id, int x, int y, int z, Uint32 container = 0xffffffff);
-   void Send_Target(Uint32 cursorid, int x, int y, int z);
+   void Send_Target(Uint32 cursorid, int x, int y, int z, int artid);
    void Send_Target(Uint32 cursorid, Uint32 targetid);
    void Send_ItemEquipReq(Uint32 itemid, Uint32 charid, Uint16 model);
    void Send_MenuChoice(Uint32 dialogid, Uint16 menuid, Uint16 index, Uint16 model);

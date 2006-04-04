@@ -62,9 +62,11 @@ public:
 
 	void SetAlpha( Uint8 alpha, bool force = false);
 	void SetHue( Uint16 hue = 0 );
-
+  
 	Uint16 GetDefaultHue( Uint32 id );
 
+	void SetLight( float factor );
+	void SetFogColor (Uint8 r, Uint8 g, Uint8 b);
 
 public:
 	SDL_Surface *m_kScreen;

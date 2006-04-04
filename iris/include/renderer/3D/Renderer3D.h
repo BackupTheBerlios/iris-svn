@@ -76,12 +76,17 @@ protected:
 	Texture *skyboxtextures[5];
     Texture *tex_water;
     Texture *tex_char_shadow;
+    
 
 private:
 	float fog_view_dist;
 	float lightNormalize;
 	float cam_x, cam_y, cam_z;
 	int current_ticks;
+    
+	sColor m_ambient_light_color, m_sun_light_color;
+	float m_light_direction[3];
+
 //flo:	unsigned long lastTime;
 
 public:
@@ -92,11 +97,12 @@ public:
    virtual void DeInit(void);
    virtual void RenderScene(void);
    virtual void GrabDynamic(int x, int y, cDynamicObject ** r_object, cCharacter ** r_character);
-   virtual void GrabMousePosition(int x, int y, int maxz, int cursor3d[3], int * cursor_character);
+   virtual void GrabMousePosition(int x, int y, int maxz, int cursor3d[3], int & artid);
    virtual void AddDynamic (cDynamicObject * object);
    virtual void DelDynamic (cDynamicObject * object);
    virtual void LoadSkyboxTextures(int map=0);
    
+      
 };
 
 #endif //_Renderer3D_H_

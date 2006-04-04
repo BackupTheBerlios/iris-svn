@@ -120,28 +120,35 @@ void CreateObject (struct sStaticObject *object, unsigned int x,
   object->fader = NULL;
 }
 
-float light_vector[3] =
-  { 0.57735026918963, 0.57735026918963, 0.57735026918963 };
 
-sColor ambient_color;
-
-sColor sun_color;
-
-float light_direction[3];
 
 
 bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 {
+//  float light_vector[3] =
+//    { 0.57735026918963, 0.57735026918963, 0.57735026918963 };
+    m_light_direction[0] = 1.0f;
+    m_light_direction[1] = 0.0f;
+    m_light_direction[2] = 0.0f;
+
 	if ( _generated )
 	{
 		return false;
 	}
-	ambient_color.colorRGB.r = 80;
+	m_ambient_light_color.colorRGB.r = 20;
+	m_ambient_light_color.colorRGB.g = 10;
+	m_ambient_light_color.colorRGB.b = 10;
+	m_ambient_light_color.colorRGB.a = 255;
+	m_sun_light_color.colorRGB.r = 240;
+	m_sun_light_color.colorRGB.g = 200;
+	m_sun_light_color.colorRGB.b = 120;
+	m_sun_light_color.colorRGB.a = 255;
+/*	ambient_color.colorRGB.r = 80;
 	ambient_color.colorRGB.g = 90;
 	ambient_color.colorRGB.b = 90;
 	sun_color.colorRGB.r = 400;
 	sun_color.colorRGB.g = 400;
-	sun_color.colorRGB.b = 420;
+	sun_color.colorRGB.b = 420;*/
 
 	shader_matrix.setBlock( m_blockx, m_blocky );
 
@@ -152,8 +159,8 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 
 	_generated = true;
 	
-	//light_vector[2] *= 10.0f;
-	NormalizeVector( light_vector );
+//	light_vector[2] *= 10.0f;
+//	NormalizeVector( light_vector );
 
 
 /*
@@ -234,8 +241,8 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 			NormalizeVector( groundnormals[y][x] );
 
 			float *gnormal = groundnormals[y][x];
-			float light_fac = gnormal[0] * light_direction[0] + gnormal[1] * 
-				light_direction[1] + gnormal[2] * light_direction[2];
+			float light_fac = gnormal[0] * m_light_direction[0] + gnormal[1] * 
+				m_light_direction[1] + gnormal[2] * m_light_direction[2];
 
 			ground_vertieces[y][x].x = (float)x;
 			ground_vertieces[y][x].y = (float)y;
@@ -245,16 +252,16 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 
 			for ( int i = 0; i < 3; i++ )
 			{
-				int value =	ambient_color.color_array[i] + 
-					(int)( (float) sun_color.color_array[i] * ((light_fac > 0.0f) ? light_fac : 0.0f) );
+				int value =	m_ambient_light_color.color_array[i] + 
+					(int)( (float) m_sun_light_color.color_array[i] * ((light_fac > 0.0f) ? light_fac : 0.0f) );
 				ground_vertieces[y][x].color.color_array[i] = (value < 255) ? value : 255;
 				// printf("%i\n", value);
 			}
-			/*
+			
 			ground_vertieces[y][x].color.colorRGB.r = 255;
 			ground_vertieces[y][x].color.colorRGB.g = 128;
 			ground_vertieces[y][x].color.colorRGB.b = 128;
-			*/
+			
 			ground_vertieces[y][x].color.colorRGB.a = 255;
 		}
 
@@ -366,7 +373,7 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
   //nodequads.Sort(); 
   m_recalc_ambient_light = true;    // Make sure, that ambient lighting is done
 
-  light_handler->CalcAmbientLight (ambient_color, sun_color, light_direction,
+  light_handler->CalcAmbientLight (m_ambient_light_color, m_sun_light_color, m_light_direction,
                                    &shader_matrix);
 
   // Generate Water 
@@ -429,11 +436,11 @@ void cMapblock3D::Render (int x, int y, bool do_culling, float move_x,
               for (unsigned int i = 0; i < objects.count (); i++)
                   {
                     struct sStaticObject *object = objects.Get (i);
-                    object->light->CalcAmbientLight (ambient_color, sun_color,
-                                                     light_direction);
+                    object->light->CalcAmbientLight (m_ambient_light_color, m_sun_light_color,
+                                                     m_light_direction);
                   }
-              light_handler->CalcAmbientLight (ambient_color, sun_color,
-                                               light_direction,
+              light_handler->CalcAmbientLight (m_ambient_light_color, m_sun_light_color,
+                                               m_light_direction,
                                                &shader_matrix);
               m_recalc_ambient_light = false;
             }
@@ -519,8 +526,6 @@ void cMapblock3D::RenderWater (int dx, int dy, bool do_culling)
   float my = dy * 8.0;
 
   glDisable (GL_ALPHA_TEST);
-
-  glColor4f (1.0, 1.0, 1.0, 1.0);
   glNormal3f (0.0, 0.0, 1.0);
   glBegin (GL_QUADS);
   glDisable (GL_LIGHTING);
@@ -601,8 +606,8 @@ sStaticObject *cMapblock3D::CheckRay (float vecOrigin[3], float vecDir[3],
                 sphere[2] = object->sphere[2] * 0.1f;
                 act_dist =
                   GetSquaredDistRayPoint (vecOrigin, vecDir, sphere, lam2);
-                if (lam2 > 0)
-                  if (act_dist < (object->sphere[4] * object->sphere[4]))
+                if (lam2 > 0) {
+//                  if (act_dist < (object->sphere[3] * object->sphere[3]))
                       {
                         cStaticModel *model =
 							StaticModelLoader::GetInstance()->getModel (object->tileid);
@@ -622,6 +627,8 @@ sStaticObject *cMapblock3D::CheckRay (float vecOrigin[3], float vecDir[3],
                                         }
                                   }
                             }
+                      }
+                      
                       }
               }
       }
@@ -735,4 +742,19 @@ void cMapblock3D::AddMultiObject(Uint32 id, Uint16 tileid, Uint16 dye, int x, in
                                                                object->y - new_y * 8,
                                                                object->z, model);
     }		
+}
+
+void cMapblock3D::set_light_color (sColor ambient_color, sColor sun_color)
+{
+     this->m_ambient_light_color = ambient_color;
+     this->m_sun_light_color = sun_color;
+     m_recalc_ambient_light = true;
+}
+
+void cMapblock3D::set_light_direction (float light_direction[3])
+{
+     m_light_direction[0] = light_direction[0];
+     m_light_direction[1] = light_direction[1];
+     m_light_direction[2] = light_direction[2];
+     m_recalc_ambient_light = true;
 }

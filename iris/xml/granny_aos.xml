@@ -1420,7 +1420,7 @@
 
 
   <CHARACTER_AOS>
-    <DESCRIPTION>male</DESCRIPTION>
+    <DESCRIPTION>Male</DESCRIPTION>
     <ID>400</ID>
     <ANIMSET>0</ANIMSET>
     <EARS>Models/Others/H_Male_Ears_V2_LOD2.grn</EARS>
@@ -1441,7 +1441,7 @@
   </CHARACTER_AOS>
 
   <CHARACTER_AOS>
-    <DESCRIPTION>maleelf</DESCRIPTION>
+    <DESCRIPTION>Maleelf</DESCRIPTION>
     <ID>605</ID>
     <ANIMSET>0</ANIMSET>
     <EARS>Models/Others/E_Male_Ears_V2_LOD2.grn</EARS>
@@ -1461,6 +1461,93 @@
     <RIGHT_HAND_BONE>20</RIGHT_HAND_BONE>
   </CHARACTER_AOS>
 
+<!-- orgiginal: currently doesn't work
+  <CHARACTER>
+    <ID>744</ID>
+    <FILE>$_lod2.grn</FILE>
+    <ANIMSET>0</ANIMSET>
+    <PREFIX>Models/Humans/h_male</PREFIX>
+  </CHARACTER>
+-->
+  <CHARACTER_AOS>
+    <DESCRIPTION>Necromancy transformed Male</DESCRIPTION>
+    <ID>744</ID>
+    <ANIMSET>0</ANIMSET>
+    <EARS>Models/Others/H_Male_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/Others/H_Male_Face_01_V2_LOD2.grn</FACE>
+    <FEET>Models/Others/H_Male_Feet_V2_LOD2.grn</FEET>
+    <HANDS>Models/Others/H_Male_Hands_V2_LOD2.grn</HANDS>
+    <HEAD>Models/Others/H_Male_Head_V2_LOD2.grn</HEAD>
+    <LLEGS>Models/Others/H_Male_LLegs_V2_LOD2.grn</LLEGS>
+    <NECK>Models/Others/H_Male_Neck_V2_LOD2.grn</NECK>
+    <TORSOUP>Models/Others/H_Male_Torso_Upper_V2_LOD2.grn</TORSOUP>
+    <TORSO>Models/Others/H_Male_Torso_V2_LOD2.grn</TORSO>
+    <UARMS>Models/Others/H_Male_UArms_V2_LOD2.grn</UARMS>
+    <FARMS>Models/Others/H_Male_FArms_v2_LOD2.grn</FARMS>
+    <ULEGS>Models/Others/H_Male_ulegs_v2_LOD2.grn</ULEGS>
+    <PELVIS>Models/Others/H_Male_Pelvis_v2_LOD2.grn</PELVIS>
+    <LEFT_HAND_BONE>24</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>20</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
+
+<!-- orgiginal: currently doesn't work
+  <CHARACTER>
+    <ID>183</ID>
+    <FILE>$_lod2.grn</FILE>
+    <ANIMSET>0</ANIMSET>
+    <PREFIX>Models/Humans/H_Savage_Male</PREFIX>
+  </CHARACTER>
+-->
+  <CHARACTER_AOS>
+    <DESCRIPTION>Necromancy transformed Male</DESCRIPTION>
+    <ID>183</ID>
+    <ANIMSET>0</ANIMSET>
+    <EARS>Models/Others/H_Male_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/Others/H_Male_Face_01_V2_LOD2.grn</FACE>
+    <FEET>Models/Others/H_Male_Feet_V2_LOD2.grn</FEET>
+    <HANDS>Models/Others/H_Male_Hands_V2_LOD2.grn</HANDS>
+    <HEAD>Models/Others/H_Male_Head_V2_LOD2.grn</HEAD>
+    <LLEGS>Models/Others/H_Male_LLegs_V2_LOD2.grn</LLEGS>
+    <NECK>Models/Others/H_Male_Neck_V2_LOD2.grn</NECK>
+    <TORSOUP>Models/Others/H_Male_Torso_Upper_V2_LOD2.grn</TORSOUP>
+    <TORSO>Models/Others/H_Male_Torso_V2_LOD2.grn</TORSO>
+    <UARMS>Models/Others/H_Male_UArms_V2_LOD2.grn</UARMS>
+    <FARMS>Models/Others/H_Male_FArms_v2_LOD2.grn</FARMS>
+    <ULEGS>Models/Others/H_Male_ulegs_v2_LOD2.grn</ULEGS>
+    <PELVIS>Models/Others/H_Male_Pelvis_v2_LOD2.grn</PELVIS>
+    <LEFT_HAND_BONE>24</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>20</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
+
+<!-- orgiginal: currently doesn't work
+  <CHARACTER>
+    <ID>750</ID>
+    <FILE>$_lod2.grn</FILE>
+    <ANIMSET>0</ANIMSET>
+    <PREFIX>Models/Humans/H_Savage_Male</PREFIX>
+  </CHARACTER>
+-->
+  <CHARACTER_AOS>
+    <DESCRIPTION>Savage Male</DESCRIPTION>
+    <ID>750</ID>
+    <ANIMSET>0</ANIMSET>
+    <EARS>Models/Others/H_Male_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/Others/H_Male_Face_01_V2_LOD2.grn</FACE>
+    <FEET>Models/Others/H_Male_Feet_V2_LOD2.grn</FEET>
+    <HANDS>Models/Others/H_Male_Hands_V2_LOD2.grn</HANDS>
+    <HEAD>Models/Others/H_Male_Head_V2_LOD2.grn</HEAD>
+    <LLEGS>Models/Others/H_Male_LLegs_V2_LOD2.grn</LLEGS>
+    <NECK>Models/Others/H_Male_Neck_V2_LOD2.grn</NECK>
+    <TORSOUP>Models/Others/H_Male_Torso_Upper_V2_LOD2.grn</TORSOUP>
+    <TORSO>Models/Others/H_Male_Torso_V2_LOD2.grn</TORSO>
+    <UARMS>Models/Others/H_Male_UArms_V2_LOD2.grn</UARMS>
+    <FARMS>Models/Others/H_Male_FArms_v2_LOD2.grn</FARMS>
+    <ULEGS>Models/Others/H_Male_ulegs_v2_LOD2.grn</ULEGS>
+    <PELVIS>Models/Others/H_Male_Pelvis_v2_LOD2.grn</PELVIS>
+    <LEFT_HAND_BONE>24</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>20</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
+
   <!-- 
   ============================================================================================================
            Female
@@ -1469,7 +1556,7 @@
 
 
   <CHARACTER_AOS>
-    <DESCRIPTION>female</DESCRIPTION>
+    <DESCRIPTION>Female</DESCRIPTION>
     <ID>401</ID>
     <ANIMSET>1</ANIMSET>
     <EARS>Models/Others/H_Female_Ears_V2_LOD2.grn</EARS>
@@ -1490,7 +1577,7 @@
   </CHARACTER_AOS>
 
   <CHARACTER_AOS>
-    <DESCRIPTION>femaleelf</DESCRIPTION>
+    <DESCRIPTION>Femaleelf</DESCRIPTION>
     <ID>606</ID>
     <ANIMSET>1</ANIMSET>
     <EARS>Models/others/E_Female_Ears_V2_LOD2.grn</EARS>
@@ -1506,6 +1593,156 @@
     <FARMS>Models/others/H_Female_FArms_V2_LOD2.grn</FARMS>
     <ULEGS>Models/others/H_Female_ULegs_V2_LOD2.grn</ULEGS>
     <PELVIS>Models/others/H_Female_Pelvis_V2_LOD2.grn</PELVIS>
+    <LEFT_HAND_BONE>22</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>15</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
+
+<!-- original currently doesn't work
+  <CHARACTER>
+    <ID>745</ID>
+    <FILE>$_lod2.grn</FILE>
+    <ANIMSET>1</ANIMSET>
+    <PREFIX>Models/Humans/h_female</PREFIX>
+  </CHARACTER>
+-->
+
+  <CHARACTER_AOS>
+    <DESCRIPTION>Necromancy trandformed Female</DESCRIPTION>
+    <ID>745</ID>
+    <ANIMSET>1</ANIMSET>
+    <EARS>Models/Others/H_Female_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/Others/H_Female_Face_02_V2_LOD2.grn</FACE>
+    <FEET>Models/Others/H_Female_Feet_V2_LOD2.grn</FEET>
+    <HANDS>Models/Others/H_Female_Hands_V2_LOD2.grn</HANDS>
+    <HEAD>Models/Others/H_Female_Head_V2_LOD2.grn</HEAD>
+    <LLEGS>Models/Others/H_Female_LLegs_V2_LOD2.grn</LLEGS>
+    <NECK>Models/Others/H_Female_Neck_V2_LOD2.grn</NECK>
+    <TORSOUP>Models/Others/H_Female_Torso_Upper_V2_LOD2.grn</TORSOUP>
+    <TORSO>Models/Others/H_Female_Torso_V2_LOD2.grn</TORSO>
+    <UARMS>Models/Others/H_Female_UArms_V2_LOD2.grn</UARMS>
+    <FARMS>Models/Others/H_Female_FArms_V2_LOD2.grn</FARMS>
+    <ULEGS>Models/Others/H_Female_ULegs_V2_LOD2.grn</ULEGS>
+    <PELVIS>Models/Others/H_Female_Pelvis_V2_LOD2.grn</PELVIS>
+    <LEFT_HAND_BONE>22</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>15</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
+
+<!-- original currently doesn't work
+  <CHARACTER>
+    <ID>184</ID>
+    <FILE>$_lod2.grn</FILE>
+    <ANIMSET>1</ANIMSET>
+    <PREFIX>Models/Humans/H_Savage_Female</PREFIX>
+  </CHARACTER>
+-->
+
+  <CHARACTER_AOS>
+    <DESCRIPTION>Savage Female</DESCRIPTION>
+    <ID>184</ID>
+    <ANIMSET>1</ANIMSET>
+    <EARS>Models/Others/H_Female_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/Others/H_Female_Face_02_V2_LOD2.grn</FACE>
+    <FEET>Models/Others/H_Female_Feet_V2_LOD2.grn</FEET>
+    <HANDS>Models/Others/H_Female_Hands_V2_LOD2.grn</HANDS>
+    <HEAD>Models/Others/H_Female_Head_V2_LOD2.grn</HEAD>
+    <LLEGS>Models/Others/H_Female_LLegs_V2_LOD2.grn</LLEGS>
+    <NECK>Models/Others/H_Female_Neck_V2_LOD2.grn</NECK>
+    <TORSOUP>Models/Others/H_Female_Torso_Upper_V2_LOD2.grn</TORSOUP>
+    <TORSO>Models/Others/H_Female_Torso_V2_LOD2.grn</TORSO>
+    <UARMS>Models/Others/H_Female_UArms_V2_LOD2.grn</UARMS>
+    <FARMS>Models/Others/H_Female_FArms_V2_LOD2.grn</FARMS>
+    <ULEGS>Models/Others/H_Female_ULegs_V2_LOD2.grn</ULEGS>
+    <PELVIS>Models/Others/H_Female_Pelvis_V2_LOD2.grn</PELVIS>
+    <LEFT_HAND_BONE>22</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>15</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
+
+<!-- original currently doesn't work
+  <CHARACTER>
+    <ID>186</ID>
+    <FILE>$_lod2.grn</FILE>
+    <ANIMSET>1</ANIMSET>
+    <PREFIX>Models/Humans/H_Savage_Female</PREFIX>
+  </CHARACTER>
+-->
+
+  <CHARACTER_AOS>
+    <DESCRIPTION>Savage Female</DESCRIPTION>
+    <ID>186</ID>
+    <ANIMSET>1</ANIMSET>
+    <EARS>Models/Others/H_Female_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/Others/H_Female_Face_02_V2_LOD2.grn</FACE>
+    <FEET>Models/Others/H_Female_Feet_V2_LOD2.grn</FEET>
+    <HANDS>Models/Others/H_Female_Hands_V2_LOD2.grn</HANDS>
+    <HEAD>Models/Others/H_Female_Head_V2_LOD2.grn</HEAD>
+    <LLEGS>Models/Others/H_Female_LLegs_V2_LOD2.grn</LLEGS>
+    <NECK>Models/Others/H_Female_Neck_V2_LOD2.grn</NECK>
+    <TORSOUP>Models/Others/H_Female_Torso_Upper_V2_LOD2.grn</TORSOUP>
+    <TORSO>Models/Others/H_Female_Torso_V2_LOD2.grn</TORSO>
+    <UARMS>Models/Others/H_Female_UArms_V2_LOD2.grn</UARMS>
+    <FARMS>Models/Others/H_Female_FArms_V2_LOD2.grn</FARMS>
+    <ULEGS>Models/Others/H_Female_ULegs_V2_LOD2.grn</ULEGS>
+    <PELVIS>Models/Others/H_Female_Pelvis_V2_LOD2.grn</PELVIS>
+    <LEFT_HAND_BONE>22</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>15</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
+
+<!-- original currently doesn't work
+  <CHARACTER>
+    <ID>751</ID>
+    <FILE>$_lod2.grn</FILE>
+    <ANIMSET>1</ANIMSET>
+    <PREFIX>Models/Humans/H_Savage_Female</PREFIX>
+  </CHARACTER>
+-->
+
+  <CHARACTER_AOS>
+    <DESCRIPTION>Savage Female</DESCRIPTION>
+    <ID>751</ID>
+    <ANIMSET>1</ANIMSET>
+    <EARS>Models/Others/H_Female_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/Others/H_Female_Face_02_V2_LOD2.grn</FACE>
+    <FEET>Models/Others/H_Female_Feet_V2_LOD2.grn</FEET>
+    <HANDS>Models/Others/H_Female_Hands_V2_LOD2.grn</HANDS>
+    <HEAD>Models/Others/H_Female_Head_V2_LOD2.grn</HEAD>
+    <LLEGS>Models/Others/H_Female_LLegs_V2_LOD2.grn</LLEGS>
+    <NECK>Models/Others/H_Female_Neck_V2_LOD2.grn</NECK>
+    <TORSOUP>Models/Others/H_Female_Torso_Upper_V2_LOD2.grn</TORSOUP>
+    <TORSO>Models/Others/H_Female_Torso_V2_LOD2.grn</TORSO>
+    <UARMS>Models/Others/H_Female_UArms_V2_LOD2.grn</UARMS>
+    <FARMS>Models/Others/H_Female_FArms_V2_LOD2.grn</FARMS>
+    <ULEGS>Models/Others/H_Female_ULegs_V2_LOD2.grn</ULEGS>
+    <PELVIS>Models/Others/H_Female_Pelvis_V2_LOD2.grn</PELVIS>
+    <LEFT_HAND_BONE>22</LEFT_HAND_BONE>
+    <RIGHT_HAND_BONE>15</RIGHT_HAND_BONE>
+  </CHARACTER_AOS>
+
+<!-- original currently doesn't work
+  <CHARACTER>
+    <ID>774</ID>
+    <FILE>$_lod2.grn</FILE>
+    <ANIMSET>1</ANIMSET>
+    <PREFIX>Models/Humans/Dawn_Girl</PREFIX>
+  </CHARACTER>
+-->
+
+  <CHARACTER_AOS>
+    <DESCRIPTION>Dawn Girl</DESCRIPTION>
+    <ID>774</ID>
+    <ANIMSET>1</ANIMSET>
+    <EARS>Models/Others/H_Female_Ears_V2_LOD2.grn</EARS>
+    <FACE>Models/Others/H_Female_Face_02_V2_LOD2.grn</FACE>
+    <FEET>Models/Others/H_Female_Feet_V2_LOD2.grn</FEET>
+    <HANDS>Models/Others/H_Female_Hands_V2_LOD2.grn</HANDS>
+    <HEAD>Models/Others/H_Female_Head_V2_LOD2.grn</HEAD>
+    <LLEGS>Models/Others/H_Female_LLegs_V2_LOD2.grn</LLEGS>
+    <NECK>Models/Others/H_Female_Neck_V2_LOD2.grn</NECK>
+    <TORSOUP>Models/Others/H_Female_Torso_Upper_V2_LOD2.grn</TORSOUP>
+    <TORSO>Models/Others/H_Female_Torso_V2_LOD2.grn</TORSO>
+    <UARMS>Models/Others/H_Female_UArms_V2_LOD2.grn</UARMS>
+    <FARMS>Models/Others/H_Female_FArms_V2_LOD2.grn</FARMS>
+    <ULEGS>Models/Others/H_Female_ULegs_V2_LOD2.grn</ULEGS>
+    <PELVIS>Models/Others/H_Female_Pelvis_V2_LOD2.grn</PELVIS>
     <LEFT_HAND_BONE>22</LEFT_HAND_BONE>
     <RIGHT_HAND_BONE>15</RIGHT_HAND_BONE>
   </CHARACTER_AOS>
@@ -10232,12 +10469,6 @@
     <PREFIX>Models/Monsters/NPC_Cpt_Dasha</PREFIX>
   </CHARACTER>
   <CHARACTER>
-    <ID>774</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>1</ANIMSET>
-    <PREFIX>Models/Monsters/Dawn_Girl</PREFIX>
-  </CHARACTER>
-  <CHARACTER>
     <ID>775</ID>
     <FILE>$_lod2.grn</FILE>
     <ANIMSET>3</ANIMSET>
@@ -10438,29 +10669,12 @@
           Humanoids
   ============================================================================================================ 
   -->
-  <CHARACTER>
-    <ID>183</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>0</ANIMSET>
-    <PREFIX>Models/Humans/H_Savage_Male</PREFIX>
-  </CHARACTER>
-  <CHARACTER>
-    <ID>184</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>1</ANIMSET>
-    <PREFIX>Models/Humans/H_Savage_Female</PREFIX>
-  </CHARACTER>
+
   <CHARACTER>
     <ID>185</ID>
     <FILE>$_lod2.grn</FILE>
     <ANIMSET>0</ANIMSET>
     <PREFIX>Models/Humans/H_SavageRider_Male</PREFIX>
-  </CHARACTER>
-  <CHARACTER>
-    <ID>186</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>1</ANIMSET>
-    <PREFIX>Models/Humans/H_Savage_Female</PREFIX>
   </CHARACTER>
   <CHARACTER>
     <ID>402</ID>
@@ -10485,30 +10699,6 @@
     <FILE>$_lod2.grn</FILE>
     <ANIMSET>0</ANIMSET>
     <PREFIX>Models/Humans/player_ghost</PREFIX>
-  </CHARACTER>
-  <CHARACTER>
-    <ID>744</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>0</ANIMSET>
-    <PREFIX>Models/Humans/h_male</PREFIX>
-  </CHARACTER>
-  <CHARACTER>
-    <ID>745</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>1</ANIMSET>
-    <PREFIX>Models/Humans/h_female</PREFIX>
-  </CHARACTER>
-  <CHARACTER>
-    <ID>750</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>0</ANIMSET>
-    <PREFIX>Models/Humans/H_Savage_Male</PREFIX>
-  </CHARACTER>
-  <CHARACTER>
-    <ID>751</ID>
-    <FILE>$_lod2.grn</FILE>
-    <ANIMSET>1</ANIMSET>
-    <PREFIX>Models/Humans/H_Savage_Female</PREFIX>
   </CHARACTER>
   <CHARACTER>
     <ID>970</ID>

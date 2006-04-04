@@ -58,8 +58,9 @@ cDynamicObject::cDynamicObject()
 
 cDynamicObject::~cDynamicObject()
 {
-  if (m_light_source)
+  if (m_light_source) {
     pLightManager.UnRegisterLight (m_light_source);
+  }
   if (m_particle_effect_handle)
     pParticleEngine.RemoveEffect (m_particle_effect_handle);
 }
@@ -141,6 +142,7 @@ cDynamicObject *cDynamicObjectList::Add( Uint32 id )
 {
 	dynamiclist_t::iterator iter;
 	iter = dynamiclist.find( id );
+	
 
 	if ( iter != dynamiclist.end() )
 	{
@@ -326,14 +328,21 @@ cDynamicObject *cDynamicObjectList::AddContainerContent (Uint32 id,
 cDynamicObject *cDynamicObjectList::AddWorldItem( Uint32 id, Uint16 model, Uint16 dye, int x, int y, int z, 
 												  int itemcount, int incrcounter, int direction, int flag )
 {
+	/*
+     Tensor: what did we do here? Imho not the best idea, since we don't cleanup anything...
+     
 	cDynamicObject *result = Get( id );
+
+
 	// much better with that check!
 	if ( !( result && result->x == x && result->y == y && result->z == z ) )
 	{
 		result = Add( id );
-	}
+	}*/
 
-	// result = Add( id );
+    // Tensor: old method was simply a:
+	cDynamicObject *result  = Add( id );
+	
 	assert( result );
 	result->id = id;
 	result->type = DYNAMICTYPE_WORLD;

@@ -69,6 +69,9 @@ public:
    void SetRecalcAmbientLightFlag ();
    void AddMultiObject(Uint32 id, Uint16 tileid, Uint16 dye, int x, int y, int z);
 
+   virtual void set_light_color (sColor ambient_color, sColor sun_color);
+   virtual void set_light_direction (float light_direction[3]);
+
 protected:
 	//float groundtiles[8*8*4*3];
 	float groundnormals[9][9][3];
@@ -99,6 +102,10 @@ protected:
 
 	cMotiveBasedGroundLight * light_handler;
 	cShaderMatrixBlock shader_matrix;
+	sColor m_ambient_light_color, m_sun_light_color;
+	float m_light_direction[3];
+   
+
 };
 
 

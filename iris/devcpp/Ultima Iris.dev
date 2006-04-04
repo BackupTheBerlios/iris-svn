@@ -1,7 +1,7 @@
 [Project]
 FileName=Ultima Iris.dev
 Name=Ultima Iris
-UnitCount=134
+UnitCount=135
 Type=1
 Ver=1
 ObjFiles=
@@ -25,7 +25,7 @@ CommandLine=
 IncludeVersionInfo=1
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=00000010010010000000c1
+CompilerSettings=00000010010010000000b1
 UseCustomMakefile=0
 CustomMakefile=
 
@@ -1003,7 +1003,7 @@ BuildCmd=
 Major=0
 Minor=6
 Release=5
-Build=438
+Build=446
 LanguageID=2057
 CharsetID=1252
 CompanyName=Iris Team
@@ -1854,6 +1854,16 @@ BuildCmd=
 FileName=..\src\net\Packet.cpp
 CompileCpp=1
 Folder=net
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit135]
+FileName=..\src\renderer\3D\WorldEnvironment.cpp
+CompileCpp=1
+Folder=renderer/3D
 Compile=1
 Link=1
 Priority=1000

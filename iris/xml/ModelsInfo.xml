@@ -23,12 +23,26 @@
 
 <MODELS>
       <SCALE_FACTOR>0.9</SCALE_FACTOR>
+	<!-- rabbit -->
+	<MODEL>
+		<ID>205</ID>
+		<SCALE_X>0.3</SCALE_X>
+		<SCALE_Y>0.3</SCALE_Y>
+		<SCALE_Z>0.3</SCALE_Z>
+	</MODEL>
+	<!-- rabbit -->
+	<MODEL>
+		<ID>835</ID>
+		<SCALE_X>0.5</SCALE_X>
+		<SCALE_Y>0.5</SCALE_Y>
+		<SCALE_Z>0.5</SCALE_Z>
+	</MODEL>
 	<!-- cat -->
 	<MODEL>
 		<ID>201</ID>
-		<SCALE_X>0.6</SCALE_X>
-		<SCALE_Y>0.6</SCALE_Y>
-		<SCALE_Z>0.6</SCALE_Z>
+		<SCALE_X>0.4</SCALE_X>
+		<SCALE_Y>0.4</SCALE_Y>
+		<SCALE_Z>0.4</SCALE_Z>
 	</MODEL>
 	<!-- canines_dog_hound -->
 	<MODEL>
@@ -40,9 +54,9 @@
 	<!-- rodents_rat_sewer_lod2 -->
 	<MODEL>
 		<ID>238</ID>
-		<SCALE_X>0.6</SCALE_X>
-		<SCALE_Y>0.6</SCALE_Y>
-		<SCALE_Z>0.6</SCALE_Z>
+		<SCALE_X>0.3</SCALE_X>
+		<SCALE_Y>0.3</SCALE_Y>
+		<SCALE_Z>0.3</SCALE_Z>
 	</MODEL>
 
 	<!-- Succubus -->

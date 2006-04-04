@@ -41,6 +41,7 @@
 #include "Fade.h"
 
 // #include "../Fluid/mmgr.h"
+#include "renderer/3D/WorldEnvironment.h"
 
 class Renderer
 {
@@ -59,6 +60,8 @@ protected:
 	float m_lightlevel;
 	int flags;
 
+    cWorldEnvironment m_world_environment;    
+
 public:
    Renderer();
    virtual ~Renderer();
@@ -67,7 +70,7 @@ public:
    virtual void DeInit( void ) = 0;
    virtual void RenderScene( void ) = 0;
    virtual void GrabDynamic( int x, int y, cDynamicObject **r_object, cCharacter **r_character ) = 0;
-   virtual void GrabMousePosition( int x, int y, int maxz, int cursor3d[3], int *cursor_character ) = 0;
+   virtual void GrabMousePosition( int x, int y, int maxz, int cursor3d[3], int & artid ) = 0;
    virtual void AddDynamic( cDynamicObject *object );
    virtual void DelDynamic( cDynamicObject *object );
    virtual void AddCharacter( cCharacter *character ) { return; }
@@ -88,6 +91,8 @@ public:
    float lightlevel() { return m_lightlevel; }
    
    void setDragModel( Uint16 drag_model, int x = 0, int y = 0, int z = 0 );
+   
+   cWorldEnvironment & world_environment ();
 };
 
 #endif //_Renderer_H_

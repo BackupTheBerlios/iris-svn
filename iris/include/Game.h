@@ -148,7 +148,7 @@ private:
 	void (*callback_OnDynamicDrag)( Uint32 id, Uint16 model, int count, int x, int y, Uint32 container );
 	void (*callback_OnAOSTooltip)( Uint32 id, int count, int x, int y );
 
-	void GrabMousePosition( int x, int y, int max_z = 1000 );
+	void GrabMousePosition( int x, int y, int & artid, int max_z = 1000);
 	void MoveToMouse();
 	void GrabDynamic( int x, int y, cDynamicObject ** r_object, cCharacter ** r_character );
 

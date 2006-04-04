@@ -67,7 +67,8 @@ public:
    
    int getBlockX () { return m_blockx; }
    int getBlockY () { return m_blocky; }
-
+   
+   virtual void set_light_color (sColor ambient_color, sColor sun_color) = 0;
 };
 
 

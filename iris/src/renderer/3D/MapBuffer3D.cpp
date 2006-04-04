@@ -107,3 +107,14 @@ void Mapbuffer3D::SetRecalcAmbientLightFlag ()
         block->SetRecalcAmbientLightFlag ();
       }
 }
+
+void Mapbuffer3D::SetLightColorAndDirection (sColor ambient_color, sColor sun_color, float light_direction[3])
+{
+  MapBuffer_t::iterator iter;
+  for (iter = root.begin (); iter != root.end (); iter++)
+      {
+        cMapblock3D *block = (cMapblock3D *) iter->second;
+        block->set_light_color (ambient_color, sun_color);
+        block->set_light_direction (light_direction);
+      }
+}

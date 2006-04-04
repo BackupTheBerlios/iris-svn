@@ -2931,6 +2931,7 @@ static ZString api_net_senddoubleclick (ZCsl * aCsl)
 
 }
 
+//SiENcE: added to get Cliloc Messages
 static ZString api_loader_getmessage (ZCsl * aCsl)
 {
 	int id = aCsl->get ("id").asInt ();
@@ -2939,6 +2940,32 @@ static ZString api_loader_getmessage (ZCsl * aCsl)
 		return "";
 
 	return pClilocLoader.GetMessage(id).c_str();
+}
+
+//Tensor: Loads world environment lightmap
+static ZString api_load_world_light_map (ZCsl * aCsl)
+{
+  Renderer *renderer = Game::GetInstance()->GetRenderer ();
+
+  if (!renderer)
+    return "0";
+  
+  renderer->world_environment().LoadLightColorMap (aCsl->get ("ambientfilename").buffer (), aCsl->get ("sunfilename").buffer ());
+  
+  return "0";       
+}
+
+//Tensor: Loads world environment fogmap
+static ZString api_load_world_fog_map (ZCsl * aCsl)
+{
+  Renderer *renderer = Game::GetInstance()->GetRenderer ();
+
+  if (!renderer)
+    return "0";
+  
+  renderer->world_environment().LoadFogColorMap (aCsl->get ("fogfilename").buffer ());
+  
+  return "0";       
 }
 
 CSLHandler::CSLHandler ()
@@ -3417,6 +3444,12 @@ void CSLHandler::InitAPI (void)
     // added in 0.86 SiENcE
     //Harkon: get locale string from cliloc.*
     csl->addFunc(module, "cliloc_getmessage(const id)", api_loader_getmessage);
+
+    // added from Tensor
+    csl->addFunc (module, "load_world_light_map(const ambientfilename, const sunfilename)",
+                           api_load_world_light_map);
+    csl->addFunc (module, "load_world_fog_map(const fogfilename)",
+                           api_load_world_fog_map);
   }
 
   catch (const ZException & err)

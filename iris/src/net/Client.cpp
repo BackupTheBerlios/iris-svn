@@ -328,14 +328,14 @@ cClient::cClient( void (*error_callback)(unsigned int error) )
 	last_skill = 0;
 	last_attack = 0;
 	m_wait_for_target = "";
-
-	cMapInfoEntry * actualmap = MapInfoLoader::GetInstance()->GetMapInfo(0);
+/* This is now handled by WorldEnvironment.cpp */
+/*	cMapInfoEntry * actualmap = MapInfoLoader::GetInstance()->GetMapInfo(0);
 
 	if ( actualmap )
 	{
 		GLfloat fogColor[4] = {(float) actualmap->fog_r() / 255.0f, (float) actualmap->fog_g() / 255.0f,(float) actualmap->fog_b() / 255.0f, 1.0 };
 		glFogfv(GL_FOG_COLOR, fogColor);
-	}
+	} */
 
 	callback_OnGameStart = NULL;
 	callback_OnTeleport = NULL;
@@ -1144,6 +1144,7 @@ void cClient::Act_Speak( cPacket *packet )
 		callback_OnSpeech( msg, name, (Uint32)packet->packet.Speak.m_id, color );
 	}
 
+	// SAFE_DELETE( msg );
 	SAFE_DELETE_ARRAY( msg );
 }
 
@@ -2530,7 +2531,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		}
 		else if ( command == "checkbox" )
 		{
-			std::cout << "Trying to add a CheckBox which is disabled on this version." << std::endl;
+			Logger::WriteDebug( "Trying to add a check box (DISABLED): " + command );
 /*
 			Checkbox *checkbox = new Checkbox( params[0], params[1], params[2], params[3], params[4] );
 			control = checkbox;
@@ -2538,8 +2539,6 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		}
 		else if ( command == "radio" )
 		{
-			std::cout << "Trying to add a Radio Button which is disabled on this version." << std::endl;
-			/*
 			// TODO: Fix first time, it shows the wrong option checked but on click fixes (needs debugging).
 
 			printf( "DEBUG - params: %d %d %d %d %d\n", params[0], params[1], params[2], params[3], params[4] );
@@ -2548,7 +2547,6 @@ void cClient::Act_GumpDialog( cPacket *packet )
 
             radio->SetPage( target_page );
             control = radio;
-			*/
 		}
 		else if ( command == "noresize" )
 		{
@@ -2738,8 +2736,10 @@ void cClient::Act_SubCommands (cPacket * packet)
 		  Renderer * renderer = Game::GetInstance()->GetRenderer();
 
 		  renderer->LoadSkyboxTextures (actual_map);
-		  GLfloat fogColor[4] = {(float) mapinfo_entry->fog_r() / 255.0f, (float) mapinfo_entry->fog_g() / 255.0f,(float) mapinfo_entry->fog_b() / 255.0f, 1.0 };
-		  glFogfv(GL_FOG_COLOR, fogColor);
+/*		  This is now handled by WorldEnvironment.cpp
+
+          GLfloat fogColor[4] = {(float) mapinfo_entry->fog_r() / 255.0f, (float) mapinfo_entry->fog_g() / 255.0f,(float) mapinfo_entry->fog_b() / 255.0f, 1.0 };
+		  glFogfv(GL_FOG_COLOR, fogColor); */
 		  
 		  break;
 		}
@@ -3386,7 +3386,7 @@ void cClient::Send_DropRequest (Uint32 id, int x, int y, int z,
 }
 
 
-void cClient::Send_Target (Uint32 cursorid, int x, int y, int z)
+void cClient::Send_Target (Uint32 cursorid, int x, int y, int z, int artid)
 {
   cPacket packet;
   packet.FillPacket (PCK_Target);
@@ -3395,6 +3395,7 @@ void cClient::Send_Target (Uint32 cursorid, int x, int y, int z)
   packet.packet.Target.m_clickX = x;
   packet.packet.Target.m_clickY = y;
   packet.packet.Target.m_clickZ = (Uint8) ((Sint8) z);
+  packet.packet.Target.m_Model = artid;
   Send (&packet);
 }
 

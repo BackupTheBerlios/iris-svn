@@ -521,7 +521,11 @@ void Game::HandleMouseMotion( SDL_MouseMotionEvent * event )
 
 	if ( SDL_GetTicks() - (unsigned int)m_MouseLastTick > (unsigned int)Config::GetMouseMotionTimer() )
 	{
-		GrabMousePosition( cursorx, cursory );
+        	int artid;
+		GrabMousePosition( cursorx, cursory, artid );
+
+//		GrabMousePosition( cursorx, cursory );
+
 		cDynamicObject *object;
 		cCharacter *character;
 		GrabDynamic( cursorx, cursory, &object, &character );
@@ -590,6 +594,8 @@ void Game::HandleClick( int x, int y, unsigned int buttonstate, bool double_clic
 	vecP[2] = -1.0f;
 	int tx, ty;
 	pCamera->GetRenderCoords(vecP, tx, ty); */
+
+	int artid;
 	
 	if ( ( buttonstate == SDL_BUTTON_LEFT ) && pClient )
 	{
@@ -658,8 +664,12 @@ void Game::HandleClick( int x, int y, unsigned int buttonstate, bool double_clic
 			break;
 
 		case CLICK_TARGET_XYZ:
-			GrabMousePosition( x, y );
-			pClient->Send_Target( (Uint32)cursorid(), cursor3d[0], cursor3d[1], cursor3d[2] );
+			GrabMousePosition( x, y, artid);
+//			printf ("%i %i %.2f\n", x, y, artid);
+			pClient->Send_Target( (Uint32)cursorid(), cursor3d[0], cursor3d[1], cursor3d[2], artid );
+
+//			GrabMousePosition( x, y );
+//			pClient->Send_Target( (Uint32)cursorid(), cursor3d[0], cursor3d[1], cursor3d[2] );
 			m_click_mode = CLICK_NORMAL;
 			break;
 		}
@@ -794,18 +804,16 @@ void Game::Walk_Simple( Uint8 action )
 }
 
 
-void Game::GrabMousePosition( int x, int y, int max_z )
+void Game::GrabMousePosition( int x, int y, int & artid, int max_z)
 {
 	if ( m_paused || !m_kRenderer )
 	{
 		return;
 	}
 
-	int cursor_char = 0;
+	m_kRenderer->GrabMousePosition( x, y, max_z, cursor3d, artid );
 
-	m_kRenderer->GrabMousePosition( x, y, max_z, cursor3d, &cursor_char );
-
-	cursor_character = cursor_char;
+	cursor_character = 0;
 }
 
 
@@ -837,9 +845,11 @@ void Game::HandleMouseDown( int x, int y, int button )
 		return;
 	}
 
+	int artid;
+
 	cursorx = x;
 	cursory = y;
-	GrabMousePosition( cursorx, cursory );
+	GrabMousePosition( cursorx, cursory, artid );
   
 	if ( button == 1 )
 	{
@@ -860,9 +870,11 @@ void Game::HandleMouseUp( int x, int y, int button )
 		return;
 	}
 
+	int artid;
+
 	cursorx = x;
 	cursory = y;
-	GrabMousePosition( cursorx, cursory );
+	GrabMousePosition( cursorx, cursory, artid );
   
 	if ( button == 1 )
 	{
@@ -905,7 +917,12 @@ void Game::MoveToMouse()
 		run_flag = 0x80;
 	}
 
-	GrabMousePosition( cursorx, cursory, pz + 20 );
+	int artid;
+	GrabMousePosition( cursorx, cursory, artid, pz + 20 );
+//	printf ("%i %i %i\n", cursor3d[0] - px, cursor3d[1] - py, cursor3d[2]);
+
+//	GrabMousePosition( cursorx, cursory, pz + 20 );
+
 	int dx = cursor3d[0] - px;
 	int dy = cursor3d[1] - py;
 	float angle = 0.0f;
@@ -1056,7 +1073,10 @@ void Game::UpdateDragMode( int mousex, int mousey )
 {
 	if ( drag_id )
 	{
-		GrabMousePosition (mousex, mousey);
+		int artid;
+		GrabMousePosition (mousex, mousey, artid);
+
+//		GrabMousePosition (mousex, mousey);
 		Uint32 containerid = 0;
 		bool value = !pUOGUI.FindDragContainer( mousex, mousey, &containerid );
         

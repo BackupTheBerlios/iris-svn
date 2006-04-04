@@ -63,12 +63,10 @@
 //extern SDLScreen *SDLscreen;
 float water_phase = 0.0f;
 
-extern float light_direction[3];
+// Make it better
 float light_angle = 0.4f;
 float light_angle_dir = 1.0f;
 int light_last_change = 0;
-extern sColor ambient_color;
-extern sColor sun_color;
 
 //CalCoreModel m_calCoreModel;
 //CalModel m_calModel;
@@ -94,9 +92,6 @@ char SkyBoxTextureNames[5][12] = {
 
 Renderer3D::Renderer3D ()
 {
-  light_direction[0] = 0.1f;
-  light_direction[1] = 0.2f;
-  light_direction[2] = 0.6f;
   for (int index = 0; index < 5; index++)
     skyboxtextures[index] = NULL;
   tex_char_shadow = NULL;
@@ -400,6 +395,7 @@ void Renderer3D::RenderScene( void )
 	glFogf( GL_FOG_START, (float)fog_view_dist );
 	glFogf( GL_FOG_END, (float)fog_view_dist + 8 );
 	// printf ("Fogdistance_START: %i\n", (int) fog_view_dist);
+	
 
 	flush_vertex_buffer();
 
@@ -410,36 +406,53 @@ void Renderer3D::RenderScene( void )
 
 	SDLScreen::GetInstance()->ClearScreen();
 
+	// SDLScreen::GetInstance()->SetLight( m_lightlevel );
 	glDisable( GL_LIGHTING );
 
 
 	current_ticks = SDL_GetTicks();
-	if ( current_ticks - light_last_change > 15000 )
+
+	if ( current_ticks - light_last_change > 150 )
 	{
+		// Dirty hack (set real time instead of current_ticks / 250)
+   	     int worldtime = (current_ticks / 250) % 256;
+       
 		// This is a temporary day cycle
-		light_angle += ( current_ticks - light_last_change ) * 0.000001f * light_angle_dir;
-		// light_angle = 0.2;
-		light_direction[0] = cos( 0.6f ) * sin( light_angle );
-		light_direction[1] = cos( light_angle ) * sin( 0.6f );
-		light_direction[2] = sin( light_angle );
+		light_angle += ( current_ticks - light_last_change ) * 0.0001f * light_angle_dir;
+		light_angle = (float) worldtime / 256.0f * 3.14159f;
+		if (light_angle <= 0.1f) light_angle = 0.1f;
+		if (light_angle >= 3.0f) light_angle = 3.0f;
+		m_light_direction[0] = cos( 0.2f ) * sin( light_angle );
+		m_light_direction[1] = cos( light_angle ) * sin( 0.2f );
+		m_light_direction[2] = sin( light_angle );
         
 		// Normalize (NOTE: Multiplication is faster than division).
-		lightNormalize = 1 / sqrt( light_direction[0] * light_direction[0] + 
-			light_direction[1] * light_direction[1] + light_direction[2] * light_direction[2] );
-		light_direction[0] *= lightNormalize;
-		light_direction[1] *= lightNormalize;
-		light_direction[2] *= lightNormalize;
+		lightNormalize = 1 / sqrt( m_light_direction[0] * m_light_direction[0] + 
+			m_light_direction[1] * m_light_direction[1] + m_light_direction[2] * m_light_direction[2] );
+		m_light_direction[0] *= lightNormalize;
+		m_light_direction[1] *= lightNormalize;
+		m_light_direction[2] *= lightNormalize;
+		
+		m_sun_light_color = world_environment().getSunLightColor (worldtime);
+		m_ambient_light_color = world_environment().getAmbientLightColor (worldtime);
+
+//		printf ("%i %i %i %i %.2f\n", (current_ticks / 250) % 256, m_sun_light_color.colorRGB.r, m_sun_light_color.colorRGB.g, m_sun_light_color.colorRGB.b, light_angle);
 
 		if ( light_angle > 3.14159f * 0.9f )
 		{
 			light_angle_dir = -1.0f;
 		}
+
 		if (light_angle < 3.14159f * 0.1f)
 		{
 			light_angle_dir = 1.0f;
 		}
+		( (Mapbuffer3D *)pMapbufferHandler.buffer() )->SetLightColorAndDirection (m_ambient_light_color, m_sun_light_color, m_light_direction);
 		( (Mapbuffer3D *)pMapbufferHandler.buffer() )->SetRecalcAmbientLightFlag();
-		pDynamicObjectList.SetRecalcAmbientLightFlag();
+		pDynamicObjectList.SetRecalcAmbientLightFlag ();
+		
+		sColor fogcolor = world_environment().getFogColor (worldtime);
+    	SDLScreen::GetInstance()->SetFogColor (fogcolor.colorRGB.r, fogcolor.colorRGB.g, fogcolor.colorRGB.b);
 
         light_last_change = current_ticks;
 	}
@@ -649,6 +662,13 @@ void Renderer3D::RenderWater (bool do_culling)
   int blocky = pCamera.GetBlockY ();
 
   glBindTexture (GL_TEXTURE_2D, tex_water->GetGLTex ());
+  float r = (float) m_ambient_light_color.colorRGB.r / 255.0f * 2.0f;
+  if (r > 1.0f) r = 1.0f;
+  float g = (float) m_ambient_light_color.colorRGB.g / 255.0f * 2.0f;
+  if (g > 1.0f) g = 1.0f;
+  float b = (float) m_ambient_light_color.colorRGB.g / 255.0f * 2.0f;
+  if (b > 1.0f) b = 1.0f;
+  glColor4f (r, g, b, 0.9f);
 
   for (int y = -view_distance; y < view_distance; y++)
     for (int x = -view_distance; x < view_distance; x++)
@@ -701,7 +721,7 @@ void Renderer3D::RenderDynamics( bool do_culling )
 				{
 					if ( object->RecalcAmbientLightFlag() )
 					{
-						object->motive()->CalcAmbientLight( ambient_color, sun_color, light_direction );
+						object->motive()->CalcAmbientLight( m_ambient_light_color, m_sun_light_color, m_light_direction );
 					}
 					object->motive()->PrepareModelForRendering();
 				}
@@ -780,7 +800,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
               assert (light);
               light->Generate (character->fx () - dx, character->fy () - dy,
                                character->fz () * 0.1f, blockx, blocky,
-                               ambient_color, sun_color, light_direction,
+                               m_ambient_light_color, m_sun_light_color, m_light_direction,
                                invmatrix);
 
               glPopMatrix ();
@@ -1140,14 +1160,18 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
   }
 }
 
-void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3],
-                                    int *cursor_character)
+
+// Picks a 3D Position (ground or statics) by targetting on the screen in (x, y)
+// max_z:  z-Maximum of the objects (used for hidden stages)
+// cursor3d: contains result position after call
+// art: contains result artid after call
+void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3], int & artid)
 {
   // Obtain Cam Coords and PickRay
-
   float vecPickRayOrigin[3];
   float vecPickRayDir[3];
 
+  // Creates a Ray
   pCamera.PlaceGLMatrix ();
   pCamera.CreatePickRay (x, y, vecPickRayOrigin, vecPickRayDir);
 
@@ -1173,12 +1197,16 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3],
   int blockx = pCamera.GetBlockX ();
   int blocky = pCamera.GetBlockY ();
 
+  // dummy variables containing result objects
   sStaticObject *picked_object = NULL;
   int picked_x = -1;
   int picked_y = -1;
   int picked_z = 0;
+  
+  // current distance, in order to get the nearest item
   float distance = 1000000.0f;
 
+  // Check blocks in view distance
   for (int y = -view_distance; y < view_distance; y++)
     for (int x = -view_distance; x < view_distance; x++)
         {
@@ -1186,48 +1214,57 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3],
             reinterpret_cast <
 
             cMapblock3D * >(pMapbufferHandler.buffer ()->CreateBlock (blockx + x, blocky + y));
-          if (block)
+            
+             if (block)
               {
-                float act_distance;
-                int z;
-                sStaticObject *result =
-                  block->CheckRay (vecPickRayOrigin, vecPickRayDir,
+                  float act_distance;
+                  int z;
+                  
+                  // Check for static objects
+                  sStaticObject *result =
+                     block->CheckRay (vecPickRayOrigin, vecPickRayDir,
                                    act_distance, x * 8.0f, y * 8.0f, max_z);
-                if (result)
-                  if (act_distance < distance)
-                      {
-                        distance = act_distance;
-                        picked_object = result;
-                        picked_x = -1;
-                        picked_y = -1;
-                      }
-                int id =
-                  block->CheckRayOnGround (vecPickRayOrigin, vecPickRayDir,
-                                           act_distance, x * 8.0f, y * 8.0f,
-                                           z);
-                if (id != 255)
-                    {
-                      if (act_distance < distance)
+                   if (result)  // we have hit a static item
+                      if (act_distance < distance) // and it is nearer than any other
                           {
-                            distance = act_distance;
-                            picked_object = NULL;
-                            picked_x = (id % 8) + (blockx + x) * 8;
-                            picked_y = (id / 8) + (blocky + y) * 8;
-                            picked_z = z;
+                            distance = act_distance; // note it
+                            picked_object = result;
+                            picked_x = -1;
+                            picked_y = -1;
                           }
-                    }
+    
+                  
+                  
+                   // Check for ground items
+                   int id =
+                      block->CheckRayOnGround (vecPickRayOrigin, vecPickRayDir,
+                                             act_distance, x * 8.0f, y * 8.0f,
+                                            z);
+                   if (id != 255) // we have hit a ground item
+                       {
+                          if (act_distance < distance) // and it is nearer than any other
+                            {
+                               distance = act_distance; // note it
+                               picked_object = NULL;
+                               picked_x = (id % 8) + (blockx + x) * 8;
+                               picked_y = (id / 8) + (blocky + y) * 8;
+                               picked_z = z;
+                            }
+                       }
+                   
 
 
               }
         }
 
-  cursor_character = 0;
-
+  // and set results
+  artid = 0;
   if (picked_object)
       {
         cursor3d[0] = picked_object->x + picked_object->blockx * 8;
         cursor3d[1] = picked_object->y + picked_object->blocky * 8;
-        cursor3d[2] = picked_object->z + picked_object->height;
+        cursor3d[2] = picked_object->z;
+        artid = picked_object->tileid;
       }
 
   if (picked_x != -1)
@@ -1236,16 +1273,6 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3],
         cursor3d[1] = picked_y;
         cursor3d[2] = picked_z;
       }
-
-/*			float act_distance;
-			cCharacter * character = pCharacterList->CheckRay(vecPickRayOrigin, vecPickRayDir, - blockx * 8.0f, - blocky * 8.0f, 0.0f, act_distance);
-			if (character && (act_distance < distance)) {
-                             distance = act_distance;
-                             if (cursor_character)
-                                 *cursor_character =  character->id();
-                        }
-*/
-
 }
 
 void Renderer3D::AddDynamic (cDynamicObject * object)

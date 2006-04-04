@@ -39,6 +39,7 @@ public:
 	void AddLight( cLight3D *light );
 	void RemoveLight( cLight3D *light );
 	void SetRecalcAmbientLightFlag();
+    void SetLightColorAndDirection (sColor ambient_color, sColor sun_color, float light_direction[3]);
 };
 
 #endif //_MAPBUFFER3D_H_

@@ -1,5 +1,14 @@
+04.04.2006
+Changes by Alexander Oster (Tensor) &  Florian Fischer (SiENcE)
+	- WorldEnvironment.cpp added to renderer3D
+	- lightning changed to gradient bmp files <- they should be added to textures dir
+	- function added to csl to load this gradient textures
+	- p.engine bug fixed
+	- granny_aos.xml updated to support all AoS Models
+	- modelsinfo.xml: scaling fixed for rabbit and rat
+
 03.04.2006
-Changes by Nuno Ramiro
+Changes by Florian Fischer (SiENcE)
 	- some csl things cleaned
 	- cliloc_getmessage added to CSLHandler.cpp for PopUp-Menu
 	- Comments Added to Maps.xml & Macros.xml

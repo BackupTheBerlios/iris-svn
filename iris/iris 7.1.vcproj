@@ -611,6 +611,12 @@ imm32.lib smpeg.lib"
 			<File
 				RelativePath=".\include\renderer\World.h">
 			</File>
+			<File
+				RelativePath=".\src\renderer\3d\WorldEnvironment.cpp">
+			</File>
+			<File
+				RelativePath=".\include\renderer\3d\WorldEnvironment.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="granny"

@@ -233,3 +233,9 @@ void Renderer::AddDynamic (cDynamicObject * object)
 void Renderer::DelDynamic (cDynamicObject * object)
 {
 }
+
+cWorldEnvironment & Renderer::world_environment ()
+{
+    return m_world_environment;
+}
+
