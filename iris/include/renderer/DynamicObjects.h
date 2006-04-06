@@ -84,11 +84,11 @@ public:
   Uint32 GetParticleEffectHandle ();
   
   Uint32 AOSTooltipID(){return aostooltips_listID;}
-   void SetAOSTooltipID(Uint32 id){aostooltips_listID = id;}
-   void AddAOSTooltip(std::string tooltip){aostooltips_list.push_back(tooltip);}
-   void ClearAOSTooltip(){aostooltips_list.clear();}
-   int aostooltips_count(){return aostooltips_list.size();}
-   std::string GetAOSTooltip(int id){return aostooltips_list.at(id);}
+  void SetAOSTooltipID(Uint32 id){aostooltips_listID = id;}
+  void AddAOSTooltip(std::string tooltip){aostooltips_list.push_back(tooltip);}
+  void ClearAOSTooltip(){aostooltips_list.clear();}
+  int aostooltips_count(){return aostooltips_list.size();}
+  std::string GetAOSTooltip(int id){return aostooltips_list.at(id);}
 };
 
 

@@ -115,7 +115,6 @@ bool cClilocLoader::Init(std::string path)
 	Uint16 msglen;
 	std::string message = "";
 	char unknown[6];
-	char buf[1000];
 
 	std::vector<byte> msg;
 	std::vector< Unicode2Bytes > output;
@@ -135,8 +134,6 @@ bool cClilocLoader::Init(std::string path)
 		#if 0
 		output.clear();
 		UTF8Decode2BytesUnicode(msg, output);
-		//wcstombs(buf, (wchar_t*)&output[0], 1000);
-		//message = buf;
 		cUnicode uni((NCHAR*)&output[0], output.size());
 		message = uni.m_charBuf;
 		#else
@@ -179,8 +176,6 @@ bool cClilocLoader::Init(std::string path)
 			#if 0
     		output.clear();
     		UTF8Decode2BytesUnicode(msg, output);
-    		//wcstombs(buf, (wchar_t*)&output[0], 1000);
-    		//message = buf;
     		cUnicode uni((NCHAR*)&output[0], output.size());
     		message = uni.m_charBuf;
     		#else

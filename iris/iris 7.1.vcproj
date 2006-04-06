@@ -79,14 +79,17 @@ imm32.lib smpeg.lib"
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/I &quot;include&quot;  /I &quot;include/csl&quot; /I &quot;devcpp/libs&quot;"
+				GlobalOptimizations="TRUE"
 				EnableIntrinsicFunctions="TRUE"
+				ImproveFloatingPointConsistency="TRUE"
 				FavorSizeOrSpeed="1"
+				OptimizeForProcessor="3"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;ZC_BUILDING_ZBASE;ZC_BUILDING_ZCSL"
 				RuntimeLibrary="0"
 				EnableEnhancedInstructionSet="0"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
-				WarningLevel="2"
+				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="3"/>
 			<Tool
@@ -132,112 +135,6 @@ imm32.lib smpeg.lib"
 	</References>
 	<Files>
 		<Filter
-			Name="sources"
-			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
-			<File
-				RelativePath=".\src\Buffer.cpp">
-			</File>
-			<File
-				RelativePath=".\src\Config.cpp">
-			</File>
-			<File
-				RelativePath=".\src\csl\CSLForm.cpp">
-			</File>
-			<File
-				RelativePath=".\src\csl\CSLHandler.cpp">
-			</File>
-			<File
-				RelativePath=".\src\Exception.cpp">
-			</File>
-			<File
-				RelativePath=".\src\Font.cpp">
-			</File>
-			<File
-				RelativePath=".\src\FontManager.cpp">
-			</File>
-			<File
-				RelativePath=".\src\Game.cpp">
-			</File>
-			<File
-				RelativePath=".\src\Geometry.cpp">
-			</File>
-			<File
-				RelativePath=".\src\iris_endian.cpp">
-			</File>
-			<File
-				RelativePath=".\src\Logger.cpp">
-			</File>
-			<File
-				RelativePath=".\src\Macros.cpp">
-			</File>
-			<File
-				RelativePath=".\src\SDLEvent.cpp">
-			</File>
-			<File
-				RelativePath=".\src\string_utils.cpp">
-			</File>
-			<File
-				RelativePath=".\src\xml.cpp">
-			</File>
-		</Filter>
-		<Filter
-			Name="includes"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File
-				RelativePath=".\include\Buffer.h">
-			</File>
-			<File
-				RelativePath=".\include\Cache.h">
-			</File>
-			<File
-				RelativePath=".\include\Common.h">
-			</File>
-			<File
-				RelativePath=".\include\Config.h">
-			</File>
-			<File
-				RelativePath=".\include\csl\CSLHandler.h">
-			</File>
-			<File
-				RelativePath=".\include\Font.h">
-			</File>
-			<File
-				RelativePath=".\include\FontManager.h">
-			</File>
-			<File
-				RelativePath=".\include\Game.h">
-			</File>
-			<File
-				RelativePath=".\include\Geometry.h">
-			</File>
-			<File
-				RelativePath=".\include\include.h">
-			</File>
-			<File
-				RelativePath=".\include\Logger.h">
-			</File>
-			<File
-				RelativePath=".\include\loaders\MultisLoader.h">
-			</File>
-			<File
-				RelativePath=".\include\sound\Music.h">
-			</File>
-			<File
-				RelativePath=".\resource.h">
-			</File>
-			<File
-				RelativePath=".\include\SDLEvent.h">
-			</File>
-			<File
-				RelativePath=".\include\uotype.h">
-			</File>
-			<File
-				RelativePath=".\include\xml.h">
-			</File>
-		</Filter>
-		<Filter
 			Name="resources"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
@@ -249,162 +146,31 @@ imm32.lib smpeg.lib"
 			</File>
 		</Filter>
 		<Filter
-			Name="CSL header"
-			Filter="">
-			<File
-				RelativePath=".\include\csl\Internal.h">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZAsync.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZBase.h">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZBase.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZCsl.h">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZCsl.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZCss.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZDate.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZDynLink.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZExcept.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZFile.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZPlatfrm.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZProcess.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZProfile.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZPtrlist.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZRegEx.h">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZRegular.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZSql.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZString.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZStrlist.hpp">
-			</File>
-			<File
-				RelativePath=".\include\csl\ZTrace.hpp">
-			</File>
-		</Filter>
-		<Filter
-			Name="xmls"
-			Filter="">
-			<File
-				RelativePath=".\xml\config.xml">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\xml\granny.xml">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\xml\granny_aos.xml">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\xml\ground.xml">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
-			</File>
-		</Filter>
-		<Filter
-			Name="GUI"
+			Name="gui"
 			Filter="">
 			<File
 				RelativePath=".\src\gui\Border.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\Border.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\Button.cpp">
-			</File>
-			<File
-				RelativePath=".\include\gui\Button.h">
 			</File>
 			<File
 				RelativePath=".\src\gui\Checkbox.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\Checkbox.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\Container.cpp">
-			</File>
-			<File
-				RelativePath=".\include\gui\Container.h">
 			</File>
 			<File
 				RelativePath=".\src\gui\Control.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\Control.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\GUIHandler.cpp">
-			</File>
-			<File
-				RelativePath=".\include\gui\GUIHandler.h">
 			</File>
 			<File
 				RelativePath=".\src\gui\Gump.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\Gump.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\GumpDialog.cpp">
-			</File>
-			<File
-				RelativePath=".\include\gui\GumpDialog.h">
 			</File>
 			<File
 				RelativePath=".\src\gui\HTMLGumpParser.cpp">
@@ -413,31 +179,16 @@ imm32.lib smpeg.lib"
 				RelativePath=".\src\gui\Image.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\Image.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\ImageArt.cpp">
-			</File>
-			<File
-				RelativePath=".\include\gui\ImageArt.h">
 			</File>
 			<File
 				RelativePath=".\src\gui\InputField.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\InputField.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\ItemContainer.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\ItemContainer.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\Label.cpp">
-			</File>
-			<File
-				RelativePath=".\include\gui\Label.h">
 			</File>
 			<File
 				RelativePath=".\src\gui\MultiLabel.cpp">
@@ -446,31 +197,16 @@ imm32.lib smpeg.lib"
 				RelativePath=".\src\gui\Paperdoll.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\Paperdoll.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\RadioButton.cpp">
-			</File>
-			<File
-				RelativePath=".\include\gui\RadioButton.h">
 			</File>
 			<File
 				RelativePath=".\src\gui\Stack.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\Stack.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\Textbox.cpp">
 			</File>
 			<File
-				RelativePath=".\include\gui\Textbox.h">
-			</File>
-			<File
 				RelativePath=".\src\gui\TextManager.cpp">
-			</File>
-			<File
-				RelativePath=".\include\gui\TextManager.h">
 			</File>
 		</Filter>
 		<Filter
@@ -487,9 +223,6 @@ imm32.lib smpeg.lib"
 			</File>
 			<File
 				RelativePath=".\include\renderer\Camera.h">
-			</File>
-			<File
-				RelativePath=".\src\renderer\3d\CharacterLight.cpp">
 			</File>
 			<File
 				RelativePath=".\src\renderer\Characters.cpp">
@@ -510,28 +243,10 @@ imm32.lib smpeg.lib"
 				RelativePath=".\include\renderer\Fade.h">
 			</File>
 			<File
-				RelativePath=".\src\renderer\3d\Light3D.cpp">
-			</File>
-			<File
-				RelativePath=".\include\renderer\3d\Light3D.h">
-			</File>
-			<File
-				RelativePath=".\src\renderer\3d\LightNodeEnvironment.cpp">
-			</File>
-			<File
-				RelativePath=".\src\renderer\3d\LightNodes.cpp">
-			</File>
-			<File
 				RelativePath=".\src\renderer\MapBlock.cpp">
 			</File>
 			<File
 				RelativePath=".\include\renderer\MapBlock.h">
-			</File>
-			<File
-				RelativePath=".\src\renderer\3d\MapBlock3D.cpp">
-			</File>
-			<File
-				RelativePath=".\include\renderer\3d\MapBlock3D.h">
 			</File>
 			<File
 				RelativePath=".\src\renderer\MapBuffer.cpp">
@@ -540,55 +255,16 @@ imm32.lib smpeg.lib"
 				RelativePath=".\include\renderer\MapBuffer.h">
 			</File>
 			<File
-				RelativePath=".\src\renderer\3d\MapBuffer3D.cpp">
-			</File>
-			<File
-				RelativePath=".\include\renderer\3d\MapBuffer3D.h">
-			</File>
-			<File
-				RelativePath=".\src\renderer\3d\MotiveBasedGroundLight.cpp">
-			</File>
-			<File
-				RelativePath=".\src\renderer\3d\MotiveBasedLight.cpp">
-			</File>
-			<File
-				RelativePath=".\src\renderer\particles\ParticleEngine.cpp">
-			</File>
-			<File
-				RelativePath=".\src\renderer\particles\ParticleHandler.cpp">
-			</File>
-			<File
-				RelativePath=".\src\renderer\particles\ParticleLoader.cpp">
-			</File>
-			<File
-				RelativePath=".\src\renderer\particles\ParticleTextures.cpp">
-			</File>
-			<File
 				RelativePath=".\src\renderer\Renderer.cpp">
 			</File>
 			<File
 				RelativePath=".\include\renderer\Renderer.h">
 			</File>
 			<File
-				RelativePath=".\src\renderer\3d\Renderer3D.cpp">
-			</File>
-			<File
-				RelativePath=".\include\renderer\3d\Renderer3D.h">
-			</File>
-			<File
-				RelativePath=".\src\renderer\3d\SceneMaker.cpp">
-			</File>
-			<File
-				RelativePath=".\include\renderer\3d\SceneMaker.h">
-			</File>
-			<File
 				RelativePath=".\src\renderer\SDLScreen.cpp">
 			</File>
 			<File
 				RelativePath=".\include\renderer\SDLScreen.h">
-			</File>
-			<File
-				RelativePath=".\src\renderer\3d\ShaderMatrixBlock.cpp">
 			</File>
 			<File
 				RelativePath=".\src\renderer\StaticObjects.cpp">
@@ -608,15 +284,80 @@ imm32.lib smpeg.lib"
 			<File
 				RelativePath=".\include\renderer\TextureBuffer.h">
 			</File>
-			<File
-				RelativePath=".\include\renderer\World.h">
-			</File>
-			<File
-				RelativePath=".\src\renderer\3d\WorldEnvironment.cpp">
-			</File>
-			<File
-				RelativePath=".\include\renderer\3d\WorldEnvironment.h">
-			</File>
+			<Filter
+				Name="3D"
+				Filter="">
+				<File
+					RelativePath=".\src\renderer\3d\CharacterLight.cpp">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\Light3D.cpp">
+				</File>
+				<File
+					RelativePath=".\include\renderer\3d\Light3D.h">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\LightNodeEnvironment.cpp">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\LightNodes.cpp">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\MapBlock3D.cpp">
+				</File>
+				<File
+					RelativePath=".\include\renderer\3d\MapBlock3D.h">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\MapBuffer3D.cpp">
+				</File>
+				<File
+					RelativePath=".\include\renderer\3d\MapBuffer3D.h">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\MotiveBasedGroundLight.cpp">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\MotiveBasedLight.cpp">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\Renderer3D.cpp">
+				</File>
+				<File
+					RelativePath=".\include\renderer\3d\Renderer3D.h">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\SceneMaker.cpp">
+				</File>
+				<File
+					RelativePath=".\include\renderer\3d\SceneMaker.h">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\ShaderMatrixBlock.cpp">
+				</File>
+				<File
+					RelativePath=".\src\renderer\3d\WorldEnvironment.cpp">
+				</File>
+				<File
+					RelativePath=".\include\renderer\3d\WorldEnvironment.h">
+				</File>
+			</Filter>
+			<Filter
+				Name="particles"
+				Filter="">
+				<File
+					RelativePath=".\src\renderer\particles\ParticleEngine.cpp">
+				</File>
+				<File
+					RelativePath=".\src\renderer\particles\ParticleHandler.cpp">
+				</File>
+				<File
+					RelativePath=".\src\renderer\particles\ParticleLoader.cpp">
+				</File>
+				<File
+					RelativePath=".\src\renderer\particles\ParticleTextures.cpp">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="granny"
@@ -771,7 +512,7 @@ imm32.lib smpeg.lib"
 			</File>
 		</Filter>
 		<Filter
-			Name="CSL source"
+			Name="csl"
 			Filter="">
 			<File
 				RelativePath=".\src\csl\Block.cpp">
@@ -802,6 +543,12 @@ imm32.lib smpeg.lib"
 						Name="VCCLCompilerTool"
 						AdditionalOptions="/J"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\src\csl\CSLForm.cpp">
+			</File>
+			<File
+				RelativePath=".\src\csl\CSLHandler.cpp">
 			</File>
 			<File
 				RelativePath=".\src\csl\Function.cpp">
@@ -1228,12 +975,48 @@ imm32.lib smpeg.lib"
 			<File
 				RelativePath=".\src\sound\SoundMixer.cpp">
 			</File>
-			<File
-				RelativePath=".\include\sound\SoundMixer.h">
-			</File>
 		</Filter>
 		<File
+			RelativePath=".\src\Buffer.cpp">
+		</File>
+		<File
+			RelativePath=".\src\Config.cpp">
+		</File>
+		<File
+			RelativePath=".\src\Exception.cpp">
+		</File>
+		<File
+			RelativePath=".\src\Font.cpp">
+		</File>
+		<File
+			RelativePath=".\src\FontManager.cpp">
+		</File>
+		<File
+			RelativePath=".\src\Game.cpp">
+		</File>
+		<File
+			RelativePath=".\src\Geometry.cpp">
+		</File>
+		<File
+			RelativePath=".\src\iris_endian.cpp">
+		</File>
+		<File
+			RelativePath=".\src\Logger.cpp">
+		</File>
+		<File
+			RelativePath=".\src\Macros.cpp">
+		</File>
+		<File
 			RelativePath=".\src\main.cpp">
+		</File>
+		<File
+			RelativePath=".\src\SDLEvent.cpp">
+		</File>
+		<File
+			RelativePath=".\src\string_utils.cpp">
+		</File>
+		<File
+			RelativePath=".\src\xml.cpp">
 		</File>
 	</Files>
 	<Globals>

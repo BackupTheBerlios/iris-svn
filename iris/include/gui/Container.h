@@ -23,62 +23,67 @@
 #ifndef _CONTAINER_H_
 #define _CONTAINER_H_
 
+#ifdef WIN32
+#include <windows.h>
+#endif
+
+#include "SDL/SDL.h"
 #include "Control.h"
-#include "Logger.h"
 #include <map>
+
+// #include "../Fluid/mmgr.h"
 
 
 class Container : public Control
 {
-public:
-	Container();
-	virtual ~Container();
+ public:
+  Container();
+  ~Container();
 
-	virtual void Draw( GumpHandler *kGumps );
-	virtual int HandleMessage( gui_message *kMsg );
+  virtual void Draw(GumpHandler * gumps);
+  virtual int HandleMessage(gui_message * msg);
 
-	void ClearControls();
+  void ClearControls (void);
+  void AddControl(Control * control);
+  void AddControl(Control * control, int page);
+  Control * GetControl(int controlid);
+  ControlList_t* GetControlList();
+  int GetCurrentPage(void);
+  void SetCurrentPage(int);
+  void SetFocus(int controlid);
+  
+  void Rewind(void);
+  Control * GetNext(void);
+  
+  virtual void SetAlpha (unsigned char alpha);
+  virtual bool CheckPixel(int x, int y);
+  
+  void SetShape(int controlid);
+  
+  virtual Uint32 FindDragContainer(int x, int y, int * drop_x, int * drop_y, Uint32 * charid);
+  //Control* RemoveControl(int controlid);
+  //Control* RemoveControl(Control *control);
+   
+   void SetGumpID(int id){gump_id = id;}
+   void SetPlayerID(int id){pl_id = id;}
+   int GetPlayerID(){return pl_id;}
+   int GetGumpID(){return gump_id;}
 
-	void AddControl( Control *kControl );
-	void AddControl( Control *kControl, int iPage );
+ private:
+  ControlList_t	control_root;
+  int idcounter;
+  int search_index;
+  int focusid;
+  int current_page;
+  int shape_id;
+   int gump_id;
+   int pl_id;   
 
-	Control *GetControl( int iControlId );
-	ControlList_t *GetControlList();
-	Control *GetNext();
-	int GetCurrentPage() const;
-	int GetPlayerID() const;
-	int GetGumpID() const;
-
-	void SetCurrentPage( int iCurrentPage );
-	void SetFocus( int iControlId );
-	virtual void SetAlpha( unsigned char ucAlpha );
-	void SetShape( int iControlId );
-	void SetGumpID( int iId );
-	void SetPlayerID( int iId );
-
-	void Rewind();
-
-	virtual bool CheckPixel( int iX, int iY );
-
-	virtual Uint32 FindDragContainer( int iX, int iY, int *DropX, int *DropY, Uint32 *uiCharId );
-	//Control* RemoveControl(int controlid);
-	//Control* RemoveControl(Control *control);
-
-private:
-	ControlList_t control_root;
-	int idcounter;
-	int search_index;
-	int focusid;
-	int current_page;
-	int shape_id;
-	int gump_id;
-	int pl_id;   
-
-private:
-	int SendMessageToItems( gui_message *kMsg );
-	void ReleaseFocus( int iControlId );
-	void HandleMessageQueues();
+  int SendMessageToItems(gui_message * msg);
+  void ReleaseFocus(int controlid);
+  void HandleMessageQueues(void);
 
 };
 
-#endif	// _CONTAINER_H_
+
+#endif

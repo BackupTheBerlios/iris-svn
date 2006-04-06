@@ -1,20 +1,20 @@
 [Project]
-FileName=Ultima Iris.dev
-Name=Ultima Iris
+FileName=Iris.dev
+Name=Iris
 UnitCount=135
 Type=1
 Ver=1
 ObjFiles=
 Includes=..\include;libs;..\include\csl;libs\smpeg
 Libs=
-PrivateResource=Ultima_Iris_private.rc
+PrivateResource=Iris_private.rc
 ResourceIncludes=
 MakeIncludes=
 Compiler=
 CppCompiler=
 Linker=-lopengl32_@@_-lglu32_@@_-lwsock32_@@_libs/libSDL.a_@@_libs/libSDLmain.a_@@_libs/SDL_image.lib_@@_libs/SDL_mixer.lib_@@_libs/SDL_net.lib_@@_libs/SDL_ttf.lib_@@_libs/smpeg.lib_@@_
 IsCpp=1
-Icon=Ultima Iris.ico
+Icon=Iris.ico
 ExeOutput=bin
 ObjectOutput=obj
 OverrideOutput=1
@@ -1003,7 +1003,7 @@ BuildCmd=
 Major=0
 Minor=6
 Release=5
-Build=446
+Build=450
 LanguageID=2057
 CharsetID=1252
 CompanyName=Iris Team
@@ -1306,7 +1306,7 @@ Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
-<<<<<<< Ultima Iris.dev
+<<<<<<< Iris.dev
 
 [Unit129]
 FileName=..\src\renderer\3D\ShaderMatrixBlock.cpp
@@ -1332,7 +1332,7 @@ BuildCmd=
 [Unit129]
 FileName=..\src\Macros.cpp
 CompileCpp=1
-Folder=Ultima Iris
+Folder=Iris
 Compile=1
 Link=1
 Priority=1000
@@ -1353,7 +1353,7 @@ BuildCmd=
 [Unit131]
 FileName=..\src\main.cpp
 CompileCpp=1
-Folder=Ultima Iris
+Folder=Iris
 Compile=1
 Link=1
 Priority=1000
@@ -1363,7 +1363,7 @@ BuildCmd=
 [Unit132]
 FileName=..\src\Logger.cpp
 CompileCpp=1
-Folder=Ultima Iris
+Folder=Iris
 Compile=1
 Link=1
 Priority=1000
@@ -1373,7 +1373,7 @@ BuildCmd=
 [Unit133]
 FileName=..\src\Font.cpp
 CompileCpp=1
-Folder=Ultima Iris
+Folder=Iris
 Compile=1
 Link=1
 Priority=1000
@@ -1843,7 +1843,7 @@ BuildCmd=
 [Unit134]
 FileName=..\src\FontManager.cpp
 CompileCpp=1
-Folder=Ultima Iris
+Folder=Iris
 Compile=1
 Link=1
 Priority=1000

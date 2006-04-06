@@ -2193,7 +2193,7 @@ void cClient::Act_AOSTooltip (cPacket * packet)
         obj->ClearAOSTooltip ();
         obj->SetAOSTooltipID (listID);
       }
-  int count;
+
   Uint32 clilocID;
   do
       {
@@ -2541,12 +2541,13 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		{
 			// TODO: Fix first time, it shows the wrong option checked but on click fixes (needs debugging).
 
-			printf( "DEBUG - params: %d %d %d %d %d\n", params[0], params[1], params[2], params[3], params[4] );
-
+			Logger::WriteDebug("DEBUG - params: " + params[0] + params[1] + params[2] + params[3] + params[4] );
+/*
             RadioButton *radio = new RadioButton( params[0], params[1], params[2], params[3], params[4] );
 
             radio->SetPage( target_page );
             control = radio;
+*/
 		}
 		else if ( command == "noresize" )
 		{
