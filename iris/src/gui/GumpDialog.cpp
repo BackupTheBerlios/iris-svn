@@ -22,6 +22,8 @@
 
 #include "gui/GumpDialog.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
 
 GumpDialog::GumpDialog ()
 {

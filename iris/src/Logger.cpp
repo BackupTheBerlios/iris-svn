@@ -31,6 +31,9 @@
 
 #include "Logger.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 // Initialize static variables (NOTE: They're static MUST be initialized before and globaly).
 std::fstream *Logger::m_fLogFile = NULL;
 int Logger::m_iLogLevel = LEVEL_WARNING;

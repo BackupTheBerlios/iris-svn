@@ -26,6 +26,9 @@
 
 #include "SDL/SDL_image.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 cWorldEnvironment::cWorldEnvironment ()

@@ -24,8 +24,10 @@
 
 #include "loaders/SpeechLoader.h"
 
-SpeechLoader *SpeechLoader::m_sgSpeechLoader = NULL;
+#include "memguardconf.h"
+#include "memguard.h"
 
+SpeechLoader *SpeechLoader::m_sgSpeechLoader = NULL;
 
 SpeechLoader::SpeechLoader( std::string sPath )
 {

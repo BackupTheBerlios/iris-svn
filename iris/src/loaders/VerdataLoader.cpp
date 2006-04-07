@@ -28,6 +28,9 @@
 #include <string.h>
 #include <iostream>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 cVerdataLoader pVerdataLoader;
@@ -66,9 +69,8 @@ void cVerdataLoader::Init (std::string filename)
   verdatafile->seekg (0, ios::beg);
   verdatafile->read ((char *) &patch_count, 4);
   patch_count = IRIS_SwapU32 (patch_count);
-  patches =
-    (struct VerDataEntry *) malloc (patch_count *
-                                    sizeof (struct VerDataEntry));
+  patches = (struct VerDataEntry *) malloc (patch_count *sizeof (struct VerDataEntry),
+                                            "cVerdataLoader::Init");
   verdatafile->read ((char *) patches,
                      patch_count * sizeof (struct VerDataEntry));
                      

@@ -23,6 +23,8 @@
 #include "include.h"
 #include "renderer/Fade.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
 
 using namespace std;
 

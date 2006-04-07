@@ -34,6 +34,9 @@
 #include <cassert>
 #include "net/uo_huffman.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 //  This file contains the classes to compress and decompress data from

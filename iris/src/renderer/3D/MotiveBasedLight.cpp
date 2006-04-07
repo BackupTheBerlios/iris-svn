@@ -34,6 +34,9 @@
 #include <map>
 #include <math.h>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 cLightMotive::cLightMotive (float x, float y, float z, cStaticModel * model,
@@ -45,7 +48,7 @@ cLightMotive::cLightMotive (float x, float y, float z, cStaticModel * model,
 
   m_nodecount = (model->point_light_nodes ())->size ();
 
-  m_factor_array = (float *) malloc (m_nodecount * sizeof (float));
+  m_factor_array = (float *) malloc (m_nodecount * sizeof (float), "cLightMotive::cLightMotive");
 
   ApplyLight (x, y, z, model);
 }
@@ -122,7 +125,7 @@ cMotiveBasedLight::cMotiveBasedLight( float x, float y, float z, int blockx, int
 	m_model = model;
 
 	int nodecount = (model->nodes())->size();
-	ambient_color_array = (sColor *)malloc( nodecount * sizeof(sColor) );
+	ambient_color_array = (sColor *)malloc( nodecount * sizeof(sColor), "cMotiveBasedLight::cMotiveBasedLight");
 	memset( ambient_color_array, 0xff, nodecount * sizeof(sColor) );
 }
 
@@ -171,7 +174,7 @@ void cMotiveBasedLight::PrepareModelForRendering ()
   unsigned int colorindex, nodeindex;
 
 
-  int *colors = (int *) malloc (face_light_nodes->size () * sizeof (int) * 3);
+  int *colors = (int *) malloc (face_light_nodes->size () * sizeof (int) * 3, "cMotiveBasedLight::PrepareModelForRendering");
   int *color_iter = colors;
 
   for (nodeindex = 0; nodeindex < face_light_nodes->size (); nodeindex++)     // Apply Ambient Light
@@ -303,7 +306,8 @@ cMotiveBasedLight_Tile::cMotiveBasedLight_Tile( float x, float y, float z, int b
 {
 	assert( model );
 	int nodecount = (model->nodes())->size();
-	light_node_list = (sLightNode **)malloc( nodecount * sizeof(sLightNode *) );
+	light_node_list = (sLightNode **)malloc( nodecount * sizeof(sLightNode *),
+                                             "cMotiveBasedLight_Tile::cMotiveBasedLight_Tile");
 
 	cLightNodeHandler *node_handler = node_environment.get( 0, 0 );  // get center handler
 	node_handler->AddModel( model, x, y, z, light_node_list, node_environment );

@@ -21,6 +21,9 @@
 
 #include "renderer/SDLScreen.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 SDLScreen *SDLScreen::m_sgSDLScreen = NULL;
 
 GLfloat mat_specular[] = { 0.05, 0.05, 0.05, 1.0 };

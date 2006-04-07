@@ -21,6 +21,9 @@
 #include "granny/grntextchunk.h"
 #include "include.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 TextChunk::TextChunk ()

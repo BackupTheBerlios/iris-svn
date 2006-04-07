@@ -24,6 +24,9 @@
 #include "Logger.h"
 #include "Config.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 Textbox::Textbox ()

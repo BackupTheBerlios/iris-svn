@@ -25,6 +25,9 @@
 #include <assert.h>
 #include "include.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 cStaticObjectList::cStaticObjectList ()
@@ -77,8 +80,8 @@ void cStaticObjectList::AllocNewArray ()  // alloc a new array
 {
   m_head = 0;
   m_current_array =
-    (struct sStaticObject *) malloc (STATICOBJECTLIST_ARRAY_SIZE *
-                                     sizeof (struct sStaticObject));
+    (struct sStaticObject *) malloc (STATICOBJECTLIST_ARRAY_SIZE *sizeof (struct sStaticObject),
+                                     "cStaticObjectList::AllocNewArray");
   memset (m_current_array, 0,
           STATICOBJECTLIST_ARRAY_SIZE * sizeof (struct sStaticObject));
   cache.push_back (m_current_array);

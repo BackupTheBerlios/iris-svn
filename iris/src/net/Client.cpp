@@ -20,10 +20,10 @@
  *
  *****/
 
-
-
-
 #include "net/Client.h"
+
+#include "memguardconf.h"
+#include "memguard.h"
 
 using namespace std;
 
@@ -572,7 +572,7 @@ void cClient::OnData (void *data, unsigned int len)
   if (decompress)
   {
 //     int llen = len;
-     uncompressed_data = malloc (MAX_PACKET_LEN);
+     uncompressed_data = malloc (MAX_PACKET_LEN, "cClient::OnData");
      
      int dest_size = MAX_PACKET_LEN;
      int src_size = len;

@@ -29,6 +29,8 @@
 #include <iostream>
 #include <string_utils.h>
 
+#include "memguardconf.h"
+#include "memguard.h"
 
 using namespace std;
 

@@ -29,6 +29,8 @@
 #include <string.h>
 #include <iostream>
 
+#include "memguardconf.h"
+#include "memguard.h"
 
 using namespace std;
 
@@ -108,7 +110,7 @@ void cSkillLoader::Init (std::string filename, std::string indexname)
         if ((indexRecord.offset != 0xffffffff)
             && (indexRecord.length != 0xffffffff))
             {
-              char *name = (char *) malloc (indexRecord.length);
+              char *name = (char *) malloc (indexRecord.length, "cSkillLoader::Init");
               Uint8 use_button;
               memset (name, 0, indexRecord.length);
               skillfile->seekg (indexRecord.offset, ios::beg);

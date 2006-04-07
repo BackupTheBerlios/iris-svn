@@ -27,6 +27,9 @@ using namespace std;
 #include "Exception.h"
 #include <cassert>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 cLightNodeEnvironment::cLightNodeEnvironment ()
 {
   for (int i = 0; i < 3; i++)

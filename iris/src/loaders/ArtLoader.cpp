@@ -22,8 +22,10 @@
 
 #include "loaders/ArtLoader.h"
 
-ArtLoader *ArtLoader::m_sgArtLoader = NULL;
+#include "memguardconf.h"
+#include "memguard.h"
 
+ArtLoader *ArtLoader::m_sgArtLoader = NULL;
 
 ArtLoader::ArtLoader( std::string sFileName, std::string sIndexName ) : m_kArtFile( NULL ), m_kArtIndex( NULL ), m_uiArtCount( 0 )
 {

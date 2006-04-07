@@ -31,6 +31,8 @@
 #include "loaders/MultisLoader.h"
 #include "renderer/particles/ParticleEngine.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
 
 cDynamicObject::cDynamicObject()
 {

@@ -33,7 +33,8 @@
 #include "Geometry.h"
 #include "renderer/MapBuffer.h"
 
-
+#include "memguardconf.h"
+#include "memguard.h"
 
 int GroundCoords[4][2] = { {0, 1}, {1, 1}, {1, 0}, {0, 0} };
 float GroundTexCoords[4][2] =

@@ -139,10 +139,10 @@ imm32.lib smpeg.lib"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
-				RelativePath=".\iris.rc">
+				RelativePath=".\devcpp\Iris.ico">
 			</File>
 			<File
-				RelativePath=".\devcpp\Ultima Iris.ico">
+				RelativePath=".\iris.rc">
 			</File>
 		</Filter>
 		<Filter
@@ -1008,6 +1008,12 @@ imm32.lib smpeg.lib"
 		</File>
 		<File
 			RelativePath=".\src\main.cpp">
+		</File>
+		<File
+			RelativePath=".\src\memguard\memguard.cpp">
+		</File>
+		<File
+			RelativePath=".\resource.h">
 		</File>
 		<File
 			RelativePath=".\src\SDLEvent.cpp">

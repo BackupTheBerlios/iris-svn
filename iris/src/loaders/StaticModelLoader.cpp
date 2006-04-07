@@ -22,6 +22,9 @@
 
 #include "loaders/StaticModelLoader.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 StaticModelLoader *StaticModelLoader::m_sgStaticModelLoader = NULL;
 
 char FILEID_GAMEMODELCOLLECTION[] = "UI3D";

@@ -35,6 +35,9 @@
 #include "renderer/DynamicObjects.h"
 #include "renderer/3D/Light3D.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 cLightManager pLightManager;

@@ -94,8 +94,8 @@
 		<STEREO>1</STEREO>
 		<FREQUENCY>22050</FREQUENCY>
 		<CHUNKSIZE>2048</CHUNKSIZE>
-		<MUSICVOLUME>70</MUSICVOLUME>
-		<SOUNDVOLUME>100</SOUNDVOLUME>
+		<MUSICVOLUME>90</MUSICVOLUME>
+		<SOUNDVOLUME>128</SOUNDVOLUME>
 
 		<!-- If you have Samurai Empire Expansion choose 1, because there are no Midi Files
 			 If you put OGG Files into MusicList.xml turn Midi on; You can also turn on the MidiPath -->

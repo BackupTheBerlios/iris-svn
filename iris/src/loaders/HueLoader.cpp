@@ -28,6 +28,9 @@
 #include <fstream>
 #include <string>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 cHueLoader::cHueLoader ()
 {
 }

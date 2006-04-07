@@ -29,12 +29,12 @@
 
 #include "Config.h"
 #include "Logger.h"
-
 #include "xml.h"
 
 #include <cassert>
 
-// #include "../Fluid/mmgr.h"
+#include "memguardconf.h"
+#include "memguard.h"
 
 using namespace std;
 

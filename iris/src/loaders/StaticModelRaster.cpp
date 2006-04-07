@@ -24,7 +24,10 @@
 #include "loaders/StaticModelRaster.h"
 #include "Exception.h"
 #include "iris_endian.h"
-  
+
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 
@@ -63,7 +66,7 @@ void cStaticModelRaster::LoadFromStream (std::ifstream * stream)
 	if ((m_size_x >= 128) || (m_size_y >= 128) || (m_size_z >= 128))
 	 THROWEXCEPTION ("model raster load error: size >= 128");
 
-	m_data = (Uint8 *) malloc (m_size_x * m_size_y * m_size_z);
+	m_data = (Uint8 *) malloc (m_size_x * m_size_y * m_size_z, "cStaticModelRaster::LoadFromStream");
 
 	stream->read ((char *) m_data, m_size_x * m_size_y * m_size_z);
 } 

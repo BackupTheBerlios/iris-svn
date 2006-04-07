@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Korean resources
+// Koreanisch resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
 #ifdef _WIN32
@@ -70,12 +70,12 @@ BEGIN
         BLOCK "080004b0"
         BEGIN
             VALUE "FileDescription", "ultima iris"
-            VALUE "FileVersion", "0, 6, 0, 0"
+            VALUE "FileVersion", "0, 8, 6, 0"
             VALUE "InternalName", "iris"
             VALUE "LegalCopyright", "GPL"
             VALUE "OriginalFilename", "iris.exe"
-            VALUE "ProductName", "ultima iris"
-            VALUE "ProductVersion", "0, 6, 0, 0"
+            VALUE "ProductName", "iris 3d-client"
+            VALUE "ProductVersion", "0, 8, 6, 0"
         END
     END
     BLOCK "VarFileInfo"
@@ -92,8 +92,8 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_ICON1               ICON                    "devcpp\\Ultima Iris.ico"
-#endif    // Korean resources
+IDI_ICON1               ICON                    "devcpp\\Iris.ico"
+#endif    // Koreanisch resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -27,6 +27,9 @@
 #include "Logger.h"
 #include <cassert>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 cGrannyStream::cGrannyStream (std::fstream * file, std::string filename)
@@ -36,7 +39,7 @@ cGrannyStream::cGrannyStream (std::fstream * file, std::string filename)
   m_size = file->tellg ();
   if (m_size)
       {
-        m_data = (char *) malloc (m_size);
+        m_data = (char *) malloc (m_size, "cGrannyStream::cGrannyStream");
         assert (m_data);
         file->seekg (0, ios::beg);
         file->read (m_data, m_size);

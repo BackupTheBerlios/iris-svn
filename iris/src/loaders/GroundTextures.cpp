@@ -30,9 +30,10 @@
 #include <string.h>
 #include <iostream>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
-
-
 
 cGroundTextureLoader pGroundTextureLoader;
 
@@ -119,8 +120,8 @@ Texture *cGroundTextureLoader::LoadTexture (int index)
         return NULL;
       }
 
-  char *sprite = (char *) malloc (size * size * 4);
-  Uint16 *temp = (Uint16 *) malloc (size * size * 2);
+  char *sprite = (char *) malloc (size * size * 4, "cGroundTextureLoader::LoadTexture");
+  Uint16 *temp = (Uint16 *) malloc (size * size * 2, "cGroundTextureLoader::LoadTexture");
 
   texmapsfile->seekg (idx.offset, ios::beg);
   texmapsfile->read ((char *) temp, size * size * 2);

@@ -53,7 +53,8 @@
 
 #include "xml.h"
 
-// #include "../Fluid/mmgr.h"
+#include "memguardconf.h"
+#include "memguard.h"
 
 extern GUIHandler pUOGUI;
 

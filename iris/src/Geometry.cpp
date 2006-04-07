@@ -30,6 +30,9 @@
 
 #include <string.h>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 #ifndef WIN32
 // There is no any classes with std namespace included in this file
 using namespace std;

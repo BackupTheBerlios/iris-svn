@@ -30,6 +30,9 @@
 #include "xml.h"
 #include "iris_endian.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 MacroLoader * pMacroLoader = NULL;
 
 MacroLoader::MacroLoader()

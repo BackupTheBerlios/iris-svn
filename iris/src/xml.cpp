@@ -19,6 +19,8 @@
 
 #include "xml.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
 
 // Charsets
 const char *letterSet =

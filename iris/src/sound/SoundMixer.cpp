@@ -18,6 +18,10 @@
 
 #include "sound/SoundMixer.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
+
 SoundMix *SoundMix::m_sgSoundMix = NULL;
 
 
@@ -127,10 +131,16 @@ void SoundMix::PlaySound( int sound, int volume, char flags, int x, int y, int z
 	if ( wave )
 	{
 		int volume = (int)( (1.0f - (dist * 0.05f) ) * Config::GetSoundVolume() );  // Set Volume
+        //if volume is smaler than min 5 set it to 5
 		if ( volume <= 5 )
 		{
 			volume = 5;
 		}
+		//if volume is greater than max=128 set it to 128
+		if (volume > 128)
+		{
+            volume = 128;
+        }
 		Mix_VolumeChunk( wave, volume );
 
 		if ( Mix_PlayChannel( -1, wave, 0 ) == -1 )

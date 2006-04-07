@@ -44,6 +44,9 @@
 #include <math.h>
 #include <iostream>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 //extern SDLScreen *SDLscreen;

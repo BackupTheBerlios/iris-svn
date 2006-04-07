@@ -22,6 +22,9 @@
 
 #include "Config.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 //extern SDLScreen *SDLscreen;
 
 // Initializing variables

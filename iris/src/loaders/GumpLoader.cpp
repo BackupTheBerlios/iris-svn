@@ -22,6 +22,9 @@
 
 #include "loaders/GumpLoader.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 GumpLoader pGumpLoader;
 
 GumpLoader::GumpLoader() : gumpfile( NULL ), gumpindex( NULL )
@@ -125,7 +128,7 @@ Uint32 *GumpLoader::LoadGumpRaw (int index, int &tex_width, int &tex_height,
     h *= 2;
 
 
-  Uint32 *data = (Uint32 *) malloc (w * h * 4);
+  Uint32 *data = (Uint32 *) malloc (w * h * 4, "GumpLoader::LoadGumpRaw");
   memset (data, 0, w * h * 4);
   Uint32 *heightTable = new Uint32[height];
 

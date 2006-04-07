@@ -33,6 +33,9 @@
 #include <cassert>
 #include <map>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 vertex *vertex_buffer = NULL;
@@ -59,7 +62,8 @@ void init_vertex_buffer ()
 {
   if (vertex_buffer)
     THROWEXCEPTION ("double init of vertex buffer");
-  vertex_buffer = (vertex *) malloc (sizeof (vertex) * (vertex_buffer_size + 9));   // 9 security buffer
+  vertex_buffer = (vertex *) malloc (sizeof (vertex) * (vertex_buffer_size + 9),
+                                     "init_vertex_buffer");   // 9 security buffer
   if (!vertex_buffer)
     THROWEXCEPTION ("vertex buffer out of memory");
 

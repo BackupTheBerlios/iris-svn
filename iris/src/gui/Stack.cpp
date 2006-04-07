@@ -23,6 +23,9 @@
 #include "gui/Stack.h"
 #include <iostream>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 MessageStack::MessageStack ()
@@ -51,7 +54,7 @@ void MessageStack::Clear (void)
 void MessageStack::Push (gui_message message)
 {
   struct message_entry *entry =
-    (struct message_entry *) malloc (sizeof (struct message_entry));
+    (struct message_entry *) malloc (sizeof (struct message_entry), "MessageStack::Push");
   entry->msg = message;
   entry->next = root;
   root = entry;

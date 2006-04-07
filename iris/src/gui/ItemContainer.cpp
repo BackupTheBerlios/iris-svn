@@ -28,10 +28,11 @@
 #include "renderer/DynamicObjects.h"
 #include "renderer/TextureBuffer.h"
 
-
-
 #include "loaders/ArtLoader.h"
 #include <cassert>
+
+#include "memguardconf.h"
+#include "memguard.h"
 
 using namespace std;
 

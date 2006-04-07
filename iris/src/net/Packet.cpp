@@ -33,6 +33,8 @@
 #include "Config.h"
 #include "net/Packet.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
 
 using namespace std;
 

@@ -29,6 +29,9 @@
 #include <cstdlib>
 #include "uotype.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 cHTMLGumpParser::cHTMLGumpParser ()
 {
 	_defcolor = 0;

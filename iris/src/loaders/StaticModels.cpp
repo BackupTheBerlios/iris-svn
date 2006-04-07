@@ -24,6 +24,8 @@
 
 #include "loaders/StaticModels.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
 
 using namespace std;
 
@@ -522,7 +524,7 @@ cStaticModel::~cStaticModel()
 void cStaticModel::CreateVertieces ()
 {
   m_vertieces =
-    (vertex *) malloc (sizeof (struct vertex) * m_face_light_nodes.size ());
+    (vertex *) malloc (sizeof (struct vertex) * m_face_light_nodes.size (), "cStaticModel::CreateVertieces");
   memset (m_vertieces, 0,
           sizeof (struct vertex) * m_face_light_nodes.size ());
 

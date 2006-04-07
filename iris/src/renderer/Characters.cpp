@@ -36,6 +36,9 @@
 
 #include "renderer/particles/ParticleEngine.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 cCharacterList pCharacterList;

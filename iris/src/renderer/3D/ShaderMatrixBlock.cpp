@@ -40,27 +40,18 @@
 
  *****/  
 
-  
-
-
 #include <iostream>
-
-#include "renderer/3D/ShaderMatrixBlock.h"
-
-  
-
 #include <cassert>
-
 #include <vector>
-
 #include <map>
-
-#include "renderer/3D/MapBuffer3D.h"
-
-#include "renderer/3D/SceneMaker.h"
-
 #include <math.h>
 
+#include "renderer/3D/MapBuffer3D.h"
+#include "renderer/3D/SceneMaker.h"
+#include "renderer/3D/ShaderMatrixBlock.h"
+
+#include "memguardconf.h"
+#include "memguard.h"
   
 using namespace std;
 

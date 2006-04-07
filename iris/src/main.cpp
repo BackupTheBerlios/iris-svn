@@ -40,9 +40,8 @@
 #include "sound/MusicListLoader.h"
 #include "FontManager.h"
 
-// #include "Engine.h"
-
-// #include "../Fluid/mmgr.h"
+#include "memguardconf.h"
+#include "memguard.h"
 
 #if defined( _WIN32 ) && !defined( _DEBUG )
 #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" )
@@ -193,6 +192,14 @@ int main( int argc, char **args )
 	Logger::Close();
 
 	SDLNet_Quit();
+
+#if MEM_GUARD_LEVEL == 2
+  showMemory();
+#endif
+#if MEM_GUARD_LEVEL == 1
+    std::cout << "alloc_count: " << alloc_count << endl;
+#endif
+
 	SDL_Quit();
 
 	return 0;

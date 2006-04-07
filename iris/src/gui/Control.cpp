@@ -26,6 +26,8 @@
 #include "loaders/GumpLoader.h"
 #include "loaders/HueLoader.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
 
 Control::Control()
 {
@@ -48,7 +50,7 @@ Control::Control()
 	parent = NULL;
 	__page = 0;
 
-	script_funcs = (char **) malloc( SCRIPT_FUNC_COUNT * sizeof(char *) );
+	script_funcs = (char **) malloc( SCRIPT_FUNC_COUNT * sizeof(char *), "Control::Control");
 	int i;
 	for ( i = 0; i < SCRIPT_FUNC_COUNT; i++ )
 	{

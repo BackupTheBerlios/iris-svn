@@ -20,6 +20,9 @@
 #include "granny/grnobjects.h"
 #include <iostream>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 Object::Object ()

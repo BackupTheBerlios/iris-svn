@@ -61,7 +61,8 @@
 #include "include.h"
 #include "sound/SoundMixer.h"
 
-// #include "../Fluid/mmgr.h"
+#include "memguardconf.h"
+#include "memguard.h"
 
 int gamestate = GAMESTATE_MENU;
 

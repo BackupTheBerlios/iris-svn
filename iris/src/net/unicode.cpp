@@ -30,6 +30,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 cUnicode::cUnicode (char *str, int len /* = 0 */ )
 {
   memset (m_charBuf, 0, sizeof (m_charBuf));

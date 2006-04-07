@@ -24,6 +24,9 @@
 #include "loaders/StaticModelLoader.h"
 #include "loaders/ArtLoader.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 TextureBuffer *TextureBuffer::m_sgTextureBuffer = NULL;
 
 

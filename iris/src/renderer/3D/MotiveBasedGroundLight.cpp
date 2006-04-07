@@ -34,6 +34,9 @@
 #include <map>
 #include <math.h>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 cGroundLightMotive::cGroundLightMotive (int blockx, int blocky,
@@ -223,7 +226,7 @@ void cMotiveBasedGroundLight::PrepareForRendering ()
   unsigned int colorindex, nodeindex;
 
 
-  int *colors = (int *) malloc (81 * sizeof (int) * 3);
+  int *colors = (int *) malloc (81 * sizeof (int) * 3, "cMotiveBasedGroundLight::PrepareForRendering");
   int *color_iter = colors;
 
   for (nodeindex = 0; nodeindex < 81; nodeindex++)    // Apply Ambient Light

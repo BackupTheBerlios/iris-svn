@@ -28,6 +28,9 @@
 #include <cassert>
 #include <math.h>
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 using namespace std;
 
 float char_normals[6][3] =
@@ -47,7 +50,7 @@ cCharacterLight::cCharacterLight (int size_x, int size_y, int size_z)
   m_size_z = size_z;
 
   int mem = size_x * size_y * size_z * 6 * sizeof (sColor); // allocate color lookup table
-  color_array = (struct sColor *) malloc (mem);
+  color_array = (struct sColor *) malloc (mem, "cCharacterLight::cCharacterLight");
   if (!color_array)
     THROWEXCEPTION ("out of memory");
   memset (color_array, 0, mem);

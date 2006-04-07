@@ -19,6 +19,9 @@
 
 #include "gui/Label.h"
 
+#include "memguardconf.h"
+#include "memguard.h"
+
 Label::Label( int x, int y, const char *text, unsigned short hue, unsigned char font )
 {
 	SetPosition (x, y);
@@ -26,7 +29,7 @@ Label::Label( int x, int y, const char *text, unsigned short hue, unsigned char 
 	element = 0;
 	timeout = 0;
 	creation_time = SDL_GetTicks();
-	_text = (char *)malloc( strlen( text ) + 1 );
+	_text = (char *)malloc( strlen( text ) + 1, "Label::Label");
 	strcpy (_text, text);
 	_hue = hue;
 	_font = font;
@@ -65,7 +68,7 @@ void Label::setText( char *text )
 		free( _text );
 	}
 
-	_text = (char *)malloc( strlen( text ) + 1 );
+	_text = (char *)malloc( strlen( text ) + 1, "Label::setText");
 	strcpy( _text, text );
 	refresh();
 }
@@ -225,7 +228,7 @@ void Label::Crop (int width, int height)
         if(_text)
          free( _text);
         //_text = newtext;
-        _text = (char *) malloc (croppedsize + 1);
+        _text = (char *) malloc (croppedsize + 1, "Label::Crop");
         strcpy(_text, newtext);
         refresh ();
         delete[] newtext;
