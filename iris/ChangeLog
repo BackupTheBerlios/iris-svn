@@ -1,5 +1,9 @@
 09.04.2006
 Changes by Florian Fischer (SiENcE)
+	-Removed: Cal3D - isn't used anymore
+
+09.04.2006
+Changes by Florian Fischer (SiENcE)
 	-Update: DevCpp and VS 2003 solution
 	-Fixed: packed attribute in MultisLoader.h
 
