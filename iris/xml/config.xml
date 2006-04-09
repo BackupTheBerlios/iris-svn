@@ -52,9 +52,6 @@
 		
 		<!-- Brightness (0-9): Default = 5 -->
 		<BRIGHTNESS>0</BRIGHTNESS>
-                
-        <!-- Animation Smoothness -->
-        <ANIMATION_SMOOTHNESS>25</ANIMATION_SMOOTHNESS>
 	</GFX>
 	
 	<NET>

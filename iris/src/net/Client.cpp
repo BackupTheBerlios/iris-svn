@@ -761,16 +761,12 @@ void cClient::OnData (void *data, unsigned int len)
               break;
             case PCK_MapDisplay:
               Act_MapDisplay(packet);
-              break;   
-			 
-			case PCK_Season:
-				std::cout << "Season" << std::endl;
-				break;
+              break;
 
             case PCK_Time:
-            // disabled, because only tested on RunUO
-            //              Act_Time(packet);
-            //              break;
+				// disabled, because only tested on RunUO
+				Act_Time(packet);
+				break;
 
             /* ToDo Packets :) */
             /* Ignore following packets */
@@ -780,6 +776,7 @@ void cClient::OnData (void *data, unsigned int len)
             case PCK_TargetMulti:
             case PCK_Weather:
             case PCK_BookOpen:
+			case PCK_Season:
             case PCK_AOSObjProp:
             case PCK_ReDrawAll:
             case PCK_ChatEnable:
@@ -1514,41 +1511,42 @@ void cClient::Act_CharDeath (cPacket * packet)
   character->displayDeath ();
 }
 
+
 void cClient::Act_Start (cPacket * packet)
 {
-  in_game = true;
-  Uint32 id = (Uint32) packet->packet.Start.m_id;
-        cCharacter *character =
-          pCharacterList.Add (id, (Uint16) packet->packet.Start.m_x,
-                               (Uint16) packet->packet.Start.m_y,
-                               (Sint8) packet->packet.Start.m_z,
-                               (Uint16) packet->packet.Start.m_bodyType);
-        character->setDirection ((Uint8) packet->packet.Start.m_dir);
+	in_game = true;
+	Uint32 id = (Uint32) packet->packet.Start.m_id;
+	cCharacter *character =
+		pCharacterList.Add (id, (Uint16) packet->packet.Start.m_x,
+		(Uint16) packet->packet.Start.m_y,
+		(Sint8) packet->packet.Start.m_z,
+		(Uint16) packet->packet.Start.m_bodyType);
+	character->setDirection ((Uint8) packet->packet.Start.m_dir);
 
-        if (callback_OnGameStart)
-          callback_OnGameStart ();
+	if (callback_OnGameStart)
+		callback_OnGameStart ();
 
-        player_char = id;
+	player_char = id;
 
-        player_position[0] = (Uint16) packet->packet.Start.m_x;
-        player_position[1] = (Uint16) packet->packet.Start.m_y;
-        player_position[2] = (Sint8) packet->packet.Start.m_z;
-        walk_direction = (Uint8) packet->packet.Start.m_dir;
+	player_position[0] = (Uint16) packet->packet.Start.m_x;
+	player_position[1] = (Uint16) packet->packet.Start.m_y;
+	player_position[2] = (Sint8) packet->packet.Start.m_z;
+	walk_direction = (Uint8) packet->packet.Start.m_dir;
 
-  if ( Config::GetClientVersion() != "none")
-      {
-
-        std::string vers = Config::GetClientVersion();
-        cPacket pckt;
-        pckt.AddByte (0xBD);
-        pckt.AddWord (4 + vers.size ());
-        pckt.AddData ((void *) vers.c_str (), vers.size ());
-        pckt.AddByte (0);
-        Send (&pckt);
-        std::string message = "Client identificated as: " + vers;
-        Logger::WriteLine ((char *) message.c_str ());
-      }
+	if ( Config::GetClientVersion() != "none" )
+	{
+		std::string vers = Config::GetClientVersion();
+		cPacket pckt;
+		pckt.AddByte( 0xBD );
+		pckt.AddWord( 4 + vers.size() );
+		pckt.AddData( (void *)vers.c_str(), vers.size() );
+		pckt.AddByte( 0 );
+		Send( &pckt );
+		std::string message = "Client identified as: " + vers;
+		Logger::WriteLine( (char *)message.c_str() );
+	}
 }
+
 
 void cClient::Act_WalkAck (cPacket * packet)
 {
@@ -2609,18 +2607,18 @@ BYTE[2] gump height in pixels
 
   printf ("Currently not supported - [MapDialog (Key: %d, GumpID: %d, Upper Left(%d, %d), Lower Right(%d, %d), Gumpwidth(%d, %d))]\n",
           mapkey, gumpid, up_left_x, up_left_y, lo_right_x, lo_right_y, gump_x, gump_y);
-/*
+  /*
   Container *dialog = new Container ();
 
   dialog->SetSize (gump_x, gump_y);
   dialog->SetPosition (up_left_x, up_left_y);
   dialog->SetFlags (GUMPFLAG_MOVABLE | GUMPFLAG_CLOSABLE | GUMPFLAG_FOCUSABLE);
   dialog->SetGumpID ((int) gumpid);
-//  dialog->SetPlayerID ((int) id);
+  //  dialog->SetPlayerID ((int) id);
 
   dialog->SetCurrentPage (1);
   pUOGUI.AddControl (dialog);
-*/
+  */
 }
 
 void cClient::Act_PlayMusic (cPacket * packet)

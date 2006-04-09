@@ -23,10 +23,6 @@
 #include "Config.h"
 
 
-
-
-//extern SDLScreen *SDLscreen;
-
 // Initializing variables
 std::vector<ParserData> Config::m_vParserInfo;
 
@@ -34,7 +30,7 @@ std::string Config::m_sVersion = "0.8.6";
 
 int Config::m_iWidth = 640, Config::m_iHeight = 480, Config::m_iBPP = 16, Config::m_iStartFullScreen = 0,
 Config::m_iCursor = 1, Config::m_iPerspective = 1, Config::m_iDepthBuffer = 16, Config::m_iMaxZoom = 10,
-Config::m_iMaxAngle = 75, Config::m_iViewDistance = 8, Config::m_iBrightness = 5, Config::m_iAnimationSmoothness = 25,
+Config::m_iMaxAngle = 75, Config::m_iViewDistance = 8, Config::m_iBrightness = 5,
 Config::m_iWidth2D = 640, Config::m_iHeight2D = 480, Config::m_iFirstPerson = 0, Config::m_iHideSelf = 0,
 Config::m_iRoofFade = 1, Config::m_iStartX = 1500, Config::m_iStartY = 1000, Config::m_iStartZ = 0, Config::m_iAOS = 1,
 Config::m_iPopup = 1, Config::m_iClilocs = 1, Config::m_iSpeechHue = 100, Config::m_iAOSToolTips = 0;
@@ -81,7 +77,6 @@ bool Config::Init()
 	m_vParserInfo.push_back( ParserData( "MAXANGLE", IS_INTEGER, &m_iMaxAngle ) );
 	m_vParserInfo.push_back( ParserData( "VIEWDISTANCE", IS_INTEGER, &m_iViewDistance ) );
 	m_vParserInfo.push_back( ParserData( "BRIGHTNESS", IS_INTEGER, &m_iBrightness ) );
-	m_vParserInfo.push_back( ParserData( "ANIMATION_SMOOTHNESS", IS_INTEGER, &m_iAnimationSmoothness ) );
 
 	// Section UO
 	m_vParserInfo.push_back( ParserData( "UO", IS_SECTION, NULL ) );
@@ -249,48 +244,19 @@ bool Config::Init()
 		m_iMaxAngle = 90;
 	}
 
-	// Animation Smoothness
-	if ( m_iAnimationSmoothness < 10 )
-	{
-		m_iAnimationSmoothness = 10;
-	}
-
-	// Animation Smoothness
-	if ( m_iAnimationSmoothness > 100 )
-	{
-		m_iAnimationSmoothness = 100;
-	}
-
-	// Fix Mulpath if no / at the end
+	// Fix Mul path if no / at the end
 	if ( m_sMulPath.size() )
 	{
 		char cLastChar = m_sMulPath[m_sMulPath.length() - 1];
 
 		if ( ( cLastChar != '/' ) && ( cLastChar != '\\' ) )
 		{
-			m_sMulPath +="/";
+			m_sMulPath += "/";
 		}
 	}
 
 	return true;
 }
-
-
-//bool Config::RegisterFonts()
-//{
-//	if ( !SDLScreen::GetInstance() )
-//	{
-//		return false;
-//	}
-//
-//	for ( unsigned int i = 0; i < m_vFonts.size(); i++ )
-//	{
-//		const FontInfo &kFont = m_vFonts[i];
-//		SDLScreen::GetInstance()->RegisterFont( kFont.iId, kFont.sFileName, kFont.iSize, kFont.iHue );
-//	}
-//
-//	return true;
-//}
 
 
 void Config::Close()
@@ -299,96 +265,109 @@ void Config::Close()
 	m_vParserInfo.empty();
 }
 
+
 // GFX
 std::string Config::GetVersion()
 {
 	return m_sVersion;
 }
 
+
 int Config::GetWidth()
 {
 	return m_iWidth;
 }
+
 
 int Config::GetHeight()
 {
 	return m_iHeight;
 }
 
+
 int Config::GetBPP()
 {
 	return m_iBPP;
 }
+
 
 int Config::GetStartFullScreen()
 {
 	return m_iStartFullScreen;
 }
 
+
 int Config::GetCursor()
 {
 	return m_iCursor;
 }
+
 
 int Config::GetPerspective()
 {
 	return m_iPerspective;
 }
 
+
 int Config::GetDepthBuffer()
 {
 	return m_iDepthBuffer;
 }
+
 
 int Config::GetMaxZoom()
 {
 	return m_iMaxZoom;
 }
 
+
 int Config::GetMaxAngle()
 {
 	return m_iMaxAngle;
 }
+
 
 int Config::GetViewDistance()
 {
 	return m_iViewDistance;
 }
 
+
 int Config::GetBrightness()
 {
 	return m_iBrightness;
 }
 
-int Config::GetAnimationSmoothness()
-{
-	return m_iAnimationSmoothness;
-}
 
 int Config::GetWidth2D()
 {
 	return m_iWidth2D;
 }
 
+
 int Config::GetHeight2D()
 {
 	return m_iHeight2D;
 }
+
 
 int Config::GetFirstPerson()
 {
 	return m_iFirstPerson;
 }
 
+
 int Config::GetHideSelf()
 {
 	return m_iHideSelf;
 }
 
+
 int Config::GetRoofFade()
 {
 	return m_iRoofFade;
 }
+
 
 // UO
 int Config::GetStartX()
@@ -396,55 +375,66 @@ int Config::GetStartX()
 	return m_iStartX;
 }
 
+
 int Config::GetStartY()
 {
 	return m_iStartY;
 }
+
 
 int Config::GetStartZ()
 {
 	return m_iStartZ;
 }
 
+
 int Config::GetAOS()
 {
 	return m_iAOS;
 }
+
 
 std::string Config::GetMulPath()
 {
 	return m_sMulPath;
 }
 
+
 std::string Config::GetCompressedMap()
 {
 	return m_sCompressedMap;
 }
+
 
 int Config::GetPopup()
 {
 	return m_iPopup;
 }
 
+
 std::string Config::GetClientVersion()
 {
 	return m_sClientVersion;
 }
+
 
 int Config::GetClilocs()
 {
 	return m_iClilocs;
 }
 
+
 std::string Config::GetClilocLang()
 {
 	return m_sClilocLang;
 }
 
+
 int Config::GetSpeechHue()
 {
 	return m_iSpeechHue;
 }
+
 
 int Config::GetAOSToolTips()
 {
@@ -458,55 +448,66 @@ std::string Config::GetServer()
 	return m_sServer;
 }
 
+
 std::string Config::GetLogin()
 {
 	return m_sLogin;
 }
+
 
 std::string Config::GetPassword()
 {
 	return m_sPassword;
 }
 
+
 int Config::GetServerPort()
 {
 	return m_iServerPort;
 }
+
 
 int Config::GetRoofFadeTime()
 {
 	return m_iRoofFadeTime;
 }
 
+
 int Config::GetRoofFadeAlpha()
 {
 	return m_iRoofFadeAlpha;
 }
+
 
 int Config::GetIsSphere()
 {
 	return m_iIsSphere;
 }
 
+
 int Config::GetIsSphere55R()
 {
 	return m_iIsSphere55R;
 }
+
 
 int Config::GetIsPol()
 {
 	return m_iIsPol;
 }
 
+
 int Config::GetIsRunUO()
 {
 	return m_iIsRunUO;
 }
 
+
 int Config::GetIsUox3()
 {
 	return m_iIsUox3;
 }
+
 
 int Config::GetClientKey()
 {
@@ -520,40 +521,48 @@ int Config::GetMusic()
 	return m_iMusic;
 }
 
+
 int Config::GetSound()
 {
 	return m_iSound;
 }
+
 
 int Config::GetFrequency()
 {
 	return m_iFrequency;
 }
 
+
 int Config::GetStereo()
 {
 	return m_iStereo;
 }
+
 
 int Config::GetChunkSize()
 {
 	return m_iChunkSize;
 }
 
+
 int Config::GetMusicVolume()
 {
 	return m_iMusicVolume;
 }
+
 
 int Config::GetSoundVolume()
 {
 	return m_iSoundVolume;
 }
 
+
 int Config::GetMP3()
 {
 	return m_iMP3;
 }
+
 
 int Config::GetFootSteps()
 {
@@ -567,75 +576,90 @@ std::string Config::GetScriptPath()
 	return m_sScriptPath;
 }
 
+
 int Config::GetMouseMotionTimer()
 {
 	return m_iMouseMotionTimer;
 }
+
 
 void Config::SetCursor( int iCursor )
 {
 	m_iCursor = iCursor;
 }
 
+
 void Config::SetBrightness( int iBrightness )
 {
 	m_iBrightness = iBrightness;
 }
+
 
 void Config::SetFirstPerson( int iFirstPerson )
 {
 	m_iFirstPerson = iFirstPerson;
 }
 
+
 void Config::SetHideSelf( int iHideSelf )
 {
 	m_iHideSelf = iHideSelf;
 }
+
 
 void Config::SetLogin( std::string sLogin )
 {
 	m_sLogin = sLogin;
 }
 
+
 void Config::SetMusic( int iMusic )
 {
 	m_iMusic = iMusic;
 }
+
 
 void Config::SetPassword( std::string sPassword )
 {
 	m_sPassword = sPassword;
 }
 
+
 void Config::SetPerspective( int iPerspective )
 {
 	m_iPerspective = iPerspective;
 }
+
 
 void Config::SetRoofFade( int iRoofFade )
 {
 	m_iRoofFade = iRoofFade;
 }
 
+
 void Config::SetRoofFadeTime( int iRoofFadeTime )
 {
 	m_iRoofFadeTime = iRoofFadeTime;
 }
+
 
 void Config::SetServer( std::string sServer )
 {
 	m_sServer = sServer;
 }
 
+
 void Config::SetSound( int iSound )
 {
 	m_iSound = iSound;
 }
 
+
 void Config::SetSpeechHue( int iSpeechHue )
 {
 	m_iSpeechHue = iSpeechHue;
 }
+
 
 void Config::SetClilocs( int iClilocs )
 {

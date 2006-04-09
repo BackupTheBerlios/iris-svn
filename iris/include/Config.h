@@ -247,7 +247,7 @@ protected:
 	static std::string m_sVersion;
 	static int m_iWidth, m_iHeight, m_iBPP, m_iStartFullScreen;
 	static int m_iCursor, m_iPerspective, m_iDepthBuffer, m_iMaxZoom, m_iMaxAngle;
-	static int m_iViewDistance, m_iBrightness, m_iAnimationSmoothness;
+	static int m_iViewDistance, m_iBrightness;
 	static int m_iWidth2D, m_iHeight2D;
 	static int m_iFirstPerson, m_iHideSelf, m_iRoofFade;
 
