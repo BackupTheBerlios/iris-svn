@@ -28,8 +28,8 @@
 #include <string.h>
 #include <iostream>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 cMultisLoader *pMultisLoader=NULL;
 

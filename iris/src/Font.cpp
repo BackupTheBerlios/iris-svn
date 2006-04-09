@@ -16,8 +16,8 @@
 
 #include "Font.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 
 Font::Font( int iId, std::string sFileName, std::string sFontName, int iSize, int iHue ) : m_kFont( NULL ),

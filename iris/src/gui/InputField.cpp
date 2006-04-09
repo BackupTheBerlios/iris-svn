@@ -18,8 +18,8 @@
 
 #include "gui/InputField.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 InputField::InputField ( int x, int y, unsigned int width, unsigned int height, const char *text, 
 						unsigned short hue, unsigned char font, char passwordChar )

@@ -34,8 +34,8 @@
 #include <cassert>
 #include "net/uo_huffman.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 //

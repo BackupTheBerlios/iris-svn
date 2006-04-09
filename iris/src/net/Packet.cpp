@@ -33,8 +33,8 @@
 #include "Config.h"
 #include "net/Packet.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 
@@ -240,10 +240,14 @@ void InitTables ()
   packet_lens[PCK_ChatEnable] = 0x03;
   packet_lens[PCK_Arrow] = 0x06;
   packet_lens[PCK_MailMsg] = 0x09;
+  
+  /*
   if ( Config::GetIsSphere55R() )
     packet_lens[PCK_Season] = 0x02;
   else
-    packet_lens[PCK_Season] = 0x03;
+  */
+
+	packet_lens[PCK_Season] = 0x03;
   packet_lens[PCK_ClientVersion] = 0x00;
   packet_lens[PCK_UnkVersionAssist] = 0x00;
   packet_lens[PCK_ExtData] = 0x00;

@@ -50,8 +50,8 @@
 #include "renderer/3D/SceneMaker.h"
 #include "renderer/3D/ShaderMatrixBlock.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
   
 using namespace std;
 

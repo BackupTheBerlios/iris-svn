@@ -24,8 +24,8 @@
 #include "loaders/SoundLoader.h"
 #include <string>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 // Compiler directives
 #if  	defined(WIN32) && !defined(__MINGW32__)

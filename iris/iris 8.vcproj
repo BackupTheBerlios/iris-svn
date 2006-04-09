@@ -852,6 +852,14 @@
 				RelativePath=".\include\renderer\TextureBuffer.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\renderer\3D\WorldEnvironment.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\include\renderer\3D\WorldEnvironment.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="granny"

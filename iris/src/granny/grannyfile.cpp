@@ -25,8 +25,8 @@
 #include <iostream>
 #include <cassert>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 
@@ -204,8 +204,7 @@ void cGrannyFile::load (std::string filename, std::string basepath)
 	if (imesh != meshes.meshes.end ())
 	{
 		color_array =
-			(float *) malloc (imesh->points.size () * 3 * sizeof (float),
-                              "cGrannyFile::load");
+			(float *) malloc (imesh->points.size () * 3 * sizeof (float));
 	}
 	
 	initBone();

@@ -23,8 +23,8 @@
 
 #include "loaders/UOMap.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 MapLoader *pMapLoader = NULL;
 
@@ -143,9 +143,9 @@ struct staticinfo *UOMapLoader::LoadStatics( int x, int y, int &len )
 	len = block.length / 7;
 
 	struct staticentry *uostatics =
-		(struct staticentry *) malloc (block.length, "UOMapLoader::LoadStatics");
+		(struct staticentry *) malloc (block.length);
 	struct staticinfo *static_infos =
-		(struct staticinfo *) malloc (len * sizeof (struct staticinfo), "UOMapLoader::LoadStatics");
+		(struct staticinfo *) malloc (len * sizeof (struct staticinfo));
 
 
 	m_staticstream->seekg( block.offset, std::ios::beg );

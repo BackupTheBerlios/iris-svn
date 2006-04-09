@@ -33,8 +33,8 @@
 #include "renderer/SDLScreen.h"
 #include "Geometry.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 

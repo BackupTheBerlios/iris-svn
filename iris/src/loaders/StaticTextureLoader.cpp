@@ -22,8 +22,8 @@
 
 #include "loaders/StaticTextureLoader.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 char FILEID_GAMEMODELTEXTURE[] = "UI3F";
 
@@ -87,7 +87,7 @@ void cStaticTexture::LoadTexture (std::ifstream * stream)
 {
   assert (stream);
 
-  char *tempdata = (char *) malloc (m_stream_length, "cStaticTexture::LoadTexture");
+  char *tempdata = (char *) malloc (m_stream_length);
 
   int oldpos = stream->tellg ();
 

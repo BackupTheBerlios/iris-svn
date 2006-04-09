@@ -30,8 +30,8 @@
 #include <iostream>
 #include <cassert>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 

@@ -21,8 +21,8 @@
 #include "../include.h"
 #include "granny/grnmatrix.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 static float identity[16] = {
   1, 0, 0, 0,

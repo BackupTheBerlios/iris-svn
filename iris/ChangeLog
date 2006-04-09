@@ -1,10 +1,15 @@
+09.04.2006
+Changes by Nuno Ramiro
+	- Updated: VS 05 solution.
+	- Fixed: SphereR packets - it is now compatible with 56b.
+	- Reverted: Reverted MemGuard changes, it was not a good idea.
+
 07.04.2006
 Changes by Florian Fischer (SiENcE)
 	- old Container.cpp/h restored, because the new one had strange bugs (look at out bugtracker)
 	- updated & reorganized the vs2003 project files
 	- renamed the DevCpp project files to Iris
 	- removed some unused variables
-
 
 04.04.2006
 Changes by Alexander Oster (Tensor) &  Florian Fischer (SiENcE)

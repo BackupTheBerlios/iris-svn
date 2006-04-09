@@ -58,8 +58,8 @@
 
 #include "Geometry.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 //extern SDLScreen *SDLscreen;
 float water_phase = 0.0f;

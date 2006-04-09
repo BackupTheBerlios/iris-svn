@@ -32,8 +32,8 @@
 #include "string_utils.h"
 #include <string>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 #define         MASKBITS                0x3F
 #define         MASKBYTE                0x80

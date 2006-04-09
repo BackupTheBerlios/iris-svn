@@ -27,8 +27,8 @@
 #include "Logger.h"
 #include <cassert>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 

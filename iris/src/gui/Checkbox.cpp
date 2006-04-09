@@ -22,8 +22,8 @@
 
 #include "gui/Checkbox.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 Checkbox::Checkbox( int iUnCheckedPic, int iCheckedPic ) : m_bChecked( false )
 {

@@ -27,8 +27,8 @@
 #include <cassert>
 #include "Logger.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 // Library Includes
 #include <vector>

@@ -23,8 +23,8 @@
 
 #include "renderer/Bitmask.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 cBitmask::cBitmask() : pixels( NULL )
 {

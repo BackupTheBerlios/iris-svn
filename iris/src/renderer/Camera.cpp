@@ -29,8 +29,8 @@
 #include "Geometry.h"
 #include "irisgl.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 

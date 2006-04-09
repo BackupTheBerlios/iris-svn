@@ -27,8 +27,8 @@
 #include <cassert>
 #include <math.h>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 
@@ -303,8 +303,7 @@ void cLightNodeHandler::AllocNewNormalArray ()
 {
   m_normal_head = 0;
   m_current_normal_array =
-    (struct sLightNodeNormal *) malloc (LIGHTNODE_ARRAY_SIZE *sizeof (struct sLightNodeNormal),
-                                        "cLightNodeHandler::AllocNewNormalArray");
+    (struct sLightNodeNormal *) malloc (LIGHTNODE_ARRAY_SIZE *sizeof (struct sLightNodeNormal));
   memset (m_current_normal_array, 0,
           LIGHTNODE_ARRAY_SIZE * sizeof (struct sLightNodeNormal));
   normal_array_cache.push_back (m_current_normal_array);
@@ -315,8 +314,7 @@ void cLightNodeHandler::AllocNewNodeArray ()
 {
   m_node_head = 0;
   m_current_node_array =
-    (struct sLightNode *) malloc (LIGHTNODE_ARRAY_SIZE *sizeof (struct sLightNode),
-                                  "cLightNodeHandler::AllocNewNodeArray");
+    (struct sLightNode *) malloc (LIGHTNODE_ARRAY_SIZE *sizeof (struct sLightNode));
   memset (m_current_node_array, 0,
           LIGHTNODE_ARRAY_SIZE * sizeof (struct sLightNode));
   node_array_cache.push_back (m_current_node_array);
@@ -326,8 +324,7 @@ void cLightNodeHandler::AllocNewEquivArray ()
 {
   m_equiv_head = 0;
   m_current_equiv_array =
-    (struct sEquivNodes *) malloc (NODEEQUIV_ARRAY_SIZE *sizeof (struct sEquivNodes),
-                                   "cLightNodeHandler::AllocNewEquivArray");
+    (struct sEquivNodes *) malloc (NODEEQUIV_ARRAY_SIZE *sizeof (struct sEquivNodes));
   memset (m_current_equiv_array, 0,
           NODEEQUIV_ARRAY_SIZE * sizeof (struct sEquivNodes));
   equiv_array_cache.push_back (m_current_equiv_array);

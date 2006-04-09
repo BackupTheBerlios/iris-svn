@@ -30,8 +30,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 cUnicode::cUnicode (char *str, int len /* = 0 */ )
 {

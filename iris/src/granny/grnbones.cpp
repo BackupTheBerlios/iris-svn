@@ -21,8 +21,8 @@
 #include "granny/grntype.h"
 #include "granny/grnbones.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 Bone::Bone ()
 {

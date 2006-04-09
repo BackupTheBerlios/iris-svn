@@ -53,8 +53,8 @@
 
 #include "xml.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 extern GUIHandler pUOGUI;
 

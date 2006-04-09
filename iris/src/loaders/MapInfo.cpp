@@ -23,8 +23,8 @@
 
 #include "loaders/MapInfo.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 MapInfoLoader *MapInfoLoader::m_sgMapInfoLoader = NULL;
 

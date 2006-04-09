@@ -21,8 +21,8 @@
 
 #include "renderer/SDLScreen.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 SDLScreen *SDLScreen::m_sgSDLScreen = NULL;
 

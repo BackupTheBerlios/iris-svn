@@ -23,8 +23,8 @@
 
 #include "renderer/MapBuffer.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 MapbufferHandler pMapbufferHandler;
 

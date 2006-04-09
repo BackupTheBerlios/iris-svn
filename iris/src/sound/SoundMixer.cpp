@@ -18,8 +18,8 @@
 
 #include "sound/SoundMixer.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 
 SoundMix *SoundMix::m_sgSoundMix = NULL;

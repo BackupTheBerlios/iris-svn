@@ -27,8 +27,8 @@
 #include "SDL/SDL_image.h"
 #include <cassert>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 
@@ -200,7 +200,7 @@ int Texture::LoadFromSurfaceWithColorKey (SDL_Surface * surface, int colorkey)
       }
 
   int size = surface->w * surface->h;
-  Uint8 *data = (Uint8 *) malloc (size * 4, "Texture::LoadFromSurfaceWithColorKey");
+  Uint8 *data = (Uint8 *) malloc (size * 4);
   Uint8 *dst = data;
   Uint8 *src = (Uint8 *) surface->pixels;
   Uint8 *key = (Uint8 *) (&colorkey);
@@ -251,7 +251,7 @@ int Texture::LoadFromFileWithTransparency (const char *filename,
       }
 
   int size = image->w * image->h;
-  Uint8 *data = (Uint8 *) malloc (size * 4, "Texture::LoadFromFileWithTransparency");
+  Uint8 *data = (Uint8 *) malloc (size * 4);
   Uint8 *dst = data;
   Uint8 *src = (Uint8 *) image->pixels;
 

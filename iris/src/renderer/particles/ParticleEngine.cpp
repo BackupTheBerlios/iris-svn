@@ -28,8 +28,8 @@
 #include "include.h"
 #include "Logger.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 

@@ -18,8 +18,8 @@
 
 #include "sound/Music.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 Music::Music() : m_kMusic( NULL ), m_bPlaying( false )
 { 

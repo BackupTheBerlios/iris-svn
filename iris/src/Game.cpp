@@ -22,8 +22,8 @@
 #include "Game.h"
 #include "renderer/3D/Renderer3D.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 // Singleton
 Game *Game::m_sgGame = NULL;

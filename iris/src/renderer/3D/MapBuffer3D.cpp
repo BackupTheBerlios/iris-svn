@@ -22,8 +22,8 @@
 
 #include "renderer/3D/MapBuffer3D.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 cMapblock *Mapbuffer3D::CreateBlock( int x, int y )
 {

@@ -29,8 +29,8 @@
 #include <cassert>
 #include <math.h>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 

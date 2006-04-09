@@ -21,8 +21,8 @@
 
 #include "SDLEvent.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 bool SDLEvent::m_bQuit = false;
 

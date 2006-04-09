@@ -29,8 +29,8 @@
 #include <string.h>
 #include "Buffer.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 
@@ -64,7 +64,7 @@ void Buffer::Create (int size)
   if (bufferarray)
     Free ();
   this->size = size;
-  bufferarray = (BufferEntry **) malloc (size * 4, "Buffer::Create");
+  bufferarray = (BufferEntry **) malloc (size * 4);
   memset (bufferarray, 0, size * 4);
 }
 

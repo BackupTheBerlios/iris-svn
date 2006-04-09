@@ -23,8 +23,8 @@
 #include <iostream>
 #include <cassert>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 BoneAnim::BoneAnim() : id(0), length(0), numTranslates(0), numQuaternions(0), numUnknowns(0)
 {

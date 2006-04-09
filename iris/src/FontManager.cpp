@@ -16,8 +16,8 @@
 
 #include "FontManager.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 FontManager *FontManager::m_sgFontManager;
 

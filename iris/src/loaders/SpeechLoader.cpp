@@ -24,8 +24,8 @@
 
 #include "loaders/SpeechLoader.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 SpeechLoader *SpeechLoader::m_sgSpeechLoader = NULL;
 

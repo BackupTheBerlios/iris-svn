@@ -22,8 +22,8 @@
 
 #include "gui/RadioButton.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 RadioButton::RadioButton( int iUnChecked, int iChecked ) : Checkbox( iUnChecked, iChecked )
 {

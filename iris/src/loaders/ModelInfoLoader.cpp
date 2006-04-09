@@ -23,8 +23,8 @@
 
 #include "loaders/ModelInfoLoader.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 //cModelInfoLoader pModelInfoLoader;
 

@@ -27,8 +27,8 @@
 #include "Logger.h"
 #include <iostream>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 int onscrollup (Control * contr)
 {

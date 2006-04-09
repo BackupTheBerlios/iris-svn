@@ -19,8 +19,8 @@
 #include "granny/grntype.h"
 #include "granny/grnunhandled.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 Unhandled::Unhandled ()
 {

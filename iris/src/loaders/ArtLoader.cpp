@@ -22,8 +22,8 @@
 
 #include "loaders/ArtLoader.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 ArtLoader *ArtLoader::m_sgArtLoader = NULL;
 

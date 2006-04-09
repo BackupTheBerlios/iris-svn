@@ -27,8 +27,8 @@
 #include "Config.h"
 #include "loaders/TileDataBuffer.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 

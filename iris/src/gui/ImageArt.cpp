@@ -22,8 +22,8 @@
 
 #include "gui/ImageArt.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 ImageArt::ImageArt() : m_iTextId( 0 ), m_iHue( 0 )
 {

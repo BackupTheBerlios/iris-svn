@@ -31,8 +31,8 @@
 #include "Game.h"
 #include <cassert>
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 GUIHandler pUOGUI;
 

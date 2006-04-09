@@ -22,8 +22,8 @@
 
 #include "net/Client.h"
 
-#include "memguardconf.h"
-#include "memguard.h"
+
+
 
 using namespace std;
 
@@ -572,7 +572,7 @@ void cClient::OnData (void *data, unsigned int len)
   if (decompress)
   {
 //     int llen = len;
-     uncompressed_data = malloc (MAX_PACKET_LEN, "cClient::OnData");
+     uncompressed_data = malloc (MAX_PACKET_LEN);
      
      int dest_size = MAX_PACKET_LEN;
      int src_size = len;
@@ -762,6 +762,11 @@ void cClient::OnData (void *data, unsigned int len)
             case PCK_MapDisplay:
               Act_MapDisplay(packet);
               break;   
+			 
+			case PCK_Season:
+				std::cout << "Season" << std::endl;
+				break;
+
             case PCK_Time:
             // disabled, because only tested on RunUO
             //              Act_Time(packet);
@@ -773,7 +778,6 @@ void cClient::OnData (void *data, unsigned int len)
             case PCK_ZoneChange:
             case PCK_UnkUpdateRange:
             case PCK_TargetMulti:
-            case PCK_Season:
             case PCK_Weather:
             case PCK_BookOpen:
             case PCK_AOSObjProp:
