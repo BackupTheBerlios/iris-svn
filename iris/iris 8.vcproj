@@ -257,6 +257,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\SynchronizedTime.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Window.cpp"
 				>
 			</File>
@@ -340,6 +344,10 @@
 			</File>
 			<File
 				RelativePath=".\include\SDLEvent.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\SynchronizedTime.h"
 				>
 			</File>
 			<File

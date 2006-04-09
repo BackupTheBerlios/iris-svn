@@ -4,6 +4,10 @@ Changes by Nuno Ramiro
 	- Fixed: SphereR packets - it is now compatible with 56b.
 	- Reverted: Reverted MemGuard changes, it was not a good idea.
 	- Removed: AnimationSmoothness was not doing anything other than overload.
+	- Organized: Client packets are more organized.
+	- Added: Time packet is active again, note that it is sent once at login.
+	- Added: SynchronizedTime class, you receive the time from the server at login, and it stores it into the class.
+		Whenever you need Hours/Minutes/Seconds use SynchronizedTime::GetHours()/GetMinutes()/GetSeconds().
 
 09.04.2006
 Changes by Florian Fischer (SiENcE)

@@ -27,7 +27,6 @@
 #include <windows.h>
 #endif
 
-#include <time.h>
 #include <cassert>
 #include <stdlib.h>
 #include <vector>
@@ -78,6 +77,8 @@
 #include "Config.h"
 #include "Logger.h"
 #include "Exception.h"
+#include "SynchronizedTime.h"
+
 #include "net/unicode.h"
 
 #include "sound/SoundMixer.h"

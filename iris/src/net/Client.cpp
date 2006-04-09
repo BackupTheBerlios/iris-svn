@@ -23,10 +23,6 @@
 #include "net/Client.h"
 
 
-
-
-using namespace std;
-
 cClient *pClient = NULL;
 int spellbooktype = 2;
 
@@ -610,198 +606,245 @@ void cClient::OnData (void *data, unsigned int len)
               return;
             }
 
-        switch (packet->packet.Default.m_cmd)
+		switch (packet->packet.Default.m_cmd)
+		{
+		case PCK_ServerList:
+			Act_ServerList (packet);
+			break;
 
-            {
-            case PCK_ServerList:
-              Act_ServerList (packet);
-              break;
-            case PCK_LogBad:
-              Act_BadLog (packet);
-              break;
-            case PCK_Relay:
-              Act_Relay (packet);
-              break;
-            case PCK_CharList:
-            case PCK_CharList2:
-              Act_CharList (packet);
-              break;
-            case PCK_Char:
-              Act_Char (packet);
-              break;
-            case PCK_Start:
-              Act_Start (packet);
-              break;
-            case PCK_Speak:
-              Act_Speak (packet);
-              break;
-            case PCK_SpeakUNICODE:
-              Act_SpeakUnicode (packet);
-              break;
-            case PCK_Put:
-              Act_Put (packet);
-              break;
-            case PCK_View:
-              Act_View (packet);
-              break;
-            case PCK_WalkAck:
-              Act_WalkAck (packet);
-              break;
-            case PCK_WalkCancel:
-              Act_WalkCancel (packet);
-              break;
-            case PCK_Light:
-              Act_Light (packet);
-              break;
-            case PCK_War:
-              Act_War (packet);
-              break;
-            case PCK_Delete:
-              Act_Delete (packet);
-              break;
-            case PCK_Status:
-              Act_Status (packet);
-              break;
-            case PCK_Content:
-              Act_Content (packet);
-              break;
-            case PCK_ContOpen:
-              Act_ContOpen (packet);
-              break;
-            case PCK_Skill:
-              Act_Skill (packet);
-              break;
-            case PCK_CharMove:
-              Act_CharMove (packet);
-              break;
-            case PCK_ItemEquip:
-              Act_ItemEquip (packet);
-              break;
-            case PCK_DragCancel:
-              Act_DragCancel (packet);
-              break;
-            case PCK_Target:
-              Act_Target (packet);
-              break;
-            case PCK_MenuItems:
-              Act_MenuItems (packet);
-              break;
-            case PCK_GumpDialog:
-              Act_GumpDialog (packet);
-              break;
-            case PCK_PaperDoll:
-              Act_Paperdoll (packet);
-              break;
-            case PCK_DyeVat:
-              Act_Dye (packet);
-              break;
-            case PCK_ContAdd:
-              Act_ContAdd (packet);
-              break;
-            case PCK_Sound:
-              Act_Sound (packet);
-              break;
-            case PCK_CharAction:
-              Act_CharAction (packet);
+		case PCK_LogBad:
+			Act_BadLog (packet);
+			break;
 
-              break;
-            case PCK_ExtData:
-              Act_SubCommands (packet);
-              break;
-            case PCK_AttackOK:
-              Act_AttackOK (packet);
-              break;
-            case PCK_CharDeath:
-              Act_CharDeath (packet);
-              break;
-            case PCK_StatChngStr:
-            case PCK_StatChngDex:
-            case PCK_StatChngInt:
-              Act_StatChange (packet);
-              break;
-            case PCK_Pause:
-              if (callback_OnGameStart && !in_game)
-                  {
-                    callback_OnGameStart ();
-                    in_game = true;
-                  }
-              break;
-            case PCK_CorpEquip:
-              Act_CorpEquip (packet);
-              break;
-            case PCK_SpeakTable:
-              Act_SpeakTable (packet);
-              break;
-            case PCK_SecureTrade:
-              Act_SecureTrade (packet);
-              break;
-            case PCK_VendOpenBuy:
-              Act_VendOpenBuy (packet);
-              break;
-            case PCK_VendOpenSell:
-              Act_VendOpenSell (packet);
-              break;
-            case PCK_VendorBuy:
-              Act_VendorBuy (packet);
-              break;
-            case PCK_PlayMusic:
-              Act_PlayMusic (packet);
-              break;
-            case PCK_AOSTooltip:
-              Act_AOSTooltip (packet);
-              break;
-            case PCK_ClientState:
-              Act_ClientState (packet);
-              break;
-            case PCK_Ping:
-              Send (packet);
-              break;
-            case PCK_ParticleEffect:
-              Act_ParticleEffect(packet);
-              break;
-            case PCK_MapDisplay:
-              Act_MapDisplay(packet);
-              break;
+		case PCK_Relay:
+			Act_Relay (packet);
+			break;
 
-            case PCK_Time:
-				// disabled, because only tested on RunUO
-				Act_Time(packet);
-				break;
+		case PCK_CharList:
+		case PCK_CharList2:
+			Act_CharList (packet);
+			break;
 
-            /* ToDo Packets :) */
-            /* Ignore following packets */
-            case PCK_EffectUpdate:
-            case PCK_ZoneChange:
-            case PCK_UnkUpdateRange:
-            case PCK_TargetMulti:
-            case PCK_Weather:
-            case PCK_BookOpen:
-			case PCK_Season:
-            case PCK_AOSObjProp:
-            case PCK_ReDrawAll:
-            case PCK_ChatEnable:
-            case PCK_Scroll:
-            case PCK_LightPoint:
-            case PCK_Options:
-              break;
-            default:
-              printf
-                ("Unknown Packet: %x (%i bytes), position %i (last packet: %x)\n",
-                 (int) packet->packet.Default.m_cmd, packet->len (), len,
-                 last_packet);
-              break;
-            }
+		case PCK_Char:
+			Act_Char (packet);
+			break;
+		case PCK_Start:
+			Act_Start (packet);
+			break;
 
-        last_packet = (Uint8) packet->packet.Default.m_cmd;
+		case PCK_Speak:
+			Act_Speak (packet);
+			break;
 
-        len -= packet_len;
-        p += packet_len;
-        data_buffer_pos -= packet_len;
-        memcpy (data_buffer, p, MAX_PACKET_LEN - (p - data_buffer));
-      }
-  if (decompress_safe)
-    free (uncompressed_data);
-  delete packet;
+		case PCK_SpeakUNICODE:
+			Act_SpeakUnicode (packet);
+			break;
+
+		case PCK_Put:
+			Act_Put (packet);
+			break;
+
+		case PCK_View:
+			Act_View (packet);
+			break;
+
+		case PCK_WalkAck:
+			Act_WalkAck (packet);
+			break;
+
+		case PCK_WalkCancel:
+			Act_WalkCancel (packet);
+			break;
+
+		case PCK_Light:
+			Act_Light (packet);
+			break;
+
+		case PCK_War:
+			Act_War (packet);
+			break;
+
+		case PCK_Delete:
+			Act_Delete (packet);
+			break;
+
+		case PCK_Status:
+			Act_Status (packet);
+			break;
+
+		case PCK_Content:
+			Act_Content (packet);
+			break;
+
+		case PCK_ContOpen:
+			Act_ContOpen (packet);
+			break;
+
+		case PCK_Skill:
+			Act_Skill (packet);
+			break;
+
+		case PCK_CharMove:
+			Act_CharMove (packet);
+			break;
+
+		case PCK_ItemEquip:
+			Act_ItemEquip (packet);
+			break;
+
+		case PCK_DragCancel:
+			Act_DragCancel (packet);
+			break;
+
+		case PCK_Target:
+			Act_Target (packet);
+			break;
+
+		case PCK_MenuItems:
+			Act_MenuItems (packet);
+			break;
+
+		case PCK_GumpDialog:
+			Act_GumpDialog (packet);
+			break;
+
+		case PCK_PaperDoll:
+			Act_Paperdoll (packet);
+			break;
+
+		case PCK_DyeVat:
+			Act_Dye (packet);
+			break;
+
+		case PCK_ContAdd:
+			Act_ContAdd (packet);
+			break;
+
+		case PCK_Sound:
+			Act_Sound (packet);
+			break;
+
+		case PCK_CharAction:
+			Act_CharAction (packet);
+			break;
+
+		case PCK_ExtData:
+			Act_SubCommands (packet);
+			break;
+
+		case PCK_AttackOK:
+			Act_AttackOK (packet);
+			break;
+
+		case PCK_CharDeath:
+			Act_CharDeath (packet);
+			break;
+
+		case PCK_StatChngStr:
+		case PCK_StatChngDex:
+		case PCK_StatChngInt:
+			Act_StatChange (packet);
+			break;
+
+		case PCK_Pause:
+			if (callback_OnGameStart && !in_game)
+			{
+				callback_OnGameStart ();
+				in_game = true;
+			}
+			break;
+
+		case PCK_CorpEquip:
+			Act_CorpEquip (packet);
+			break;
+
+		case PCK_SpeakTable:
+			Act_SpeakTable (packet);
+			break;
+
+		case PCK_SecureTrade:
+			Act_SecureTrade (packet);
+			break;
+
+		case PCK_VendOpenBuy:
+			Act_VendOpenBuy (packet);
+			break;
+
+		case PCK_VendOpenSell:
+			Act_VendOpenSell (packet);
+			break;
+
+		case PCK_VendorBuy:
+			Act_VendorBuy (packet);
+			break;
+
+		case PCK_PlayMusic:
+			Act_PlayMusic (packet);
+			break;
+
+		case PCK_AOSTooltip:
+			Act_AOSTooltip (packet);
+			break;
+
+		case PCK_ClientState:
+			Act_ClientState (packet);
+			break;
+
+		case PCK_Ping:
+			Send (packet);
+			break;
+
+		case PCK_ParticleEffect:
+			Act_ParticleEffect(packet);
+			break;
+
+		case PCK_MapDisplay:
+			Act_MapDisplay(packet);
+			break;
+
+		case PCK_Time:
+			// This packet is sent at login
+			Act_Time( packet );
+			break;
+
+		/*
+		ToDo Packets.
+		Ignore following packets
+		*/
+		case PCK_EffectUpdate:
+		case PCK_ZoneChange:
+		case PCK_UnkUpdateRange:
+		case PCK_TargetMulti:
+		case PCK_Weather:
+		case PCK_BookOpen:
+		case PCK_Season:
+		case PCK_AOSObjProp:
+		case PCK_ReDrawAll:
+		case PCK_ChatEnable:
+		case PCK_Scroll:
+		case PCK_LightPoint:
+		case PCK_Options:
+			break;
+
+		default:
+			printf( "Unknown Packet: %x (%i bytes), position %i (last packet: %x)\n", 
+				(int)packet->packet.Default.m_cmd, packet->len(), len, last_packet );
+			break;
+		}
+
+		last_packet = (Uint8) packet->packet.Default.m_cmd;
+
+		len -= packet_len;
+		p += packet_len;
+		data_buffer_pos -= packet_len;
+		memcpy (data_buffer, p, MAX_PACKET_LEN - (p - data_buffer));
+	  }
+
+	  if ( decompress_safe )
+	  {
+		  free( uncompressed_data );
+	  }
+	  SAFE_DELETE( packet );
 }
 
 void cClient::Send (void *data, Uint32 len)
@@ -2117,18 +2160,18 @@ void cClient::Act_Paperdoll (cPacket * packet)
     callback_OnPaperdoll (id, text, flag);
 }
 
-void cClient::Act_Time (cPacket * packet)
+
+void cClient::Act_Time( cPacket *kPacket )
 {
-  packet->SetPosition (1);
+	kPacket->SetPosition( 1 );
 
-  time_t now = time((time_t *)NULL);
-  tm z=*(localtime(&now));
-
-  z.tm_hour = packet->GetByte ();
-  z.tm_min = packet->GetByte ();
-  z.tm_sec = packet->GetByte ();
-  std::cout << z.tm_hour << ":" << z.tm_min << " and " << z.tm_sec << "sec" << endl;
+	tm z;
+	z.tm_hour = kPacket->GetByte();
+	z.tm_min = kPacket->GetByte();
+	z.tm_sec = kPacket->GetByte();
+	SynchronizedTime::Synchronize( z.tm_hour, z.tm_min, z.tm_sec );
 }
+
 
 void cClient::Act_CorpEquip (cPacket * packet)
 {
