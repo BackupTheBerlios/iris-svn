@@ -67,7 +67,7 @@ struct stMultiList
 {
 	std::list<stMultiPart> multiParts;
 	bool ishouse;
-}STRUCT_PACKED;
+}/*STRUCT_PACKED*/;
 
 #if defined(WIN32) && !defined(__MINGW32__)
 #pragma pack(pop)

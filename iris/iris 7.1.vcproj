@@ -1010,9 +1010,6 @@ imm32.lib smpeg.lib"
 			RelativePath=".\src\main.cpp">
 		</File>
 		<File
-			RelativePath=".\src\memguard\memguard.cpp">
-		</File>
-		<File
 			RelativePath=".\resource.h">
 		</File>
 		<File

@@ -1,4 +1,9 @@
 09.04.2006
+Changes by Florian Fischer (SiENcE)
+	-Update: DevCpp and VS 2003 solution
+	-Fixed: packed attribute in MultisLoader.h
+
+09.04.2006
 Changes by Nuno Ramiro
 	- Updated: VS 05 solution.
 	- Fixed: SphereR packets - it is now compatible with 56b.

@@ -1,7 +1,7 @@
 [Project]
 FileName=Iris.dev
 Name=Iris
-UnitCount=135
+UnitCount=134
 Type=1
 Ver=1
 ObjFiles=
@@ -20,7 +20,7 @@ ObjectOutput=obj
 OverrideOutput=1
 OverrideOutputName=Iris.exe
 HostApplication=
-Folders=csl,granny,gui,loaders,memguard,net,renderer,renderer/3D,renderer/particles,sound
+Folders=csl,granny,gui,loaders,net,renderer,renderer/3D,renderer/particles,sound
 CommandLine=
 IncludeVersionInfo=1
 SupportXPThemes=0
@@ -1003,7 +1003,11 @@ BuildCmd=
 Major=0
 Minor=6
 Release=5
-Build=550
+<<<<<<< .mine
+Build=451
+=======
+Build=552
+>>>>>>> .r90
 LanguageID=2057
 CharsetID=1252
 CompanyName=Iris Team
@@ -1371,7 +1375,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit136]
-FileName=..\include\memguard\memguardconf.h
+FileName=..\include\memguardconf.h
 CompileCpp=1
 Folder=memguard
 Compile=1
@@ -1791,7 +1795,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit137]
-FileName=..\include\memguard\memguard.h
+FileName=..\include\memguard.h
 CompileCpp=1
 Folder=memguard
 Compile=1
@@ -1844,16 +1848,6 @@ BuildCmd=
 FileName=..\src\net\Packet.cpp
 CompileCpp=1
 Folder=net
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit135]
-FileName=..\src\memguard\memguard.cpp
-CompileCpp=1
-Folder=memguard
 Compile=1
 Link=1
 Priority=1000
