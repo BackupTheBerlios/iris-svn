@@ -1,9 +1,13 @@
 10.04.2006
+Changes by Florian Fischer (SiENcE)
+	- new formula to detect the Groundtexturesize added (old one was only for 64 or 128x128)
+
+10.04.2006
 Changes by Nuno Ramiro
 	- Fixed: Act_BadLog was not beeing called, instead was beeing spammed "SDLNet_TCP_Recv:".
 	- Fixed: Includes under WorldEnviroment.
 
-09.04.2006
+10.04.2006
 Changes by Florian Fischer (SiENcE)
 	- Update: VS2003 and DevCpp solutions (SynchronizedTime.cpp added, cleaned)
 	- Update: Makefile.am (removed memguard.cpp, added SynchronizedTime.cpp)

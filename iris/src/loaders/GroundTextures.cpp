@@ -1,6 +1,9 @@
-//
-// File: GroundTextures.cpp
-// Created by: Alexander Oster - tensor@ultima-iris.de
+/*
+ * File: GroundTextures.cpp
+ * Created by Alexander Oster.
+ * Last change: 10-04-06 (SiENcE)
+ */
+
 //
 /*****
  *
@@ -113,7 +116,10 @@ Texture *cGroundTextureLoader::LoadTexture (int index)
   if (idx.offset == 0xffffffff)
     return NULL;
 
-  int size = (idx.extra == 1 ? 128 : 64);
+//SiENcE: support for custom size Textures added
+//other Formula choosen. Now the size of the Textures is calculated
+//  int size = (idx.extra == 1 ? 128 : 64);
+  Uint32 size = (Uint32) sqrt( idx.length / 2 );
 
   if (idx.length != (unsigned int) (size * size * 2))
       {
