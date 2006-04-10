@@ -470,17 +470,20 @@ bool cClient::Connect( char *address, Uint16 port )
 }
 
 
-void cClient::Disconnect ()
+void cClient::Disconnect()
 {
-  if (!connected)
-    return;
+	if ( !connected )
+	{
+		return;
+	}
 
-  SDLNet_FreeSocketSet (socketset);
-  SDLNet_TCP_Close (socket);
+	SDLNet_FreeSocketSet( socketset );
+	SDLNet_TCP_Close( socket );
 
-  socket = NULL;
-  connected = false;
+	socket = NULL;
+	connected = false;
 }
+
 
 void cClient::Poll()
 {
@@ -501,7 +504,7 @@ void cClient::Poll()
 	bool do_poll = true;
 	int poll_pos = 0;
 
-	while (do_poll)
+	while ( do_poll )
 	{
 		do_poll = false;
 		const int numready = SDLNet_CheckSockets( socketset, 0 );
@@ -518,8 +521,9 @@ void cClient::Poll()
 			if ( len <= 0 )
 			{
 				Logger::WriteLine( "SDLNet_TCP_Recv: " + std::string( SDLNet_GetError() ) );
-				return;
+				break;
 			}
+
 			if ( len > 0 )
 			{
 				do_poll = true;
@@ -528,92 +532,85 @@ void cClient::Poll()
 		}
 	}
 
-	if ( poll_pos > 0 )
-	{
-		OnData( packet, poll_pos );
-	}
+	OnData( packet, poll_pos );
 }
 
 void LogStream(void* data, int orig_len, bool dir)
 {
-		FILE *fp = fopen("packets.txt", "at");
-		if(!fp) return; 
-		unsigned char * p = (unsigned char*) data;
-		fprintf(fp, "Packet [%02x], Length: %i, Type: %s\n", *p, orig_len, (dir ? "Server" : "Client") );
-		if(orig_len < 0) orig_len*=-1;
-		for (int i = 0; i < orig_len; i++) 
-
-
-
-
-
-		{
-			fprintf(fp, "%02x ", (Uint32)*p); p++;
-			if (i % 16 == 15)
-				fprintf(fp, "\n");
-		}
-		fprintf(fp, "\n\n");
-		fclose(fp);
+	FILE *fp = fopen("packets.txt", "at");
+	if(!fp) return; 
+	unsigned char * p = (unsigned char*) data;
+	fprintf(fp, "Packet [%02x], Length: %i, Type: %s\n", *p, orig_len, (dir ? "Server" : "Client") );
+	if(orig_len < 0) orig_len*=-1;
+	for (int i = 0; i < orig_len; i++)
+	{
+		fprintf(fp, "%02x ", (Uint32)*p); p++;
+		if (i % 16 == 15)
+			fprintf(fp, "\n");
+	}
+	fprintf(fp, "\n\n");
+	fclose(fp);
 }
 
-void cClient::OnData (void *data, unsigned int len)
+void cClient::OnData( void *data, unsigned int len )
 {
-  cPacket *packet = new cPacket;
-  bool decompress_safe = decompress;
-  void *uncompressed_data = data;
+	cPacket *packet = new cPacket();
+	bool decompress_safe = decompress;
+	void *uncompressed_data = data;
 
-//  int orig_len = len;
-  int last_packet = 255;
+	//  int orig_len = len;
+	int last_packet = 255;
 
-  if (decompress)
-  {
-//     int llen = len;
-     uncompressed_data = malloc (MAX_PACKET_LEN);
-     
-     int dest_size = MAX_PACKET_LEN;
-     int src_size = len;
-     (*copier) ((char *) uncompressed_data, (char *) data, dest_size, src_size);
-     len = dest_size;
-  }
+	if (decompress)
+	{
+		//     int llen = len;
+		uncompressed_data = malloc( MAX_PACKET_LEN );
 
-  if (len + data_buffer_pos > MAX_PACKET_LEN) {
-              Logger::WriteLine ("NET | Buffer overflow");
-              data_buffer_pos = 0;
-    }
-  
+		int dest_size = MAX_PACKET_LEN;
+		int src_size = len;
+		(*copier)( (char *)uncompressed_data, (char *)data, dest_size, src_size );
+		len = dest_size;
+	}
 
-  memcpy (&data_buffer[data_buffer_pos], uncompressed_data, len);
-  data_buffer_pos += len;
+	if ( len + data_buffer_pos > MAX_PACKET_LEN )
+	{
+		Logger::WriteLine( "NET | Buffer overflow" );
+		data_buffer_pos = 0;
+	}
 
-  len = data_buffer_pos;
 
-  while (data_buffer_pos > 0)
-      {
-        char *p = (char *) data_buffer;
-        int packet_len = packet->ParsePacket (p, len, PACKET_SERVER);
+	memcpy( &data_buffer[data_buffer_pos], uncompressed_data, len );
+	data_buffer_pos += len;
 
-        // can be disabled
-        LogStream(p, packet_len, true);
+	len = data_buffer_pos;
+
+	while ( data_buffer_pos > 0 )
+	{
+		char *p = (char *)data_buffer;
+		int packet_len = packet->ParsePacket( p, len, PACKET_SERVER );
+
+		// can be disabled
+		LogStream( p, packet_len, true );
    
-        if (packet_len <= 0)
-            {
-              delete packet;
-              Logger::WriteLine ("NET | Warning: lost packet stream");
-/*              printf
-                ("    Len: %d Needed Len: %d Cmd: %x (Last Packet: %x)\n",
-                 len, -packet_len, 0, last_packet);
-*/
-              return;
-            }
+		if ( packet_len <= 0 )
+		{
+			SAFE_DELETE( packet );
+			Logger::WriteLine( "NET | Warning: lost packet stream" );
+			/*              printf
+			("    Len: %d Needed Len: %d Cmd: %x (Last Packet: %x)\n",
+			len, -packet_len, 0, last_packet);
+			*/
+			return;
+		}
 
-		switch (packet->packet.Default.m_cmd)
+		switch ( packet->packet.Default.m_cmd )
 		{
 		case PCK_ServerList:
 			Act_ServerList (packet);
 			break;
 
 		case PCK_LogBad:
-			Act_BadLog (packet);
+			Act_BadLog( packet );
 			break;
 
 		case PCK_Relay:
@@ -951,35 +948,42 @@ void cClient::Act_ServerList (cPacket * packet)
     callback_OnServerList (login_server_list.size ());
 }
 
-void cClient::Act_BadLog (cPacket * packet)
+void cClient::Act_BadLog( cPacket *packet )
 {
-  if (!packet)
-    return;
+	if ( !packet )
+	{
+		return;
+	}
 
-  sServerPacket *pack = packet->serverpacket ();
+	sServerPacket *pack = packet->serverpacket();
 
-  char msg[128];
-  sprintf (msg, "Login Denied: %i\n", pack->LogBad.m_code);
-  Logger::WriteLine (msg);
+	char msg[128];
+	sprintf( msg, "Login Denied: %i\n", pack->LogBad.m_code );
+	Logger::WriteLine( msg );
 
-  switch (pack->LogBad.m_code)
-      {
-      case LOGINERR_NONE:
-        callback_OnNetError (NETERROR_UNKNOWNUSER);
-        break;
-      case LOGINERR_ACCUSED:
-        callback_OnNetError (NETERROR_ACCOUNTINUSE);
-        break;
-      case LOGINERR_BLOCKED:
-        callback_OnNetError (NETERROR_ACCOUNTBLOCKED);
-        break;
-      case LOGINERR_BAD_PASS:
-        callback_OnNetError (NETERROR_BADPASSWORD);
-        break;
-      default:
-        callback_OnNetError (NETERROR_UNKNOWN);
-      }
+	switch ( pack->LogBad.m_code )
+	{
+	case LOGINERR_NONE:
+		callback_OnNetError( NETERROR_UNKNOWNUSER );
+		break;
 
+	case LOGINERR_ACCUSED:
+		callback_OnNetError( NETERROR_ACCOUNTINUSE );
+		break;
+
+	case LOGINERR_BLOCKED:
+		callback_OnNetError( NETERROR_ACCOUNTBLOCKED );
+		break;
+
+	case LOGINERR_BAD_PASS:
+		callback_OnNetError( NETERROR_BADPASSWORD );
+		break;
+
+	default:
+		callback_OnNetError( NETERROR_UNKNOWN );
+	}
+
+	Disconnect();
 }
 
 void cClient::Act_ClientState (cPacket * packet)

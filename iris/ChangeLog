@@ -1,3 +1,8 @@
+10.04.2006
+Changes by Nuno Ramiro
+	- Fixed: Act_BadLog was not beeing called, instead was beeing spammed "SDLNet_TCP_Recv:".
+	- Fixed: Includes under WorldEnviroment.
+
 09.04.2006
 Changes by Florian Fischer (SiENcE)
 	- Update: VS2003 and DevCpp solutions (SynchronizedTime.cpp added, cleaned)

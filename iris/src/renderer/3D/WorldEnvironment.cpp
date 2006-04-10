@@ -21,15 +21,8 @@
  *****/
 
 #include "renderer/3D/WorldEnvironment.h"
-#include "Logger.h"
-#include "Exception.h"
-
-#include "SDL/SDL_image.h"
 
 
-
-
-using namespace std;
 
 cWorldEnvironment::cWorldEnvironment ()
 {

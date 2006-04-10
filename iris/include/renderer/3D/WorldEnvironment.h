@@ -23,15 +23,13 @@
 #ifndef _WORLDENVIRONMENT_H_
 #define _WORLDENVIRONMENT_H_
 
-#ifdef WIN32
-#include <windows.h>
-#endif
+#include <string>
+#include "uotype.h"
+#include "SDL/SDL_image.h"
+#include "Logger.h"
+#include "Exception.h"
 
 // #include "../Fluid/mmgr.h"
-
-#include "uotype.h"
-#include <string>
-#include "SDL/SDL.h"
 
 class cWorldEnvironment
 {
