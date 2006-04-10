@@ -1,7 +1,7 @@
 [Project]
 FileName=Iris.dev
 Name=Iris
-UnitCount=134
+UnitCount=135
 Type=1
 Ver=1
 ObjFiles=
@@ -1006,7 +1006,7 @@ Release=5
 <<<<<<< .mine
 Build=451
 =======
-Build=552
+Build=553
 >>>>>>> .r90
 LanguageID=2057
 CharsetID=1252
@@ -1858,6 +1858,16 @@ BuildCmd=
 FileName=..\src\iris_endian.cpp
 CompileCpp=1
 Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit135]
+FileName=..\src\SynchronizedTime.cpp
+CompileCpp=1
+Folder=Iris
 Compile=1
 Link=1
 Priority=1000

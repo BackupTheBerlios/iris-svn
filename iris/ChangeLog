@@ -1,4 +1,10 @@
 09.04.2006
+Changes by Florian Fischer (SiENcE)
+	- Update: VS2003 and DevCpp solutions (SynchronizedTime.cpp added, cleaned)
+	- Update: Makefile.am (removed memguard.cpp, added SynchronizedTime.cpp)
+	- Added:  new Iris.ico added (new Iris Color is: BROWN - R 90, G 61, B 27)
+
+09.04.2006
 Changes by Nuno Ramiro
 	- Updated: VS 05 solution.
 	- Fixed: SphereR packets - it is now compatible with 56b.

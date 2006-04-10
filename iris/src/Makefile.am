@@ -1,10 +1,10 @@
-VPATH = loaders memguard renderer gui csl net granny sound renderer/3D renderer/2D renderer/particles
+VPATH = loaders renderer gui csl net granny sound renderer/3D renderer/2D renderer/particles
 AM_CXXFLAGS=@CXXFLAGS@ -I../include -I../include/csl -Wall
 
 bin_PROGRAMS=ui3
 ui3_LDADD=@GL_LIBS@
 ui3_SOURCES= ArtLoader.cpp \
-memguard.cpp \
+SynchronizedTime.cpp \
 Bitmask.cpp \
 Border.cpp \
 Buffer.cpp \
