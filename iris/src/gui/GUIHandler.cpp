@@ -304,8 +304,8 @@ int GUIHandler::HandleMessage( gui_message *kMsg )
 	ControlList_t::reverse_iterator iter;
 	for ( iter = z_root.rbegin(); iter != z_root.rend(); iter++ )
 	{
-		if ( kMsg->type == MESSAGE_MOUSEMOTION )
-		{
+		//if ( kMsg->type == MESSAGE_MOUSEMOTION )
+		//{
 			// Needs to be worked out (8 directions)
 			//if ( kMsg->mousemotionevent.x < 100 )
 			//{
@@ -323,9 +323,9 @@ int GUIHandler::HandleMessage( gui_message *kMsg )
 			//	}
 			//}
 
-			return true;
-		}
-		if ( kMsg->type != MESSAGE_MOUSEMOTION && !m_dragging )
+		//	return true;
+		//}
+		if ( kMsg->type != MESSAGE_MOUSEMOTION || !m_dragging )
 		{
 			if ( (*iter).second->HandleMessage( kMsg ) )
 			{
