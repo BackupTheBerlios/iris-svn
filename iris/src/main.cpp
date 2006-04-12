@@ -63,7 +63,7 @@ int main( int argc, char **args )
 	}
 
 	// Initialize Game
-	Game *pGame = new Game();
+	Game *kGame = new Game();
 
 	SDLScreen *SDLscreen;
 
@@ -102,7 +102,7 @@ int main( int argc, char **args )
 		// Initialize SDL_music
 		SoundMix *pSoundMix;
 		if ( Config::GetMusic() || Config::GetSound() )
-        	{
+        {
 			pSoundMix = new SoundMix();
 			pSoundMix->Init();
 
@@ -140,7 +140,7 @@ int main( int argc, char **args )
 		pCSLHandler.Load( (char *)sScriptPath.c_str() );
 
 		// Init game engine
-		if ( !pGame->Init() ) 
+		if ( !kGame->Init() ) 
 		{
 			Logger::WriteLine( "\t| -> Error while trying to initialize Game." );
 		}
@@ -153,8 +153,8 @@ int main( int argc, char **args )
 		{
 			// Handle events in the queue
 			SDLevent->PollEvent();
-			pGame->Handle();
-			pGame->RenderScene();
+			kGame->Handle();
+			kGame->RenderScene();
 
 			if ( pClient )
 			{
@@ -186,7 +186,7 @@ int main( int argc, char **args )
 	SAFE_DELETE( SDLscreen );
 	SAFE_DELETE( pMusicListLoader );
 
-	SAFE_DELETE( pGame );
+	SAFE_DELETE( kGame );
 
 	Config::Close();
 	Logger::Close();

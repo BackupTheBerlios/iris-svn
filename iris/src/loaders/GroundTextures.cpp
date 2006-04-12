@@ -119,7 +119,7 @@ Texture *cGroundTextureLoader::LoadTexture (int index)
 //SiENcE: support for custom size Textures added
 //other Formula choosen. Now the size of the Textures is calculated
 //  int size = (idx.extra == 1 ? 128 : 64);
-  Uint32 size = (Uint32) sqrt( idx.length / 2 );
+  Uint32 size = (Uint32) sqrt( idx.length / 2.0 );
 
   if (idx.length != (unsigned int) (size * size * 2))
       {

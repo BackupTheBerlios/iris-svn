@@ -32,8 +32,6 @@
 #include <cassert>
 
 
-
-
 GUIHandler pUOGUI;
 
 GUIHandler::GUIHandler()
@@ -124,14 +122,13 @@ Control *GUIHandler::GetControl( int controlid )
 	}
 }
 
+
 void GUIHandler::AddControl( Control *control )
 {
 	if ( !control )
 	{
 		return;
 	}
-
-	// Problem with Control -> Button (5th) when trying to delete it, it will crash the app (Wrongly added).
 
 	control->SetID( idcounter );
 	control->SetZ( zcounter );
@@ -141,23 +138,27 @@ void GUIHandler::AddControl( Control *control )
 	zcounter++;
 }
 
+
 void GUIHandler::CloseWindow( int controlid )
 {
-  Control *control = GetControl( controlid );
-  if (control)
-      {
-        control->DoOnClose();
-        control_root.erase( controlid );
-        z_root.erase( control->GetZ() );
+	Control *control = GetControl( controlid );
+	if ( control )
+	{
+		control->DoOnClose();
+		control_root.erase( controlid );
+		z_root.erase( control->GetZ() );
 		// NOTE: Do _NOT_ try to delete control since we did not alocate memory for it.
-      }
-  if (controlid == focusid)
-      {
-        focusid = 0;
-        if (default_focusid)
-          SetFocus (default_focusid);
-      }
+	}
+	if ( controlid == focusid )
+	{
+		focusid = 0;
+		if ( default_focusid )
+		{
+			SetFocus( default_focusid );
+		}
+	}
 }
+
 
 void GUIHandler::SetFocus (int controlid)
 {
@@ -296,17 +297,49 @@ void GUIHandler::Draw (void)    //Uint16 hue)
   glEnable (GL_CULL_FACE);
 }
 
-int GUIHandler::HandleMessage (gui_message * msg)
-{
-  assert (msg);
-  ControlList_t::reverse_iterator iter;
-  for (iter = z_root.rbegin (); iter != z_root.rend (); iter++)
-    if (!m_dragging || (msg->type != MESSAGE_MOUSEMOTION))
-      if ((*iter).second->HandleMessage (msg))
-        return true;
 
-  return false;
+int GUIHandler::HandleMessage( gui_message *kMsg )
+{
+	assert( kMsg );
+	ControlList_t::reverse_iterator iter;
+	for ( iter = z_root.rbegin(); iter != z_root.rend(); iter++ )
+	{
+		if ( kMsg->type == MESSAGE_MOUSEMOTION )
+		{
+			// Needs to be worked out (8 directions)
+			//if ( kMsg->mousemotionevent.x < 100 )
+			//{
+			//	// Load Icon left
+			//}
+			//else
+			//{
+			//	if ( kMsg->mousemotionevent.x > Config::GetWidth() - 100 )
+			//	{
+			//		// Load Icon right
+			//	}
+			//	else
+			//	{
+			//		if ( kMsg->mousemotionevent.y > )
+			//	}
+			//}
+
+			return true;
+		}
+		else
+		{
+			if ( !m_dragging )
+			{
+				if ( (*iter).second->HandleMessage( kMsg ) )
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }
+
 
 void GUIHandler::HandleMessageQueues (void)
 {

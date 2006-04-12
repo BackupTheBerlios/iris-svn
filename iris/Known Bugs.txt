@@ -8,8 +8,7 @@
 - When dclicking the candle on backpack it equips but does not disapear from backpack (SiENcE)	- Needs fixing
 - Remove fountain effect from candle since it was for debug purposes (SiENcE)			- Needs fixing
 - Creating a character you can not choose your skills (they are choosen for you)		- Needs fixing
-- Skills show everything with 0's								- Needs fixing
-- When connecting with a wrong username the engine crashes					- Needs fixing
+- Skills show everything with 0's (RunUO - Packet missing?)					- Needs fixing
 - Font Color Black and White is vice versa							- Needs fixing
 - Polymorphing (".poly 12") doesn't work, old model remains until logout->login			- Needs fixing
 - Elfs don't wear clothes									- Needs fixing
@@ -83,3 +82,4 @@ restarting iris)
 - HUE color bug											- FIXED
 - Sound was not working.									- FIXED
 - UOX3 crashes Iris when server sends new music title						- FIXED
+- When connecting with a wrong username the engine crashes					- FIXED

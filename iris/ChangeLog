@@ -1,3 +1,7 @@
+12.04.2006
+Changes by Nuno Ramiro
+	- Fixed: SiENcE's new formula.
+
 10.04.2006
 Changes by Florian Fischer (SiENcE)
 	- new formula to detect the Groundtexturesize added (old one was only for 64 or 128x128)

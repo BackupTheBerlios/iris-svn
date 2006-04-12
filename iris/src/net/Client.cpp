@@ -385,6 +385,7 @@ cClient::cClient( void (*error_callback)(unsigned int error) )
 	Send( &packet );
 }
 
+
 cClient::~cClient()
 {
 	if ( connected )
@@ -396,27 +397,34 @@ cClient::~cClient()
 	SAFE_DELETE( copier );
 }
 
-void cClient::ClearLoginLists ()
+
+void cClient::ClearLoginLists()
 {
-  unsigned int i;
-  for (i = 0; i < login_char_list.size (); i++)
-    delete login_char_list[i];
-  for (i = 0; i < login_server_list.size (); i++)
-    delete login_server_list[i];
-  login_char_list.clear ();
-  login_server_list.clear ();
+	unsigned int i;
+	for ( i = 0; i < login_char_list.size(); i++ )
+	{
+		SAFE_DELETE( login_char_list[i] );
+	}
+	
+	for ( i = 0; i < login_server_list.size(); i++ )
+	{
+		SAFE_DELETE( login_server_list[i] );
+	}
+
+	login_char_list.clear();
+	login_server_list.clear();
 }
 
 
 bool cClient::Connect( char *address, Uint16 port )
 {
-	if ( connected )
-	{
-		// This should _NEVER_ happen
-		Logger::WriteDebug( "Something is wrong, we are disconnecting on connect." );
-		Disconnect ();
-	}
-	connected = false;
+	//if ( connected )
+	//{
+	//	// This should _NEVER_ happen
+	//	Logger::WriteDebug( "Something is wrong, we are disconnecting on connect." );
+	//	Disconnect();
+	//}
+	//connected = false;
 
 	IPaddress ip;
 
@@ -678,7 +686,7 @@ void cClient::OnData( void *data, unsigned int len )
 			break;
 
 		case PCK_Skill:
-			Act_Skill (packet);
+			Act_Skill( packet );
 			break;
 
 		case PCK_CharMove:
@@ -1961,65 +1969,77 @@ void cClient::Act_ContOpen (cPacket * packet)
     callback_OnOpenContainer (id, gump);
 }
 
-void cClient::Act_Skill (cPacket * packet)
+
+void cClient::Act_Skill( cPacket *packet )
 {
-  packet->SetPosition (3);
-  Uint16 id, skill = 0, unmodified, skillcap;
-  Uint8 skilllock;
-  Uint8 type = packet->GetByte ();
-  int count = 0;
-  Uint16 skill_id = 0;
-  cCharacter *character = player_character ();
-  if (character)
-      {
-        switch (type)
-            {
-            case 0x00:
-            case 0x02:
-              while ((id = packet->GetWord ()) && (count < 100))
-                  {
-                    count++;
-                    skill = packet->GetWord ();
-                    unmodified = packet->GetWord ();
-                    skilllock = packet->GetByte ();
-                    if (type == 0x02)
-                      skillcap = packet->GetWord ();
-                    else
-                      skillcap = 0;
-                    sSkillEntry *entry = character->skill (id);
-                    entry->value = skill;
-                    entry->unmodified = unmodified;
-                    entry->skillcap = skillcap;
-                    entry->skillLock = skilllock;
-                  }
+	packet->SetPosition( 3 );
+	Uint16 id, skill = 0, unmodified, skillcap;
+	Uint8 skilllock;
+	Uint8 type = packet->GetByte();
+	int count = 0;
+	Uint16 skill_id = 0;
+	cCharacter *character = player_character();
+	if ( character )
+	{
+		switch ( type )
+		{
+		case 0x00:
+		case 0x02:
+			while ( ( id = packet->GetWord() ) && ( count < 100 ) )
+			{
+				count++;
+				skill = packet->GetWord();
+				unmodified = packet->GetWord();
+				skilllock = packet->GetByte();
+				if ( type == 0x02 )
+				{
+					skillcap = packet->GetWord();
+				}
+				else
+				{
+					skillcap = 0;
+				}
+				sSkillEntry *entry = character->skill( id );
+				entry->value = skill;
+				entry->unmodified = unmodified;
+				entry->skillcap = skillcap;
+				entry->skillLock = skilllock;
+			}
+			break;
 
-              break;
-            case 0xff:
-            case 0xDF:
-              id = packet->GetWord ();
-              skill = packet->GetWord ();
-              unmodified = packet->GetWord ();
-              skilllock = packet->GetByte ();
-              if (type == 0xDF)
-                skillcap = packet->GetWord ();
-              else
-                skillcap = 0;
-              sSkillEntry *entry = character->skill (id);
-              entry->value = skill;
-              entry->unmodified = unmodified;
-              entry->skillcap = skillcap;
-              entry->skillLock = skilllock;
-              skill_id = skill;
-              break;
-            }
-      }
+		case 0xff:
+		case 0xDF:
+			id = packet->GetWord();
+			skill = packet->GetWord();
+			unmodified = packet->GetWord();
+			skilllock = packet->GetByte();
+			if ( type == 0xDF )
+			{
+				skillcap = packet->GetWord();
+			}
+			else
+			{
+				skillcap = 0;
+			}
+			sSkillEntry *entry = character->skill( id );
+			entry->value = skill;
+			entry->unmodified = unmodified;
+			entry->skillcap = skillcap;
+			entry->skillLock = skilllock;
+			skill_id = skill;
+			break;
+		}
+	}
 
-  if (!skill_id)
-    skill = 0;
+	if ( !skill_id )
+	{
+		skill = 0;
+	}
 
-  if (callback_OnSkill)
-    callback_OnSkill (skill_id, skill);
-
+	if ( callback_OnSkill )
+	{
+		callback_OnSkill( skill_id, skill );
+	}
 }
 
 void cClient::Act_CharMove (cPacket * packet)
