@@ -325,14 +325,11 @@ int GUIHandler::HandleMessage( gui_message *kMsg )
 
 			return true;
 		}
-		else
+		if ( kMsg->type != MESSAGE_MOUSEMOTION && !m_dragging )
 		{
-			if ( !m_dragging )
+			if ( (*iter).second->HandleMessage( kMsg ) )
 			{
-				if ( (*iter).second->HandleMessage( kMsg ) )
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
