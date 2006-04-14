@@ -261,6 +261,8 @@ public:
    void Send_StatusRequest(Uint32 id, Uint8 mode = 0);
    void Send_Dye(Uint32 id, Uint16 model, Uint16 color);
    void Send_DoubleClick(Uint32 id);
+
+   void Send_AoSCommand(Uint32 charid,Uint8 subcmd);
    void Send_Click(Uint32 id);
    void Send_Warmode(Uint32 mode);
    void Send_Action(int type, int mode = 0);

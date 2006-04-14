@@ -320,9 +320,13 @@ void Game::InitRenderer( std::string sMulPath )
 	//Profiler::End();
     
 	//Profiler::Begin( "Speech" );
-    Logger::WriteLine( "\t| -> speech" );
-    m_kSpeechLoader = new SpeechLoader( sMulPath );
-	Logger::WriteDebug( "\t| -> Bank word: " + m_kSpeechLoader->GetID( "*bank*" ) );
+    //Artix: speechloader loaded only if config option for speech is enabled
+    if(Config::GetUseSpeech())
+    {
+        Logger::WriteLine( "\t| -> speech" );
+        m_kSpeechLoader = new SpeechLoader( sMulPath );
+        Logger::WriteDebug( "\t| -> Bank word: " + m_kSpeechLoader->GetID( "*bank*" ) );
+    }
 	//Profiler::End();
     
 	//Profiler::Begin( "Macros" );
@@ -404,8 +408,12 @@ void Game::DeInitRenderer( void )
 	Logger::WriteLine( "\t| -> multis" );
 	SAFE_DELETE( pMultisLoader );
 
-	Logger::WriteLine( "\t| -> Speech" );
-	SAFE_DELETE( m_kSpeechLoader );
+    //Artix: speechloader loaded only if config option is enabled
+    if(Config::GetUseSpeech())
+    {
+        Logger::WriteLine( "\t| -> Speech" );
+	    SAFE_DELETE( m_kSpeechLoader );
+    }
 }
 
 

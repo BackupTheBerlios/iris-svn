@@ -232,12 +232,13 @@ int SDLScreen::InitGL( GLvoid )
 	GLuint fogfilter = 2; // Which Fog To Use
 //  GLfloat fogColor[4] = { 53.0f / 255.0f, 66.0f / 255.0f, 98.0f / 255.0f , 1.0f }; // skybox
 //	GLfloat fogColor[4] = { 168.0f / 255.0f, 168.0f / 255.0f, 180.0f / 255.0f , 1.0f }; // skybox
-	glEnable( GL_FOG );
-	glClearColor( 0.5f, 0.5f, 0.5f, 1.0f ); // We'll Clear To The Color Of The Fog
+//	glClearColor( 0.5f, 0.5f, 0.5f, 1.0f ); // We'll Clear To The Color Of The Fog
 	glFogi( GL_FOG_MODE, fogMode[fogfilter] ); // Fog Mode
-	// glFogfv( GL_FOG_COLOR, fogColor ); // Set Fog Color
+// glFogfv( GL_FOG_COLOR, fogColor ); // Set Fog Color
 	glFogf( GL_FOG_DENSITY, 0.45f ); // 0.35f How Dense Will The Fog Be
 	glHint( GL_FOG_HINT, GL_DONT_CARE ); // Fog Hint Value
+	glEnable( GL_FOG );
+
 	glMatrixMode( GL_MODELVIEW );
 	glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );
 	glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );

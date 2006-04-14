@@ -1,7 +1,11 @@
-//
-// File: Client.cpp
-// Created by: Alexander Oster - tensor@ultima-iris.de
-//
+/*
+ * File: Client.cpp
+ * Created by Alexander Oster.
+ * Changed: 10-01-04 (Florian Fischer^SiENcE)
+ * Changed: 17-02-06 (Nuno Ramiro)
+ * last Change: 13-04-06 (Florian Fischer^SiENcE)
+ */
+
 /*****
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -2805,7 +2809,9 @@ void cClient::Act_SubCommands (cPacket * packet)
 
 		  Renderer * renderer = Game::GetInstance()->GetRenderer();
 
-		  renderer->LoadSkyboxTextures (actual_map);
+//removed because Skybox don't look good with dynamic lightning and fog
+//		  renderer->LoadSkyboxTextures (actual_map);
+
 /*		  This is now handled by WorldEnvironment.cpp
 
           GLfloat fogColor[4] = {(float) mapinfo_entry->fog_r() / 255.0f, (float) mapinfo_entry->fog_g() / 255.0f,(float) mapinfo_entry->fog_b() / 255.0f, 1.0 };
@@ -3123,36 +3129,20 @@ bool cClient::Send_Walk (Uint8 direction)
 
 }
 
-/*
-void cClient::Send_Speech (std::string text, Uint8 mode)
-{
-  cPacket packet;
-  packet.Clear ();
-  packet.FillPacket (PCK_Talk);
-  packet.SetLength (1);
-  packet.AddWord (text.size () + 9);
-  packet.AddByte (mode);
-  //packet.AddWord(100);
-  packet.AddWord (nConfig::speech_hue);
-  packet.AddWord (3);
-  packet.AddData ((void *) text.c_str (), text.size ());
-  Send (&packet.packet, text.size () + 9);
-}
-*/
-
-
 void cClient::Send_Speech (std::string text, Uint8 mode)
 {
 	std::vector<Uint16> keywords;
+    Uint16 count = 0;
+    
+    if(Config::GetUseSpeech())
+    {  
+      keywords = SpeechLoader::GetInstance()->GetIDs( text );
+	  count = keywords.size();    
+    }
 
-	Uint16 count = 0;
-  
-	keywords = SpeechLoader::GetInstance()->GetIDs( text );
-	count = keywords.size();
-	// std::cout << "KeyWord Count: " << count << std::endl;
 	cPacket packet;
-
-	if ( count > 0 )
+    //Artix: use speech.mul only if config option is enabled
+	if ( count > 0 && Config::GetUseSpeech())
 	{
 		int keyw_size = 2;
 		for ( int k = 0; k < count; k++ )
@@ -3282,6 +3272,17 @@ void cClient::Send_DoubleClick (Uint32 id)
   Send (&packet);
   
   last_object = id;
+}
+
+void cClient::Send_AoSCommand (Uint32 charid, Uint8 subcmd)
+{
+  cPacket packet;
+  packet.AddByte (PCK_AOSCommand);
+  packet.AddWord (0x0a);  //Not const! But for now packetsize 0x0a
+  packet.AddDword(charid); //PlayerID
+  packet.AddWord(subcmd);  //Subcommand
+  packet.AddByte (0x07);     // Unknown
+  Send (&packet);
 }
 
 void cClient::Send_Click (Uint32 id)
@@ -3414,8 +3415,6 @@ void cClient::Send_AttackRequest (Uint32 id)
   packet.AddByte (PCK_Attack);
   packet.AddDword (id);
   Send (&packet);
-  
-  
 }
 
 void cClient::Send_SkillLock (Uint32 skill, Uint32 lock)
@@ -3833,7 +3832,7 @@ void cClient::GetMenuItem (int index, std::string & text, int &model)
 void cClient::SendGumpDialogRet (int gumpID, int playerID, int ret_value)
 {
   cPacket packet;
-  packet.AddByte (0xB1);
+  packet.AddByte (PCK_GumpDialogRet);
   packet.AddWord (0x17);
   packet.AddDword ((Uint32) playerID);
   packet.AddDword ((Uint32) gumpID);
@@ -3878,9 +3877,10 @@ void cClient::CastSpell (int spellid)
 
 Uint32 cClient::GetEnemy ()
 {
-  
   if ( Config::GetIsUox3() && (enemy == 0))
-   return 0xFFFFFFFF;
+  {
+       return 0xFFFFFFFF;
+  }
  
   return enemy;
 }
@@ -3914,12 +3914,12 @@ void cClient::Act_ParticleEffect(cPacket * packet)
  Uint32  mode = packet->GetDword();
 
  //particle effect
-    Uint16 particle_id = packet->GetWord();
-    Uint16 explode_id = packet->GetWord();
-    Uint16 mov_id = packet->GetWord();
-    Uint32 itemid = packet->GetDword();
-    Uint8 layer = packet->GetByte();
-    Uint16 unk = packet->GetWord();
+ Uint16 particle_id = packet->GetWord();
+ Uint16 explode_id = packet->GetWord();
+ Uint16 mov_id = packet->GetWord();
+ Uint32 itemid = packet->GetDword();
+ Uint8 layer = packet->GetByte();
+ Uint16 unk = packet->GetWord();
 
  //char idstr[2];
  //idstr[1] = 0;
@@ -3937,7 +3937,6 @@ void cClient::Act_ParticleEffect(cPacket * packet)
      }
   case 3:{
      std::cout << "On player particle" << endl;
-     
      cCharacter *character = NULL;
      character = pCharacterList.Get (source_serial);
      if(!character)
@@ -3955,6 +3954,3 @@ void cClient::Act_ParticleEffect(cPacket * packet)
   case 1: break;                       
  }
 }
-
-
-

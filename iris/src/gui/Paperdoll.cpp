@@ -1,7 +1,9 @@
-//
-// File: Paperdoll.cpp
-// Created by: Alexander Oster - tensor@ultima-iris.de
-//
+/*
+ * File: Client.cpp
+ * Created by Alexander Oster.
+ * last Change: 14-04-06 (Florian Fischer^SiENcE)
+ */
+
 /*****
  *
  *  This program is free software; you can redistribute it and/or modify
@@ -115,35 +117,75 @@ void Paperdoll::AssignChar (cCharacter * character)
 
   int base_id = 50000;
 
+//Should be seperated into an XML-File !!!!!!!!!!!!!
   //Human-Male Paperdoll
-  if (character->body () == 400)
+  if (character->body () == 400 ||
+      character->body () == 744)  //Necromancy Transfromed Model
       {
-        builder->AddGump (12, 0, layermap, character->hue ());
+        builder->AddGump (0x0C, 0, layermap, character->hue ());
         base_id = 50000;
       }
-//Human-Female Paperdoll
-  else if (character->body () == 401)
+  //Human-Savage_Male
+  else if (character->body () == 183 ||
+           character->body () == 185 ||
+           character->body () == 750)
       {
-        builder->AddGump (13, 0, layermap, character->hue ());
+        builder->AddGump (0x79, 0, layermap, character->hue ());
+        base_id = 50000;
+      }
+  //Human-Female Paperdoll
+  else if (character->body () == 401 ||
+           character->body () == 745)  //Necromancy Transfromed Model
+      {
+        builder->AddGump (0x0D, 0, layermap, character->hue ());
+        base_id = 60000;
+      }
+  //Human-Savage_Female
+  else if (character->body () == 184 ||
+           character->body () == 186 ||
+           character->body () == 751)
+      {
+        builder->AddGump (0x78, 0, layermap, character->hue ());
         base_id = 60000;
       }
   //Male-Elf Paperdoll
   else if (character->body () == 605)
       {
-        builder->AddGump (14, 0, layermap, character->hue ());
+        builder->AddGump (0x0E, 0, layermap, character->hue ());
         base_id = 50000;
       }
   //Female-Elf Paperdoll
   else if (character->body () == 606)
       {
-        builder->AddGump (15, 0, layermap, character->hue ());
+        builder->AddGump (0x0F, 0, layermap, character->hue ());
         base_id = 60000;
       }
-  else if (character->body () == 990 || character->body () == 991 ||
-           character->body () == 994 || character->body () == 183)
+//SiENcE: new test!
+  //Lord British
+  else if (character->body () == 990)
+       {
+        builder->AddGump (0x3DE, 0, layermap, character->hue ());
+        base_id = 50000;
+       }
+  //Blackthorn
+  else if (character->body () == 991)
+       {
+        builder->AddGump (0x3DF, 0, layermap, character->hue ());
+        base_id = 50000;
+       }
+  //Dupre (wrong paperdoll ?!)
+  else if (character->body () == 994)
       {
-  //if nothing (maybe player is transformed into a creature display a male paperdoll
-        builder->AddGump (12, 0, layermap, character->hue ());
+        builder->AddGump (0x3E2, 0, layermap, character->hue ());
+      }
+  //Player Ghosts
+  else if (character->body () == 402 ||
+           character->body () == 403 ||
+           character->body () == 607 ||
+           character->body () == 608 ||
+           character->body () == 970)
+      {
+        builder->AddGump (0x3DB, 0, layermap, character->hue ());
       }
 
   int layerOrder[0x18] = { 0x09,    // - N/A (not used)

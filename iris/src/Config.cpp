@@ -33,7 +33,8 @@ Config::m_iCursor = 1, Config::m_iPerspective = 1, Config::m_iDepthBuffer = 16, 
 Config::m_iMaxAngle = 75, Config::m_iViewDistance = 8, Config::m_iBrightness = 5,
 Config::m_iWidth2D = 640, Config::m_iHeight2D = 480, Config::m_iFirstPerson = 0, Config::m_iHideSelf = 0,
 Config::m_iRoofFade = 1, Config::m_iStartX = 1500, Config::m_iStartY = 1000, Config::m_iStartZ = 0, Config::m_iAOS = 1,
-Config::m_iPopup = 1, Config::m_iClilocs = 1, Config::m_iSpeechHue = 100, Config::m_iAOSToolTips = 0;
+//Artix: added m_iSpeech var for speech.mul 
+Config::m_iPopup = 1, Config::m_iClilocs = 1, Config::m_iSpeechHue = 100, Config::m_iAOSToolTips = 0, Config::m_iSpeech=0;
 
 std::string Config::m_sMulPath = "", Config::m_sCompressedMap = "", Config::m_sClientVersion = "4.0.10a", Config::m_sScriptPath = "root",
 Config::m_sClilocLang = "enu", Config::m_sServer = "localhost", Config::m_sLogin = "Account", Config::m_sPassword = "";
@@ -92,7 +93,8 @@ bool Config::Init()
 	m_vParserInfo.push_back( ParserData( "CLILOC_LANGUAGE", IS_STRING, &m_sClilocLang ) );
 	m_vParserInfo.push_back( ParserData( "SPEECH_HUE", IS_INTEGER, &m_iSpeechHue ) );
 	m_vParserInfo.push_back( ParserData( "AOSTOOLTIPS", IS_INTEGER, &m_iAOSToolTips ) );
-
+    //Artix added speech.mul config option
+    m_vParserInfo.push_back( ParserData( "USE_SPEECH", IS_INTEGER, &m_iSpeech ) );
 	// Section NET
 	m_vParserInfo.push_back( ParserData( "NET", IS_SECTION, NULL ) );
 	m_vParserInfo.push_back( ParserData( "PORT", IS_INTEGER, &m_iServerPort ) );
@@ -441,6 +443,11 @@ int Config::GetAOSToolTips()
 	return m_iAOSToolTips;
 }
 
+//Artix: speech.mul config option
+int Config::GetUseSpeech()
+{
+	return m_iSpeech;
+}
 
 // Net
 std::string Config::GetServer()
@@ -665,3 +672,4 @@ void Config::SetClilocs( int iClilocs )
 {
 	m_iClilocs = iClilocs;
 }
+

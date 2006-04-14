@@ -74,13 +74,6 @@ void cTextElement::setText( const char *text, unsigned short hueId, unsigned sho
 		{
 			hueId = 0;
 		}
-
-//SiENcE: seems to be incorrect
-//          hueId = SDLScreen::GetInstance()->GetDefaultHue (fontId);
-//printf (text);
-//printf ("[hueId %d]\n", hueId);
-//if (hueId == 1152) hueId = 0;
-
 		setTextTTF( text, hueId, ttf_font );
 		//if(_style)
 		TTF_SetFontStyle( ttf_font, _style );

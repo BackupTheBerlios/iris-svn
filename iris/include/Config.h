@@ -150,7 +150,9 @@ public:
 	static int GetSpeechHue();
 	/// Returns configuration if we are using AOS Tool Tips or not.
 	static int GetAOSToolTips();
-
+    //Artix:
+    /// Returns configuration if we are using speech.mul support.
+	static int GetUseSpeech();
 	// Net
 
 	/// Returns configuration Server IP.
@@ -258,7 +260,7 @@ protected:
 	static std::string m_sClientVersion;
 	static int m_iClilocs;
 	static std::string m_sClilocLang;
-	static int m_iSpeechHue, m_iAOSToolTips;
+	static int m_iSpeechHue, m_iAOSToolTips, m_iSpeech; //Artix
 
 	// Net
 	static std::string m_sServer, m_sLogin, m_sPassword;

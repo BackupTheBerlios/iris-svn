@@ -114,7 +114,8 @@ int Renderer3D::Init (void)
   tex_char_shadow = new Texture();
   tex_char_shadow->LoadFromFile ("./textures/char_shadow.png");
 
-  LoadSkyboxTextures ();
+//removed because Skybox don't look good with dynamic lightning and fog
+//  LoadSkyboxTextures ();
 
   pUOGUI.LoadCursor (0, 0x205a);
   pUOGUI.LoadCursor (1, 0x205b);
@@ -164,7 +165,6 @@ int Renderer3D::Init (void)
   return (true);
 }
 
-
 void Renderer3D::LoadSkyboxTextures (int map)
 {
   for (int index = 0; index < 5; index++)
@@ -193,7 +193,6 @@ void Renderer3D::LoadSkyboxTextures (int map)
         skyboxtextures[index]->LoadFromFile (skyboxset);
       }
 }
-
 
 void Renderer3D::DeInit( void )
 {
@@ -392,11 +391,10 @@ for(vertexId = 0; vertexId < vertexCount; vertexId++)
 void Renderer3D::RenderScene( void )
 {
 	fog_view_dist = (float) (view_distance - 2.5f) * 8 + pCamera.GetZoom();
-	
 	glFogf( GL_FOG_START, (float)fog_view_dist );
 	glFogf( GL_FOG_END, (float)fog_view_dist + 8 );
-	// printf ("Fogdistance_START: %i\n", (int) fog_view_dist);
-	
+
+	//printf ("Fogdistance_START: %i\n", (int) fog_view_dist);
 
 	flush_vertex_buffer();
 
@@ -489,7 +487,7 @@ void Renderer3D::RenderScene( void )
 	// Do our Skybox
 	pCamera.PlaceGLRotationMatrix();
 
-	RenderSkybox();
+//	RenderSkybox();
 
 	SDLScreen::GetInstance()->ClearZBuffer();
 

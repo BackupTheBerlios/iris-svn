@@ -648,6 +648,14 @@ handler_on_backpack (const sender)
 //	}
 }
 
+//function to open the new Quest Gump in Paperdoll
+handler_on_quest (const sender)
+{
+	log("Quest Gump");
+	log(net_getplayercharacter());
+	net_openquestgump( net_getplayercharacter(), 0x32 );
+}
+
 handler_on_close_backpack (const sender)
 {
 	backpackopen = 0;

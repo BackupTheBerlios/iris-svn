@@ -2562,6 +2562,26 @@ static ZString api_net_openbackpack( ZCsl *aCsl )
 	return "0";
 }
 
+//SiENcE: Quest
+static ZString api_net_openquestgump( ZCsl *aCsl )
+{
+  Uint32 charid = aCsl->get ("charid").asInt ();
+  Uint32 subcmd = aCsl->get ("subcmd").asInt ();
+
+	if ( pClient )
+	{
+		cCharacter *character = pClient->player_character();
+
+		if ( character )
+		{    
+           //Send Quest request
+           pClient->Send_AoSCommand(charid, subcmd);
+        }
+    }
+
+	return "0";
+}
+
 static ZString api_char_getstatus (ZCsl * aCsl)
 {
   Uint32 id = aCsl->get ("id").asInt ();
@@ -3451,6 +3471,9 @@ void CSLHandler::InitAPI (void)
                            api_load_world_light_map);
     csl->addFunc (module, "load_world_fog_map(const fogfilename)",
                            api_load_world_fog_map);
+    
+    // added in 0.86 SiENcE
+    csl->addFunc (module, "net_openquestgump(const charid, const subcmd)", api_net_openquestgump);
   }
 
   catch (const ZException & err)

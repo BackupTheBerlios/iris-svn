@@ -1,10 +1,22 @@
+14.04.2006
+Changes by Florian Fischer (SiENcE)
+	- Added: Artix's speech.mul Configuration (for Emus doN't using speech.mul keywords)
+	- Added: <USE_SPEECH> added to config.xml
+	- Updated: Skybox disabled (because with new lightning and fog it doesn't look good)
+	- Updated: Fog modified in SDLScreen.cpp
+	- Added: QuestGump Handler added to papderdoll.gfm, iris.csl and CSLHandler.cpp
+	- Added: Paperdolls added for all Humans (like Savage, Dupre, L.British, Blackthorn, Player-ghost)
+	- Fixed: HandleGumpDialogEvent (we should put this function into GUI
+	- Fixed: Font definition in Config.xml (now standard XML)
+
 12.04.2006
 Changes by Nuno Ramiro
-	- Fixed: SiENcE's new formula.
+	- Fixed: Formula for Groundtextures updated
+	- Fixed: GUIHandler.cpp - Mousehandling changed
 
 10.04.2006
 Changes by Florian Fischer (SiENcE)
-	- new formula to detect the Groundtexturesize added (old one was only for 64 or 128x128)
+	- Added: Formula to detect the Groundtexturesize added (old one was only for 64 or 128x128)
 
 10.04.2006
 Changes by Nuno Ramiro

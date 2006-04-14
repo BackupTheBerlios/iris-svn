@@ -293,6 +293,9 @@ struct NDWORD
 #define PCK_UnkTextIDandStr		0xcc
 #define PCK_AOSTooltip			0xd6
 
+//House Command Tools and a lot more Subcommands
+#define PCK_AOSCommand			0xd7
+
 // introduced with Age of Shadows Expansion
 #define PCK_AOSObjProp			0xdc
 #define PCK_MYUO				0xfe

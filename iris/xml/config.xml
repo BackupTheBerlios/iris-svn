@@ -4,21 +4,20 @@
 -->
 
 <CONFIG>
-	<!-- TTF Fonts are also specified in the scripts/iris.csl ... because IrisConfig removes FONTSET settings -->
+	<!-- remove this TTF-Fonts to use the old OSI-Fonts (wrong coloring) -->
 	<FONTSET>
-		<FONT ID="0" FILE="fonts/font7.ttf"   NAME="Calligrapher" SIZE="18" HUE="946"/>
-		<FONT ID="1" FILE="fonts/font3.ttf"   NAME="Eire"	SIZE="13" HUE="946"/>
-		<FONT ID="2" FILE="fonts/font3.ttf"   NAME="Eire"	SIZE="16" HUE="946"/>
-		<FONT ID="3" FILE="fonts/font1.ttf"   NAME="Bunchlo"	SIZE="15" HUE="946"/>
-		<FONT ID="4" FILE="fonts/font5.ttf"   NAME="Stonehenge"SIZE="16" HUE="946"/>
-		<FONT ID="5" FILE="fonts/font5.ttf"   NAME="Stonehenge"	SIZE="15" HUE="946"/>
-		<FONT ID="6" FILE="fonts/font6.ttf"   NAME="Tuamach"	SIZE="14" HUE="946"/>
-		<FONT ID="7" FILE="fonts/font7.ttf"   NAME="Calligrapher"SIZE="13" HUE="946"/>
-		<FONT ID="8" FILE="fonts/font8.ttf"   NAME="Carolingia"	SIZE="19" HUE="946"/>
-		<FONT ID="9" FILE="fonts/font4.ttf"   NAME="RUNEnglish 2" SIZE="13" HUE="946"/>
-		<FONT ID="10" FILE="fonts/font2.ttf"  NAME="Celticmd"	SIZE="13" HUE="946"/>
+		<FONT FILE="fonts/font7.ttf" HUE="946" ID="0" NAME="Calligrapher" SIZE="18"></FONT>
+		<FONT FILE="fonts/font3.ttf" HUE="946" ID="1" NAME="Eire" SIZE="13"></FONT>
+		<FONT FILE="fonts/font3.ttf" HUE="946" ID="2" NAME="Eire" SIZE="16"></FONT>
+		<FONT FILE="fonts/font1.ttf" HUE="946" ID="3" NAME="Bunchlo" SIZE="15"></FONT>
+		<FONT FILE="fonts/font5.ttf" HUE="946" ID="4" NAME="Stonehenge" SIZE="16"></FONT>
+		<FONT FILE="fonts/font5.ttf" HUE="946" ID="5" NAME="Stonehenge" SIZE="15"></FONT>
+		<FONT FILE="fonts/font6.ttf" HUE="946" ID="6" NAME="Tuamach" SIZE="14"></FONT>
+		<FONT FILE="fonts/font7.ttf" HUE="946" ID="7" NAME="Calligrapher" SIZE="13"></FONT>
+		<FONT FILE="fonts/font8.ttf" HUE="946" ID="8" NAME="Carolingia" SIZE="19"></FONT>
+		<FONT FILE="fonts/font4.ttf" HUE="946" ID="9" NAME="RUNEnglish 2" SIZE="13"></FONT>
+		<FONT FILE="fonts/font2.ttf" HUE="946" ID="10" NAME="Celticmd" SIZE="13"></FONT>
 	</FONTSET>
-	 -->
 
 	<GFX>
 		<!-- Screen resolution -->
@@ -83,6 +82,9 @@
 		<CLILOC_LANGUAGE>enu</CLILOC_LANGUAGE>
 		<SPEECH_HUE>100</SPEECH_HUE>
 		<AOSTOOLTIPS>0</AOSTOOLTIPS>
+
+		<!-- 1 - use keywords (Speech.mul), 0 - don't use keyword -->
+		<USE_SPEECH>1</USE_SPEECH>
 	</UO>
         
 	<SOUND>

@@ -27,7 +27,7 @@
  <gump normal='0x7DF' over='0x7E1' pressed='0x7E0'/>
 </control>
 <control class='button' name='button_7dc' left='183' top='125' width='65' height='21' freezed='1' visible='1' alpha='0' flags='0'>
- <event onclick='' onclose='' onmouseup='' onmousedown='' onkeypressed=''/>
+ <event onclick='handler_on_quest' onclose='' onmouseup='' onmousedown='' onkeypressed=''/>
  <gump normal='0x57B5' over='0x57B6' pressed='0x57B7'/>
 </control>
 <control class='button' name='button_7d9' left='183' top='97' width='64' height='22' freezed='1' visible='1' alpha='0' flags='0'>
