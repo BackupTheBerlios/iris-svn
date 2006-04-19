@@ -59,7 +59,7 @@ struct stMultiPart
 	unsigned short tile;
 	signed short x;
 	signed short y;
-	signed char z;
+	signed short z;
 	bool visible;
 }STRUCT_PACKED;
 

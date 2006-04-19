@@ -263,8 +263,10 @@ main ()
 	font_register(10, "fonts/font2.ttf", 13, 946);
 */
 
-	load_world_light_map ("textures/ambient_light_gradient.bmp", "textures/sun_light_gradient.bmp");
-	load_world_fog_map ("textures/ambient_light_gradient.bmp");
+//Currently Disabled until Tensor get's Day&Night Cylce working
+
+//	load_world_light_map ("textures/ambient_light_gradient.bmp", "textures/sun_light_gradient.bmp");
+//	load_world_fog_map ("textures/ambient_light_gradient.bmp");
 
 	gui_translate((config_getvalue(CONFIG_WIDTH)-640)/2, (config_getvalue(CONFIG_HEIGHT)-480) /2);
 	display_main_menu();	

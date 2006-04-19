@@ -27,7 +27,6 @@ restarting iris)
 - fix getzpositionforwalk that blocks your character when moving to Z > or < 8 			- Needs testing
 - fix particle rendering (effects are rendered wrong)						- Needs testing
 - fix for using cleaver or dagger (the client crash) 						- Needs testing
-- Fog rendering is wrong (new distance formular)						- Needs testing
 - crash when RunUO-Server uses KnivesChat 2.xx							- Needs testing
 - shadow is too small when mounted / also too big for Birds 					- Needs testing
 
@@ -83,3 +82,4 @@ restarting iris)
 - Sound was not working.									- FIXED
 - UOX3 crashes Iris when server sends new music title						- FIXED
 - When connecting with a wrong username the engine crashes					- FIXED
+- Fog rendering is wrong (new distance formular)						- FIXED

@@ -1,3 +1,8 @@
+19.04.2006
+Changes by Florian Fischer (SiENcE)
+	- Updated: Temporarilly disabled day&night cycle in script/iris.csl (to enable remove comment from load_world_light_map/ ~_fog_map)
+	- Fixed: changed "signed char z;" to "signed short z;" in Multiloader.h
+
 14.04.2006
 Changes by Florian Fischer (SiENcE)
 	- Added: Artix's speech.mul Configuration (for Emus doN't using speech.mul keywords)
