@@ -1,3 +1,12 @@
+22.04.2006
+Changes by Florian Fischer (SiENcE)
+	- Added: boat support for all Boats not just the small Boat (hardcoded in Client.cpp -> later in a seperate XML-File)
+	- Added: robstring1.2.cpp/h, pathsearch.cpp/h for Case-Insensitve loading of Models and Textures
+		 This fixes our Problem with Linux and the granny-filenames
+		 Makefile, Devcpp and VS.2003 solutions updated (VS2005 needed!)
+		 therefore: grannyfile.cpp and Texture.cpp changed
+	- Fixed: MapBlock3D.cpp missing static Water Tiles added to Waterfilter
+
 19.04.2006
 Changes by Florian Fischer (SiENcE)
 	- Updated: Temporarilly disabled day&night cycle in script/iris.csl (to enable remove comment from load_world_light_map/ ~_fog_map)

@@ -76,7 +76,8 @@ void FilterWater (struct MulCell *cell, float *height, unsigned short *tile,
 
   int id = cell->tileid;
 
-  if ((id >= 76) && (id <= 111))    /* Filter water ground */
+  //This should be not hardcoded ! -> XML-File
+  if ((id >= 76) && (id <= 112))    /* <=111 Filter water ground */
     id = 22;
   if (((id >= 168) && (id <= 171)) || ((id >= 310) && (id <= 311)))
       {                         /* Filter water itself */
@@ -282,7 +283,11 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 
 		for ( i = 0; i < staticcount; i++ )
 		{
-			if ( (statics_p->TileID >= 6038) && (statics_p->TileID <= 6066) )
+            //This should be also not hardcoded ! -> XML-File
+			if ( ((statics_p->TileID >= 6038) && (statics_p->TileID <= 6066)) ||
+                 ((statics_p->TileID >=13422) && (statics_p->TileID <=13445)) ||
+                 ((statics_p->TileID >=13460) && (statics_p->TileID <=13483)) ||
+                 ((statics_p->TileID >=13496) && (statics_p->TileID <=13514)))
 			{                   // Filter out water 
 				watermap[(int)statics_p->y][(int) statics_p->x] = (int) statics_p->z + 128 | 1024;
 			}

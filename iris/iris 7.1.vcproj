@@ -1356,6 +1356,12 @@ imm32.lib smpeg.lib"
 			RelativePath=".\src\main.cpp">
 		</File>
 		<File
+			RelativePath=".\src\pathsearch.cpp">
+		</File>
+		<File
+			RelativePath=".\src\robstring1.2.cpp">
+		</File>
+		<File
 			RelativePath=".\src\SDLEvent.cpp">
 		</File>
 		<File

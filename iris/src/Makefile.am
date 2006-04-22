@@ -72,6 +72,7 @@ Music.cpp \
 MusicListLoader.cpp \
 ShaderMatrixBlock.cpp \
 Packet.cpp \
+pathsearch.cpp \
 Paperdoll.cpp \
 PaperdollBuilder.cpp \
 ParticleEngine.cpp \
@@ -81,6 +82,7 @@ ParticleTextures.cpp \
 RadioButton.cpp \
 Renderer.cpp \
 Renderer3D.cpp \
+robstring1.2.cpp \
 WorldEnvironment.cpp \
 SceneMaker.cpp \
 SDLEvent.cpp \

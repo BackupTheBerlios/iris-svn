@@ -40,6 +40,7 @@ Uint32 popserial = 0;
 Uint32 corpse_id = 0;
 std::map < Uint32, Uint8 > corpse_equip;
 bool buy_opening = false;
+bool backpack_opened = false;
 Uint32 vendor_id = 0;
 Uint32 trade_1 = 0;
 Uint32 trade_2 = 0;
@@ -68,18 +69,49 @@ int HandleGumpDialogEvent (Control * contr)
   return -1;
 }
 
+// This shouldn't be hardcoded -> XML-File
 Uint16 CheckIfBoat(Uint16 modelID)
 {
  Uint16 new_modid; 
  if((modelID >= 0x4000) && (modelID < 0x4022))
  {
-  Logger::WriteLine("BOAT!!!!!");
+  Logger::WriteLine("BOAT ModelID: " + modelID);
   switch(modelID)
   {
+   //Small boat
    case 0x4000: new_modid = 16093; break;
    case 0x4001: new_modid = 15962; break;
    case 0x4002: new_modid = 16098; break;
    case 0x4003: new_modid = 15980; break;
+   //Small Dragon Boat
+   case 0x4004: new_modid = 16093; break;
+   case 0x4005: new_modid = 15962; break;
+   case 0x4006: new_modid = 16098; break;
+   case 0x4007: new_modid = 15980; break;
+
+   //Medium Boat
+   case 0x4008: new_modid = 16093; break;
+   case 0x4009: new_modid = 15962; break;
+   case 0x400A: new_modid = 16098; break;
+   case 0x400B: new_modid = 15980; break;
+
+   //Median Dragon Dragon Boat
+   case 0x400C: new_modid = 16093; break;
+   case 0x400D: new_modid = 15962; break;
+   case 0x400E: new_modid = 16098; break;
+   case 0x400F: new_modid = 15980; break;
+
+   //Large Boat
+   case 0x4010: new_modid = 16093; break;
+   case 0x4011: new_modid = 15962; break;
+   case 0x4012: new_modid = 16098; break;
+   case 0x4013: new_modid = 15980; break;
+
+   //Large Dragon Boat
+   case 0x4014: new_modid = 16093; break;
+   case 0x4015: new_modid = 15962; break;
+   case 0x4016: new_modid = 16098; break;
+   case 0x4017: new_modid = 15980; break;
    default: new_modid = modelID;
   }
   return new_modid;
@@ -532,7 +564,7 @@ void cClient::Poll()
 			len = SDLNet_TCP_Recv( socket, packet + poll_pos, MAX_PACKET_LEN );
 			if ( len <= 0 )
 			{
-				Logger::WriteLine( "SDLNet_TCP_Recv: " + std::string( SDLNet_GetError() ) );
+				if (len < 0) Logger::WriteLine( "SDLNet_TCP_Recv: " + std::string( SDLNet_GetError() ) );
 				break;
 			}
 
@@ -1964,11 +1996,16 @@ void cClient::Act_ContOpen (cPacket * packet)
   Uint32 id = packet->GetDword ();
   Uint16 gump = packet->GetWord ();
   if (buy_opening && gump == 0x30)
-      {
-        buy_opening = true;
-        vendor_id = id;
-        return;
-      }
+  {
+     buy_opening = true;
+     vendor_id = id;
+     return;
+  }
+  else if (gump == 0x003c)   // 0x003c = backpack
+  {
+     backpack_opened = true;
+     std::cout << "Backpackopend == true" << std::endl;
+  }
   if (callback_OnOpenContainer)
     callback_OnOpenContainer (id, gump);
 }

@@ -52,7 +52,7 @@ restarting iris)
 - lightlevel restore										- New Feature
 - season packet support										- New Feature
 - new skyboxes 											- New Feature
-- Custom packets:										- New FeatureS
+- Custom packets:										- New Features
       -character alpha
       -character scale
       -skyboxes change
@@ -64,6 +64,7 @@ restarting iris)
 - Removing the 8 direction limit (providing patches for Emus (RunUO/Pol) and for Iris)		- New Feature
 - Exchange CSL for LUA										- New Feature
 - Paging system											- New Feature
+- new Boat Models must be added with IrisEdit to uim file. Now only Small Boat is used for all. - New Feature
 
 
 - Beeing able to stop the Music.								- ADDED

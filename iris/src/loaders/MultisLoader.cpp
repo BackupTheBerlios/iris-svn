@@ -97,6 +97,7 @@ cMultisLoader::cMultisLoader (std::string filename, std::string indexname)
     THROWEXCEPTION ("multi file too big");
 	}
 	multiindex->seekg (0, ios::beg);
+
   for(int i=0;i<MultiLength;i++)
   {
 		unsigned int offset, size, dummy;
@@ -131,7 +132,7 @@ cMultisLoader::cMultisLoader (std::string filename, std::string indexname)
 		}
 
 	}
-  // old harcoded list
+  // old hardcoded list
   for (int i=0x64; i<=0x7f; i++) MultiList[i].ishouse=true;
   MultiList[0x87].ishouse=true;
   MultiList[0x8d].ishouse=true;

@@ -24,6 +24,8 @@
 #include "Logger.h"
 #include <iostream>
 #include <cassert>
+#include <string>
+#include "pathsearch.h" // by ghoulsblade
 
 
 
@@ -155,9 +157,20 @@ void cGrannyFile::load (std::string filename, std::string basepath)
 	std::fstream * file =
 		new fstream (filename.c_str (), ios::in | ios::binary);
 
+	// ghoulsblade's patch : try searching for the path with ignore case
+	if (!file->is_open ()) {
+		std::string realpath = rob_pathsearch(filename);
+		if (realpath.size() > 0) {
+			SAFE_DELETE( file ); 
+			file = new fstream (realpath.c_str (), ios::in | ios::binary);
+		}
+	}
+		
 	if (!file->is_open ())
 	{
 		Logger::WriteLine ("Error: File not found: " + filename);
+		SAFE_DELETE( file ); // ghoulsblade : fixed MEMORY LEAK, file was not deleted
+        file=0;
 		return;
 	}
 

@@ -204,15 +204,15 @@ void Paperdoll::AssignChar (cCharacter * character)
     0x0A,                       // - Neck Covering/Armor
     0x06,                       // - Head Covering/Armor
     0x13,                       // - Arm Covering/Armor
-    0x07,                       // - Hand Covering/Armor
+    0x07,                       // - Gloves
     0x16,                       // - Torso (outer)(Robe)
     0x17,                       // - Legs (outer)(Skirt/Kilt)
     0x0C,                       // - Waist (Half-Apron)
     0x01,                       // - Single-Hand item/weapon
     0x02,                       // - Two-Hand item/weapon (including Shield)
     0x15,                       // - BackPack
-    0x0F
-  };                            // - N/A (no info)
+    0x0F                        // - Unused !?
+  };
   for (int layer = 0x01; layer <= 0x18; layer++)
       {
         cCharacterEquip *equip = character->GetEquip (layerOrder[layer]);
@@ -225,7 +225,6 @@ void Paperdoll::AssignChar (cCharacter * character)
   texture = builder->CreateTexture();
 
   SAFE_DELETE( builder );
-
 }
 
 int Paperdoll::HandleMessage (gui_message * msg)

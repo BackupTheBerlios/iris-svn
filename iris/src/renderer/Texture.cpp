@@ -26,6 +26,7 @@
 #include "Logger.h"
 #include "SDL/SDL_image.h"
 #include <cassert>
+#include "pathsearch.h" // by ghoulsblade
 
 
 
@@ -143,6 +144,12 @@ int Texture::LoadFromFile (const char *filename)
   SDL_Surface *image;
   image = IMG_Load (filename);
 
+	// ghoulsblade's patch : try searching for the path with ignore case
+	if (!image) {
+		std::string realpath = rob_pathsearch(filename);
+		if (realpath.size() > 0) image = IMG_Load(realpath.c_str());
+	}
+		
   if (!image)
       {
         char errorStr[512];
