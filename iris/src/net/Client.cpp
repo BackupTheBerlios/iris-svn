@@ -3104,7 +3104,11 @@ bool cClient::Send_Walk (Uint8 direction)
     return false;
 
   if (walk_stack.size () >= 5)
+  {
+  //SiENcE: Ghoulsblade: workaround hack for "character stops moving bug"
+    walk_stack.clear();
     return false;
+  }
 
   static Uint32 last_walk = 0;
   Uint32 currenttime = SDL_GetTicks ();

@@ -1,3 +1,8 @@
+02.05.2006
+Changes by Florian Fischer (SiENcE)
+	- Added: Solution for Code::Blocks added
+	- Fixed: Walkbug fixed (hack from Ghoulsblade)
+
 22.04.2006
 Changes by Florian Fischer (SiENcE)
 	- Added: boat support for all Boats not just the small Boat (hardcoded in Client.cpp -> later in a seperate XML-File)
