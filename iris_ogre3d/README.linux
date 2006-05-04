@@ -1,0 +1,25 @@
+you will have to install ogre3d  (at least version 1.2 "dagon")
+
+you might try  "apt-get install ogre3d" 
+or consult the info on http://ogre3d.org 
+
+you might have to adjust ressources.cfg to where your ogre installation is, if it is not in /usr/src/ogrenew
+
+Linux compilation:
+------------------
+aclocal
+autoconf
+automake -a
+./configure
+make
+
+Linux run:
+------------------
+copy the binary data (folders : fonts/ textures/ etc) from "iris-release-linux" available at http://developer.berlios.de/projects/iris/  
+./src/ui3
+
+you need a ultima online installation to play (see README)
+
+in order to play locally you have to set up a local server, 
+this is possible under linux using "sunuo" (see google)
+which requires runuo(win) and "mono" (.net framework emulator for linux or something like that)
