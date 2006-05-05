@@ -31,6 +31,7 @@
 
 #include "GrannyModel.h"
 #include "grannyfile.h"
+#include "ogrewrapper.h"
 
 // #include "../Fluid/mmgr.h"
 
@@ -39,7 +40,7 @@ class cGrannyModelTD : public cGrannyModel
 public:
         cGrannyModelTD (std::string modelfile, std::string basepath, std::string defaultanim, std::string prefix="");
         virtual ~cGrannyModelTD ();
-       virtual void Render(int animid, int tick, float & curtime, GrnMatrix * left_matrix, GrnMatrix * right_matrix, cCharacterLight * character_light, float r, float g, float b, float alpha, bool is_corpse);
+       virtual void Render(cOgreGrannyWrapper* pGrannyWrapper,int animid, int tick, float & curtime, GrnMatrix * left_matrix, GrnMatrix * right_matrix, cCharacterLight * character_light, float r, float g, float b, float alpha, bool is_corpse);
         virtual int Age(int tick);
         virtual void Free ();
         virtual void AddAnimation(int animid, std::string filename);

@@ -27,6 +27,7 @@
 #include "renderer/Texture.h"
 #include "renderer/3D/CharacterLight.h"
 #include "granny/grnmatrix.h"
+#include "ogrewrapper.h"
 
 // #include "../Fluid/mmgr.h"
 
@@ -39,7 +40,7 @@ class cGrannyModel
 {
 public:
 	virtual ~cGrannyModel() { }
-	virtual void Render(int animid, int tick, float & curtime, GrnMatrix * left_matrix, GrnMatrix * right_matrix, cCharacterLight * character_light, float r, float g, float b, float alpha, bool is_corpse) = 0;
+	virtual void Render(cOgreGrannyWrapper* pGrannyWrapper,int animid, int tick, float & curtime, GrnMatrix * left_matrix, GrnMatrix * right_matrix, cCharacterLight * character_light, float r, float g, float b, float alpha, bool is_corpse) = 0;
 	virtual int Age(int tick) = 0;
 	virtual void Free () = 0;
 	virtual void AddAnimation(int animid, std::string filename) = 0;

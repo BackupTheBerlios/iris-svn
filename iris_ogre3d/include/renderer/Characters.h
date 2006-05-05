@@ -39,6 +39,7 @@
 #include "renderer/3D/SceneMaker.h"
 #include "renderer/3D/CharacterLight.h"
 #include "uotype.h"
+class cOgreGrannyWrapper;
 
 // #include "../Fluid/mmgr.h"
 
@@ -194,6 +195,7 @@ private:
 	std::vector<std::string> aostooltips_list;
 
 public:
+	cOgreGrannyWrapper* mpGrannyWrapper;
 	cCharacter();
 	virtual ~cCharacter();
 

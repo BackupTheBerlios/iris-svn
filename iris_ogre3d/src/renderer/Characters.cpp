@@ -35,6 +35,7 @@
 #include "loaders/HueLoader.h"
 
 #include "renderer/particles/ParticleEngine.h"
+#include "ogrewrapper.h"
 
 
 
@@ -60,6 +61,7 @@ float Char_Outbox[12][3][3] = {
 
 cCharacter::cCharacter ()
 {PROFILE
+	mpGrannyWrapper = 0;
 	m_id = 0;
 	m_forceanim = -1;
 	m_forcerepeat = -1;
@@ -120,6 +122,7 @@ cCharacter::cCharacter ()
 
 cCharacter::~cCharacter ()
 {PROFILE
+	delete mpGrannyWrapper; mpGrannyWrapper = 0;
 	ClearEquip ();
 	ClearSkills ();
 	ClearText ();

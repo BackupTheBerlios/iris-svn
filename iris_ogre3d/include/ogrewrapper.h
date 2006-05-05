@@ -4,6 +4,7 @@
 #include <OgreVector3.h>
 #include <OgreQuaternion.h>
 #include <OgreUserDefinedObject.h>
+#include <vector>
 /// cOgreWrapper by ghoulsblade
 
 class cTimer;
@@ -23,6 +24,30 @@ class cOgreUserObjectWrapper : public Ogre::UserDefinedObject { public :
 	virtual ~cOgreUserObjectWrapper();
 	virtual long getTypeID(void) const;
 	virtual const Ogre::String& getTypeName(void) const;
+};
+
+class cOgreGrannyWrapper { public:
+	enum eMatrixType {
+		GL_MODELVIEW_MATRIX
+	};
+	cOgreGrannyWrapper();
+	virtual ~cOgreGrannyWrapper();
+	virtual void	glPushMatrix	() = 0;
+	virtual void	glPopMatrix		() = 0;
+	virtual void	glLoadIdentity	() = 0;
+	virtual void	glLoadMatrixf	(const float* m) = 0;
+	virtual void	glMultMatrixf	(const float* m) = 0;
+	virtual void	glGetFloatv		(const eMatrixType type,float* buf) = 0;
+	virtual void	glScalef		(const float x,const float y,const float z) = 0;
+	virtual void	glTranslatef	(const float x,const float y,const float z) = 0;
+	virtual void	glRotatef		(const float ang,const float x,const float y,const float z) = 0;
+	virtual void	glColor3f		(const float r,const float g,const float b) = 0;
+	virtual void	glColor4f		(const float r,const float g,const float b,const float a) = 0;
+	virtual void	glTexCoord2fv	(const float* buf) = 0;
+	virtual void	glVertex3fv		(const float* buf) = 0;
+	virtual void	glBegin			(const char* sMat,const size_t iNumPolys) = 0;
+	virtual void	glEnd			() = 0;
+	virtual void	DrawStep		(const bool bVisible,const float x,const float y,const float z) = 0;
 };
 
 class cOgreWrapper { public :
@@ -67,6 +92,8 @@ class cOgreWrapper { public :
 	
 	// GUI
 	void	GUI_SetOrigin	(const int posx,const int posy);
+
+	cOgreGrannyWrapper* CreateOgreGrannyWrapper();
 	
 	// Ray/Intersection Queries
 	bool	RayEntityQuery	(const Ogre::Ray* pRay,Ogre::Entity* pEntity,float* pfHitDist=0);

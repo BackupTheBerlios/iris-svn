@@ -77,7 +77,7 @@ cGrannyModelTD::~cGrannyModelTD ()
   Free ();
 }
 
-void cGrannyModelTD::Render (int animid, int tick, float &curtime,
+void cGrannyModelTD::Render (cOgreGrannyWrapper* pGrannyWrapper,int animid, int tick, float &curtime,
                              GrnMatrix * left_matrix,
                              GrnMatrix * right_matrix,
                              cCharacterLight * character_light, float r,
@@ -128,30 +128,26 @@ void cGrannyModelTD::Render (int animid, int tick, float &curtime,
 
   last_tick = tick;
 
-	  /* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
   if (hand != HAND_NONE)
-    glPushMatrix ();*/
+    pGrannyWrapper->glPushMatrix ();
 
-	  /* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
   if ((hand == HAND_LEFT) && left_matrix)
   {
-     glLoadMatrixf (left_matrix->matrix);
+     pGrannyWrapper->glLoadMatrixf (left_matrix->matrix);
 //printf ("[hand_left %d]\n", hand);
   }
   if ((hand == HAND_RIGHT) && right_matrix)
   {
-    glLoadMatrixf (right_matrix->matrix);
+    pGrannyWrapper->glLoadMatrixf (right_matrix->matrix);
 //printf ("[hand_right %d]\n", hand);
   }
-	  */
 
-  model->Render (animation, curtime, character_light, r, g, b, alpha,
+  model->Render (pGrannyWrapper,animation, curtime, character_light, r, g, b, alpha,
                  is_corpse);
 
-/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
   if (hand != HAND_NONE)
-    glPopMatrix ();
-	*/
+    pGrannyWrapper->glPopMatrix ();
+	
 
   if (hand == HAND_OWNER)
       {

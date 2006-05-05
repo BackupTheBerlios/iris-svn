@@ -13,9 +13,18 @@ automake -a
 ./configure
 make
 
+copy the binary data from "iris-release-linux" available at http://developer.berlios.de/projects/iris/ :
+	data/
+	fonts/ 
+	gfm/
+	textures/
+	script/
+	xml/
+
+adjust   xml/config.xml
+
 Linux run:
 ------------------
-copy the binary data (folders : fonts/ textures/ etc) from "iris-release-linux" available at http://developer.berlios.de/projects/iris/  
 ./src/ui3
 
 you need a ultima online installation to play (see README)
@@ -23,3 +32,5 @@ you need a ultima online installation to play (see README)
 in order to play locally you have to set up a local server, 
 this is possible under linux using "sunuo" (see google)
 which requires runuo(win) and "mono" (.net framework emulator for linux or something like that)
+
+As the gumps (2d-gui elements) are not fully implemented yet, you have to create a character using some other uo client (maybe the old iris) and use the quick login button (upper triangle)

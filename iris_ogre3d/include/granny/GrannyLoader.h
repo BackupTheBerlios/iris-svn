@@ -29,6 +29,7 @@
 #include <map>
 
 #include "GrannyModel.h"
+#include "ogrewrapper.h"
 
 // #include "../Fluid/mmgr.h"
 
@@ -45,8 +46,8 @@ public:
     ~cGrannyLoader();
  
     void Clear ();
-    void Render(Uint32 id, Uint32 type, float & curtime, cCharacterLight * character_light, float r, float g, float b, float alpha, GrnMatrix * left_matrix = NULL, GrnMatrix * right_matrix = NULL, bool is_corpse = false);
-    void Render(Uint32 id, Uint32 type, float & curtime, cCharacterLight * character_light, float r, float g, float b, float alpha, std::vector<int> bodyparts, GrnMatrix * left_matrix = NULL, GrnMatrix * right_matrix = NULL, bool is_corpse = false);
+    void Render(cOgreGrannyWrapper* pGrannyWrapper,Uint32 id, Uint32 type, float & curtime, cCharacterLight * character_light, float r, float g, float b, float alpha, GrnMatrix * left_matrix = NULL, GrnMatrix * right_matrix = NULL, bool is_corpse = false);
+    void Render(cOgreGrannyWrapper* pGrannyWrapper,Uint32 id, Uint32 type, float & curtime, cCharacterLight * character_light, float r, float g, float b, float alpha, std::vector<int> bodyparts, GrnMatrix * left_matrix = NULL, GrnMatrix * right_matrix = NULL, bool is_corpse = false);
     int GetAnimset(Uint32 id);
     bool isFound(Uint32 id);
 };

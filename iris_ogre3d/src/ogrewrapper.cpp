@@ -670,3 +670,127 @@ bool	MeshShape::RayIntersect	(const Vector3& ray_origin,const Vector3& ray_dir,f
 	}
 	return false;
 }
+
+cOgreGrannyWrapper::cOgreGrannyWrapper() {}
+cOgreGrannyWrapper::~cOgreGrannyWrapper() {}
+class cOgreGrannyWrapperImpl : public cOgreGrannyWrapper { public:
+	/*
+	, public MovableObject
+	class OgreGrannyWrapperSection : public Renderable {
+		cOgreGrannyWrapperImpl* mpParent;
+	};
+	std::vector<OgreGrannyWrapperSection*>	mlSections;
+	*/
+	
+	bool minmaxinit;
+	Vector3 mvMin,mvMax;
+		
+	Ogre::ManualObject* mpManualObject;
+	std::vector<Ogre::Matrix4>				mlMatrixStack;
+	Ogre::Matrix4 		mCurMatrix;
+	SceneNode* 			mpSceneNode;
+	bool				mbVisible;
+	int					miCurSection;
+	size_t				miIndexCounter;
+	
+	cOgreGrannyWrapperImpl() : mpSceneNode(0), mpManualObject(0), mbVisible(false), minmaxinit(false) {}
+	virtual ~cOgreGrannyWrapperImpl () {}
+	
+	static void FillMatrixFromBuffer (Ogre::Matrix4& matrix,const float* buf) { 
+		Real* row;
+		/*
+		row = matrix[0]; row[0] = buf[ 0]; row[1] = buf[ 4]; row[2] = buf[ 8]; row[3] = buf[12];
+		row = matrix[1]; row[0] = buf[ 1]; row[1] = buf[ 5]; row[2] = buf[ 9]; row[3] = buf[13];
+		row = matrix[2]; row[0] = buf[ 2]; row[1] = buf[ 6]; row[2] = buf[10]; row[3] = buf[14];
+		row = matrix[3]; row[0] = buf[ 3]; row[1] = buf[ 7]; row[2] = buf[11]; row[3] = buf[15];
+		/*/
+		row = matrix[0]; row[0] = *buf; ++buf; row[1] = *buf; ++buf; row[2] = *buf; ++buf; row[3] = *buf; ++buf;
+		row = matrix[1]; row[0] = *buf; ++buf; row[1] = *buf; ++buf; row[2] = *buf; ++buf; row[3] = *buf; ++buf;
+		row = matrix[2]; row[0] = *buf; ++buf; row[1] = *buf; ++buf; row[2] = *buf; ++buf; row[3] = *buf; ++buf;
+		row = matrix[3]; row[0] = *buf; ++buf; row[1] = *buf; ++buf; row[2] = *buf; ++buf; row[3] = *buf; ++buf;
+		//*/
+	}
+	static void FillBufferFromMatrix (float* buf,const Ogre::Matrix4& matrix) { 
+		const Real* row;
+		/*
+		row = matrix[0]; buf[ 0] = row[0]; buf[ 4] = row[1]; buf[ 8] = row[2]; buf[12] = row[3];
+		row = matrix[1]; buf[ 1] = row[0]; buf[ 5] = row[1]; buf[ 9] = row[2]; buf[13] = row[3];
+		row = matrix[2]; buf[ 2] = row[0]; buf[ 6] = row[1]; buf[10] = row[2]; buf[14] = row[3];
+		row = matrix[3]; buf[ 3] = row[0]; buf[ 7] = row[1]; buf[11] = row[2]; buf[15] = row[3];
+		/*/
+		row = matrix[0]; *buf = row[0]; ++buf; *buf = row[1]; ++buf; *buf = row[2]; ++buf; *buf = row[3]; ++buf; 
+		row = matrix[1]; *buf = row[0]; ++buf; *buf = row[1]; ++buf; *buf = row[2]; ++buf; *buf = row[3]; ++buf; 
+		row = matrix[2]; *buf = row[0]; ++buf; *buf = row[1]; ++buf; *buf = row[2]; ++buf; *buf = row[3]; ++buf; 
+		row = matrix[3]; *buf = row[0]; ++buf; *buf = row[1]; ++buf; *buf = row[2]; ++buf; *buf = row[3]; ++buf; 
+		//*/
+	}
+	
+	virtual void	glPushMatrix	() { mlMatrixStack.push_back(mCurMatrix); }
+	virtual void	glPopMatrix		() { mCurMatrix = mlMatrixStack.back(); mlMatrixStack.pop_back(); }
+	virtual void	glLoadIdentity	() { mCurMatrix.makeTrans(Vector3::ZERO); }
+	virtual void	glLoadMatrixf	(const float* m) { FillMatrixFromBuffer(mCurMatrix,m); }
+	virtual void	glMultMatrixf	(const float* m) {
+		static Ogre::Matrix4 mulmat; 
+		FillMatrixFromBuffer(mulmat,m);
+		mCurMatrix = mulmat * mCurMatrix;
+	}
+	virtual void	glGetFloatv		(const eMatrixType type,float* buf) { FillBufferFromMatrix(buf,mCurMatrix); }
+	virtual void	glScalef		(const float x,const float y,const float z) { mCurMatrix = Matrix4::getScale(x,y,z) * mCurMatrix; }
+	virtual void	glTranslatef	(const float x,const float y,const float z) { mCurMatrix = Matrix4::getTrans(x,y,z) * mCurMatrix; }
+	virtual void	glRotatef		(const float ang,const float x,const float y,const float z) { mCurMatrix = Matrix4(Quaternion(Degree(ang),Vector3(x,y,z))) * mCurMatrix; }
+	
+	virtual void	glColor3f		(const float r,const float g,const float b) {}
+	virtual void	glColor4f		(const float r,const float g,const float b,const float a) {}
+	virtual void	glTexCoord2fv	(const float* buf) {
+		mpManualObject->textureCoord(buf[0],buf[1]);
+	}
+	virtual void	glVertex3fv		(const float* buf) {
+		Vector3 myvec = mCurMatrix *  Vector3(buf[0],buf[1],buf[2]);
+		
+		if (!minmaxinit || myvec.x < mvMin.x) mvMin.x = myvec.x;
+		if (!minmaxinit || myvec.y < mvMin.y) mvMin.y = myvec.y;
+		if (!minmaxinit || myvec.z < mvMin.z) mvMin.z = myvec.z;
+		if (!minmaxinit || myvec.x > mvMax.x) mvMax.x = myvec.x;
+		if (!minmaxinit || myvec.y > mvMax.y) mvMax.y = myvec.y;
+		if (!minmaxinit || myvec.z > mvMax.z) mvMax.z = myvec.z;
+		minmaxinit = true;
+		
+		mpManualObject->position(myvec);
+		mpManualObject->index(miIndexCounter++);
+	}
+		
+	virtual void	glBegin			(const char* sMat,const size_t iNumPolys) {
+		mpManualObject->begin(sMat?sMat:"BaseWhiteNoLighting");
+		//mpManualObject->begin("BaseWhiteNoLighting");
+		miIndexCounter = 0;
+	}
+	virtual void	glEnd			() {
+		mpManualObject->end();
+	}
+		
+	virtual void	DrawStep		(const bool bVisible,const float x,const float y,const float z) {
+		if (minmaxinit) {
+			printf("min(%0.1f,%0.1f,%0.1f),max(%0.1f,%0.1f,%0.1f)\n",mvMin.x,mvMin.y,mvMin.z,mvMax.x,mvMax.y,mvMax.z);
+			minmaxinit = false;
+		}
+		if (!bVisible && !mpSceneNode) return;
+		if (bVisible && !mpSceneNode) {
+			mpSceneNode = cOgreWrapper::GetSingleton().mSceneMgr->getRootSceneNode()->createChildSceneNode();
+			mpManualObject = cOgreWrapper::GetSingleton().mSceneMgr->createManualObject(cOgreWrapper::GetUniqueName());
+			mpSceneNode->attachObject(mpManualObject);
+		}
+		if (mbVisible != bVisible) {
+			mbVisible = bVisible;
+			mpManualObject->setVisible(mbVisible);
+		}
+		
+		mpSceneNode->setPosition(x,y,z);
+		glLoadIdentity();
+		miCurSection = 0;
+		mpManualObject->clear();
+	}
+};
+
+cOgreGrannyWrapper* cOgreWrapper::CreateOgreGrannyWrapper() {
+	return new cOgreGrannyWrapperImpl();
+}

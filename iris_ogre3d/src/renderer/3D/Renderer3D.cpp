@@ -240,6 +240,7 @@ void Renderer3D::RenderScene( void )
 			float player_x, player_y, player_z;
 			pCamera.GetGamePosition( cam_x, cam_y, cam_z );
 			player_character->getPosition( player_x, player_y, player_z );
+			//printf("player_character->getPosition = (%0.1f,%0.1f,%0.1f)\n",player_x, player_y, player_z);
 
 			if ( ( player_x != cam_x ) || ( player_y != cam_y ) || ( player_z != cam_z ) )
 			{
@@ -289,8 +290,9 @@ void Renderer3D::RenderScene( void )
 			lastmousex = cInput::iMouse[0];
 			lastmousey = cInput::iMouse[1];
 			
-			
-			cOgreWrapper::GetSingleton().SetCameraRot( playerdir * curview );
+			static Ogre::Quaternion camrot;
+			camrot = playerdir * curview;
+			cOgreWrapper::GetSingleton().SetCameraRot( camrot );
 			// -pClient->player_character()->angle()
 			
 			/*
@@ -307,6 +309,8 @@ void Renderer3D::RenderScene( void )
 				-(pCamera.GetZ() - 15.0f) * 0.1f
 				));
 				
+			if (cInput::bKeys[cInput::kkey_i]) cOgreWrapper::GetSingleton().mCamera->moveRelative(Ogre::Vector3(0,0,5));
+			if (cInput::bKeys[cInput::kkey_k]) cOgreWrapper::GetSingleton().mCamera->moveRelative(Ogre::Vector3(0,0,-5));
 				
 			/*
 			//cOgreWrapper::GetSingleton().CameraLookAt(Ogre::Vector3(
@@ -666,8 +670,7 @@ void Renderer3D::RenderDynamics( bool do_culling )
 void Renderer3D::RenderCharacters (bool do_culling)
 {PROFILE
 	//TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-  #if 0
-	if (!pClient)
+  	if (!pClient)
     return;
 
   int blockx = pCamera.GetBlockX ();
@@ -686,18 +689,25 @@ void Renderer3D::RenderCharacters (bool do_culling)
   characterlist_t::iterator iter;
   Uint32 currentticks = SDL_GetTicks ();
 
-  glEnable (GL_CULL_FACE);
+	bool bVisible;
+	
+  // glEnable (GL_CULL_FACE); // ghoulsblade : deactivated
   for (iter = characters->begin (); iter != characters->end (); iter++)
       {
-        cCharacter *character = iter->second;
-        
-		if((character->id() == pClient->player_charid()) && Config::GetHideSelf() )
-         continue;
-        
-        if ((character->x () >= min_x) && (character->y () >= min_y)
-            && (character->x () <= max_x) && (character->y () <= max_y))
-            {
-
+			cCharacter *character = iter->second;
+			
+		  bVisible = !((character->id() == pClient->player_charid()) && Config::GetHideSelf() ) &&
+					(	(character->x () >= min_x) && (character->y () >= min_y) && 
+						(character->x () <= max_x) && (character->y () <= max_y));
+			
+		  if  (!character->mpGrannyWrapper) 
+				character->mpGrannyWrapper = cOgreWrapper::GetSingleton().CreateOgreGrannyWrapper();
+		
+		  cOgreGrannyWrapper* pGrannyWrapper = character->mpGrannyWrapper;
+				
+		  pGrannyWrapper->DrawStep(bVisible,character->fx () - dx, character->fy () - dy, character->fz () * 0.1f);
+		  
+        if (bVisible) {
 				cModelInfoEntry *modelinfo = ModelInfoLoader::GetInstance()->GetModelEntry(character->body());
 
               float alpha = 1.0f;
@@ -719,29 +729,65 @@ void Renderer3D::RenderCharacters (bool do_culling)
                altbody = modelinfo->alt_body ();
               }
 
-              float matrix[16], invmatrix[16];
-              glPushMatrix ();
-              glLoadIdentity ();
-              glScalef (-1.0f * scalex, 1.0f * scaley, 1.0f * scalez);
-              glTranslatef (-0.5f, 0.5f, 0.0f);
-              glRotatef (-character->angle (), 0.0f, 0.0f, 1.0f);
-              glGetFloatv (GL_MODELVIEW_MATRIX, matrix);
+              float matrix[16];
+			  
+			  
+              pGrannyWrapper->glPushMatrix ();
+              pGrannyWrapper->glLoadIdentity ();
+              //pGrannyWrapper->glScalef (-1.0f * scalex, 1.0f * scaley, 1.0f * scalez); // ghoulsblade : deactivated
+              pGrannyWrapper->glScalef (scalex, scaley, scalez); // ghoulsblade : added for testing
+               //pGrannyWrapper->glTranslatef (-0.5f, 0.5f, 0.0f); // ghoulsblade : deactivated
+              //pGrannyWrapper->glTranslatef (0.5f, 0.5f, 0.0f); // ghoulsblade : added for testing
+              //pGrannyWrapper->glRotatef (-character->angle (), 0.0f, 0.0f, 1.0f);
+              pGrannyWrapper->glRotatef (character->angle (), 0.0f, 0.0f, 1.0f);
+              pGrannyWrapper->glTranslatef (0.5, 0.5, 0.0f); // ghoulsblade : added for testing
+              pGrannyWrapper->glGetFloatv (cOgreGrannyWrapper::GL_MODELVIEW_MATRIX, matrix);
+               
+			  
+			  cCharacterLight *light = character->light ();
+			  assert (light);
+			  
+			  /* // ghoulsblade : deactivated
+              float invmatrix[16];
               InvertMatrix (matrix, invmatrix);
-
-              cCharacterLight *light = character->light ();
-              assert (light);
               light->Generate (character->fx () - dx, character->fy () - dy,
                                character->fz () * 0.1f, blockx, blocky,
                                m_ambient_light_color, m_sun_light_color, m_light_direction,
                                invmatrix);
+			  */
+			  
+              pGrannyWrapper->glPopMatrix ();
+              pGrannyWrapper->glPushMatrix ();
 
-              glPopMatrix ();
-              glPushMatrix ();
-
-              glTranslatef (character->fx () - dx, character->fy () - dy,
-                            character->fz () * 0.1f);
+			  /*
+				pCamera.SetX( -( player_x - (int)( player_x / 8.0f ) * 8 ) );
+				pCamera.SetY( -( player_y - (int)( player_y / 8.0f ) * 8 ) );
+				pCamera.SetZ( -player_z );
+				cOgreWrapper::GetSingleton().SetCameraPos(Ogre::Vector3(
+					-(pCamera.GetX() - 0.5f), 
+					-(pCamera.GetY() - 0.5f), 
+					-(pCamera.GetZ() - 15.0f) * 0.1f
+					));
+				pCamera.SetBlockX( (int) player_x / 8 );
+				pCamera.SetBlockY( (int) player_y / 8 );
+			  int dx = blockx * 8;
+			  int dy = blocky * 8;
+					
+					
+				cOgreWrapper::GetSingleton().SetCameraPos(Ogre::Vector3(
+					(( player_x - dx ) + 0.5f), 
+					(( player_y - dy ) + 0.5f), 
+					(player_z + 15.0f) * 0.1f
+					));
+			  */
+              //pGrannyWrapper->glTranslatef (character->fx () - dx, character->fy () - dy, character->fz () * 0.1f); // ghoulsblade : deactivated
+							
+							
+				//printf("scale (%0.1f,%0.1f,%0.1f)\n",1.0f * scalex, 1.0f * scaley, 1.0f * scalez);
+				//printf("char (%0.1f,%0.1f,%0.1f)\n",character->fx (),character->fy (),character->fz ());
 
 				// shadow
+				/* // ghoulsblade : deactivated
               glDisable (GL_ALPHA_TEST);
               glBindTexture (GL_TEXTURE_2D, tex_char_shadow->GetGLTex ());
               glBegin (GL_QUADS);
@@ -751,8 +797,9 @@ void Renderer3D::RenderCharacters (bool do_culling)
               glTexCoord2f (0.0f, 1.0f);glVertex3f (1.0f, 1.0f, 0.01f);
               glEnd ();
               glEnable (GL_ALPHA_TEST);
+			  */
 
-              glMultMatrixf (matrix);
+              pGrannyWrapper->glMultMatrixf (matrix);
               float curtime = character->animtime ();
               float delta_time =
                 (currentticks - character->lastanim ()) * 0.001f;
@@ -859,7 +906,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                               //always render hands for recal hands matrix
                               bodyparts[3] = 0;
 
-                              pGrannyLoader->Render (body, anim_type, curtime,
+                              pGrannyLoader->Render (pGrannyWrapper,body, anim_type, curtime,
                                                  light, colr, colg, colb,
                                                  alpha, bodyparts,
                                                  &left_matrix, &right_matrix,
@@ -868,22 +915,22 @@ void Renderer3D::RenderCharacters (bool do_culling)
 
                         }
                     else
-                      pGrannyLoader->Render ( body,
+                      pGrannyLoader->Render ( pGrannyWrapper,body,
                                              anim_type, curtime, light, colr,
                                              colg, colb, alpha, &left_matrix,
                                              &right_matrix,
                                              character->isCorpse ());
 					
 					// calculates right_matrix and left_matrix
-					glPushMatrix ();
-                    glMultMatrixf (right_matrix.matrix);
-                    glGetFloatv (GL_MODELVIEW_MATRIX, right_matrix.matrix);
-                    glPopMatrix ();
+					pGrannyWrapper->glPushMatrix ();
+                    pGrannyWrapper->glMultMatrixf (right_matrix.matrix);
+                    pGrannyWrapper->glGetFloatv (cOgreGrannyWrapper::GL_MODELVIEW_MATRIX, right_matrix.matrix);
+                    pGrannyWrapper->glPopMatrix ();
 
-                    glPushMatrix ();
-                    glMultMatrixf (left_matrix.matrix);
-                    glGetFloatv (GL_MODELVIEW_MATRIX, left_matrix.matrix);
-                    glPopMatrix ();
+                    pGrannyWrapper->glPushMatrix ();
+                    pGrannyWrapper->glMultMatrixf (left_matrix.matrix);
+                    pGrannyWrapper->glGetFloatv (cOgreGrannyWrapper::GL_MODELVIEW_MATRIX, left_matrix.matrix);
+                    pGrannyWrapper->glPopMatrix ();
 					
                     for (int layer = 0; layer < 25; layer++)
                         {
@@ -920,7 +967,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                                 }
                                           }
                                       if (!found)
-                                        pGrannyLoader->Render (base_id | anim,
+                                        pGrannyLoader->Render (pGrannyWrapper,base_id | anim,
                                                                anim_type,
                                                                curtime, light,
                                                                colr, colg,
@@ -931,7 +978,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                                                isCorpse ());
                                     }
                                 else
-                                  pGrannyLoader->Render (base_id | anim,
+                                  pGrannyLoader->Render (pGrannyWrapper,base_id | anim,
                                                          anim_type, curtime,
                                                          light, colr, colg,
                                                          colb, alpha,
@@ -957,6 +1004,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                         }
                     if (mounttile != NULL)
                         {
+							printf("mounttile != NULL\n");
                           mount = new cMount (mounttile->model ());
                           mountmodel = mount->GetMountType ();
                           if ((m_kGame->GetPointedObj () == character->id ())
@@ -967,7 +1015,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                           else
                             pHueLoader.GetRGBHue (mounttile->hue (), colr,
                                                    colg, colb);
-                          pGrannyLoader->Render ( mountmodel,
+                          pGrannyLoader->Render ( pGrannyWrapper,mountmodel,
                                                  mountanim, curtime, light,
                                                  colr, colg, colb, alpha,
                                                  &left_matrix, &right_matrix);
@@ -979,10 +1027,9 @@ void Renderer3D::RenderCharacters (bool do_culling)
             delete mount;
                   }
               character->setAnimtime (curtime);
-              glPopMatrix ();
+              pGrannyWrapper->glPopMatrix ();
             }
       }
-	#endif
 }
 
 

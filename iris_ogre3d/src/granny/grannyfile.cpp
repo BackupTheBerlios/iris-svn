@@ -33,7 +33,7 @@
 using namespace std;
 
 // Utility Function
-void calculateBoneRests (Bone * bone);
+void calculateBoneRests (cOgreGrannyWrapper* pGrannyWrapper,Bone * bone);
 
 
 cGrannyFile::cGrannyFile ()
@@ -150,6 +150,10 @@ int cGrannyFile::getBoneID(const char *name)
 
 void cGrannyFile::load (std::string filename, std::string basepath)
 {
+	printf("cGrannyFile::load(%s,%s)\n",filename.c_str(),basepath.c_str());
+	static cOgreGrannyWrapper* pGrannyWrapper = 0;
+	if (!pGrannyWrapper) pGrannyWrapper = cOgreWrapper::GetSingleton().CreateOgreGrannyWrapper();
+		
 	if (color_array)
 		free (color_array);
 	color_array = NULL;
@@ -178,11 +182,8 @@ void cGrannyFile::load (std::string filename, std::string basepath)
 	file->close ();
 	delete file;
 
-	
-	/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-	glPushMatrix ();
-	glLoadIdentity ();
-	*/
+	pGrannyWrapper->glPushMatrix ();
+	pGrannyWrapper->glLoadIdentity ();
 
 	m_stream->seekg (0x40);         // skip header (Could be FileType magic)
 
@@ -204,7 +205,7 @@ void cGrannyFile::load (std::string filename, std::string basepath)
 	std::vector<Bone *> &bones = getBones().bones;
 	if( bones.size() > 0 )
 	{
-		calculateBoneRests( bones[0] );
+		calculateBoneRests(pGrannyWrapper, bones[0] );
 	}
 
 
@@ -224,9 +225,7 @@ void cGrannyFile::load (std::string filename, std::string basepath)
 	
 	initBone();
 
-	/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-	glPopMatrix ();
-	*/
+	pGrannyWrapper->glPopMatrix ();
 }
 
 void cGrannyFile::addTime (float t)
@@ -343,15 +342,12 @@ bool cGrannyFile::loadTexture (const char *basepath)
 	return (m_texture);
 }
 
-void calculateBoneRests (Bone * bone)
+void calculateBoneRests (cOgreGrannyWrapper* pGrannyWrapper,Bone * bone)
 {
 	GrnMatrix matrix;
 	matrix.setTransform(bone->quaternion, bone->translate);
-	/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-	glMultMatrixf(matrix.matrix);
-
-	glGetFloatv (GL_MODELVIEW_MATRIX, matrix.matrix);
-	*/
+	pGrannyWrapper->glMultMatrixf(matrix.matrix);
+	pGrannyWrapper->glGetFloatv (cOgreGrannyWrapper::GL_MODELVIEW_MATRIX, matrix.matrix);
 
 	bone->matrix = matrix;
 	bone->matrix.invert ();
@@ -362,11 +358,10 @@ void calculateBoneRests (Bone * bone)
 	vector < Bone * >::iterator ibone;
 	for (ibone = bone->children.begin ();
 		ibone != bone->children.end (); ibone++)
-	{/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-		glPushMatrix ();*/
-		calculateBoneRests (*ibone);
-		/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-		glPopMatrix ();*/
+	{
+		pGrannyWrapper->glPushMatrix ();
+		calculateBoneRests (pGrannyWrapper,*ibone);
+		pGrannyWrapper->glPopMatrix ();
 	}
 }
 
@@ -383,22 +378,21 @@ int cGrannyFile::getFrame (cGrannyFile * animation, float &curTime)
 	return 0;
 }
 
-cDeformedArray *cGrannyFile::createDeformed (cGrannyFile * animation,
+cDeformedArray *cGrannyFile::createDeformed (cOgreGrannyWrapper* pGrannyWrapper,cGrannyFile * animation,
 											 float time,
 											 list < Mesh >::iterator imesh)
 {
+	printf("cGrannyFile::createDeformed\n");
 	cDeformedArray *deformed = NULL;
 
 	Bones & bones = getBones ();
 	BoneTies & boneTies = getTies ();
 
-	/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-	glPushMatrix ();
-	glLoadIdentity ();*/
+	pGrannyWrapper->glPushMatrix ();
+	pGrannyWrapper->glLoadIdentity ();
 	if (animation)
-		animation->getSkeleton (bones.bones[0], time);
-	/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-	glPopMatrix ();*/
+		animation->getSkeleton (pGrannyWrapper,bones.bones[0], time);
+	pGrannyWrapper->glPopMatrix ();
 
 	vector < BoneWeight >::iterator iwt;
 	dword pnt = 0;
@@ -451,7 +445,7 @@ cDeformedArray *cGrannyFile::createDeformed (cGrannyFile * animation,
 	return deformed;
 }
 
-void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
+void cGrannyFile::Render (cOgreGrannyWrapper* pGrannyWrapper,cGrannyFile * animation, float &curTime,
 						  cCharacterLight * character_light, float r, float g,
 						  float b, float alpha, bool is_corpse)
 {
@@ -491,7 +485,7 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
 
 	if (!deformed)
 	{
-		deformed = createDeformed (animation, time, imesh);
+		deformed = createDeformed (pGrannyWrapper,animation, time, imesh);
 		if (animation)
 			animation->addDeformed (deformed, frame);
 	}
@@ -516,6 +510,7 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
 
 		float *data = deformed->data ();
 
+		#if 0 // ghoulsblade : deactivated, port me to ogre (NORMALS)
 		if (imesh->normals.size () && color_array
 			&& (imesh->points.size () <= imesh->normals.size ()))
 		{
@@ -534,14 +529,15 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
 					color_array + i * 3);
 			}
 		}
-		/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-		if (alpha < 1.0f)
-			glDisable (GL_ALPHA_TEST);
+		#endif
+		
+		// if (alpha < 1.0f) glDisable (GL_ALPHA_TEST);  // ghoulsblade : deaktivated
 		dword poly = 0;
 		vector < gPolygon >::iterator polygon;
-		//
-		glBindTexture (GL_TEXTURE_2D, getTexture ());
-		glBegin (GL_TRIANGLES);
+		
+		// glBindTexture (GL_TEXTURE_2D, getTexture ()); // ghoulsblade : deaktivated
+		// glBegin (GL_TRIANGLES); // ghoulsblade : deaktivated
+		pGrannyWrapper->glBegin(getOgreMaterial(),imesh->polygons.size());
 
 		assert (character_light);
 
@@ -549,7 +545,10 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
 			polygon != imesh->polygons.end (); polygon++, poly++)
 		{
 			for (int i = 0; i < 3; ++i)
+			//for (int i = 2; i >= 0; --i)
 			{
+				float *vertex = data + (polygon->nodes[i] * 3);
+				pGrannyWrapper->glVertex3fv (vertex);
 
 				// Do we have texture-map information?
 				if (imesh->textureMap.size ())
@@ -557,10 +556,8 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
 					Point & p =
 						imesh->textureMap[textures.polygons[poly].
 						nodes[i + 1]];
-					glTexCoord2fv (p.points);
+					pGrannyWrapper->glTexCoord2fv (p.points);
 				}
-
-				float *vertex = data + (polygon->nodes[i] * 3);
 
 				if (color_array)
 				{
@@ -568,10 +565,10 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
 					//glColor3f(color[0] * r, color[1] * g, color[2] * b);
 
 					if (alpha < 1.0f)
-						glColor4f (color[0] * r, color[1] * g,
+						pGrannyWrapper->glColor4f (color[0] * r, color[1] * g,
 						color[2] * b, alpha);
 					else
-						glColor3f (color[0] * r, color[1] * g,
+						pGrannyWrapper->glColor3f (color[0] * r, color[1] * g,
 						color[2] * b);
 
 
@@ -582,16 +579,14 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
 				//
 				//printf("%.2f %.2f %.2f\n", *vertex, *(vertex + 1), *(vertex + 2));
 
-				glVertex3fv (vertex);
+				// pGrannyWrapper->glVertex3fv (vertex); // ghoulsblade : moved to start
 				
 			}
 		}
-		*/
 		
-		/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-		if (alpha < 1.0f)
-			glEnable (GL_ALPHA_TEST);
-		glEnd ();*/
+		
+		// if (alpha < 1.0f) glEnable (GL_ALPHA_TEST);  // ghoulsblade : deaktivated
+		pGrannyWrapper->glEnd ();
 
 		//glBindTexture( GL_TEXTURE_2D, 0 );
 
@@ -600,7 +595,7 @@ void cGrannyFile::Render (cGrannyFile * animation, float &curTime,
 	}
 }
 
-void cGrannyFile::getSkeleton (Bone * bone, float &curTime)
+void cGrannyFile::getSkeleton (cOgreGrannyWrapper* pGrannyWrapper,Bone * bone, float &curTime)
 {
 }
 
@@ -658,7 +653,7 @@ void cGrannyAnimation::Assign (cGrannyFile * model)
 
 
 
-void cGrannyAnimation::getSkeleton (Bone * bone, float &curTime)
+void cGrannyAnimation::getSkeleton (cOgreGrannyWrapper* pGrannyWrapper,Bone * bone, float &curTime)
 {
 	float X, Y, Z, x, y, z, w;
 	dword rid=0,mid=0;
@@ -667,29 +662,25 @@ void cGrannyAnimation::getSkeleton (Bone * bone, float &curTime)
 	if (m_animBones.empty() || !bone)
 		return;
 
-#if 0
-	/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
 	if ((left_hand_bone != -1) && ((int) bone->id == left_hand_bone))
 	{
-		glPushMatrix ();
-		glRotatef (-135.0f, 1.0f, 0.0f, 0.0f);
-		glRotatef (-45.0f, 0.0f, 1.0f, 0.0f);
-		//glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
-		glGetFloatv (GL_MODELVIEW_MATRIX, matrix_left_hand.matrix);
-		glPopMatrix ();
+		pGrannyWrapper->glPushMatrix ();
+		pGrannyWrapper->glRotatef (-135.0f, 1.0f, 0.0f, 0.0f);
+		pGrannyWrapper->glRotatef (-45.0f, 0.0f, 1.0f, 0.0f);
+		//pGrannyWrapper->glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
+		pGrannyWrapper->glGetFloatv (cOgreGrannyWrapper::GL_MODELVIEW_MATRIX, matrix_left_hand.matrix);
+		pGrannyWrapper->glPopMatrix ();
 	}
 
 	if ((right_hand_bone != -1) && ((int) bone->id == right_hand_bone))
 	{
-		glPushMatrix ();
-		glRotatef (90.0f, 1.0f, 0.0f, 0.0f);
-		glRotatef (135.0f, 0.0f, 1.0f, 0.0f);
-		//glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
-		glGetFloatv (GL_MODELVIEW_MATRIX, matrix_right_hand.matrix);
-		glPopMatrix ();
+		pGrannyWrapper->glPushMatrix ();
+		pGrannyWrapper->glRotatef (90.0f, 1.0f, 0.0f, 0.0f);
+		pGrannyWrapper->glRotatef (135.0f, 0.0f, 1.0f, 0.0f);
+		//pGrannyWrapper->glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
+		pGrannyWrapper->glGetFloatv (cOgreGrannyWrapper::GL_MODELVIEW_MATRIX, matrix_right_hand.matrix);
+		pGrannyWrapper->glPopMatrix ();
 	}
-	*/
-#endif
 
 	rid = mid = 0;
 	if ((m_animBones[bone->id] == (dword)-1))
@@ -741,9 +732,8 @@ void cGrannyAnimation::getSkeleton (Bone * bone, float &curTime)
 
 		matrix.setTransform(q, t);
 
-		/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-		glMultMatrixf (matrix.matrix);
-		glGetFloatv (GL_MODELVIEW_MATRIX, matrix.matrix);*/
+		pGrannyWrapper->glMultMatrixf (matrix.matrix);
+		pGrannyWrapper->glGetFloatv (cOgreGrannyWrapper::GL_MODELVIEW_MATRIX, matrix.matrix);
 		bone->curMatrix = matrix;
 		bone->curMatrix *= bone->matrix;
 
@@ -759,11 +749,9 @@ void cGrannyAnimation::getSkeleton (Bone * bone, float &curTime)
 	vector < Bone * >::iterator ibone;
 	for( ibone = bone->children.begin(); ibone != bone->children.end(); ++ibone )
 	{
-		/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-		glPushMatrix ();*/
-		getSkeleton (*ibone, curTime);
-		/* TODO : ghoulsblade : port me to ogre, opengl commands are not available directly
-		glPopMatrix ();*/
+		pGrannyWrapper->glPushMatrix ();
+		getSkeleton (pGrannyWrapper,*ibone, curTime);
+		pGrannyWrapper->glPopMatrix ();
 	}
 }
 

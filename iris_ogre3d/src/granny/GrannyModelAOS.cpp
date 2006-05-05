@@ -51,7 +51,7 @@ cGrannyModelAOS::~cGrannyModelAOS()
 	Free();
 }
 
-void cGrannyModelAOS::Render (int animid, int tick, float &curtime,
+void cGrannyModelAOS::Render (cOgreGrannyWrapper* pGrannyWrapper,int animid, int tick, float &curtime,
                               GrnMatrix * left_matrix,
                               GrnMatrix * right_matrix,
                               cCharacterLight * character_light, float r,
@@ -68,7 +68,7 @@ void cGrannyModelAOS::Render (int animid, int tick, float &curtime,
 		int id = iter->first;
 		if (bodyparts.size () > (unsigned int) id)
 		if (bodyparts.at (id) == 0)
-			iter->second->Render(animid, tick, curtime, 
+			iter->second->Render(pGrannyWrapper,animid, tick, curtime, 
 				id==3 ? left_matrix: NULL, id==3 ? right_matrix : NULL, 
 				character_light, r, g, b, alpha, is_corpse);
       }

@@ -28,6 +28,7 @@
 #include "renderer/Texture.h"
 #include "renderer/3D/CharacterLight.h"
 #include "include.h"
+#include "ogrewrapper.h"
 #include <map>
 
 // #include "../Fluid/mmgr.h"
@@ -52,7 +53,7 @@ public:
 	virtual ~cGrannyFile();
 	void load( std::string filename, std::string basepath );
 	void addTime( float t );
-	virtual void getSkeleton( Bone *bone, float & curTime );
+	virtual void getSkeleton( cOgreGrannyWrapper* pGrannyWrapper,Bone *bone, float & curTime );
 	std::string getTextureName();
 	Meshes &getMeshes();
 	Bones &getBones();
@@ -64,7 +65,7 @@ public:
 	dword getValue(dword obj,dword key);
 	std::string findID(dword id);
 	dword findValue(dword key,dword value);
-	void Render(cGrannyFile *animation,  float & curTime, cCharacterLight * character_light, float r, float g, float b, float alpha, bool is_corpse);
+	void Render(cOgreGrannyWrapper* pGrannyWrapper,cGrannyFile *animation,  float & curTime, cCharacterLight * character_light, float r, float g, float b, float alpha, bool is_corpse);
 
 	void setID(int id) { m_id = id; }
 	int id() { return m_id; }
@@ -80,7 +81,15 @@ public:
 
 	bool loadTexture( const char *basepath );
 
-	// Returns the GL Texture Identifier
+	/// returns a ogre material name or 0
+	const char* getOgreMaterial() const {
+		if( m_texture )
+			return m_texture->GetModelMaterial();
+		else
+			return 0;
+	}
+
+	// Returns the GL Texture Identifier	
 	GLuint getTexture() const
 	{
 		if( m_texture )
@@ -105,7 +114,7 @@ protected:
 	void initBone();
 	void mainChunk();
 	int getFrame (cGrannyFile * animation, float & curTime);
-	cDeformedArray * createDeformed (cGrannyFile * animation, float time, std::list<Mesh>::iterator imesh);
+	cDeformedArray * createDeformed (cOgreGrannyWrapper* pGrannyWrapper,cGrannyFile * animation, float time, std::list<Mesh>::iterator imesh);
 	ItemList copyright,object,final;
 	cGrannyStream *m_stream;
 	Texture *m_texture; // Our main Texture
@@ -122,7 +131,7 @@ public:
 	virtual ~cGrannyAnimation();
 	void Assign (cGrannyFile * model);
 	dword * GetAnimBones(void);
-	void getSkeleton( Bone *bone, float & curTime );
+	void getSkeleton( cOgreGrannyWrapper* pGrannyWrapper,Bone *bone, float & curTime );
 	virtual float length () {
 		return m_length;
 	}

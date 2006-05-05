@@ -490,7 +490,7 @@ void cGrannyLoader::Clear()
 
 
 
-void cGrannyLoader::Render (Uint32 id, Uint32 type, float &curtime,
+void cGrannyLoader::Render (cOgreGrannyWrapper* pGrannyWrapper,Uint32 id, Uint32 type, float &curtime,
 							cCharacterLight * character_light, float r,
 							float g, float b, float alpha,
 							GrnMatrix * left_matrix, GrnMatrix * right_matrix,
@@ -504,13 +504,13 @@ void cGrannyLoader::Render (Uint32 id, Uint32 type, float &curtime,
 	{
 		assert (iter->second);
 
-		iter->second->Render (type, tick, curtime, left_matrix, right_matrix,
+		iter->second->Render (pGrannyWrapper,type, tick, curtime, left_matrix, right_matrix,
 			character_light, r, g, b, alpha, is_corpse);
 	}
 
 }
 
-void cGrannyLoader::Render( Uint32 id, Uint32 type, float &curtime, cCharacterLight *character_light, float r,
+void cGrannyLoader::Render( cOgreGrannyWrapper* pGrannyWrapper,Uint32 id, Uint32 type, float &curtime, cCharacterLight *character_light, float r,
 							float g, float b, float alpha, std::vector<int> bodyparts, GrnMatrix *left_matrix,
 							GrnMatrix *right_matrix, bool is_corpse )
 {
@@ -525,7 +525,7 @@ void cGrannyLoader::Render( Uint32 id, Uint32 type, float &curtime, cCharacterLi
 		{
 			cGrannyModelAOS *model = dynamic_cast<cGrannyModelAOS *>( iter->second );
 			model->setBodyParts( bodyparts );
-			model->Render( type, tick, curtime, left_matrix, right_matrix, character_light, r, g, b, alpha, is_corpse );
+			model->Render( pGrannyWrapper,type, tick, curtime, left_matrix, right_matrix, character_light, r, g, b, alpha, is_corpse );
 		}
 	}
 
