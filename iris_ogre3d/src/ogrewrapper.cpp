@@ -216,7 +216,8 @@ bool	cOgreWrapper::Init			() {PROFILE
 	mpText->setVerticalAlignment(Ogre::GVA_TOP);
 	mpText->setCaption("iris with ogre");
 	mpText->setCharHeight(16); // TODO : unhardcode
-	mpText->setFontName("TrebuchetMSBold"); // TODO : unhardcode
+	//mpText->setFontName("TrebuchetMSBold"); // TODO : unhardcode
+	mpText->setFontName("BlueHighway"); // TODO : unhardcode
 	
 	mpOverlayGUI->add2D(mpPanel);
 	mpPanel->addChild(mpText);
