@@ -7,6 +7,34 @@
 #include <OgreKeyEvent.h>
 #include "profile.h"
 
+#ifdef WIN32   
+ 
+#ifndef snprintf  
+     #define snprintf _snprintf  
+#endif  
+ 
+#ifndef vsnprintf   
+     #define vsnprintf _vsnprintf  
+#endif  
+ 
+#else  
+     #include <unistd.h> 
+     #include <sys/stat.h>  
+ 
+#ifndef stricmp   
+     #define stricmp strcasecmp  
+#endif  
+  
+#ifndef _strnicmp   
+     #define _strnicmp strncasecmp  
+#endif  
+ 
+#ifndef strnicmp   
+     #define strnicmp strncasecmp  
+#endif  
+
+#endif 
+
 #ifndef stricmp
 	#define stricmp strcasecmp
 #endif
