@@ -231,7 +231,6 @@ void Renderer3D::RenderScene( void )
 {PROFILE
 	
 	
-	
 	if ( pClient )
 	{
 		cCharacter *player_character = pClient->player_character();
@@ -558,7 +557,6 @@ void Renderer3D::RenderTerrain (bool do_culling)
   int blocky = pCamera.GetBlockY ();
 
   for (int y = -view_distance; y < view_distance; y++)
-
     for (int x = -view_distance; x < view_distance; x++)
         {
           cMapblock3D *block = reinterpret_cast < cMapblock3D * >(pMapbufferHandler.buffer ()->CreateBlock (blockx + x, blocky + y));
@@ -632,11 +630,23 @@ void Renderer3D::RenderDynamics( bool do_culling )
 
 	dynamiclist_t *dynamics = pDynamicObjectList.GetList();
 	dynamiclist_t::iterator iter;
+	
+	
+	static bool debug_hidedynamics = false;
+	static bool debug_hidedynamics_keydown = false;
+	if (cInput::bKeys[cInput::kkey_8]) {
+		if (!debug_hidedynamics_keydown) {
+			debug_hidedynamics = !debug_hidedynamics;
+			debug_hidedynamics_keydown = true;
+		}
+	} else debug_hidedynamics_keydown = false;
 
 	for ( iter = dynamics->begin(); iter != dynamics->end(); iter++ )
 	{
 		cDynamicObject *object = iter->second;
 		bool bVisible = ( object->x >= min_x ) && ( object->y >= min_y ) && ( object->x <= max_x ) && ( object->y <= max_y );
+		if (debug_hidedynamics) bVisible = false;
+		
 		if ( bVisible )
 		{
 			if ( object->fader )
@@ -691,6 +701,17 @@ void Renderer3D::RenderCharacters (bool do_culling)
 
 	bool bVisible;
 	
+	
+
+	static bool debug_hidechars = false;
+	static bool debug_hidechars_keydown = false;
+	if (cInput::bKeys[cInput::kkey_9]) {
+		if (!debug_hidechars_keydown) {
+			debug_hidechars = !debug_hidechars;
+			debug_hidechars_keydown = true;
+		}
+	} else debug_hidechars_keydown = false;
+	
   // glEnable (GL_CULL_FACE); // ghoulsblade : deactivated
   for (iter = characters->begin (); iter != characters->end (); iter++)
       {
@@ -700,11 +721,14 @@ void Renderer3D::RenderCharacters (bool do_culling)
 					(	(character->x () >= min_x) && (character->y () >= min_y) && 
 						(character->x () <= max_x) && (character->y () <= max_y));
 			
+		  if (debug_hidechars) bVisible = false;
+		  
 		  if  (!character->mpGrannyWrapper) 
 				character->mpGrannyWrapper = cOgreWrapper::GetSingleton().CreateOgreGrannyWrapper();
 		
 		  cOgreGrannyWrapper* pGrannyWrapper = character->mpGrannyWrapper;
-				
+			
+		  
 		  pGrannyWrapper->DrawStep(bVisible,character->fx () - dx, character->fy () - dy, character->fz () * 0.1f);
 		  
         if (bVisible) {
@@ -734,14 +758,26 @@ void Renderer3D::RenderCharacters (bool do_culling)
 			  
               pGrannyWrapper->glPushMatrix ();
               pGrannyWrapper->glLoadIdentity ();
-              //pGrannyWrapper->glScalef (-1.0f * scalex, 1.0f * scaley, 1.0f * scalez); // ghoulsblade : deactivated
-              pGrannyWrapper->glScalef (scalex, scaley, scalez); // ghoulsblade : added for testing
-               //pGrannyWrapper->glTranslatef (-0.5f, 0.5f, 0.0f); // ghoulsblade : deactivated
-              //pGrannyWrapper->glTranslatef (0.5f, 0.5f, 0.0f); // ghoulsblade : added for testing
-              //pGrannyWrapper->glRotatef (-character->angle (), 0.0f, 0.0f, 1.0f);
-              pGrannyWrapper->glRotatef (character->angle (), 0.0f, 0.0f, 1.0f);
-              pGrannyWrapper->glTranslatef (0.5, 0.5, 0.0f); // ghoulsblade : added for testing
-              pGrannyWrapper->glGetFloatv (cOgreGrannyWrapper::GL_MODELVIEW_MATRIX, matrix);
+			  
+			  /*
+			  orig : 
+              glScalef (-1.0f * scalex, 1.0f * scaley, 1.0f * scalez);
+              glTranslatef (-0.5f, 0.5f, 0.0f);
+              glRotatef (-character->angle (), 0.0f, 0.0f, 1.0f);
+			  */
+			  
+			pGrannyWrapper->glScalef (scalex, scaley, scalez); // ghoulsblade : added for testing
+			pGrannyWrapper->glTranslatef (0.5, 0.5, 0.0f); // ghoulsblade : added for testing
+			pGrannyWrapper->glRotatef (character->angle (), 0.0f, 0.0f, 1.0f);
+			
+			  
+			//pGrannyWrapper->glScalef (-1.0f * scalex, 1.0f * scaley, 1.0f * scalez); // ghoulsblade : deactivated
+			
+			  
+			  //pGrannyWrapper->glTranslatef (-0.5f, 0.5f, 0.0f); // ghoulsblade : deactivated
+			//pGrannyWrapper->glTranslatef (0.5f, 0.5f, 0.0f); // ghoulsblade : added for testing
+			//pGrannyWrapper->glRotatef (-character->angle (), 0.0f, 0.0f, 1.0f);
+			pGrannyWrapper->glGetFloatv (cOgreGrannyWrapper::GL_MODELVIEW_MATRIX, matrix);
                
 			  
 			  cCharacterLight *light = character->light ();

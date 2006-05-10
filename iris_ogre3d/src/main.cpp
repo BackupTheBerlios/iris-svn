@@ -42,6 +42,7 @@
 #include "ogrewrapper.h"
 #include "timer.h"
 #include "robinput.h"
+#include "OgreException.h"
 
 // #include "../Fluid/mmgr.h"
 
@@ -196,6 +197,10 @@ int main( int argc, char **args )
 	{
 		Logger::WriteLine( sException );
 	}
+    catch( Ogre::Exception& e ) {
+		Logger::WriteLine( "Ogre::Exception :" );
+		Logger::WriteLine( e.getFullDescription() );
+    }
 	catch ( ... )
 	{
 		Logger::WriteLine( "Unhandled exception" );

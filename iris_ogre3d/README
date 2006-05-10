@@ -134,3 +134,11 @@ SDL, SDL_ttf, SDL_mixer, SDL_net, SDL_image - http://www.libsdl.org	( libs/sdl )
 
 
 Copyright (©) 2003-2006 Iris Team
+
+OgrePort Debug Keys :
+holding i moves the cam back 
+holding k moves the cam forward
+pressing 9 toggles character display
+pressing 8 toggles dynamic display
+pressing 7 toggles static&terrain display
+

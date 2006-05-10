@@ -216,8 +216,11 @@ bool	cOgreWrapper::Init			() {PROFILE
 	mpText->setVerticalAlignment(Ogre::GVA_TOP);
 	mpText->setCaption("iris with ogre");
 	mpText->setCharHeight(16); // TODO : unhardcode
-	//mpText->setFontName("TrebuchetMSBold"); // TODO : unhardcode
+	#ifdef WIN32
 	mpText->setFontName("BlueHighway"); // TODO : unhardcode
+	#else
+	mpText->setFontName("TrebuchetMSBold"); // TODO : unhardcode
+	#endif
 	
 	mpOverlayGUI->add2D(mpPanel);
 	mpPanel->addChild(mpText);
@@ -699,7 +702,7 @@ class cOgreGrannyWrapperImpl : public cOgreGrannyWrapper { public:
 	
 	static void FillMatrixFromBuffer (Ogre::Matrix4& matrix,const float* buf) { 
 		Real* row;
-		/*
+		//*
 		row = matrix[0]; row[0] = buf[ 0]; row[1] = buf[ 4]; row[2] = buf[ 8]; row[3] = buf[12];
 		row = matrix[1]; row[0] = buf[ 1]; row[1] = buf[ 5]; row[2] = buf[ 9]; row[3] = buf[13];
 		row = matrix[2]; row[0] = buf[ 2]; row[1] = buf[ 6]; row[2] = buf[10]; row[3] = buf[14];
@@ -713,7 +716,7 @@ class cOgreGrannyWrapperImpl : public cOgreGrannyWrapper { public:
 	}
 	static void FillBufferFromMatrix (float* buf,const Ogre::Matrix4& matrix) { 
 		const Real* row;
-		/*
+		//*
 		row = matrix[0]; buf[ 0] = row[0]; buf[ 4] = row[1]; buf[ 8] = row[2]; buf[12] = row[3];
 		row = matrix[1]; buf[ 1] = row[0]; buf[ 5] = row[1]; buf[ 9] = row[2]; buf[13] = row[3];
 		row = matrix[2]; buf[ 2] = row[0]; buf[ 6] = row[1]; buf[10] = row[2]; buf[14] = row[3];
@@ -730,15 +733,27 @@ class cOgreGrannyWrapperImpl : public cOgreGrannyWrapper { public:
 	virtual void	glPopMatrix		() { mCurMatrix = mlMatrixStack.back(); mlMatrixStack.pop_back(); }
 	virtual void	glLoadIdentity	() { mCurMatrix.makeTrans(Vector3::ZERO); }
 	virtual void	glLoadMatrixf	(const float* m) { FillMatrixFromBuffer(mCurMatrix,m); }
+	virtual void	glGetFloatv		(const eMatrixType type,float* buf) { FillBufferFromMatrix(buf,mCurMatrix); }
+	
+	/*
 	virtual void	glMultMatrixf	(const float* m) {
 		static Ogre::Matrix4 mulmat; 
 		FillMatrixFromBuffer(mulmat,m);
 		mCurMatrix = mulmat * mCurMatrix;
 	}
-	virtual void	glGetFloatv		(const eMatrixType type,float* buf) { FillBufferFromMatrix(buf,mCurMatrix); }
 	virtual void	glScalef		(const float x,const float y,const float z) { mCurMatrix = Matrix4::getScale(x,y,z) * mCurMatrix; }
 	virtual void	glTranslatef	(const float x,const float y,const float z) { mCurMatrix = Matrix4::getTrans(x,y,z) * mCurMatrix; }
 	virtual void	glRotatef		(const float ang,const float x,const float y,const float z) { mCurMatrix = Matrix4(Quaternion(Degree(ang),Vector3(x,y,z))) * mCurMatrix; }
+	/*/
+	virtual void	glMultMatrixf	(const float* m) {
+		static Ogre::Matrix4 mulmat; 
+		FillMatrixFromBuffer(mulmat,m);
+		mCurMatrix = mCurMatrix * mulmat;
+	}
+	virtual void	glScalef		(const float x,const float y,const float z) { mCurMatrix = mCurMatrix * Matrix4::getScale(x,y,z); }
+	virtual void	glTranslatef	(const float x,const float y,const float z) { mCurMatrix = mCurMatrix * Matrix4::getTrans(x,y,z); }
+	virtual void	glRotatef		(const float ang,const float x,const float y,const float z) { mCurMatrix = mCurMatrix * Matrix4(Quaternion(Degree(ang),Vector3(x,y,z))); }
+	//*/
 	
 	virtual void	glColor3f		(const float r,const float g,const float b) {}
 	virtual void	glColor4f		(const float r,const float g,const float b,const float a) {}

@@ -272,7 +272,7 @@ void GUIHandler::Draw (void)    //Uint16 hue)
   */
 
 	bool myshowcursor = false;
-  if ( Config::GetCursor() == 1 )
+  if ( Config::GetCursor() == 1)
       {
         int cursor_id = 2;
         if ((Game::GetInstance()->click_mode () == CLICK_TARGET_ID)

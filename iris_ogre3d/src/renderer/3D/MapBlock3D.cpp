@@ -33,6 +33,7 @@
 #include "Geometry.h"
 #include "renderer/MapBuffer.h"
 #include "ogrewrapper.h"
+#include "robinput.h"
 #include <Ogre.h>
 
 
@@ -404,7 +405,13 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 
 int tile_coords[4][2] = { {0, 0}, {0, 1}, {1, 1}, {1, 0} };
 
+
+bool debug_hidestatic = false;
+
 void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float move_x, float move_y) {PROFILE
+	if (debug_hidestatic) return;
+	
+	
 	if (!mpSceneNode) {
 		printf("cMapblock3D::DrawStep(%d,%d) : CreateGfx\n",x,y);
 		bChangedRelPos = true;
@@ -498,6 +505,7 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 		lastx = x;
 		lasty = y;
 	}
+	
 	if (lastframedrawn != cOgreWrapper::miFrameNum-1 && !bVisible) { 
 		mpSceneNode->setVisible(true); bVisible = true;
 		printf("cMapblock3D::DrawStep(%d,%d) : setVisible true\n",x,y);
@@ -527,8 +535,18 @@ void	cMapblock3D::DestroyGfx	() {PROFILE
 
 /// called every frame for all blocks
 void	cMapblock3D::Step	() {
-	// TODO : hide if not drawn lastframe
 	
+	// hides terrain + statics
+	static bool debug_hidestatic_keydown = false;
+	if (cInput::bKeys[cInput::kkey_7]) {
+		if (!debug_hidestatic_keydown) {
+			debug_hidestatic = !debug_hidestatic;
+			debug_hidestatic_keydown = true;
+		}
+	} else debug_hidestatic_keydown = false;
+	if (debug_hidestatic) lastframedrawn = 0;
+	
+	// hide if not drawn lastframe
 	if (mpSceneNode && lastframedrawn != cOgreWrapper::miFrameNum && bVisible) { 
 		printf("cMapblock3D::Step() : setVisible false\n");
 		mpSceneNode->setVisible(false); 
