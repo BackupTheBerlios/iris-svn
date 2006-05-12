@@ -26,7 +26,7 @@
 #include "ogrewrapper.h"
 #include <Ogre.h>
 #include <OgreManualObject.h>
-
+#include <set>
 
 
 
@@ -557,72 +557,81 @@ const char* cStaticModel::GetOgreMeshName () {PROFILE
 		
 		Ogre::ManualObject* myManualObject = cOgreWrapper::GetSingleton().mSceneMgr->createManualObject(cOgreWrapper::GetUniqueName());
 		
-		// TODO : ghoulsblade : sort faces by material first ? doesn't seem neccessary, material change count has been very low during testing
-		// TODO : ghoulsblade : (low-prio) store texturecoords also in "node", then indexes can be used efficiently
-		printf("cStaticModel::GetOgreMeshName::firstload : numfaces=%d\n",m_faces.size());
+		std::set<int> textureset;
 		for (iCurFace=0;iCurFace<m_faces.size();++iCurFace) {
 			face = m_faces[iCurFace];
-			if (face->m_texture != iCurTexture || iMaterialChangeCounter == 0) {
-				// update material
-				if (iMaterialChangeCounter > 0) myManualObject->end();
-				++iMaterialChangeCounter;
-				iCurTexture = face->m_texture;
-				printf("cStaticModel::GetOgreMeshName::firstload : iCurTexture=%d\n",iCurTexture);
+			textureset.insert(face->m_texture);
+		}
+		
+		// TODO : ghoulsblade : sort faces by material first ? doesn't seem neccessary, material change count has been very low during testing
+		// TODO : ghoulsblade : (low-prio) store texturecoords also in "node", then indexes can be used efficiently
+		printf("cStaticModel::GetOgreMeshName::firstload : numfaces=%d textureset.size()=%d\n",m_faces.size(),textureset.size());
+		for (std::set<int>::iterator itor = textureset.begin();itor != textureset.end();++itor) {
+			
+			// update material
+			if (iMaterialChangeCounter > 0) myManualObject->end();
+			++iMaterialChangeCounter;
+			iCurTexture = *itor;
+			
+			if (iCurTexture >= 0)
+					szMaterialName = texture_loader->GetTexture(iCurTexture)->GetModelMaterial();
+			else	szMaterialName = TextureBuffer::GetInstance()->GetArtTexture(-iCurTexture + 16384)->GetModelMaterial();
+			myManualObject->begin(szMaterialName);
+			vertexcount = 0;
+		
+			// draw all faces with this material
+			for (iCurFace=0;iCurFace<m_faces.size();++iCurFace) {
+				face = m_faces[iCurFace];
+				if (face->m_texture != *itor) continue;
 				
-				if (iCurTexture >= 0)
-						szMaterialName = texture_loader->GetTexture(iCurTexture)->GetModelMaterial();
-				else	szMaterialName = TextureBuffer::GetInstance()->GetArtTexture(-iCurTexture + 16384)->GetModelMaterial();
-				myManualObject->begin(szMaterialName);
-				vertexcount = 0;
-			}
-			
-			bool bUseNodeNormals = !(m_flags & MODELFLAG_TILEABLE);
-			// if bUseNodeNormals then every vertex(=node) has its own normal
-			// otherwise the whole face has a single normal
-			// TODO : determine from faceflags which system to use ? 
-				// alsway false is bad : round things like candles look edgy
-				// always true is bad : wall parts are wrongfully smoothened around the edges, looks ugly
-			// note : m_vertieces[face->m_node_indices[i]].x is equal to node->m_position[0]
-			
-			 
-				// node->m_normal  face->m_nodes
-			
-			for (i=2;i>=0;--i) {
-				node = face->m_nodes[i];
-				myManualObject->position(	node->m_position[0],
-											node->m_position[1],
-											node->m_position[2] );
-				if (bUseNodeNormals) {
-					myManualObject->normal(		node->m_normal[0],
-												node->m_normal[1],
-												node->m_normal[2]);
-				} else {
-					myManualObject->normal(		face->m_normal[0],
-												face->m_normal[1],
-												face->m_normal[2]);
+				bool bUseNodeNormals = !(m_flags & MODELFLAG_TILEABLE);
+				// if bUseNodeNormals then every vertex(=node) has its own normal
+				// otherwise the whole face has a single normal
+				// TODO : determine from faceflags which system to use ? 
+					// alsway false is bad : round things like candles look edgy
+					// always true is bad : wall parts are wrongfully smoothened around the edges, looks ugly
+				// note : m_vertieces[face->m_node_indices[i]].x is equal to node->m_position[0]
+				
+				 
+					// node->m_normal  face->m_nodes
+				
+				for (i=2;i>=0;--i) {
+					node = face->m_nodes[i];
+					myManualObject->position(	node->m_position[0],
+												node->m_position[1],
+												node->m_position[2] );
+					if (bUseNodeNormals) {
+						myManualObject->normal(		node->m_normal[0],
+													node->m_normal[1],
+													node->m_normal[2]);
+					} else {
+						myManualObject->normal(		face->m_normal[0],
+													face->m_normal[1],
+													face->m_normal[2]);
+					}
+					myManualObject->textureCoord(	face->m_texcoords[i][0],
+													face->m_texcoords[i][1]);
+					myManualObject->index(vertexcount++);
 				}
-				myManualObject->textureCoord(	face->m_texcoords[i][0],
-												face->m_texcoords[i][1]);
-				myManualObject->index(vertexcount++);
-			}
-			
-			if (face->m_flags & FACEFLAG_BACKFACE) for (i=0;i<3;++i) {
-				 node = face->m_nodes[i];
-				myManualObject->position(	node->m_position[0],
-											node->m_position[1],
-											node->m_position[2] );
-				if (bUseNodeNormals) {
-					myManualObject->normal(		node->m_normal[0],
-												node->m_normal[1],
-												node->m_normal[2]);
-				} else {
-					myManualObject->normal(		face->m_normal[0],
-												face->m_normal[1],
-												face->m_normal[2]);
+				
+				if (face->m_flags & FACEFLAG_BACKFACE) for (i=0;i<3;++i) {
+					 node = face->m_nodes[i];
+					myManualObject->position(	node->m_position[0],
+												node->m_position[1],
+												node->m_position[2] );
+					if (bUseNodeNormals) {
+						myManualObject->normal(		node->m_normal[0],
+													node->m_normal[1],
+													node->m_normal[2]);
+					} else {
+						myManualObject->normal(		face->m_normal[0],
+													face->m_normal[1],
+													face->m_normal[2]);
+					}
+					myManualObject->textureCoord(	face->m_texcoords[i][0],
+													face->m_texcoords[i][1]);
+					myManualObject->index(vertexcount++);
 				}
-				myManualObject->textureCoord(	face->m_texcoords[i][0],
-												face->m_texcoords[i][1]);
-				myManualObject->index(vertexcount++);
 			}
 		}
 		if (iMaterialChangeCounter > 0) myManualObject->end();

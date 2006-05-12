@@ -453,7 +453,7 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 			for (int tx = 0; tx < 8; tx++) for (int ty = 0; ty < 8; ty++) {
 				texture = TextureBuffer::GetInstance()->GetGroundTexture (groundids[ty][tx]);
 				if (texture)  {
-					mpManualObj->begin(texture->GetModelMaterial());
+					mpManualObj->begin(texture->GetGroundMaterial());
 				} else	{ 
 					printf("Failed to load ground texture %d for %d,%d\n",groundids[ty][tx],tx,ty);
 					continue;

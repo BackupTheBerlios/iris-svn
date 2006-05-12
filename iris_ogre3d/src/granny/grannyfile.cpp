@@ -382,7 +382,7 @@ cDeformedArray *cGrannyFile::createDeformed (cOgreGrannyWrapper* pGrannyWrapper,
 											 float time,
 											 list < Mesh >::iterator imesh)
 {
-	printf("cGrannyFile::createDeformed\n");
+	//printf("cGrannyFile::createDeformed\n");
 	cDeformedArray *deformed = NULL;
 
 	Bones & bones = getBones ();

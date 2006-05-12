@@ -35,7 +35,7 @@
 
 using namespace std;
 
-Texture::Texture() : gltex( 0 ), width( 0 ), height( 0 ), assigned( false ), bitmask( NULL )
+Texture::Texture() : gltex( 0 ), width( 0 ), height( 0 ), assigned( false ), bitmask( NULL ), mbHasAlpha(false)
 {PROFILE
 
 }
@@ -69,13 +69,27 @@ const char* Texture::GetModelMaterial () {PROFILE
 		msModelMaterialName = cOgreWrapper::GetUniqueName();
 		Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create(msModelMaterialName, "General");
 		material->getTechnique(0)->getPass(0)->createTextureUnitState(msTextureName);
-		material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBF_SOURCE_ALPHA,Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
-		material->getTechnique(0)->getPass(0)->setAlphaRejectSettings(Ogre::CMPF_GREATER,230); // 0.9*255 ~ 230
+		if (mbHasAlpha) material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBF_SOURCE_ALPHA,Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
+		if (mbHasAlpha) material->getTechnique(0)->getPass(0)->setAlphaRejectSettings(Ogre::CMPF_GREATER,230); // 0.9*255 ~ 230
 		//material->getTechnique(0)->getPass(0)->getTextureUnitState(0)->setTextureAddressingMode(Ogre::TextureUnitState::TAM_CLAMP);
 		material->load();
 	}
 	if (msModelMaterialName.size() > 0)
 			return msModelMaterialName.c_str();
+	else	return "BaseWhiteNoLighting";
+}
+
+const char* Texture::GetGroundMaterial () {PROFILE
+	if (msGroundMaterialName.size() == 0 && msTextureName.size() > 0) {
+		// Create material for use by the uo-granny models
+		msGroundMaterialName = cOgreWrapper::GetUniqueName();
+		Ogre::MaterialPtr material = Ogre::MaterialManager::getSingleton().create(msGroundMaterialName, "General");
+		material->getTechnique(0)->getPass(0)->createTextureUnitState(msTextureName);
+		material->setLightingEnabled(false);
+		material->load();
+	}
+	if (msGroundMaterialName.size() > 0)
+			return msGroundMaterialName.c_str();
 	else	return "BaseWhiteNoLighting";
 }
 
@@ -91,7 +105,7 @@ const char* Texture::GetGUIMaterial () {PROFILE
 		material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
 		material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 		//material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBT_MODULATE);
-		material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBF_SOURCE_ALPHA,Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
+		if (mbHasAlpha) material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SBF_SOURCE_ALPHA,Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
 		//material->getTechnique(0)->getPass(0)->setAlphaRejectSettings(Ogre::CMPF_GREATER,1);
 		material->load();
 		/*
@@ -141,6 +155,7 @@ int Texture::LoadFromData (void *data, int width, int height,
 			Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
 			//imgstream, width, height, (bits_per_pixel == 32) ? Ogre::PF_A8B8G8R8 : Ogre::PF_B8G8R8);
 			imgstream, width, height, (bits_per_pixel == 32) ? Ogre::PF_BYTE_RGBA  : Ogre::PF_BYTE_RGB);
+	  mbHasAlpha = bits_per_pixel == 32;
 	tex->load();
 	imgstream->close ();
 	

@@ -77,8 +77,11 @@ public:
    std::string msTextureName;
    std::string msGUIMaterialName;
    std::string msModelMaterialName;
+   std::string msGroundMaterialName;
+   bool		   mbHasAlpha;
    const char* GetGUIMaterial ();
    const char* GetModelMaterial ();
+   const char* GetGroundMaterial ();
    
    bool CheckPixel(int x, int y, bool swapy = false);
 

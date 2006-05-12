@@ -254,7 +254,9 @@ bool	cOgreWrapper::Init			() {PROFILE
 		
         // Create a light
         gMainLight = mSceneMgr->createLight("MainLight");
-        gMainLight->setPosition(0,0,40);
+        gMainLight->setType(Ogre::Light::LT_DIRECTIONAL);
+        //gMainLight->setPosition(0,0,40);
+        gMainLight->setDirection(1,1,-1);
 		
 		DrawOneFrame();
 		
@@ -786,7 +788,7 @@ class cOgreGrannyWrapperImpl : public cOgreGrannyWrapper { public:
 		
 	virtual void	DrawStep		(const bool bVisible,const float x,const float y,const float z) {
 		if (minmaxinit) {
-			printf("min(%0.1f,%0.1f,%0.1f),max(%0.1f,%0.1f,%0.1f)\n",mvMin.x,mvMin.y,mvMin.z,mvMax.x,mvMax.y,mvMax.z);
+			//printf("min(%0.1f,%0.1f,%0.1f),max(%0.1f,%0.1f,%0.1f)\n",mvMin.x,mvMin.y,mvMin.z,mvMax.x,mvMax.y,mvMax.z);
 			minmaxinit = false;
 		}
 		if (!bVisible && !mpSceneNode) return;
