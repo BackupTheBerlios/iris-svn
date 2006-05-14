@@ -303,8 +303,14 @@ void GUIHandler::Draw (void)    //Uint16 hue)
 					last_cursor_id = cursor_id;
 					
 					mPanel_cursor->setUV(0,1,1,0);
+					mPanel_cursor->setMaterialName("BaseWhiteNoLighting");
 					mPanel_cursor->setMaterialName(tex_cursors[cursor_id]->GetGUIMaterial());
-					mPanel_cursor->setDimensions(tex_cursors[cursor_id]->GetWidth(),tex_cursors[cursor_id]->GetHeight());
+					float cw = tex_cursors[cursor_id]->GetWidth();
+					float ch = tex_cursors[cursor_id]->GetHeight();
+					if (ch < 0) ch = -ch;
+					if (cw < 0) cw = -cw;
+					mPanel_cursor->setDimensions(cw,ch);
+					printf("cursor w=%f h=%f\n",(float)tex_cursors[cursor_id]->GetWidth(),(float)tex_cursors[cursor_id]->GetHeight());
 				}
 				cursorx = cInput::iMouse[0]; // todo : replace by mousemotionevent
 				cursory = cInput::iMouse[1];
