@@ -262,6 +262,7 @@ void cInput::MouseStateUpdate (const int iAbsX,const int iAbsY,const int iRelZ,c
 		if (init_lastabs) {
 			lastabsx = iAbsX;
 			lastabsy = iAbsY;
+			init_lastabs = false;
 		}
 		iMouse[0] += iAbsX - lastabsx;
 		iMouse[1] += iAbsY - lastabsy;
