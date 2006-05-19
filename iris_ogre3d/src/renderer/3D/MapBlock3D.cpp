@@ -52,6 +52,7 @@ int environment_table[8][2] =
 cMapblock3D::cMapblock3D( int blockx, int blocky ) : cMapblock( blockx, blocky )
 {PROFILE
 	mpSceneNode = 0;
+	mpStaticGeom = 0;
 	cullmode = 0;
 	_generated = false;
 
@@ -408,6 +409,10 @@ int tile_coords[4][2] = { {0, 0}, {0, 1}, {1, 1}, {1, 0} };
 
 bool debug_hidestatic = false;
 
+
+// ghoulsblade : i tried a little experiment with the ogre static geometry object, but didn't get the positions right somehow, retry this later, don't have time now...
+#define IRIS_USE_STATIC_GEOMETRY 0
+
 void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float move_x, float move_y) {PROFILE
 	if (debug_hidestatic) return;
 	
@@ -416,7 +421,12 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 		printf("cMapblock3D::DrawStep(%d,%d) : CreateGfx\n",x,y);
 		bChangedRelPos = true;
 		bVisible = false;
-		mpSceneNode = cOgreWrapper::GetSingleton().mSceneMgr->getRootSceneNode()->createChildSceneNode();
+		
+		#if IRIS_USE_STATIC_GEOMETRY
+		mpSceneNode = cOgreWrapper::GetSingleton().mSceneMgr->createSceneNode();  // for using Ogre::StaticGeometry
+		#else
+		mpSceneNode = cOgreWrapper::GetSingleton().mSceneMgr->getRootSceneNode()->createChildSceneNode(); // for standard attachment
+		#endif
 		
 		Ogre::SceneNode* pChildNode; // quick and dirty to see something, should be moved to sStaticObject, but that requires some restructuring
 		printf("cMapblock3D::DrawStep, creating %d subobjects\n",objects.count ());
@@ -493,10 +503,17 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 			pUserObject->mpCharacter = 0;
 			mpManualObj->setUserObject(pUserObject);
 		}
+		
+		#if IRIS_USE_STATIC_GEOMETRY
+			mpStaticGeom = cOgreWrapper::GetSingleton().mSceneMgr->createStaticGeometry(cOgreWrapper::GetUniqueName());
+			//mpStaticGeom->addSceneNode(mpSceneNode);
+			//mpStaticGeom->build();
+		#endif
 	}
 	if (!mpSceneNode) return;
 	
 	if (!bChangedRelPos && (lastx != x || lasty != y)) bChangedRelPos = true;
+	
 	
 	if (bChangedRelPos) {
 		printf("cMapblock3D::DrawStep(%d,%d) : setPosition\n",x,y);
@@ -504,17 +521,34 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 		bChangedRelPos = false;
 		lastx = x;
 		lasty = y;
+		
+		if (bVisible) {
+			#if IRIS_USE_STATIC_GEOMETRY
+			mpStaticGeom->destroy();
+			mpStaticGeom->reset();
+			mpStaticGeom->addSceneNode(mpSceneNode);
+			mpStaticGeom->build();
+			#endif
+		}
 	}
 	
 	if (lastframedrawn != cOgreWrapper::miFrameNum-1 && !bVisible) { 
 		mpSceneNode->setVisible(true); bVisible = true;
 		printf("cMapblock3D::DrawStep(%d,%d) : setVisible true\n",x,y);
+		
+		#if IRIS_USE_STATIC_GEOMETRY
+		mpStaticGeom->destroy();
+		mpStaticGeom->reset();
+		mpStaticGeom->addSceneNode(mpSceneNode);
+		mpStaticGeom->build();
+		#endif
 	}
 	lastframedrawn = cOgreWrapper::miFrameNum;
 }
 
 
 void	cMapblock3D::DestroyGfx	() {PROFILE
+	printf("cMapblock3D::DestroyGfx start");
 	DEBUG_PRINT_WITH_STACKTRACE("cMapblock3D::DestroyGfx")
 	if (!mpSceneNode) return;
 	mpSceneNode->setVisible(false);
@@ -531,6 +565,13 @@ void	cMapblock3D::DestroyGfx	() {PROFILE
 		cOgreWrapper::GetSingleton().mSceneMgr->destroyManualObject(mpManualObj);
 		mpManualObj = 0;
 	}
+	
+	#if IRIS_USE_STATIC_GEOMETRY
+	if (mpStaticGeom) {
+		cOgreWrapper::GetSingleton().mSceneMgr->destroyStaticGeometry(mpStaticGeom->getName());
+	}
+	#endif
+	printf("cMapblock3D::DestroyGfx end");
 }
 
 /// called every frame for all blocks
@@ -551,6 +592,10 @@ void	cMapblock3D::Step	() {
 		printf("cMapblock3D::Step() : setVisible false\n");
 		mpSceneNode->setVisible(false); 
 		bVisible = false;
+		#if IRIS_USE_STATIC_GEOMETRY
+		mpStaticGeom->destroy();
+		mpStaticGeom->reset();
+		#endif
 	}
 }
 

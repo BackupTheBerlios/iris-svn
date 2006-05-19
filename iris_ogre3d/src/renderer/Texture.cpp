@@ -147,7 +147,11 @@ int Texture::LoadFromData (void *data, int width, int height,
         return (false);
       }
 
-	  
+	  static size_t iNumTexturesLoaded = 0;
+	  static size_t iTotalTextureDataSize = 0;
+	  ++iNumTexturesLoaded;
+	  iTotalTextureDataSize += width * height * ((bits_per_pixel == 32) ? 4 : 3);
+	  printf("\n\niNumTexturesLoaded=%d, iTotalTextureDataSize=%d bytes= %d kb\n",iNumTexturesLoaded,iTotalTextureDataSize,iTotalTextureDataSize/1024);
 	 
 	msTextureName = cOgreWrapper::GetUniqueName();
 	Ogre::DataStreamPtr imgstream(new Ogre::MemoryDataStream(data, width * height * (bits_per_pixel/8)));

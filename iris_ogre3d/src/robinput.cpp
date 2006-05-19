@@ -257,17 +257,17 @@ void cInput::Step() { PROFILE
 /// checks for change and generates events (process unbuffered mouse input from ogre)
 void cInput::MouseStateUpdate (const int iAbsX,const int iAbsY,const int iRelZ,const bool b1,const bool b2,const bool b3) { PROFILE
 	#ifdef WIN32
-		static int lastabsx,lastabsy;
+		static int firstabsx,firstabsy;
 		static bool init_lastabs = true;
 		if (init_lastabs) {
-			lastabsx = iAbsX;
-			lastabsy = iAbsY;
+			firstabsx = iAbsX;
+			firstabsy = iAbsY;
 			init_lastabs = false;
 		}
-		iMouse[0] += iAbsX - lastabsx;
-		iMouse[1] += iAbsY - lastabsy;
-		lastabsx = iAbsX;
-		lastabsy = iAbsY;
+		if (iAbsX - firstabsx < 0) firstabsx += iAbsX - firstabsx;
+		if (iAbsY - firstabsy < 0) firstabsy += iAbsY - firstabsy;
+		iMouse[0] = iAbsX - firstabsx;
+		iMouse[1] = iAbsY - firstabsy;
 	#else
 		iMouse[0] = iAbsX;
 		iMouse[1] = iAbsY;

@@ -303,7 +303,7 @@ void GUIHandler::Draw (void)    //Uint16 hue)
 					last_cursor_id = cursor_id;
 					
 					mPanel_cursor->setUV(0,1,1,0);
-					mPanel_cursor->setMaterialName("BaseWhiteNoLighting");
+					//mPanel_cursor->setMaterialName("BaseWhiteNoLighting");
 					mPanel_cursor->setMaterialName(tex_cursors[cursor_id]->GetGUIMaterial());
 					float cw = tex_cursors[cursor_id]->GetWidth();
 					float ch = tex_cursors[cursor_id]->GetHeight();

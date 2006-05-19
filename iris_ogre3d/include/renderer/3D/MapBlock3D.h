@@ -55,6 +55,7 @@ public:
    virtual ~cMapblock3D ();
    bool Generate(cLightNodeEnvironment & environment);
 
+	Ogre::StaticGeometry* 			mpStaticGeom;
 	Ogre::SceneNode* 				mpSceneNode;
 	Ogre::ManualObject*				mpManualObj; // only used for destruction
 	std::list<Ogre::Entity*>		mlEntities; // only used for destruction
