@@ -456,14 +456,21 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 			}
 		}
 		
-		Texture *texture;
+		Texture *oldtexture;
+		Texture *newtexture;
 		// create manual object for terrain itself
 		if (1) {
-			mpManualObj = cOgreWrapper::GetSingleton().mSceneMgr->createManualObject(cOgreWrapper::GetUniqueName());			
+			mpManualObj = cOgreWrapper::GetSingleton().mSceneMgr->createManualObject(cOgreWrapper::GetUniqueName());	
+			oldtexture = 0;
 			for (int tx = 0; tx < 8; tx++) for (int ty = 0; ty < 8; ty++) {
-				texture = TextureBuffer::GetInstance()->GetGroundTexture (groundids[ty][tx]);
-				if (texture)  {
-					mpManualObj->begin(texture->GetGroundMaterial());
+				newtexture = TextureBuffer::GetInstance()->GetGroundTexture (groundids[ty][tx]);
+				//if (oldtexture) newtexture = oldtexture;  // speed check hack
+				if (newtexture)  {
+					if (oldtexture != newtexture) {
+						if (oldtexture) mpManualObj->end();
+						mpManualObj->begin(newtexture->GetGroundMaterial());
+						oldtexture = newtexture;
+					}
 				} else	{ 
 					printf("Failed to load ground texture %d for %d,%d\n",groundids[ty][tx],tx,ty);
 					continue;
@@ -490,8 +497,8 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 					mpManualObj->textureCoord(	curvertex->u,
 													curvertex->v);
 				}
-				mpManualObj->end();
 			}
+			if (oldtexture) mpManualObj->end();
 			mpManualObj->setCastShadows(false);
 			mpSceneNode->attachObject(mpManualObj);
 			
