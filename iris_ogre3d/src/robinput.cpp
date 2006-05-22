@@ -260,8 +260,8 @@ void cInput::MouseStateUpdate (const int iAbsX,const int iAbsY,const int iRelZ,c
 		static int firstabsx,firstabsy;
 		static bool init_lastabs = true;
 		if (init_lastabs) {
-			firstabsx = iAbsX;
-			firstabsy = iAbsY;
+			firstabsx = iAbsX-200;
+			firstabsy = iAbsY-200;
 			init_lastabs = false;
 		}
 		if (iAbsX - firstabsx < 0) firstabsx += iAbsX - firstabsx;
