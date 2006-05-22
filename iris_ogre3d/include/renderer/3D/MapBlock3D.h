@@ -45,6 +45,7 @@
 #include "renderer/3D/ShaderMatrixBlock.h"
 #include <OgrePrerequisites.h>
 #include <list>
+#include <string>
 
 // #include "../Fluid/mmgr.h"
 
@@ -57,8 +58,11 @@ public:
 
 	Ogre::StaticGeometry* 			mpStaticGeom;
 	Ogre::SceneNode* 				mpSceneNode;
-	Ogre::ManualObject*				mpManualObj; // only used for destruction
-	std::list<Ogre::Entity*>		mlEntities; // only used for destruction
+	std::string						msTerrainMeshName;
+	Ogre::ManualObject*				mpManualObj;
+	Ogre::Entity*					mpTerrainEntity;
+	std::list<Ogre::Entity*>		mlEntities;
+	std::map<struct sStaticObject*,Ogre::Entity*>		mlObjectEntityMap;
 	int lastx,lasty,lastframedrawn;
 	bool bVisible;
 	bool	bChangedRelPos;

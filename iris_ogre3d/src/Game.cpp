@@ -513,6 +513,10 @@ void Game::Handle( void )
 		if (found) {
 			pBBox->setupBoundingBox(found->getWorldBoundingBox());
 			if (!pBBox->isVisible()) pBBox->setVisible(true);
+			
+			Ogre::Vector3 mid = 0.5*(found->getWorldBoundingBox().getMaximum()+found->getWorldBoundingBox().getMinimum());
+			printf("mousepickmid = %f,%f,%f\n",mid.x,mid.y,mid.z);
+			
 		} else {
 			if (pBBox->isVisible()) pBBox->setVisible(false);
 		}

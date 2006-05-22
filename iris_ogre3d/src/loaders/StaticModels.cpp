@@ -27,6 +27,7 @@
 #include <Ogre.h>
 #include <OgreManualObject.h>
 #include <set>
+#include <map>
 
 
 
@@ -541,6 +542,9 @@ void cStaticModel::CreateVertieces ()
       }
 }
 
+
+std::map<int,int> gModelTextureUsageCounter;
+
 const char* cStaticModel::GetOgreMeshName () {PROFILE
 	if (m_faces.size() == 0) return 0;
 	if (!mbHasBeenRendered) {
@@ -562,6 +566,15 @@ const char* cStaticModel::GetOgreMeshName () {PROFILE
 			face = m_faces[iCurFace];
 			textureset.insert(face->m_texture);
 		}
+		
+		int texturecount = textureset.size();
+		gModelTextureUsageCounter[texturecount]++;
+		
+		printf("gModelTextureUsageCounter :"); 
+		for (std::map<int,int>::iterator it=gModelTextureUsageCounter.begin();it!=gModelTextureUsageCounter.end();++it) {
+			printf(" (%d,%d)",it->first,it->second);
+		}
+		printf("\n"); 
 		
 		// TODO : ghoulsblade : sort faces by material first ? doesn't seem neccessary, material change count has been very low during testing
 		// TODO : ghoulsblade : (low-prio) store texturecoords also in "node", then indexes can be used efficiently

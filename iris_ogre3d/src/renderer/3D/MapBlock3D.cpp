@@ -53,6 +53,8 @@ cMapblock3D::cMapblock3D( int blockx, int blocky ) : cMapblock( blockx, blocky )
 {PROFILE
 	mpSceneNode = 0;
 	mpStaticGeom = 0;
+	mpTerrainEntity = 0;
+	mpManualObj = 0;
 	cullmode = 0;
 	_generated = false;
 
@@ -410,146 +412,141 @@ int tile_coords[4][2] = { {0, 0}, {0, 1}, {1, 1}, {1, 0} };
 bool debug_hidestatic = false;
 
 
-// ghoulsblade : i tried a little experiment with the ogre static geometry object, but didn't get the positions right somehow, retry this later, don't have time now...
-#define IRIS_USE_STATIC_GEOMETRY 0
 
 void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float move_x, float move_y) {PROFILE
 	if (debug_hidestatic) return;
 	
-	
-	if (!mpSceneNode) {
-		printf("cMapblock3D::DrawStep(%d,%d) : CreateGfx\n",x,y);
-		bChangedRelPos = true;
-		bVisible = false;
-		
-		#if IRIS_USE_STATIC_GEOMETRY
-		mpSceneNode = cOgreWrapper::GetSingleton().mSceneMgr->createSceneNode();  // for using Ogre::StaticGeometry
-		#else
-		mpSceneNode = cOgreWrapper::GetSingleton().mSceneMgr->getRootSceneNode()->createChildSceneNode(); // for standard attachment
-		#endif
-		
-		Ogre::SceneNode* pChildNode; // quick and dirty to see something, should be moved to sStaticObject, but that requires some restructuring
-		printf("cMapblock3D::DrawStep, creating %d subobjects\n",objects.count ());
-		
-		for (unsigned int i = 0; i < objects.count (); i++) {
-			struct sStaticObject *object = objects.Get (i);
-			cStaticModel *model = StaticModelLoader::GetInstance()->getModel (object->tileid);
-			if (model) { // (!object->clip)
-				const char* meshname = model->GetOgreMeshName();
-				if (meshname) {
-					++cOgreWrapper::GetSingleton().miObjectCounter;
-					pChildNode = mpSceneNode->createChildSceneNode();
-					Ogre::Entity* x = cOgreWrapper::GetSingleton().mSceneMgr->createEntity(cOgreWrapper::GetUniqueName(),meshname);
-					mlEntities.push_back(x);
-					pChildNode->attachObject(x);
-					
-					cOgreUserObjectWrapper* pUserObject = new cOgreUserObjectWrapper();
-					pUserObject->mpMapBlock3D = this;
-					pUserObject->mpStaticObject = object;
-					pUserObject->mpEntity = x;
-					pUserObject->mpDynamicObject = 0;
-					pUserObject->mpCharacter = 0;
-					x->setUserObject(pUserObject);
-					
-					pChildNode->setPosition(object->x,object->y,object->z * 0.1f);
-				}
-			}
-		}
-		
+	// create manual object convert to mesh for terrain itself
+	if (!mpManualObj) {
+		msTerrainMeshName = cOgreWrapper::GetUniqueName();
 		Texture *oldtexture;
 		Texture *newtexture;
-		// create manual object for terrain itself
-		if (1) {
-			mpManualObj = cOgreWrapper::GetSingleton().mSceneMgr->createManualObject(cOgreWrapper::GetUniqueName());	
-			oldtexture = 0;
-			for (int tx = 0; tx < 8; tx++) for (int ty = 0; ty < 8; ty++) {
-				newtexture = TextureBuffer::GetInstance()->GetGroundTexture (groundids[ty][tx]);
-				//if (oldtexture) newtexture = oldtexture;  // speed check hack
-				if (newtexture)  {
-					if (oldtexture != newtexture) {
-						if (oldtexture) mpManualObj->end();
-						mpManualObj->begin(newtexture->GetGroundMaterial());
-						oldtexture = newtexture;
-					}
-				} else	{ 
-					printf("Failed to load ground texture %d for %d,%d\n",groundids[ty][tx],tx,ty);
-					continue;
+		mpManualObj = cOgreWrapper::GetSingleton().mSceneMgr->createManualObject(cOgreWrapper::GetUniqueName());	
+		int vertexcount;
+		oldtexture = 0;
+		for (int tx = 0; tx < 8; tx++) for (int ty = 0; ty < 8; ty++) {
+			newtexture = TextureBuffer::GetInstance()->GetGroundTexture (groundids[ty][tx]);
+			//if (oldtexture) newtexture = oldtexture;  // speed check hack
+			if (newtexture)  {
+				if (oldtexture != newtexture) {
+					if (oldtexture) mpManualObj->end();
+					mpManualObj->begin(newtexture->GetGroundMaterial());
+					oldtexture = newtexture;
+					vertexcount = 0;
 				}
-				
-				vertex*	vertices[] = {	&ground_vertieces[ty][tx],
-										&ground_vertieces[ty + 1][tx],
-										&ground_vertieces[ty + 1][tx + 1],
-										&ground_vertieces[ty][tx + 1],
-										};
-				/*
-				0	3
-				1	2
-				*/
-				int		indices[] = { 0,2,1, 0,3,2 };
-				for (int i=0;i<6;++i) {				
-					vertex* curvertex = vertices[indices[i]]; // float u, v, x, y, z; 
-					mpManualObj->position(		curvertex->x,
-													curvertex->y,
-													curvertex->z );
-					mpManualObj->normal(			0.0, // TODO : where to get the real normal ?!?
-													0.0,
-													1.0);
-					mpManualObj->textureCoord(	curvertex->u,
-													curvertex->v);
-				}
+			} else	{ 
+				printf("Failed to load ground texture %d for %d,%d\n",groundids[ty][tx],tx,ty);
+				continue;
 			}
-			if (oldtexture) mpManualObj->end();
-			mpManualObj->setCastShadows(false);
-			mpSceneNode->attachObject(mpManualObj);
 			
-			cOgreUserObjectWrapper* pUserObject = new cOgreUserObjectWrapper();
-			pUserObject->mpMapBlock3D = this;
-			pUserObject->mpStaticObject = 0;
-			pUserObject->mpEntity = 0;
-			pUserObject->mpDynamicObject = 0;
-			pUserObject->mpCharacter = 0;
-			mpManualObj->setUserObject(pUserObject);
+			vertex*	vertices[] = {	&ground_vertieces[ty][tx],
+									&ground_vertieces[ty + 1][tx],
+									&ground_vertieces[ty + 1][tx + 1],
+									&ground_vertieces[ty][tx + 1],
+									};
+			//0	3
+			//1	2
+			int		indices[] = { 0,2,1, 0,3,2 };
+			for (int i=0;i<6;++i) {				
+				vertex* curvertex = vertices[indices[i]]; // float u, v, x, y, z; 
+				mpManualObj->position(		curvertex->x,
+												curvertex->y,
+												curvertex->z );
+				mpManualObj->normal(			0.0, // TODO : where to get the real normal ?!?
+												0.0,
+												1.0);
+				mpManualObj->textureCoord(	curvertex->u,
+												curvertex->v);
+				mpManualObj->index(vertexcount++);
+			}
 		}
+		if (oldtexture) mpManualObj->end();
+		//mpManualObj->setCastShadows(false);
 		
-		#if IRIS_USE_STATIC_GEOMETRY
-			mpStaticGeom = cOgreWrapper::GetSingleton().mSceneMgr->createStaticGeometry(cOgreWrapper::GetUniqueName());
-			//mpStaticGeom->addSceneNode(mpSceneNode);
-			//mpStaticGeom->build();
-		#endif
+		mpManualObj->convertToMesh(msTerrainMeshName);
+		//mpSceneNode->attachObject(mpManualObj);
+		
+		mpTerrainEntity = cOgreWrapper::GetSingleton().mSceneMgr->createEntity(cOgreWrapper::GetUniqueName(),msTerrainMeshName);
+		mpTerrainEntity->setCastShadows(false);
+		
+		cOgreUserObjectWrapper* pUserObject = new cOgreUserObjectWrapper();
+		pUserObject->mpMapBlock3D = this;
+		pUserObject->mpStaticObject = 0;
+		pUserObject->mpEntity = 0;
+		pUserObject->mpDynamicObject = 0;
+		pUserObject->mpCharacter = 0;
+		mpManualObj->setUserObject(pUserObject);
 	}
-	if (!mpSceneNode) return;
+	
+	bool bMustRebuild = false;
+	if (!mpStaticGeom) {
+		mpStaticGeom = cOgreWrapper::GetSingleton().mSceneMgr->createStaticGeometry(cOgreWrapper::GetUniqueName());
+		bChangedRelPos = true;
+		bVisible = true;
+		bMustRebuild = true;
+	}
 	
 	if (!bChangedRelPos && (lastx != x || lasty != y)) bChangedRelPos = true;
-	
-	
 	if (bChangedRelPos) {
 		printf("cMapblock3D::DrawStep(%d,%d) : setPosition\n",x,y);
-		mpSceneNode->setPosition(move_x,move_y,0);
+		// mpSceneNode->setPosition(move_x,move_y,0);
 		bChangedRelPos = false;
+		bMustRebuild = true;
 		lastx = x;
 		lasty = y;
-		
-		if (bVisible) {
-			#if IRIS_USE_STATIC_GEOMETRY
-			mpStaticGeom->destroy();
-			mpStaticGeom->reset();
-			mpStaticGeom->addSceneNode(mpSceneNode);
-			mpStaticGeom->build();
-			#endif
-		}
 	}
 	
 	if (lastframedrawn != cOgreWrapper::miFrameNum-1 && !bVisible) { 
-		mpSceneNode->setVisible(true); bVisible = true;
-		printf("cMapblock3D::DrawStep(%d,%d) : setVisible true\n",x,y);
-		
-		#if IRIS_USE_STATIC_GEOMETRY
-		mpStaticGeom->destroy();
-		mpStaticGeom->reset();
-		mpStaticGeom->addSceneNode(mpSceneNode);
-		mpStaticGeom->build();
-		#endif
+		printf("cMapblock3D::DrawStep(%d,%d) : setbVisible\n",x,y);
+		bVisible = true;
+		bMustRebuild = true;
 	}
+	
+	if (bMustRebuild) {
+		mpStaticGeom->reset();
+		//mpStaticGeom->destroy();
+		//mpStaticGeom->addSceneNode(mpSceneNode);
+		
+		// add terrain
+		mpStaticGeom->addEntity(mpTerrainEntity,Ogre::Vector3(move_x,move_y,0));
+		
+		// add statics
+		for (unsigned int i = 0; i < objects.count (); i++) {
+			struct sStaticObject *object = objects.Get (i);
+			Ogre::Entity*& objentity = mlObjectEntityMap[object];
+			if (!objentity) {
+				// 	std::map<struct sStaticObject*,Ogre::Entity*>		mlObjectEntityMap;
+				cStaticModel *model = StaticModelLoader::GetInstance()->getModel (object->tileid);
+				if (model) { // (!object->clip)
+					const char* meshname = model->GetOgreMeshName();
+					if (meshname) {
+						objentity = cOgreWrapper::GetSingleton().mSceneMgr->createEntity(cOgreWrapper::GetUniqueName(),meshname);
+						mlEntities.push_back(objentity);
+						
+						cOgreUserObjectWrapper* pUserObject = new cOgreUserObjectWrapper();
+						pUserObject->mpMapBlock3D = this;
+						pUserObject->mpStaticObject = object;
+						pUserObject->mpEntity = objentity;
+						pUserObject->mpDynamicObject = 0;
+						pUserObject->mpCharacter = 0;
+						objentity->setUserObject(pUserObject);
+						
+						//pChildNode->setPosition(object->x,object->y,object->z * 0.1f);
+					}
+				} else {
+					printf("missing model for tileid %d\n",object->tileid);
+				}
+			}
+			if (objentity) {
+				mpStaticGeom->addEntity(objentity,Ogre::Vector3(move_x+object->x,move_y+object->y,object->z * 0.1f));
+			}
+		}
+		
+		
+		
+		mpStaticGeom->build();
+	}
+	
 	lastframedrawn = cOgreWrapper::miFrameNum;
 }
 
@@ -557,12 +554,12 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 void	cMapblock3D::DestroyGfx	() {PROFILE
 	printf("cMapblock3D::DestroyGfx start");
 	DEBUG_PRINT_WITH_STACKTRACE("cMapblock3D::DestroyGfx")
-	if (!mpSceneNode) return;
-	mpSceneNode->setVisible(false);
-	mpSceneNode->detachAllObjects();
-	mpSceneNode->removeAndDestroyAllChildren();
-	cOgreWrapper::GetSingleton().mSceneMgr->destroySceneNode(mpSceneNode->getName());
-	mpSceneNode = 0;
+	
+	
+	if (mpStaticGeom) {
+		cOgreWrapper::GetSingleton().mSceneMgr->destroyStaticGeometry(mpStaticGeom->getName());
+		mpStaticGeom = 0;
+	}
 	
 	for (std::list<Ogre::Entity*>::iterator itor=mlEntities.begin();itor!=mlEntities.end();++itor)
 		cOgreWrapper::GetSingleton().mSceneMgr->destroyEntity(*itor);
@@ -572,12 +569,6 @@ void	cMapblock3D::DestroyGfx	() {PROFILE
 		cOgreWrapper::GetSingleton().mSceneMgr->destroyManualObject(mpManualObj);
 		mpManualObj = 0;
 	}
-	
-	#if IRIS_USE_STATIC_GEOMETRY
-	if (mpStaticGeom) {
-		cOgreWrapper::GetSingleton().mSceneMgr->destroyStaticGeometry(mpStaticGeom->getName());
-	}
-	#endif
 	printf("cMapblock3D::DestroyGfx end");
 }
 
@@ -594,15 +585,14 @@ void	cMapblock3D::Step	() {
 	} else debug_hidestatic_keydown = false;
 	if (debug_hidestatic) lastframedrawn = 0;
 	
+	
 	// hide if not drawn lastframe
-	if (mpSceneNode && lastframedrawn != cOgreWrapper::miFrameNum && bVisible) { 
-		printf("cMapblock3D::Step() : setVisible false\n");
-		mpSceneNode->setVisible(false); 
-		bVisible = false;
-		#if IRIS_USE_STATIC_GEOMETRY
-		mpStaticGeom->destroy();
+	if (mpStaticGeom && lastframedrawn != cOgreWrapper::miFrameNum && bVisible) { 
+		//mpStaticGeom->destroy();
 		mpStaticGeom->reset();
-		#endif
+		//mpStaticGeom->build();
+		printf("cMapblock3D::Step() : setVisible false\n");
+		bVisible = false;
 	}
 }
 

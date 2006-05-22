@@ -5,7 +5,7 @@ AM_CXXFLAGS=@CXXFLAGS@ -I../include -I../include/csl -Wall
 bin_PROGRAMS=ui3
 
 ui3_LDFLAGS= @OGRE_LIBS@
-ui3_LDADD=@GL_LIBS@
+ui3_LDADD=
 ui3_SOURCES= ArtLoader.cpp \
 SynchronizedTime.cpp \
 Bitmask.cpp \

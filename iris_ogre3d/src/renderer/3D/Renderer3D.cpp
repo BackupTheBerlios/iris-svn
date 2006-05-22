@@ -327,6 +327,7 @@ void Renderer3D::RenderScene( void )
 	RenderTerrain( do_culling );
 	RenderDynamics( do_culling );
 	RenderCharacters( do_culling );
+	
 	pUOGUI.Draw();
 	
 	return;
