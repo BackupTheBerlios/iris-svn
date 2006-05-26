@@ -35,10 +35,6 @@
 
 #endif 
 
-#ifndef stricmp
-	#define stricmp strcasecmp
-#endif
-	
 // key definition in accordance with win32 virtual keycodes,
 // partially overlapps with SDL keycodes
 

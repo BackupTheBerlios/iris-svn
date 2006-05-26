@@ -78,12 +78,14 @@ imm32.lib smpeg.lib"
 			WholeProgramOptimization="TRUE">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/I &quot;include&quot;  /I &quot;include/csl&quot; /I &quot;devcpp/libs&quot;"
+				AdditionalOptions="/I &quot;include&quot;  /I &quot;include/csl&quot; /I &quot;libs&quot;"
 				GlobalOptimizations="TRUE"
 				EnableIntrinsicFunctions="TRUE"
 				ImproveFloatingPointConsistency="TRUE"
 				FavorSizeOrSpeed="1"
 				OptimizeForProcessor="3"
+				OptimizeForWindowsApplication="TRUE"
+				AdditionalIncludeDirectories="&quot;$(OGRE_HOME)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;ZC_BUILDING_ZBASE;ZC_BUILDING_ZCSL"
 				RuntimeLibrary="0"
 				EnableEnhancedInstructionSet="0"
@@ -96,10 +98,11 @@ imm32.lib smpeg.lib"
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/LIBPATH:devcpp/libs
+				AdditionalOptions="/LIBPATH:libs
 sdl.lib sdl_image.lib sdl_mixer.lib sdl_net.lib sdl_ttf.lib
 opengl32.lib glu32.lib wsock32.lib
 imm32.lib smpeg.lib"
+				AdditionalDependencies="$(OGRE_HOME)\lib\OgreMain.lib $(OGRE_HOME)\lib\OgreGUIRenderer.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				GenerateMapFile="TRUE"
@@ -139,7 +142,7 @@ imm32.lib smpeg.lib"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
-				RelativePath=".\devcpp\Iris.ico">
+				RelativePath=".\Iris.ico">
 			</File>
 			<File
 				RelativePath=".\iris.rc">
@@ -1347,6 +1350,9 @@ imm32.lib smpeg.lib"
 			RelativePath=".\src\iris_endian.cpp">
 		</File>
 		<File
+			RelativePath=".\src\listener.cpp">
+		</File>
+		<File
 			RelativePath=".\src\Logger.cpp">
 		</File>
 		<File
@@ -1356,6 +1362,18 @@ imm32.lib smpeg.lib"
 			RelativePath=".\src\main.cpp">
 		</File>
 		<File
+			RelativePath=".\src\ogrewrapper.cpp">
+		</File>
+		<File
+			RelativePath=".\src\pathsearch.cpp">
+		</File>
+		<File
+			RelativePath=".\src\robinput.cpp">
+		</File>
+		<File
+			RelativePath=".\src\robstring1.2.cpp">
+		</File>
+		<File
 			RelativePath=".\src\SDLEvent.cpp">
 		</File>
 		<File
@@ -1363,6 +1381,9 @@ imm32.lib smpeg.lib"
 		</File>
 		<File
 			RelativePath=".\src\SynchronizedTime.cpp">
+		</File>
+		<File
+			RelativePath=".\src\timer.cpp">
 		</File>
 		<File
 			RelativePath=".\src\xml.cpp">
