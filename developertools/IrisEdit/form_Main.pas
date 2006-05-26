@@ -27,7 +27,7 @@ uses
   form_Info;
 
 const
-  VersionString = '0.9';
+  VersionString = '0.95';
 
 type
   TCategoryEntry = class (TObject)
@@ -117,7 +117,7 @@ type
     FItems: TObjectList;
     FArtIsInvalid: Boolean;
     FCurrentCategory: TCategoryEntry;
-
+    Initialized: Boolean;
     FCategoryReverseSort: Boolean;
     FCategorySortIndex: Integer;
     FItemReverseSort: Boolean;
@@ -157,15 +157,18 @@ begin
 
    Caption := Caption + ' ' + VersionString;
 
-   pTileDataLoader := TTileDataLoader.Create (TileDataMul);
-   pArtLoader := TArtLoader.Create(ArtMul, ArtIdxMul);
-
-   FileName := ExtractFilePath(Application.ExeName) + 'IrisEdit.imc';
-   if FileExists (FileName) then
-      pModelLoader.Load (FileName);
+   try
+       pTileDataLoader := TTileDataLoader.Create (TileDataMul);
+       pArtLoader := TArtLoader.Create(ArtMul, ArtIdxMul);
+       FileName := ExtractFilePath(Application.ExeName) + 'IrisEdit.imc';
+       if FileExists (FileName) then
+            pModelLoader.Load (FileName);
+            
+       Initialized := True;
+   except
+   end;
 
    CreateCategories;
-
 end;
 
 procedure TMainForm.ArtPreviewBoxPaint(Sender: TObject);
@@ -423,7 +426,8 @@ end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-   pModelLoader.Save (ExtractFilePath(Application.ExeName) + 'IrisEdit.imc');
+   if Initialized then
+     pModelLoader.Save (ExtractFilePath(Application.ExeName) + 'IrisEdit.imc');
 end;
 
 procedure TMainForm.CreateCategories;

@@ -24,20 +24,20 @@ object MainForm: TMainForm
   object Splitter1: TSplitter
     Left = 289
     Top = 0
-    Height = 578
+    Height = 586
   end
   object Splitter2: TSplitter
     Left = 574
     Top = 0
     Width = 4
-    Height = 578
+    Height = 586
     Align = alRight
   end
   object CategoryListView: TListView
     Left = 0
     Top = 0
     Width = 289
-    Height = 578
+    Height = 586
     Align = alLeft
     Columns = <
       item
@@ -69,7 +69,7 @@ object MainForm: TMainForm
     Left = 292
     Top = 0
     Width = 282
-    Height = 578
+    Height = 586
     Align = alClient
     Columns = <
       item
@@ -103,7 +103,7 @@ object MainForm: TMainForm
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 578
+    Top = 586
     Width = 842
     Height = 19
     Panels = <
@@ -119,7 +119,7 @@ object MainForm: TMainForm
     Left = 578
     Top = 0
     Width = 264
-    Height = 578
+    Height = 586
     Align = alRight
     BevelOuter = bvNone
     BorderStyle = bsSingle
@@ -128,7 +128,7 @@ object MainForm: TMainForm
       Left = 0
       Top = 0
       Width = 260
-      Height = 574
+      Height = 582
       Align = alClient
       OnPaint = ArtPreviewBoxPaint
     end
