@@ -25,16 +25,21 @@ char	gRobStringBuffer[kRobStringBufferSize] = "";
 std::string	strprintf	(const char* szFormat,...) { PROFILE
 	va_list ap;	
 	va_start(ap,szFormat);
-	std::string s = strprintvf(szFormat,ap);
+	gRobStringBuffer[0] = 0;
+	vsnprintf(gRobStringBuffer,kRobStringBufferSize-1,szFormat,ap);
+	std::string s = std::string(gRobStringBuffer);
 	va_end(ap);
 	return s;
 }
 
-std::string	strprintvf	(const char* szFormat,void* arglist) { PROFILE
-	gRobStringBuffer[0] = 0;
-	vsnprintf(gRobStringBuffer,kRobStringBufferSize-1,szFormat,(va_list)arglist);
-	return std::string(gRobStringBuffer);
-}
+std::string	strprintvf	(const char* szFormat,void* arglist) {}
+// unused
+/*
+PROFILE
+gRobStringBuffer[0] = 0;
+vsnprintf(gRobStringBuffer,kRobStringBufferSize-1,szFormat,(va_list)arglist);
+return std::string(gRobStringBuffer);
+*/
 
 void	explodestr 		(const char* separator,const char* str,std::vector<std::string>& res) { PROFILE
 	assert(separator); if (!separator) return;
