@@ -20,50 +20,57 @@
  *
  *****/
 
-
 #include "loaders/UOMap.h"
-
-
-
 
 MapLoader *pMapLoader = NULL;
 
-UOMapLoader::UOMapLoader( char *mapfile, char *staticfile, char *staidx, int type )
+UOMapLoader::UOMapLoader( int index )
 {
-	m_mapstream = new std::ifstream( mapfile, std::ios::in | std::ios::binary );
-	if ( !m_mapstream->is_open() )
-	{
-		SAFE_DELETE( m_mapstream );
+	cMapInfoEntry *mapinfo_entry = MapInfoLoader::GetInstance()->GetMapInfo( index );
+	int fileindex = mapinfo_entry->base_id() < 0 ? index : mapinfo_entry->base_id();
 
-		THROWEXCEPTION( "Could not load map file: " + std::string(mapfile) );
-	}
-
-	m_staticstream = new std::ifstream( staticfile, std::ios::in | std::ios::binary );
-	if ( !m_staticstream->is_open() )
-	{
-		SAFE_DELETE( m_mapstream );
-		SAFE_DELETE( m_staticstream );
-
-		THROWEXCEPTION( "Could not load static file: " + std::string( staticfile ) );
-	}
-
-	m_staidxstream = new std::ifstream( staidx, std::ios::in | std::ios::binary );
-	if ( !m_staidxstream->is_open() )
-	{
-		SAFE_DELETE( m_mapstream );
-		SAFE_DELETE( m_staticstream );
-		SAFE_DELETE( m_staidxstream );
-
-		THROWEXCEPTION( "Could not load static index file: " + std::string( staidx ) );
-	}
-
-	cMapInfoEntry *mapinfo_entry = MapInfoLoader::GetInstance()->GetMapInfo( type );
 	if ( !mapinfo_entry )
 	{
           THROWEXCEPTION( "Tried to load unknown map file" );
 	}
 	m_iWidth = mapinfo_entry->width();
 	m_iHeight = mapinfo_entry->height();
+
+	std::string mulpath = Config::GetMulPath();
+	char filename[30]; // buffer: 18 filename-chars, 11 digit, 1 \0
+
+	sprintf( filename, "map%i.mul", fileindex );
+	m_mapstream = new std::ifstream( (mulpath + filename).c_str(), std::ios::in | std::ios::binary );
+	if ( !m_mapstream->is_open() )
+	{
+		SAFE_DELETE( m_mapstream );
+		THROWEXCEPTION( "Could not load map file: " + std::string(filename) );
+	}
+
+	sprintf( filename, "statics%i.mul", fileindex );
+	m_staticstream = new std::ifstream( (mulpath + filename).c_str(), std::ios::in | std::ios::binary );
+	if ( !m_staticstream->is_open() )
+	{
+		SAFE_DELETE( m_mapstream );
+		SAFE_DELETE( m_staticstream );
+		THROWEXCEPTION( "Could not load static file: " + std::string( filename ) );
+	}
+
+	sprintf( filename, "staidx%i.mul", fileindex );
+	m_staidxstream = new std::ifstream( (mulpath + filename).c_str(), std::ios::in | std::ios::binary );
+	if ( !m_staidxstream->is_open() )
+	{
+		SAFE_DELETE( m_mapstream );
+		SAFE_DELETE( m_staticstream );
+		SAFE_DELETE( m_staidxstream );
+		THROWEXCEPTION( "Could not load static index file: " + std::string( filename ) );
+	}
+
+	// Initialize Diffs
+	m_stadifidxstream = NULL;
+	m_staticdifstream = NULL;
+	InitMapDif( index );
+	InitStaticsDif( index );
 }
 
 UOMapLoader::~UOMapLoader()
@@ -78,6 +85,107 @@ UOMapLoader::~UOMapLoader()
 	SAFE_DELETE( m_staidxstream );
 }
 
+bool UOMapLoader::InitMapDif( int index )
+{	// Iris has no support of diff-cropping packets, so I'll load the whole file and ignore them.
+	//////////////////////////////
+	std::string mulpath = Config::GetMulPath();
+	char filename[30]; // buffer: 18 filename-chars, 11 digit, 1 \0
+
+	// create Lookup
+	sprintf( filename, "mapdifl%i.mul", index );
+	std::ifstream diflookupstream( (mulpath + filename).c_str(), std::ios::in | std::ios::binary );
+	if ( !diflookupstream.is_open() )
+	{
+		Logger::WriteLine( "Could not load map diff lookup file: " + std::string( filename ) );
+		return false;
+	}
+
+	// open data-stream
+	sprintf( filename, "mapdif%i.mul", index );
+	m_mapdifstream = new std::ifstream( (mulpath + filename).c_str(), std::ios::in | std::ios::binary );
+	if ( !m_mapdifstream->is_open() )
+	{
+		diflookupstream.close();
+		SAFE_DELETE( m_mapdifstream );
+
+		Logger::WriteLine( "Could not load map diff file: " + std::string( filename ) );
+		return false;
+	}
+
+	Uint32 blockid;
+	std::ifstream::pos_type position;
+	// read lookup data
+	while( !diflookupstream.eof() )
+	{
+		position = diflookupstream.tellg();
+		diflookupstream.read( (char*)&blockid, sizeof(Uint32) );
+		blockid = IRIS_SwapU32( blockid );
+
+		m_maplookup[blockid] = position / sizeof(Uint32);
+	}
+
+	diflookupstream.close();
+	return true;
+}
+
+bool UOMapLoader::InitStaticsDif( int index )
+{
+	// Iris has no support of diff-cropping packets, so I'll load the whole file and ignore them.
+	//////////////////////////////
+	std::string mulpath = Config::GetMulPath();
+	char filename[30]; // buffer: 18 filename-chars, 11 digit, 1 \0
+
+	// create Lookup
+	sprintf( filename, "stadifl%i.mul", index );
+	std::ifstream diflookupstream( (mulpath + filename).c_str(), std::ios::in | std::ios::binary );
+	if ( !diflookupstream.is_open() )
+	{
+		Logger::WriteLine( "Could not load static diff lookup file: " + std::string( filename ) );
+		return false;
+	}
+
+	// open index-stream
+	sprintf( filename, "stadifi%i.mul", index );
+	m_stadifidxstream = new std::ifstream( (mulpath + filename).c_str(), std::ios::in | std::ios::binary );
+	if ( !m_staidxstream->is_open() )
+	{
+		diflookupstream.close();
+		SAFE_DELETE( m_stadifidxstream );
+
+		Logger::WriteLine( "Could not load static diff index file: " + std::string( filename ) );
+		return false;
+	}
+
+	// open data-stream
+	sprintf( filename, "stadif%i.mul", index );
+	m_staticdifstream = new std::ifstream( (mulpath + filename).c_str(), std::ios::in | std::ios::binary );
+	if ( !m_staticdifstream->is_open() )
+	{
+		diflookupstream.close();
+		m_stadifidxstream->close();
+		SAFE_DELETE( m_stadifidxstream );
+		SAFE_DELETE( m_staticdifstream );
+
+		Logger::WriteLine( "Could not load static diff file: " + std::string( filename ) );
+		return false;
+	}
+
+	Uint32 blockid;
+	std::ifstream::pos_type position;
+	// read lookup data
+	while( !diflookupstream.eof() )
+	{
+		position = diflookupstream.tellg();
+		diflookupstream.read( (char*)&blockid, sizeof(Uint32) );
+		blockid = IRIS_SwapU32( blockid );
+
+		m_staticlookup[blockid] = position / sizeof(Uint32);
+	}
+
+	diflookupstream.close();
+	return true;
+}
+
 void UOMapLoader::LoadMapBlock( int x, int y, MulBlock *block )
 {
 	if ( ( x >= m_iWidth ) || ( y >= m_iHeight ) || ( x < 0 ) || ( y < 0 ) )
@@ -85,9 +193,21 @@ void UOMapLoader::LoadMapBlock( int x, int y, MulBlock *block )
 		memset( (char *) block, 0, sizeof(struct MulBlock) );
 		return;
 	}
+	std::ifstream *datastream; // switch between diff and standard
 
-	m_mapstream->seekg( ( ( x * m_iHeight ) + y ) * 196 + 4, std::ios::beg );
-	m_mapstream->read( (char *) block, 192 );
+	LookupMap::iterator diffposition = m_maplookup.find( x * m_iHeight + y );
+	if( diffposition != m_maplookup.end() ) // block was found!
+	{
+		m_mapdifstream->seekg( (*diffposition).second * 196 + 4, std::ios::beg );
+		datastream = m_mapdifstream;
+	}
+	else
+	{
+		m_mapstream->seekg( ( ( x * m_iHeight ) + y ) * 196 + 4, std::ios::beg );
+		datastream = m_mapstream;
+	}
+
+	datastream->read( (char *) block, 192 );
   
 	for ( int j = 0; j < 64; j++ )
 	{
@@ -96,41 +216,30 @@ void UOMapLoader::LoadMapBlock( int x, int y, MulBlock *block )
 	}
 }
 
-/*void UOMapLoader::LoadStaticIdx(int x, int y, stIndexRecord * block)
-{
-  if((x >= width) || (y >= height) || (x < 0) || (y < 0)) {
-    memset((char *) block, 0, sizeof(stIndexRecord));
-    return;
-  }
-
-  mutex_idx.MutexLock();
-
-  staidxstream->seekg((x * height + y) * 12, ios::beg);
-  staidxstream->read((char *) block, 12);
-
-  mutex_idx.MutexUnlock();
-}
-
-void UOMapLoader::LoadStatics(int ofs, int len)
-{
-  mutex_statics.MutexLock();
-
-  staticstream->seekg(ofs, ios::beg);
-  staticstream->read((char *) statics, len);
-
-  mutex_statics.MutexUnlock();
-}*/
-
 struct staticinfo *UOMapLoader::LoadStatics( int x, int y, int &len )
 {
 	stIndexRecord block;
+	std::ifstream *datastream; // switch between diff and standard
 	if ( ( x >= m_iWidth ) || ( y >= m_iHeight ) || ( x < 0 ) || ( y < 0 ) )
 	{
 		return NULL;
 	}
 
-	m_staidxstream->seekg( ( x * m_iHeight + y ) * 12, std::ios::beg );
-	m_staidxstream->read( (char *) &block, 12 );
+	LookupMap::iterator diffposition = m_staticlookup.find( x * m_iHeight + y );
+	if( diffposition != m_staticlookup.end() ) // block was found!
+	{
+		m_stadifidxstream->seekg( (*diffposition).second * 12, std::ios::beg );
+		m_stadifidxstream->read( (char *) &block, 12 );
+		datastream = m_staticdifstream;
+	}
+	else // no diff, read as usual
+	{
+//		printf( "std found" );
+		m_staidxstream->seekg( ( x * m_iHeight + y ) * 12, std::ios::beg );
+		m_staidxstream->read( (char *) &block, 12 );
+		datastream = m_staticstream;
+	}
+
 	block.offset = IRIS_SwapU32( block.offset );
 	block.length = IRIS_SwapU32( block.length );
 	block.extra = IRIS_SwapU32( block.extra );
@@ -142,18 +251,17 @@ struct staticinfo *UOMapLoader::LoadStatics( int x, int y, int &len )
 
 	len = block.length / 7;
 
-	struct staticentry *uostatics =
-		(struct staticentry *) malloc (block.length);
-	struct staticinfo *static_infos =
-		(struct staticinfo *) malloc (len * sizeof (struct staticinfo));
+	struct staticentry *uostatics = (struct staticentry *) malloc (block.length);
+	struct staticinfo *static_infos = (struct staticinfo *) malloc (len * sizeof (struct staticinfo));
 
 
-	m_staticstream->seekg( block.offset, std::ios::beg );
-	m_staticstream->read((char *) uostatics, block.length );
+	datastream->seekg( block.offset, std::ios::beg );
+	datastream->read((char *) uostatics, block.length );
 
 
 	struct staticentry *uo_p = uostatics;
 	struct staticinfo *info_p = static_infos;
+
 
 	for ( int index = 0; index < len; index++ )
 	{

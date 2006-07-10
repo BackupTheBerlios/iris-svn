@@ -194,9 +194,6 @@ bool Game::Init( void )
 
 void Game::InitRenderer( std::string sMulPath )
 {
-	std::string sMulMap0 = sMulPath + "map0.mul";
-	std::string sMulStatics0 = sMulPath + "statics0.mul";
-	std::string sMulStaidx0 = sMulPath + "staidx0.mul";
 	std::string sMulTexmaps = sMulPath + "texmaps.mul";
 	std::string sMulTexidx = sMulPath + "texidx.mul";
 
@@ -207,7 +204,8 @@ void Game::InitRenderer( std::string sMulPath )
 
 	//Profiler::Begin( "Map" );
 	Logger::WriteLine( "\t| -> map" );
-	pMapLoader = new UOMapLoader( (char*)sMulMap0.c_str(), (char*)sMulStatics0.c_str(), (char*)sMulStaidx0.c_str(), 0 );
+	//Load Standard Map0.mul
+	pMapLoader = new UOMapLoader(0);
 	//Profiler::End();
 
 	//Profiler::Begin( "Ground Textures" );

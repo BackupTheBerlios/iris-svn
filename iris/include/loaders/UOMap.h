@@ -34,6 +34,7 @@
 #include "../Logger.h"
 #include "loaders/MapInfo.h"
 #include "Exception.h"
+#include "Config.h"
 
 // #include "../Fluid/mmgr.h"
 
@@ -43,19 +44,42 @@
 
 class UOMapLoader : public MapLoader
 {
+	typedef std::map<Uint32, std::istream::pos_type> LookupMap;
+	// Var
 private:
 	std::ifstream *m_mapstream;
+	std::ifstream *m_mapdifstream;
 	std::ifstream *m_staticstream;
 	std::ifstream *m_staidxstream;
+	std::ifstream *m_stadifidxstream;
+	std::ifstream *m_staticdifstream;
+	LookupMap m_maplookup;
+	LookupMap m_staticlookup;
 	int m_iWidth, m_iHeight;
 
-
+	// Ctor
 public:
-   UOMapLoader( char *mapfile, char *staticfile, char *staidx, int type );
-   ~UOMapLoader();
+	/** Ctor of a MapLoader to read std UO Maps and Statics
+	@param index Index of this map. Using int to allow an arbitrary number of maps. File-Index and realm-index can differ
+	*/
+	UOMapLoader( int index );
+	~UOMapLoader();
 
-   void	LoadMapBlock( int x, int y, MulBlock *block );
-   struct staticinfo *LoadStatics( int x, int y, int &len );
+   // Func
+private:
+	/** Diff-file Map support - optional.
+	@param index Index of this map. File-index == realm index
+	@return true, if successful
+	*/
+	bool InitMapDif( int index );
+	/** Diff-file Statics support - optional.
+	@param index Index of this map. File-index == realm index
+	@return true, if successful
+	*/
+	bool InitStaticsDif( int index );
+public:
+	void LoadMapBlock( int x, int y, MulBlock *block );
+	struct staticinfo *LoadStatics( int x, int y, int &len );
 };
 
 #endif //_MAP_H_

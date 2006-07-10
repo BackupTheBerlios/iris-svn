@@ -2837,11 +2837,8 @@ void cClient::Act_SubCommands (cPacket * packet)
 		  mapstr[1] = 0;
 		  sprintf(mapstr, "%i", (int) mapID);
 		  std::cout << "Map changed from : "<< actual_map << " to: " << mapstr << std::endl;
-		  string mul_map = Config::GetMulPath() + "map" + string(mapstr) + ".mul";
-		  string mul_statics = Config::GetMulPath() + "statics" + string(mapstr) + ".mul";
-		  string mul_staidx = Config::GetMulPath() + "staidx" + string(mapstr) + ".mul";
-	
-		  pMapLoader = new UOMapLoader((char*) mul_map.c_str(), (char*) mul_statics.c_str(), (char*) mul_staidx.c_str(), (int)mapID);
+		  pMapLoader = new UOMapLoader((int)mapID);
+
 		  actual_map = mapID;
 
 		  Renderer * renderer = Game::GetInstance()->GetRenderer();
@@ -2849,10 +2846,10 @@ void cClient::Act_SubCommands (cPacket * packet)
 //removed because Skybox don't look good with dynamic lightning and fog
 //		  renderer->LoadSkyboxTextures (actual_map);
 
-/*		  This is now handled by WorldEnvironment.cpp
-
+/*		  //This is now handled by WorldEnvironment.cpp
           GLfloat fogColor[4] = {(float) mapinfo_entry->fog_r() / 255.0f, (float) mapinfo_entry->fog_g() / 255.0f,(float) mapinfo_entry->fog_b() / 255.0f, 1.0 };
-		  glFogfv(GL_FOG_COLOR, fogColor); */
+		  glFogfv(GL_FOG_COLOR, fogColor);
+*/
 		  
 		  break;
 		}

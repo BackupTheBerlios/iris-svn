@@ -248,7 +248,7 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 
 			ground_vertieces[y][x].x = (float)x;
 			ground_vertieces[y][x].y = (float)y;
-			ground_vertieces[y][x].z = heightmap[y][x] * 0.1f;
+			ground_vertieces[y][x].z = heightmap[y][x]*0.1f;
 			ground_vertieces[y][x].u = (float)x;
 			ground_vertieces[y][x].v = (float)y;
 
