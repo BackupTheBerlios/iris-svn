@@ -39,6 +39,11 @@
 			<Add library="glu32" />
 			<Add library="wsock32" />
 		</Linker>
+		<Unit filename="Iris.rc">
+			<Option compilerVar="WINDRES" />
+			<Option objectName="codeblocks\Iris.res" />
+			<Option target="Pentium M (optimized)" />
+		</Unit>
 		<Unit filename="..\src\Buffer.cpp">
 			<Option compilerVar="CPP" />
 			<Option target="Pentium M (optimized)" />
