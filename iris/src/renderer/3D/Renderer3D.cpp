@@ -124,44 +124,6 @@ int Renderer3D::Init (void)
 
   init_vertex_buffer ();
 
-/*  if(!m_calCoreModel.create("dummy"))
-  {
-    CalError::printLastError();
-    return false;
-  }
-      
-      std::cout << "Loading skeleton..." << std::endl;
-      if(!m_calCoreModel.loadCoreSkeleton("data/cally/cally.csf"))
-      {
-        CalError::printLastError();
-        return false;
-      }
-   
-        std::cout << "Loading mesh..." << std::endl;
-      if(m_calCoreModel.loadCoreMesh("data/cally/cally_chest.cmf") == -1)
-      {
-        CalError::printLastError();
-        return false;
-      }
-  m_calCoreModel.getCoreSkeleton()->calculateBoundingBox(&m_calCoreModel);
-
-  // create the model instance from the loaded core model
-  if(!m_calModel.create(&m_calCoreModel))
-  {
-    CalError::printLastError();
-    return false;
-  }
-
-  // attach all meshes to the model
-  int meshId;
-  for(meshId = 0; meshId < m_calCoreModel.getCoreMeshCount(); meshId++)
-  {
-    m_calModel.attachMesh(meshId);
-  }
-
-  // set the material set of the whole model
-  m_calModel.setMaterialSet(0); */
-
   return (true);
 }
 

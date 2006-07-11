@@ -1,6 +1,8 @@
 11.06.2006
 Changes by Florian Fischer (SiENcE)
 	-CodeBlocks Sollution Update (Icon)
+	-Fixed: Client.cpp UOMapLoader updated for UOMap/Diff-Loader
+	-Fixed: Cal3d Code removed from Renderer3d.cpp
 
 10.06.2006
 Changes by Florian Fischer (SiENcE) & Kelon (Schattenwelt - Shard)

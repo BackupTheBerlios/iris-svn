@@ -72,7 +72,7 @@ int HandleGumpDialogEvent (Control * contr)
 // This shouldn't be hardcoded -> XML-File
 Uint16 CheckIfBoat(Uint16 modelID)
 {
- Uint16 new_modid; 
+ Uint16 new_modid;
  if((modelID >= 0x4000) && (modelID < 0x4022))
  {
   Logger::WriteLine("BOAT ModelID: " + modelID);
@@ -126,24 +126,24 @@ bool IsInBoat(int posx, int posy)
  dynamiclist_t * dynamics = pDynamicObjectList.GetList();
   	dynamiclist_t::iterator iter;
 
-  	for (iter = dynamics->begin(); iter != dynamics->end(); iter++) 
+  	for (iter = dynamics->begin(); iter != dynamics->end(); iter++)
     {
      cDynamicObject * object = iter->second;
       switch (object->model)
          {
           case 16093:
-          case 16098: 
-             if(((posx >= object->x - 2) && (posx <= object->x + 2)) && ((posy >= object->y - 3) && (posy <= object->y + 3)) )      
+          case 16098:
+             if(((posx >= object->x - 2) && (posx <= object->x + 2)) && ((posy >= object->y - 3) && (posy <= object->y + 3)) )
               {
                return true;
               }
                    break;
           case 15962:
-          case 15980: 
-             if(((posx >= object->x - 3) && (posx <= object->x + 3)) && ((posy >= object->y - 2) && (posy <= object->y + 2)) )      
+          case 15980:
+             if(((posx >= object->x - 3) && (posx <= object->x + 3)) && ((posy >= object->y - 2) && (posy <= object->y + 2)) )
               {
               return true;
-              }     
+              }
                    break;
          }
     }
@@ -155,24 +155,24 @@ Sint8 CheckBoatZ(int posx, int posy)
  dynamiclist_t * dynamics = pDynamicObjectList.GetList();
   	dynamiclist_t::iterator iter;
 
-  	for (iter = dynamics->begin(); iter != dynamics->end(); iter++) 
+  	for (iter = dynamics->begin(); iter != dynamics->end(); iter++)
     {
      cDynamicObject * object = iter->second;
       switch (object->model)
          {
           case 16093:
-          case 16098: 
-             if(((posx >= object->x - 2) && (posx <= object->x + 2)) && ((posy >= object->y - 3) && (posy <= object->y + 3)) )      
+          case 16098:
+             if(((posx >= object->x - 2) && (posx <= object->x + 2)) && ((posy >= object->y - 3) && (posy <= object->y + 3)) )
               {
                return object->z;
               }
                    break;
           case 15962:
-          case 15980: 
-             if(((posx >= object->x - 3) && (posx <= object->x + 3)) && ((posy >= object->y - 2) && (posy <= object->y + 2)) )      
+          case 15980:
+             if(((posx >= object->x - 3) && (posx <= object->x + 3)) && ((posy >= object->y - 2) && (posy <= object->y + 2)) )
               {
               return object->z;
-              }     
+              }
                    break;
          }
     }
@@ -194,7 +194,7 @@ Uint16 GetHighlightColor (Uint8 flag)
         break;                  //green
       case 3:
         color = 905;
-        break;                  //grey 
+        break;                  //grey
       case 4:
         color = 44;
         break;                  //orange
@@ -222,7 +222,7 @@ void cClient::updateBuyList (int mode, int itemid, int amount)
            for(iter = buylist.begin(); iter != buylist.end(); iter++)//
            {
            if(iter->first == itemid)
-           iter->second += amount; return;   
+           iter->second += amount; return;
            }
          */
         iter = buylist.find (itemid);
@@ -248,7 +248,7 @@ void cClient::updateBuyList (int mode, int itemid, int amount)
                   }
               else
                 buylist.erase (iter);
-            }                   //buylist.insert(make_pair(itemid, amount))          
+            }                   //buylist.insert(make_pair(itemid, amount))
       }
 }
 
@@ -267,7 +267,7 @@ void cClient::updateSellList (int mode, int itemid, int amount)
            for(iter = buylist.begin(); iter != buylist.end(); iter++)//
            {
            if(iter->first == itemid)
-           iter->second += amount; return;   
+           iter->second += amount; return;
            }
          */
         iter = selllist.find (itemid);
@@ -293,7 +293,7 @@ void cClient::updateSellList (int mode, int itemid, int amount)
                   }
               else
                 selllist.erase (iter);
-            }                   //buylist.insert(make_pair(itemid, amount))          
+            }                   //buylist.insert(make_pair(itemid, amount))
       }
 }
 
@@ -351,11 +351,11 @@ cClient::cClient( void (*error_callback)(unsigned int error) )
 	m_popupy = 0;
 	enemy = 0;
 	last_footstep_sound = 0;
-  
+
 	last_spell = 0;
 	last_object = 0;
 	/* TODO (ArTiX#1#): Add checks for UOX3 */
-        
+
 	last_target = 0;
 	last_skill = 0;
 	last_attack = 0;
@@ -441,7 +441,7 @@ void cClient::ClearLoginLists()
 	{
 		SAFE_DELETE( login_char_list[i] );
 	}
-	
+
 	for ( i = 0; i < login_server_list.size(); i++ )
 	{
 		SAFE_DELETE( login_server_list[i] );
@@ -582,7 +582,7 @@ void cClient::Poll()
 void LogStream(void* data, int orig_len, bool dir)
 {
 	FILE *fp = fopen("packets.txt", "at");
-	if(!fp) return; 
+	if(!fp) return;
 	unsigned char * p = (unsigned char*) data;
 	fprintf(fp, "Packet [%02x], Length: %i, Type: %s\n", *p, orig_len, (dir ? "Server" : "Client") );
 	if(orig_len < 0) orig_len*=-1;
@@ -635,7 +635,7 @@ void cClient::OnData( void *data, unsigned int len )
 
 		// can be disabled
 		LogStream( p, packet_len, true );
-   
+
 		if ( packet_len <= 0 )
 		{
 			SAFE_DELETE( packet );
@@ -868,7 +868,7 @@ void cClient::OnData( void *data, unsigned int len )
 			break;
 
 		default:
-			printf( "Unknown Packet: %x (%i bytes), position %i (last packet: %x)\n", 
+			printf( "Unknown Packet: %x (%i bytes), position %i (last packet: %x)\n",
 				(int)packet->packet.Default.m_cmd, packet->len(), len, last_packet );
 			break;
 		}
@@ -1047,28 +1047,28 @@ void cClient::Act_ClientState (cPacket * packet)
 
       case NO_CHARACTER:
         callback_OnCharError (NO_CHARACTER);
-        break;            
+        break;
       case CHAR_EXISTS:
         callback_OnCharError (CHAR_EXISTS);
-        break;            
+        break;
       case CANT_CONNECT:
         callback_OnCharError (CANT_CONNECT);
-        break;            
+        break;
       case CANT_CONNECT2:
         callback_OnCharError (CANT_CONNECT2);
-        break;            
+        break;
       case CHAR_ALREAY_INUSE:
         callback_OnCharError (CHAR_ALREAY_INUSE);
-        break;            
+        break;
       case LOGIN_PROBLEM:
         callback_OnCharError (LOGIN_PROBLEM);
         break;
       case IDLE:
         callback_OnCharError (IDLE);
-        break;            
+        break;
       case CANT_CONNECT3:
         callback_OnCharError (CANT_CONNECT3);
-        break;            
+        break;
 
       default:
         callback_OnNetError (NETERROR_UNKNOWN);
@@ -1216,7 +1216,7 @@ void cClient::Act_Char (cPacket * packet)
                       //printf("   Equip (id:%x, model:%d, layer:%d, hue:%d, anim:%d, \"%s\")\n", equip->id(), equip->model(), equip->layer(), equip->hue(), equip->anim(), entry.name);
                     }
 
-              
+
       }
 }
 
@@ -1228,9 +1228,9 @@ void cClient::Act_Speak( cPacket *packet )
 
 	strncpy( name, packet->packet.Speak.name, 29 );
 	strncpy( msg, &packet->packet.Speak.message, len - 44 );
-	
+
 	unsigned short color = packet->packet.Speak.m_color;
-	
+
 	if ( callback_OnSpeech )
 	{
 		callback_OnSpeech( msg, name, (Uint32)packet->packet.Speak.m_id, color );
@@ -1391,7 +1391,7 @@ void cClient::Act_View (cPacket * packet)
         else
          character->setPosition ((Uint16) packet->packet.View.m_x,
                                 (Uint16) packet->packet.View.m_y,
-                                (Sint8) packet->packet.View.m_z);                        
+                                (Sint8) packet->packet.View.m_z);
 
         walk_stack.clear ();
         walk_sequence = 0;
@@ -1413,10 +1413,10 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
   packet->SetPosition (3);
   Uint32 inventory_id = packet->GetDword ();
   Uint8 item_count = packet->GetByte ();
- 
+
   int incr = 1;
   buy_opening = true;
-  
+
   if (callback_OnBuyWindowOpen)
     callback_OnBuyWindowOpen (inventory_id);
 
@@ -1424,9 +1424,9 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
   dynamiclist_t::iterator iter;
   dynamiclist_t::iterator iter2;
   dynamiclist_t::iterator iter3;
-  
-  
-  
+
+
+
   int model;
 
   Uint32 price;
@@ -1452,14 +1452,14 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
 
   for (iter = iter2; iter != iter3;)
       {
-        
+
         cDynamicObject *object = iter->second;
         if (object)
             {
               if (object->parent == inventory_id)
                   {
 
-             
+
                     model = object->model;
                     count = object->itemcount;
 
@@ -1480,13 +1480,13 @@ void cClient::Act_VendOpenBuy (cPacket * packet)
                           int index = atoi (name);
                                 std::string cliloc_name =
                                   pClilocLoader.GetMessage (index);
-                                
+
                                 if (callback_OnBuyWinAdd)
                                   callback_OnBuyWinAdd (object->id, model,
                                                         count, hue, price,
                                                         (char *) cliloc_name.
                                                         c_str ());
-                                
+
 
                         }
                     else
@@ -1527,7 +1527,7 @@ void cClient::Act_VendOpenSell (cPacket * packet)
   Uint16 price;
   Uint16 namelen;
   char name[257];
- 
+
 
 
   for (int i = 0; i < item_count; i++)
@@ -1775,7 +1775,7 @@ void cClient::Act_Delete (cPacket * packet)
                         }
                   }
             }
-      
+
 }
 
 void cClient::Act_Status (cPacket * packet)
@@ -1846,11 +1846,11 @@ void cClient::Act_Content (cPacket * packet)
 
   packet->SetPosition (3);
   Uint16 count = packet->GetWord ();
-  
+
   Uint8 circles[8] = {0,0,0,0,0,0,0,0};
   bool is_spellbook = false;
   Uint32 spellbookserial = 0;
-  
+
   for (int i = 0; i < count; i++)
       {
         Uint32 id = packet->GetDword ();
@@ -1862,10 +1862,10 @@ void cClient::Act_Content (cPacket * packet)
         Uint32 contid = packet->GetDword ();
 
         Uint16 hue = packet->GetWord ();
-        
+
         cDynamicObject * cont_obj = pDynamicObjectList.Get(contid);
-        
-        
+
+
         if (contid == corpse_id)
             {
               std::map < Uint32, Uint8 >::iterator iter;
@@ -1893,7 +1893,7 @@ void cClient::Act_Content (cPacket * packet)
            else if(cont_obj && cont_obj->model == 0xEFA )
             {
               Uint8 circle = 0;
-              
+
               if(model >= 0x1F2D && model < 0x1F35)
                circle = 0;
               else if(model >= 0x1F35 && model < 0x1F3D)
@@ -1905,20 +1905,20 @@ void cClient::Act_Content (cPacket * packet)
               else if(model >= 0x1F4D && model < 0x1F55)
                circle = 4;
               else if(model >= 0x1F55 && model < 0x1F5D)
-               circle = 5; 
+               circle = 5;
               else if(model >= 0x1F5D && model < 0x1F65)
-               circle = 6; 
+               circle = 6;
               else if(model >= 0x1F65 && model < 0x1F6D)
                circle = 7;
-              
-              int spellpos = model - (0x1F2D + (circle * 8));                 
+
+              int spellpos = model - (0x1F2D + (circle * 8));
 
               circles[circle] |= 1 << spellpos;
               is_spellbook = true;
               spellbookserial = contid;
-            
+
             }
-   
+
        if(!is_spellbook)
         pDynamicObjectList.AddContainerContent (id, model, hue, contid, x, y,
                                                  stackcount);
@@ -2164,7 +2164,7 @@ void cClient::Act_MenuItems (cPacket * packet)
 			NBYTE	m_lenname;
 			char	m_name;		// Variable length name
 			NBYTE	m_count;
-			struct 
+			struct
 			{
 				NWORD	m_model;
 				NWORD	m_check;
@@ -2210,7 +2210,7 @@ void cClient::Act_Target (cPacket * packet)
     callback_OnTarget (id, type);
   if(!m_wait_for_target.empty())
 	 pCSLHandler.ExecuteFunction((char*)m_wait_for_target.c_str());
-	m_wait_for_target.clear();  
+	m_wait_for_target.clear();
 }
 
 void cClient::Act_Paperdoll (cPacket * packet)
@@ -2325,7 +2325,7 @@ void cClient::Act_AOSTooltip (cPacket * packet)
                 str2[i / 2] = arguments[i];
             }
         str2[textlen / 2] = 0;
-        
+
 
         vector < std::string > arglist;
         std::string arg_string = std::string (str2);
@@ -2348,7 +2348,7 @@ void cClient::Act_AOSTooltip (cPacket * packet)
 
         if (obj)
           obj->AddAOSTooltip (message);
-          
+
           delete[] str2;
           delete[] arguments;
       }
@@ -2423,14 +2423,14 @@ void cClient::Act_GumpDialog( cPacket *packet )
 	for ( int i = 0; i < txt_lines; i++ )
 	{
 		line_len = packet->GetWord();    //get length of line
- 
+
 		if ( line_len > 0 )
 		{
-			char *line = new char[line_len * 2]; 
+			char *line = new char[line_len * 2];
 			packet->GetData( line, line_len * 2 );
 			//HARKON: bug fixed - ansi len : line_len*2, unicode len: line_len
-			//cUnicode unistring((NCHAR*) line,line_len * 2); 
-			cUnicode unistring( (NCHAR*)line, line_len );  
+			//cUnicode unistring((NCHAR*) line,line_len * 2);
+			cUnicode unistring( (NCHAR*)line, line_len );
 
 			if ( strlen( unistring.m_charBuf ) > 0 )
 			{
@@ -2483,7 +2483,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		if ( command == "page" )
 		{
 			target_page = params[0];
-			
+
 			/*
 			if ( target_page == 0 )
 			{
@@ -2505,7 +2505,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		{
 			Label *label = new Label( params[0], params[1], texts_vector[params[3]].c_str(), params[2] );
 			label->setHue( params[2] );	// maybe cause some errors
-			
+
 			control = label;
 
 			printf( "label: %s 0x%x", texts_vector[params[3]].c_str(), params[2] );
@@ -2584,7 +2584,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		}
 		else if ( command == "textentry" )
 		{
-			InputField *inputfield = new InputField( params[0], params[1], params[2], 
+			InputField *inputfield = new InputField( params[0], params[1], params[2],
 				params[3], texts_vector.at( params[6] ).c_str(), params[4] );
 			// inputfield->setText ("AAA");
 			control = inputfield;
@@ -2599,7 +2599,7 @@ void cClient::Act_GumpDialog( cPacket *packet )
 			alphah = params[3];
 
 			ControlList_t *the_list = dialog->GetControlList();
-			
+
 			ControlList_t::iterator iter;
 			for ( iter = the_list->begin(); iter != the_list->end(); iter++ )
 			{
@@ -2782,7 +2782,7 @@ void cClient::Act_Sound( cPacket *packet )
 {
 	if ( SoundMix::GetInstance() )
 	{
-		SoundMix::GetInstance()->PlaySound( (int)packet->packet.Sound.m_sound, 
+		SoundMix::GetInstance()->PlaySound( (int)packet->packet.Sound.m_sound,
 			(int)packet->packet.Sound.m_volume, (char)packet->packet.Sound.m_flags,
 			(int)packet->packet.Sound.m_x, (int)packet->packet.Sound.m_y,
 			(int)packet->packet.Sound.m_z );
@@ -2822,21 +2822,21 @@ void cClient::Act_SubCommands (cPacket * packet)
 
 		  if(pMapLoader)
 			delete pMapLoader;
-	
+
 		  pMapbufferHandler.buffer ()->Clear();
-  
+
 		  cMapInfoEntry * mapinfo_entry = MapInfoLoader::GetInstance()->GetMapInfo(mapID);
 				if(!mapinfo_entry)
 					THROWEXCEPTION ("Wanted to change to an unknown map!");
-          
+/*
 				if(mapinfo_entry->base_id () >= 0)
 					mapID =  mapinfo_entry->base_id ();
-
 
 		  char mapstr[2];
 		  mapstr[1] = 0;
 		  sprintf(mapstr, "%i", (int) mapID);
 		  std::cout << "Map changed from : "<< actual_map << " to: " << mapstr << std::endl;
+*/
 		  pMapLoader = new UOMapLoader((int)mapID);
 
 		  actual_map = mapID;
@@ -2850,7 +2850,7 @@ void cClient::Act_SubCommands (cPacket * packet)
           GLfloat fogColor[4] = {(float) mapinfo_entry->fog_r() / 255.0f, (float) mapinfo_entry->fog_g() / 255.0f,(float) mapinfo_entry->fog_b() / 255.0f, 1.0 };
 		  glFogfv(GL_FOG_COLOR, fogColor);
 */
-		  
+
 		  break;
 		}
       case 0x14:
@@ -2913,7 +2913,7 @@ void cClient::Act_SubCommands (cPacket * packet)
           {
            if(listID == obj->AOSTooltipID())
            return;
-          } 
+          }
 
           cPacket pck;
           pck.AddByte (0xBf);
@@ -2922,7 +2922,7 @@ void cClient::Act_SubCommands (cPacket * packet)
           pck.AddDword (objserial);
           Send (&pck);
           break;
-        } 
+        }
         //Harkon's packet addition
         case 0x22:
         {
@@ -2933,7 +2933,7 @@ void cClient::Act_SubCommands (cPacket * packet)
              //printf("id:0x%x, damage: %d\n", id, damage);
              char buf[10];
 
-             sprintf(buf, "%d", damage); 
+             sprintf(buf, "%d", damage);
              callback_OnSpeech(buf, "", id, 0x35);
 //             callback_OnSpeech(itoa(damage,buf,10), "", id, 0x35);
              break;
@@ -3171,11 +3171,11 @@ void cClient::Send_Speech (std::string text, Uint8 mode)
 {
 	std::vector<Uint16> keywords;
     Uint16 count = 0;
-    
+
     if(Config::GetUseSpeech())
-    {  
+    {
       keywords = SpeechLoader::GetInstance()->GetIDs( text );
-	  count = keywords.size();    
+	  count = keywords.size();
     }
 
 	cPacket packet;
@@ -3194,7 +3194,7 @@ void cClient::Send_Speech (std::string text, Uint8 mode)
 				keyw_size+=2;
 			}
 		}
-  
+
 		packet.AddByte( 0xAD );
 		packet.AddWord( 12 + keyw_size + text.size() + 1 );
 		packet.AddByte( (count > 0) ? 0xC0 : 0 );
@@ -3202,41 +3202,41 @@ void cClient::Send_Speech (std::string text, Uint8 mode)
 		packet.AddWord( 0 );
 		packet.AddDword( 0x49544100 );
 		packet.AddWord( ( count << 4 ) | ( (keywords.at( 0 ) & 0xF000) >> 8 ) );
-		
+
 		for ( int i = 0; i < count; i++ )
 		{
 			if ( (i & 1) == 0 )
 			{
-				Uint8 word =  (Uint8)keywords.at( i );    
+				Uint8 word =  (Uint8)keywords.at( i );
 				packet.AddByte( word );
 			}
-			else 
+			else
 			{
-				Uint16 nextword;    
-    
+				Uint16 nextword;
+
 				if ( i == count - 1 )
 				{
 					nextword=0;
 				}
 				else
 				{
-					nextword = keywords.at( i + 1 ); 
+					nextword = keywords.at( i + 1 );
 				}
-     
+
 				Uint16 word = keywords.at( i );
 				word <<= 4;
 				word |= (nextword  & 0xF000);
 				packet.AddWord( word );
 			}
 		}
-		
+
 		packet.AddData( (void*)text.c_str(), text.size() );
 		packet.AddByte( 0 );
 
 		Send( &packet );
 	}
 	else
-	{   
+	{
 		//cPacket packet;
 		packet.Clear();
 		packet.FillPacket( PCK_Talk );
@@ -3256,14 +3256,14 @@ void cClient::Send_SpeechUNICODE(std::string text, Uint8 mode)
 	cUnicode unicode((char*)text.c_str());
 
 	cPacket packet;
-	packet.Clear();	
+	packet.Clear();
 	packet.FillPacket(PCK_TalkUNICODE);					// ID 0xAD
 	packet.SetLength(1);
 	packet.AddWord(unicode.m_unicodeLen + 12);			// Size of Packet
 	packet.AddByte(mode);								// Mode (0=say,2=emote,8=whipser,9=yell)
 	packet.AddWord(100);								// Text Color
 	packet.AddWord(3);									// Font
-	packet.AddData((void*)Config::GetClilocLang().c_str(), 4);					// Language, "ENU", "DEA", "DEU", "KOR" ...	
+	packet.AddData((void*)Config::GetClilocLang().c_str(), 4);					// Language, "ENU", "DEA", "DEU", "KOR" ...
 	packet.AddData((void *)unicode.m_unicodeBuf, unicode.m_unicodeLen); // Text
 	Send(&packet.packet, unicode.m_unicodeLen + 12);
 }
@@ -3308,7 +3308,7 @@ void cClient::Send_DoubleClick (Uint32 id)
   packet.AddByte (PCK_DClick);
   packet.AddDword (id);
   Send (&packet);
-  
+
   last_object = id;
 }
 
@@ -3349,24 +3349,24 @@ void cClient::Send_Action(int type, int mode)
 {
 	cPacket packet;
 	packet.FillPacket (PCK_DoAction);
-	
+
   	char buf[20];
-  
+
   	switch (type) {
 	   case ACTIONTYPE_SKILL:{
 
-        
+
         int buflen;
-        
+
         if(mode>9)
          buflen = 4;
         else
          buflen = 5;
-         
+
         char buf2[20];
          sprintf(buf, "%i 0", mode);
          buf2[buflen] = 0;
-         
+
 		sprintf(buf, "%i 0", mode);
 
 		cPacket pck;
@@ -3375,7 +3375,7 @@ void cClient::Send_Action(int type, int mode)
 		pck.AddByte(0x24);
 		pck.AddData(&buf, buflen-1);
 		pck.AddByte(0);
-		
+
 		Send(&pck);
 		last_skill = mode;
 		break;}
@@ -3387,62 +3387,62 @@ void cClient::Send_Action(int type, int mode)
 		break;}
 	   case ACTIONTYPE_OPENDOOR:{
 
-       
+
 	        cPacket p;
 	        p.AddByte(0x12);
 	        p.AddWord(5);
 	        p.AddByte(0x58);
 	        p.AddByte(0);
 	        Send(&p);
-	        
+
 	        return;
 		break;}
 	   case ACTIONTYPE_BOW:{
 		//packet.packet.DoAction.m_type = 0xc7;
 		//packet.packet.DoAction.m_len = 3 + 5;
 		//strcpy(&packet.packet.DoAction.m_name, "bow");
-		
+
 		char buf3[20];
          sprintf(buf3, "bow", mode);
          buf3[3] = 0;
-         
+
 	    cPacket p;
         p.AddByte(0x12);
         p.AddWord(8);
         p.AddByte(0xc7);
         p.AddData(&buf3, 4);
-        
+
         Send(&p);
         return;
-        
+
         break;}
 	   case ACTIONTYPE_SALUTE:{
 		//packet.packet.DoAction.m_type = 0xc7;
 		//packet.packet.DoAction.m_len = 6 + 5;
 		//strcpy(&packet.packet.DoAction.m_name, "salute");
-		
-			
+
+
 		char buf3[20];
          sprintf(buf3, "salute", mode);
          buf3[6] = 0;
-         
+
 	    cPacket p;
         p.AddByte(0x12);
         p.AddWord(11);
         p.AddByte(0xc7);
         p.AddData(&buf3, 7);
-        
+
         Send(&p);
         return;
-        
+
 		break;}
 	   default:
 		return;
-         
+
         }
-  
+
         Send(&packet);
-	
+
 }
 
 
@@ -3522,14 +3522,14 @@ void cClient::Send_ItemEquipReq (Uint32 itemid, Uint32 charid, Uint16 model)
 
 void cClient::Send_Target (Uint32 cursorid, Uint32 targetid)
 {
-  
+
   cPacket packet;
   packet.FillPacket (PCK_Target);
   packet.packet.Target.m_type = 0x00;
   packet.packet.Target.m_cursorID = cursorid;
   packet.packet.Target.m_clickedID = targetid;
   Send (&packet);
-  
+
   last_target = targetid;
 }
 
@@ -3755,13 +3755,13 @@ cCharacter *cClient::player_character()
 bool cClient::Walk_Simple (Uint8 action)
 {
   int direction;
-  
+
   if(runflag==0x80)
    walk_direction |= 0x80;
   else
   if(walk_direction & 0x80)
-   walk_direction ^= 0x80; 
-   
+   walk_direction ^= 0x80;
+
   switch (action)
       {
       case WALK_RIGHT:
@@ -3882,10 +3882,10 @@ void cClient::SendGumpDialogRet (int gumpID, int playerID, int ret_value)
 
 void cClient::CastSpell (int spellid)
 {
-    
-    
+
+
   cPacket packet;
-  
+
   if(spellbooktype == 1)
   {
        int len;
@@ -3902,14 +3902,14 @@ void cClient::CastSpell (int spellid)
        return;
   }
 
-  
+
   packet.AddByte (0xBF);
   packet.AddWord (0x09);
   packet.AddWord (0x1C);
   packet.AddWord (0x02);
   packet.AddWord (spellid);
   Send (&packet);
-  
+
   last_spell = spellid;
 }
 
@@ -3919,27 +3919,27 @@ Uint32 cClient::GetEnemy ()
   {
        return 0xFFFFFFFF;
   }
- 
+
   return enemy;
 }
 
 void cClient::toggleRunMode()
 {
- (runflag==0)?runflag=0x80:runflag=0;     
+ (runflag==0)?runflag=0x80:runflag=0;
 }
 
 void cClient::Act_ParticleEffect(cPacket * packet)
 {
  packet->SetPosition (1);
 
- //preamble    
+ //preamble
  Uint8 type = packet->GetByte();
  Uint32 source_serial = packet->GetDword();
  Uint32 dest_serial = packet->GetDword();
  Uint16 model = packet->GetWord();
  Uint16 x = packet->GetWord();
  Uint16 y = packet->GetWord();
- Uint8  z = packet->GetByte(); 
+ Uint8  z = packet->GetByte();
  Uint16 x2 = packet->GetWord();
  Uint16 y2 = packet->GetWord();
  Uint8  z2 = packet->GetByte();
@@ -3962,9 +3962,9 @@ void cClient::Act_ParticleEffect(cPacket * packet)
  //char idstr[2];
  //idstr[1] = 0;
  //sprintf(idstr, "%i", (int) type);
- 
+
  std::cout << "Particle: type=" << (int)type << ", ID=" << particle_id << endl;
- 
+
  switch(type)
  {
   case 2:{ //xyz particle
@@ -3982,13 +3982,13 @@ void cClient::Act_ParticleEffect(cPacket * packet)
       std::cout << "Z: " << (int)character->z() << endl;
      Uint32 p_id = pParticleEngine.AddEffect(particle_id, (float)character->x() * 1.0f, (float)character->y() * 1.0f, (float)character->z() * 1.0f);
      character->setParticle(p_id);
-     break;  
-   }  
+     break;
+   }
   case 0: {
        std::cout << "Moving FX: " << endl;
        pParticleEngine.AddMovingEffect(particle_id, (float) x * 1.0f, (float) y * 1.0f, (float)z/10.0f, (float) x2 * 1.0f, (float) y2 * 1.0f, (float)z2/10.0f);
        break;
        }
-  case 1: break;                       
+  case 1: break;
  }
 }

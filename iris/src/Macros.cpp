@@ -175,7 +175,7 @@ MacroLoader::MacroLoader()
 	}
 	char cMacros[2];
 	sprintf( cMacros, "%d", iMacroCount );
-	Logger::WriteLine( "\t|  -> Sucessfuly loaded " + std::string( cMacros ) );
+	Logger::WriteLine( "\t| -> Sucessfuly loaded " + std::string( cMacros ) );
 }
 
 
