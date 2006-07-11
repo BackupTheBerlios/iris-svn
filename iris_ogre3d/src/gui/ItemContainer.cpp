@@ -84,7 +84,7 @@ ItemContainer::~ItemContainer ()
 }
 
 
-void ItemContainer::CreateGFX			(GumpHandler *gumps) {PROFILE printf("ItemContainer::CreateGFX\n"); }
+void ItemContainer::CreateGFX			(GumpHandler *gumps) {PROFILE if (0) printf("ItemContainer::CreateGFX\n"); }
 void ItemContainer::DrawStep			(GumpHandler *gumps) {PROFILE}
 void ItemContainer::DestroyGFX		() {PROFILE}
 void ItemContainer::Draw (GumpHandler * gumps)

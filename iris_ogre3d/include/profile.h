@@ -1,6 +1,31 @@
 #ifndef _PROFILE_H_
 #define _PROFILE_H_
 
+
+#define ENABLE_PROFILING
+
+#ifdef ENABLE_PROFILING
+	// for calltime and callcount profiling and runtime callstacks/backtraces
+		
+	class cProfiler { public:
+		cProfiler(const char* sFile,const int iLine,const char* sFunc); // save current time
+		~cProfiler(); // calc time since constructor
+		
+		static void		PrintStackTrace	();
+	};
+	
+	/// put this macro at the beginning of a function
+	#define	PROFILE		cProfiler local_profiler(__FILE__,__LINE__,__FUNCTION__);
+	#define	PROFILE_PRINT_STACKTRACE cProfiler::PrintStackTrace();
+	#define	DEBUG_PRINT_WITH_STACKTRACE(msg)	{ PROFILE_PRINT_STACKTRACE printf("%s\n",msg); }
+#else 
+	#define	PROFILE 
+	#define	PROFILE_PRINT_STACKTRACE
+	#define	DEBUG_PRINT_WITH_STACKTRACE(msg) 
+#endif
+	
+	
+/* ... old ... obsolete ... 
 //#define ENABLE_PROFILING
 
 #ifdef ENABLE_PROFILING
@@ -33,6 +58,6 @@
 	#define	PRINT_COLLECTED_PROFILE_INFO
 	#define	DEBUG_PRINT_WITH_STACKTRACE(msg) 
 #endif
-	
+*/
 	
 #endif

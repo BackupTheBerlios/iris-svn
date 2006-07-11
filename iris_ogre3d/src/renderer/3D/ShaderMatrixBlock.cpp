@@ -137,6 +137,8 @@ void cShaderMatrixBlock::CheckRay (float x, float y, float z,
                                            float &intensity) 
 
 {PROFILE
+	
+	printf("cShaderMatrixBlock::CheckRay contains obsolote lighting code, shouldn't be called !\n");
   
 assert (light_dir[0] || light_dir[1] || light_dir[2]);
   
@@ -244,8 +246,8 @@ return;
     
 
 
-    ((cMapblock3D *) block)->GetShaderMatrix ()->CheckRay (x, y, z, light_dir,
-                                                           intensity);
+    //((cMapblock3D *) block)->GetShaderMatrix ()->CheckRay (x, y, z, light_dir,
+    //                                                       intensity);
 
 }
 

@@ -150,7 +150,7 @@ int cGrannyFile::getBoneID(const char *name)
 
 void cGrannyFile::load (std::string filename, std::string basepath)
 {
-	printf("cGrannyFile::load(%s,%s)\n",filename.c_str(),basepath.c_str());
+	//printf("cGrannyFile::load(%s,%s)\n",filename.c_str(),basepath.c_str());
 	static cOgreGrannyWrapper* pGrannyWrapper = 0;
 	if (!pGrannyWrapper) pGrannyWrapper = cOgreWrapper::GetSingleton().CreateOgreGrannyWrapper();
 		

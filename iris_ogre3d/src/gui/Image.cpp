@@ -81,7 +81,7 @@ int Image::GetGump (void)
 
 
 void Image::CreateGFX		(GumpHandler *gumps) { PROFILE
-	printf("Image::CreateGFX\n"); 
+	if (0) printf("Image::CreateGFX\n"); 
 	if (mlRect.size() > 0) return;
 	mlRect.push_back(Control::CreateRect());
 }

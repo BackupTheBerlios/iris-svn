@@ -74,7 +74,7 @@ cDynamicObject::~cDynamicObject()
 
 
 void	cDynamicObject::DestroyGfx	() {PROFILE
-	DEBUG_PRINT_WITH_STACKTRACE("cDynamicObject::DestroyGfx")
+	//DEBUG_PRINT_WITH_STACKTRACE("cDynamicObject::DestroyGfx")
 	if (!mpSceneNode) return;
 	--cOgreWrapper::GetSingleton().miObjectCounter;
 	printf("cDynamicObject::DestroyGfx, %d objects left\n",cOgreWrapper::GetSingleton().miObjectCounter);
@@ -96,7 +96,7 @@ void	cDynamicObject::DrawStep	(const int x, const int y, const int z, const Uint
 		cStaticModel *staticmodel = StaticModelLoader::GetInstance()->getModel( model );
 		if (staticmodel) {
 			const char* meshname = staticmodel->GetOgreMeshName();
-			printf("cDynamicObject::DrawStep loadmesh %s\n",meshname);
+			//printf("cDynamicObject::DrawStep loadmesh %s\n",meshname);
 			if (meshname) {
 				++cOgreWrapper::GetSingleton().miObjectCounter;
 				mpSceneNode = cOgreWrapper::GetSingleton().mSceneMgr->getRootSceneNode()->createChildSceneNode();
@@ -117,7 +117,7 @@ void	cDynamicObject::DrawStep	(const int x, const int y, const int z, const Uint
 		
 	
 	if (mbVisible != bVisible) { 
-		printf("cDynamicObject::DrawStep mbVisible = %d\n",mbVisible?1:0);
+		//printf("cDynamicObject::DrawStep mbVisible = %d\n",mbVisible?1:0);
 		mbVisible = bVisible; mpSceneNode->setVisible(mbVisible); 
 		//mpSceneNode->showBoundingBox(mbVisible);
 	}
@@ -125,7 +125,7 @@ void	cDynamicObject::DrawStep	(const int x, const int y, const int z, const Uint
 	
 	if (!bChangedRelPos && (lastx != x || lasty != y || lastz != z)) bChangedRelPos = true;
 	if (bChangedRelPos) {
-		printf("cDynamicObject::DrawStep bChangedRelPos %d,%d,%d\n",x,y,z);
+		//printf("cDynamicObject::DrawStep bChangedRelPos %d,%d,%d\n",x,y,z);
 		mpSceneNode->setPosition(x,y,Ogre::Real(z) * 0.1f);
 		bChangedRelPos = false;
 		lastx = x;
@@ -477,6 +477,7 @@ void cDynamicObjectList::CalcAmbientLight (sColor ambient_color,
                                            sColor sun_color,
                                            float direction[3])
 {PROFILE
+	printf("cDynamicObjectList::CalcAmbientLight contains obsolote code, shouldn't be called !\n");
   dynamiclist_t::iterator iter;
   for (iter = dynamiclist.begin (); iter != dynamiclist.end (); iter++)
       {
@@ -490,6 +491,7 @@ void cDynamicObjectList::CalcAmbientLight (sColor ambient_color,
 
 void cDynamicObjectList::SetRecalcAmbientLightFlag ()
 {PROFILE
+	printf("cDynamicObjectList::SetRecalcAmbientLightFlag contains obsolote code, shouldn't be called !\n");
   dynamiclist_t::iterator iter;
   for (iter = dynamiclist.begin (); iter != dynamiclist.end (); iter++)
     iter->second->SetRecalcAmbientLightFlag ();

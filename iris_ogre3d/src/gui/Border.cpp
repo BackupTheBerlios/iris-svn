@@ -117,7 +117,7 @@ void Border::generateTextures ()
   generated = true;
 }
 
-void Border::CreateGFX		(GumpHandler *gumps) {PROFILE printf("Border::CreateGFX\n"); 
+void Border::CreateGFX		(GumpHandler *gumps) {PROFILE if (0) printf("Border::CreateGFX\n"); 
 	if (mlRect.size() > 0) return;
 	for (int i=0;i<9;++i) mlRect.push_back(Control::CreateRect());
 }

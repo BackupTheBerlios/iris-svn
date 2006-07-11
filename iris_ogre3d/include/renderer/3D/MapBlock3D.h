@@ -90,7 +90,7 @@ public:
    virtual void set_light_color (sColor ambient_color, sColor sun_color);
    virtual void set_light_direction (float light_direction[3]);
 
-protected:
+public:
 	//float groundtiles[8*8*4*3];
 	float groundnormals[9][9][3];
 	//float groundtexs[8*8*4*2];

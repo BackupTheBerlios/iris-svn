@@ -38,7 +38,7 @@ cMapblock *Mapbuffer3D::CreateBlock( int x, int y )
 
 	if ( !block )
 	{
-		printf("Mapbuffer3D::CreateBlock : new cMapblock3D\n");
+		//printf("Mapbuffer3D::CreateBlock : new cMapblock3D\n");
 		block = new cMapblock3D( x, y );
 		Add( block );
 	}
@@ -46,7 +46,7 @@ cMapblock *Mapbuffer3D::CreateBlock( int x, int y )
 	if ( !block->generated() )
 	{
 		cLightNodeEnvironment environment;
-		printf("Mapbuffer3D::CreateBlock : generate\n");
+		//printf("Mapbuffer3D::CreateBlock : generate\n");
 		GetEnvironment( x, y, environment );
 		//fprintf(stderr, "Generating %i %i\n", x, y);
 		block->Generate( environment );

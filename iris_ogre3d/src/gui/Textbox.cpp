@@ -38,7 +38,7 @@ Textbox::~Textbox ()
 {PROFILE
 }
 
-void Textbox::CreateGFX			(GumpHandler *gumps) {PROFILE printf("Textbox::CreateGFX\n"); }
+void Textbox::CreateGFX			(GumpHandler *gumps) {PROFILE if (0) printf("Textbox::CreateGFX\n"); }
 void Textbox::DrawStep			(GumpHandler *gumps) {PROFILE}
 void Textbox::DestroyGFX		() {PROFILE}
 void Textbox::Draw (GumpHandler * gumps)

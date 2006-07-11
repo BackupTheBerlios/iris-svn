@@ -45,7 +45,7 @@ Container::~Container()
 }
 
 
-void Container::CreateGFX		(GumpHandler *gumps) {PROFILE printf("Container::CreateGFX\n"); }
+void Container::CreateGFX		(GumpHandler *gumps) {PROFILE if (0) printf("Container::CreateGFX\n"); }
 void Container::DrawStep		(GumpHandler *gumps) {PROFILE}
 void Container::DestroyGFX		() {PROFILE}
 void Container::Draw (GumpHandler * gumps)

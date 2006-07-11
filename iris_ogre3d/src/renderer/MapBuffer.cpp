@@ -22,6 +22,7 @@
 
 
 #include "renderer/MapBuffer.h"
+#include "robmap.h"
 
 
 
@@ -40,6 +41,7 @@ Mapbuffer::~Mapbuffer ()
 
 void Mapbuffer::Clear (void)
 {PROFILE
+	//cRobMap::GetSingleton().ClearCache();
 	MapBuffer_t::iterator iter;
 
 	for ( iter = root.begin (); iter != root.end (); iter++ )
@@ -51,8 +53,7 @@ void Mapbuffer::Clear (void)
 }
 
 /// called every frame, calls ALL mapblocks, not only visible ones...
-void Mapbuffer::StepAll (void)
-{PROFILE
+void Mapbuffer::StepAll (void) {PROFILE
 	MapBuffer_t::iterator iter;
 
 	for ( iter = root.begin (); iter != root.end (); iter++ )
@@ -63,6 +64,7 @@ void Mapbuffer::StepAll (void)
 
 cMapblock *Mapbuffer::Get( int x, int y )
 {PROFILE
+	//cRobMap::GetSingleton().GetBlock(x,y);
 	if ( ( x < 0 ) || ( y < 0 ) )
 	{
 		return NULL;
@@ -84,6 +86,9 @@ cMapblock *Mapbuffer::Get( int x, int y )
 
 void Mapbuffer::Add (cMapblock * block)
 {PROFILE
+	
+	//PROFILE_PRINT_STACKTRACE
+	
   assert (block);
 
   Uint16 x = block->getBlockX ();
@@ -94,6 +99,7 @@ void Mapbuffer::Add (cMapblock * block)
 
 void Mapbuffer::FreeBuffer (int radius)
 {PROFILE
+	// obsolete
   MapBuffer_t::iterator iter;
 
   int blockx, blocky;
@@ -112,7 +118,6 @@ void Mapbuffer::FreeBuffer (int radius)
               return;
             }
       }
-
 }
 
 void Mapbuffer::SetUsageFlag (bool value)

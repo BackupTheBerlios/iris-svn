@@ -558,6 +558,7 @@ void cCharacterList::Delete (unsigned int id)
 bool cCharacter::CheckRay (float vecOrigin[3], float vecDir[3], float deltax,
 						   float deltay, float deltaz, float &lambda)
 {PROFILE
+	printf("cCharacter::CheckRay contains obsolote code, shouldn't be called !\n");
 
 	float vecs[3][3];
 	float act_lambda;
@@ -595,6 +596,7 @@ cCharacter *cCharacterList::CheckRay (float vecOrigin[3], float vecDir[3],
 									  float deltax, float deltay,
 									  float deltaz, float &lambda)
 {PROFILE
+	printf("cCharacterList::CheckRay contains obsolote code, shouldn't be called !\n");
 	float act_lambda;
 	cCharacter *result = NULL;
 	lambda = 100000000.0f;

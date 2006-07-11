@@ -134,6 +134,11 @@ void CreateObject (struct sStaticObject *object, unsigned int x,
 
 bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 {PROFILE
+	
+	// TODO : this method contains lots of obsolete code !
+	
+	//printf("cMapblock3D::Generate is obsolete and shouldn't be called !\n");
+	
 //  float light_vector[3] =
 //    { 0.57735026918963, 0.57735026918963, 0.57735026918963 };
     m_light_direction[0] = 1.0f;
@@ -303,6 +308,7 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 					object->hue = statics_p->Hue;
 					CreateObject( object, x + statics_p->x, y + statics_p->y, statics_p->z, statics_p->TileID, model );
 
+					object->light = 0;
 					if ( model->flag( MODELFLAG_TILEABLE ) )
 					{
 						object->light = new cMotiveBasedLight_Tile( object->x, object->y, object->z, m_blockx, m_blocky, model, environment );
@@ -382,8 +388,8 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
   //nodequads.Sort(); 
   m_recalc_ambient_light = true;    // Make sure, that ambient lighting is done
 
-  light_handler->CalcAmbientLight (m_ambient_light_color, m_sun_light_color, m_light_direction,
-                                   &shader_matrix);
+  //light_handler->CalcAmbientLight (m_ambient_light_color, m_sun_light_color, m_light_direction,
+  //                                 &shader_matrix);
 
   // Generate Water 
   for (y = 0; y < 8; y++)
@@ -414,6 +420,7 @@ bool debug_hidestatic = false;
 
 
 void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float move_x, float move_y) {PROFILE
+	return;
 	if (debug_hidestatic) return;
 	
 	// create manual object convert to mesh for terrain itself
@@ -488,7 +495,7 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 	
 	if (!bChangedRelPos && (lastx != x || lasty != y)) bChangedRelPos = true;
 	if (bChangedRelPos) {
-		printf("cMapblock3D::DrawStep(%d,%d) : setPosition\n",x,y);
+		//printf("cMapblock3D::DrawStep(%d,%d) : setPosition\n",x,y);
 		// mpSceneNode->setPosition(move_x,move_y,0);
 		bChangedRelPos = false;
 		bMustRebuild = true;
@@ -497,7 +504,7 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 	}
 	
 	if (lastframedrawn != cOgreWrapper::miFrameNum-1 && !bVisible) { 
-		printf("cMapblock3D::DrawStep(%d,%d) : setbVisible\n",x,y);
+		//printf("cMapblock3D::DrawStep(%d,%d) : setbVisible\n",x,y);
 		bVisible = true;
 		bMustRebuild = true;
 	}
@@ -552,8 +559,8 @@ void	cMapblock3D::DrawStep	(const int x, const int y, bool do_culling, float mov
 
 
 void	cMapblock3D::DestroyGfx	() {PROFILE
-	printf("cMapblock3D::DestroyGfx start");
-	DEBUG_PRINT_WITH_STACKTRACE("cMapblock3D::DestroyGfx")
+	//printf("cMapblock3D::DestroyGfx start");
+	//DEBUG_PRINT_WITH_STACKTRACE("cMapblock3D::DestroyGfx")
 	
 	
 	if (mpStaticGeom) {
@@ -569,7 +576,7 @@ void	cMapblock3D::DestroyGfx	() {PROFILE
 		cOgreWrapper::GetSingleton().mSceneMgr->destroyManualObject(mpManualObj);
 		mpManualObj = 0;
 	}
-	printf("cMapblock3D::DestroyGfx end");
+	//printf("cMapblock3D::DestroyGfx end");
 }
 
 /// called every frame for all blocks
@@ -791,6 +798,7 @@ sStaticObject *cMapblock3D::CheckRay (float vecOrigin[3], float vecDir[3],
                                       float &distance, float deltax,
                                       float deltay, int max_z)
 {PROFILE
+	printf("cMapblock3D::CheckRay contains obsolote code, shouldn't be called !\n");
 
   float act_dist, lambda, act_lambda, lam2;
   sStaticObject *result = NULL;
@@ -922,6 +930,7 @@ void cMapblock3D::SetRecalcAmbientLightFlag ()
 
 void cMapblock3D::AddMultiObject(Uint32 id, Uint16 tileid, Uint16 dye, int x, int y, int z)
 {PROFILE
+	printf("cMapblock3D::AddMultiObject contains obsolote lighting code, shouldn't be called !\n");
 
 	cStaticModel *model = StaticModelLoader::GetInstance()->getModel (tileid);
   if (!model) return;

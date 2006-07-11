@@ -86,7 +86,7 @@ Paperdoll::~Paperdoll ()
 }
 
 
-void Paperdoll::CreateGFX			(GumpHandler *gumps) {PROFILE printf("Paperdoll::CreateGFX\n"); }
+void Paperdoll::CreateGFX			(GumpHandler *gumps) {PROFILE if (0) printf("Paperdoll::CreateGFX\n"); }
 void Paperdoll::DrawStep			(GumpHandler *gumps) {PROFILE}
 void Paperdoll::DestroyGFX		() {PROFILE}
 void Paperdoll::Draw (GumpHandler * gumps)

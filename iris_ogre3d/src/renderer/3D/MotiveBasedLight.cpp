@@ -265,6 +265,7 @@ void cMotiveBasedLight_Entity::CalcAmbientLight (sColor ambient_color,
                                                  sColor sun_color,
                                                  float direction[3])
 {PROFILE
+	printf("cMotiveBasedLight_Entity::CalcAmbientLight contains obsolote code, shouldn't be called !\n");
   assert (m_model);
   int index;
 
@@ -322,6 +323,7 @@ void cMotiveBasedLight_Tile::CalcAmbientLight (sColor ambient_color,
                                                sColor sun_color,
                                                float direction[3])
 {PROFILE
+	printf("cMotiveBasedLight_Tile::CalcAmbientLight contains obsolote code, shouldn't be called !\n");
   assert (m_model);
   int index;
 

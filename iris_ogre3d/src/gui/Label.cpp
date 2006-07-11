@@ -96,7 +96,7 @@ void Label::refresh ()
 	element = new cTextElement( _text, hue, _font, _style );
 }
 
-void Label::CreateGFX			(GumpHandler *gumps) {PROFILE printf("Label::CreateGFX\n"); }
+void Label::CreateGFX			(GumpHandler *gumps) {PROFILE if (0) printf("Label::CreateGFX\n"); }
 void Label::DrawStep			(GumpHandler *gumps) {PROFILE}
 void Label::DestroyGFX		() {PROFILE}
 void Label::Draw (GumpHandler * gumps)

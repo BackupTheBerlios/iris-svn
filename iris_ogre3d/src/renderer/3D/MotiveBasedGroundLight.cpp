@@ -144,6 +144,7 @@ void cMotiveBasedGroundLight::CalcAmbientLight (sColor ambient_color,
 {PROFILE
   int index;
   assert (shader_matrix);
+	printf("cMotiveBasedGroundLight::CalcAmbientLight contains obsolote code, shouldn't be called !\n");
 
   sColor *color_iter = ambient_color_array;
 

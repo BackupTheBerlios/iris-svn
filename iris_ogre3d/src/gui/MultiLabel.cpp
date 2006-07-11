@@ -225,7 +225,7 @@ void cMultiLabel::Create ()
   lines.clear ();
 }
 
-void cMultiLabel::CreateGFX			(GumpHandler *gumps) {PROFILE printf("cMultiLabel::CreateGFX\n"); }
+void cMultiLabel::CreateGFX			(GumpHandler *gumps) {PROFILE if (0) printf("cMultiLabel::CreateGFX\n"); }
 void cMultiLabel::DrawStep			(GumpHandler *gumps) {PROFILE}
 void cMultiLabel::DestroyGFX		() {PROFILE}
 void cMultiLabel::Draw (GumpHandler * gumps)

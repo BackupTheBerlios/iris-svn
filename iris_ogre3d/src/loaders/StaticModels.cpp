@@ -570,15 +570,17 @@ const char* cStaticModel::GetOgreMeshName () {PROFILE
 		int texturecount = textureset.size();
 		gModelTextureUsageCounter[texturecount]++;
 		
+		/*
 		printf("gModelTextureUsageCounter :"); 
 		for (std::map<int,int>::iterator it=gModelTextureUsageCounter.begin();it!=gModelTextureUsageCounter.end();++it) {
 			printf(" (%d,%d)",it->first,it->second);
 		}
 		printf("\n"); 
+		*/
 		
 		// TODO : ghoulsblade : sort faces by material first ? doesn't seem neccessary, material change count has been very low during testing
 		// TODO : ghoulsblade : (low-prio) store texturecoords also in "node", then indexes can be used efficiently
-		printf("cStaticModel::GetOgreMeshName::firstload : numfaces=%d textureset.size()=%d\n",m_faces.size(),textureset.size());
+		//printf("cStaticModel::GetOgreMeshName::firstload : numfaces=%d textureset.size()=%d\n",m_faces.size(),textureset.size());
 		for (std::set<int>::iterator itor = textureset.begin();itor != textureset.end();++itor) {
 			
 			// update material
@@ -652,7 +654,7 @@ const char* cStaticModel::GetOgreMeshName () {PROFILE
 		myManualObject->convertToMesh(msOgreMeshName);
 		
 		//msOgreMeshName = "ogrehead.mesh";
-		printf("cStaticModel::GetOgreMeshName::firstload : num_faces=%d, materialchange=%d \n",m_faces.size(),iMaterialChangeCounter);
+		// printf("cStaticModel::GetOgreMeshName::firstload : num_faces=%d, materialchange=%d \n",m_faces.size(),iMaterialChangeCounter);
 		
 		// TODO : better modelformat that has position,normal,texcoord in one vertex, and faces only have indices
 		// TODO : ghoulsblade :  alpha from Render (x, y, z, alpha) is currently ignored 
@@ -702,7 +704,8 @@ bool cStaticModel::CheckRay (float vecOrigin[3], float vecDir[3],
                              float deltax, float deltay, float deltaz,
                              float &lambda)
 {PROFILE
-
+	printf("cStaticModel::CheckRay contains obsolote code, shouldn't be called !\n");
+	
   float vecs[3][3];
   float act_lambda;
   bool result = false;

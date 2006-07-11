@@ -16,6 +16,7 @@
 #include "profile.h"
 
 using namespace Ogre;
+Ogre::LogManager* gLogMan = 0;
 
 bool	IntersectRayTriangle	(const Vector3& ray_origin,const Vector3& ray_dir,const Vector3& a,const Vector3& b,const Vector3& c,float* pfHitDist=0,float* pfABC=0);
 
@@ -65,6 +66,12 @@ cOgreWrapper::cOgreWrapper() : mbAlive(true), mRoot(0), mpTimer(0) {PROFILE
 
 bool	cOgreWrapper::Init			() {PROFILE
 	mpTimer = new cTimer(SDL_GetTicks());
+	
+	// create custom logmanager so ogre doesn't dump all that junk onto the console
+	gLogMan = new LogManager();
+	bool suppressFileOutput = false;
+	gLogMan->createLog("Ogre.log", true, false,suppressFileOutput);
+	//gLogMan->createLog(logFileName, true, true);
 	
 	mRoot = new Root();
 

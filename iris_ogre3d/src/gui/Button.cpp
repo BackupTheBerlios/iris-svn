@@ -118,7 +118,7 @@ int Button::GetDestinationPage (void)
 
 
 void Button::CreateGFX		(GumpHandler *gumps) {  PROFILE
-	printf("Button::CreateGFX\n"); 
+	if (0) printf("Button::CreateGFX\n"); 
 	if (mlRect.size() > 0) return;
 	mlRect.push_back(Control::CreateRect());
 }

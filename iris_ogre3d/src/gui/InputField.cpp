@@ -224,7 +224,7 @@ void InputField::recalcXCrop ()
 }
 
 
-void InputField::CreateGFX			(GumpHandler *gumps) {PROFILE printf("InputField::CreateGFX\n"); }
+void InputField::CreateGFX			(GumpHandler *gumps) {PROFILE if (0) printf("InputField::CreateGFX\n"); }
 void InputField::DrawStep			(GumpHandler *gumps) {PROFILE}
 void InputField::DestroyGFX		() {PROFILE}
 void InputField::Draw (GumpHandler * gumps)

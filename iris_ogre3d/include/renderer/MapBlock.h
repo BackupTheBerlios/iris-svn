@@ -37,7 +37,7 @@
 
 class cMapblock
 {
-protected:
+public:
  cStaticObjectList objects;
  bool _in_use;
  bool _generated;

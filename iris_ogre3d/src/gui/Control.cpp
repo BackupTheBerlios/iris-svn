@@ -371,7 +371,7 @@ void Control::GUIHandlerStep	(GumpHandler *gumps) {PROFILE
 	if (mbNeedGfxUpdate) mbNeedGfxUpdate = false;
 }
 
-void Control::CreateGFX			(GumpHandler *gumps) {PROFILE printf("Control::CreateGFX\n"); }
+void Control::CreateGFX			(GumpHandler *gumps) {PROFILE if (0) printf("Control::CreateGFX\n"); }
 void Control::DestroyGFX		() {PROFILE 
 	for (int i=0;i<mlRect.size();++i) { DestroyRect(mlRect[i]); mlRect[i] = 0; }
 	mlRect.clear();

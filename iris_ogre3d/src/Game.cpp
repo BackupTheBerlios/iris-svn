@@ -515,7 +515,7 @@ void Game::Handle( void )
 			if (!pBBox->isVisible()) pBBox->setVisible(true);
 			
 			Ogre::Vector3 mid = 0.5*(found->getWorldBoundingBox().getMaximum()+found->getWorldBoundingBox().getMinimum());
-			printf("mousepickmid = %f,%f,%f\n",mid.x,mid.y,mid.z);
+			//printf("mousepickmid = %f,%f,%f\n",mid.x,mid.y,mid.z);
 			
 		} else {
 			if (pBBox->isVisible()) pBBox->setVisible(false);
@@ -588,10 +588,13 @@ void Game::Handle( void )
 		pParticleEngine.Handle();
 		pLightManager.Handle( new_tick );
 
+		/*
+		ghoulsblade : pMapbufferHandler was mostly replaced by robmap
 		if ( m_kRenderer )
 		{
 			pMapbufferHandler.buffer()->FreeBuffer( m_kRenderer->GetViewDistance() + 2 );
 		}
+		*/
 	}
 }
 

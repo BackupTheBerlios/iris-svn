@@ -81,7 +81,7 @@ bool Checkbox::IsChecked()
 }
 
 
-void Checkbox::CreateGFX	(GumpHandler *gumps) {PROFILE printf("Checkbox::CreateGFX\n"); 
+void Checkbox::CreateGFX	(GumpHandler *gumps) {PROFILE if (0) printf("Checkbox::CreateGFX\n"); 
 	if (mlRect.size() > 0) return;
 	mlRect.push_back(Control::CreateRect());
 }

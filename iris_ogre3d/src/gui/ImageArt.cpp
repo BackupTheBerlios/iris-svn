@@ -75,7 +75,7 @@ int ImageArt::GetHue() const
 }
 
 
-void ImageArt::CreateGFX		(GumpHandler *gumps) { PROFILE printf("ImageArt::CreateGFX\n"); }
+void ImageArt::CreateGFX		(GumpHandler *gumps) { PROFILE if (0) printf("ImageArt::CreateGFX\n"); }
 void ImageArt::DrawStep			(GumpHandler *gumps) { PROFILE}
 void ImageArt::DestroyGFX		() {PROFILE}
 void ImageArt::Draw( GumpHandler *kGumps )

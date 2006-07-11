@@ -85,6 +85,7 @@ ParticleEngine.cpp \
 ParticleHandler.cpp \
 ParticleLoader.cpp \
 ParticleTextures.cpp \
+robmap.cpp \
 RadioButton.cpp \
 Renderer.cpp \
 Renderer3D.cpp \

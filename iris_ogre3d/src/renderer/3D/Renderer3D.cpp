@@ -60,7 +60,7 @@
 #include "ogrewrapper.h"
 #include <Ogre.h>
 #include "robinput.h"
-
+#include "robmap.h"
 
 
 
@@ -302,11 +302,16 @@ void Renderer3D::RenderScene( void )
 				);
 			*/
 			
+			int camoff_x = pCamera.GetBlockX() - cRobMap::iOriginX * ROBMAP_CHUNK_SIZE;
+			int camoff_y = pCamera.GetBlockY() - cRobMap::iOriginY * ROBMAP_CHUNK_SIZE;
 			cOgreWrapper::GetSingleton().SetCameraPos(Ogre::Vector3(
-				-(pCamera.GetX() - 0.5f), 
-				-(pCamera.GetY() - 0.5f), 
+				8.0*camoff_x - (pCamera.GetX() - 0.5f), 
+				8.0*camoff_y - (pCamera.GetY() - 0.5f), 
 				-(pCamera.GetZ() - 15.0f) * 0.1f
 				));
+				
+				
+			//printf("SetCameraPos(%f,%f)\n",8.0*camoff_x - (pCamera.GetX() - 0.5f), 8.0*camoff_y - (pCamera.GetY() - 0.5f));
 				
 			if (cInput::bKeys[cInput::kkey_i]) cOgreWrapper::GetSingleton().mCamera->moveRelative(Ogre::Vector3(0,0,5));
 			if (cInput::bKeys[cInput::kkey_k]) cOgreWrapper::GetSingleton().mCamera->moveRelative(Ogre::Vector3(0,0,-5));
@@ -552,11 +557,13 @@ void Renderer3D::RenderSkybox ()
 	*/
 }
 
-void Renderer3D::RenderTerrain (bool do_culling)
-{PROFILE
-  int blockx = pCamera.GetBlockX ();
-  int blocky = pCamera.GetBlockY ();
+void Renderer3D::RenderTerrain (bool do_culling) {PROFILE
+	int blockx = pCamera.GetBlockX ();
+	int blocky = pCamera.GetBlockY ();
+	
+	cRobMap::GetSingleton().UpdateCache(blockx,blocky,view_distance);
 
+	/*
   for (int y = -view_distance; y < view_distance; y++)
     for (int x = -view_distance; x < view_distance; x++)
         {
@@ -567,6 +574,7 @@ void Renderer3D::RenderTerrain (bool do_culling)
               }
         }
 	pMapbufferHandler.buffer()->StepAll();
+	*/
 }
 
 /* Water Renderer */
@@ -628,7 +636,10 @@ void Renderer3D::RenderDynamics( bool do_culling )
 	int max_y = (blocky + view_distance) * 8;
 	int dx = blockx * 8;
 	int dy = blocky * 8;
-
+	
+	dx = 8 * ( cRobMap::iOriginX * ROBMAP_CHUNK_SIZE);
+	dy = 8 * ( cRobMap::iOriginY * ROBMAP_CHUNK_SIZE);
+	
 	dynamiclist_t *dynamics = pDynamicObjectList.GetList();
 	dynamiclist_t::iterator iter;
 	
@@ -673,6 +684,7 @@ void Renderer3D::RenderDynamics( bool do_culling )
 		}
 		
 		object->DrawStep(object->x - dx, object->y - dy, object->z, object->alpha,bVisible);
+		//printf("object->DrawStep final(%f,%f) obj(%f,%f) d(%f,%f)\n",(float)(object->x - dx), (float)(object->y - dy),(float)(object->x), (float)(object->y),(float)(dx), (float)(dy));
 	}
 }
 
@@ -693,6 +705,8 @@ void Renderer3D::RenderCharacters (bool do_culling)
   int max_y = (blocky + view_distance) * 8;
   int dx = blockx * 8;
   int dy = blocky * 8;
+	dx = 8 * ( cRobMap::iOriginX * ROBMAP_CHUNK_SIZE);
+	dy = 8 * ( cRobMap::iOriginY * ROBMAP_CHUNK_SIZE);
 
   float colr, colg, colb;
 
