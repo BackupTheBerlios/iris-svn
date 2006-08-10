@@ -4,7 +4,7 @@ object ParticleEditForm: TParticleEditForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Edit Effect'
-  ClientHeight = 536
+  ClientHeight = 554
   ClientWidth = 714
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -570,9 +570,9 @@ object ParticleEditForm: TParticleEditForm
     object Label35: TLabel
       Left = 8
       Top = 80
-      Width = 44
+      Width = 207
       Height = 14
-      Caption = 'Effect ID:'
+      Caption = 'Spelleffect ID (Reference from UO Spells) :'
     end
     object Edit16: TEdit
       Left = 72
@@ -684,7 +684,7 @@ object ParticleEditForm: TParticleEditForm
       OnClick = Button9Click
     end
     object Edit19: TEdit
-      Left = 72
+      Left = 216
       Top = 76
       Width = 65
       Height = 22
