@@ -97,7 +97,7 @@ sdl.lib sdl_image.lib"
 				AdditionalOptions="/LIBPATH:&quot;libs/bin&quot;
 opengl32.lib glu32.lib glut32.lib glaux.lib
 sdl.lib sdl_image.lib"
-				OutputFile="$(OutDir)/$(ProjectName).exe"
+				OutputFile="bin/$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
@@ -461,25 +461,6 @@ sdl.lib sdl_image.lib"
 			</File>
 		</Filter>
 		<Filter
-			Name="xml"
-			Filter="">
-			<File
-				RelativePath=".\xml\a.xml">
-			</File>
-			<File
-				RelativePath=".\xml\config.xml">
-			</File>
-			<File
-				RelativePath=".\xml\granny.xml">
-			</File>
-			<File
-				RelativePath=".\xml\granny_aos.xml">
-			</File>
-			<File
-				RelativePath=".\xml\smd.xml">
-			</File>
-		</Filter>
-		<Filter
 			Name="loaders"
 			Filter="">
 			<File
@@ -512,7 +493,7 @@ sdl.lib sdl_image.lib"
 			</File>
 		</Filter>
 		<File
-			RelativePath=".\ReadMe.txt">
+			RelativePath=".\bin\Readme.txt">
 		</File>
 	</Files>
 	<Globals>
