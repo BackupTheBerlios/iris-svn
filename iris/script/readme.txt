@@ -175,3 +175,7 @@ gui_loadform (const x, const y, const gfm_file, [const is_container]){}
 cliloc_getmessage(const id)
 
 
+Examples:
+
+font_register:
+	font_register(0, "fonts/font7.ttf", 18, 946);

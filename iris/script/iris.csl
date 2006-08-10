@@ -248,25 +248,8 @@ update_enemy_statusbar(const container, const charid)
 
 main ()
 {
-// It's now configured in the config.xml file !!
-/*
-	font_register(0, "fonts/font7.ttf", 18, 946);
-	font_register(1, "fonts/font3.ttf", 13, 946);
-	font_register(2, "fonts/font3.ttf", 16, 946);
-	font_register(3, "fonts/font1.ttf", 15, 946);
-	font_register(4, "fonts/font5.ttf", 16, 946);
-	font_register(5, "fonts/font5.ttf", 15, 946);
-	font_register(6, "fonts/font6.ttf", 14, 946);
-	font_register(7, "fonts/font7.ttf", 13, 946);
-	font_register(8, "fonts/font8.ttf", 19, 946);
-	font_register(9, "fonts/font4.ttf", 13, 946);
-	font_register(10, "fonts/font2.ttf", 13, 946);
-*/
-
-//Currently Disabled until Tensor get's Day&Night Cylce working
-
-//	load_world_light_map ("textures/ambient_light_gradient.bmp", "textures/sun_light_gradient.bmp");
-//	load_world_fog_map ("textures/ambient_light_gradient.bmp");
+	load_world_light_map ("textures/ambient_light_gradient.bmp", "textures/sun_light_gradient2.bmp");
+	load_world_fog_map ("textures/ambient_light_gradient.bmp");
 
 	gui_translate((config_getvalue(CONFIG_WIDTH)-640)/2, (config_getvalue(CONFIG_HEIGHT)-480) /2);
 	display_main_menu();	
@@ -651,12 +634,14 @@ handler_on_backpack (const sender)
 }
 
 //function to open the new Quest Gump in Paperdoll
+/*
 handler_on_quest (const sender)
 {
 	log("Quest Gump");
 	log(net_getplayercharacter());
 	net_openquestgump( net_getplayercharacter(), 0x32 );
 }
+*/
 
 handler_on_close_backpack (const sender)
 {

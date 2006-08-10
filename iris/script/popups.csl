@@ -155,41 +155,11 @@ GetEntryString(var entry)
 	
 	// get locale string from cliloc.*
 	entrystr = cliloc_getmessage(3000000 + entry);
+
 	if (entrystr != "")
 	{
 		return entrystr;
 	}
 
-	// this switch could be deleted, because cliloc_getmessage finds the current popupstring
-/*
-	switch(entry)
-	{
-		case 0x17EB: entrystr = "Open Paperdoll"; break;
-		case 0x17D7: entrystr = "Buy"; break;
-		case 0x17D8: entrystr = "Sell"; break;
-		case 0x17D9: entrystr = "Open Bankbox"; break;
-		case 0x1801: entrystr = "Open Backpack"; break;
-		case 0x17DC: entrystr = "Follow"; break;
-		case 0x17DF: entrystr = "Kill"; break;
-		case 0x17E0: entrystr = "Stop"; break;
-		case 0x17E1: entrystr = "Transfer"; break;
-		case 0x17E2: entrystr = "Stay"; break;
-		case 0x17E6: entrystr = "Release"; break;
-		case 0x17E9: entrystr = "Look at"; break;
-		case 0x17E8: entrystr = "Hire"; break;
-		case 0x17EE: entrystr = "Stable"; break;
-		case 0x17EF: entrystr = "Claim All"; break;
-		case 0x17F0: entrystr = "Claim"; break;
-		case 0x17F2: entrystr = "Tame"; break;
-		case 0x1802: entrystr = "Talk"; break;
-		case 0x17EA: entrystr = "Open"; break;
-		case 0x17F3: entrystr = "Close"; break;
-		case 0x17F4: entrystr = "Use"; break;
-		case 0x1838: entrystr = "Auto Renew Inventory Insurance"; break;
-		case 0x1839: entrystr = "Toggle Item Insurance"; break;
-		case 0x183A: entrystr = "Cancel Renewing Inventory Insurance"; break;
-		default: entrystr = "Not Defined";
-	}
-*/
 	return entrystr = "Not Defined";
 }
