@@ -1,3 +1,0 @@
-#include <windows.h>
-
-MAPRENDERERAPP		ICON	DISCARDABLE	"MapRenderer.ico"
