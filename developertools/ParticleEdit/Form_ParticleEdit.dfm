@@ -4,7 +4,7 @@ object ParticleEditForm: TParticleEditForm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Edit Effect'
-  ClientHeight = 554
+  ClientHeight = 557
   ClientWidth = 714
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET

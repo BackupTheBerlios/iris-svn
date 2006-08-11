@@ -27,7 +27,7 @@ uses
   Dialogs, Menus, ComCtrls, Unit_Particles, Unit_Settings, form_ParticleEdit, FileCtrl;
 
 const
-  VersionString = '0.92';
+  VersionString = '0.93';
 
 type
   TMainForm = class(TForm)
