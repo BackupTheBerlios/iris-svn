@@ -1337,13 +1337,6 @@ struct  ServerPacket_s
 			NBYTE	m_unk[3];		// 00 32 00
 		} War;
 
-		// PCK_Ping (0x73)
-		struct 
-		{
-			NBYTE	m_cmd;
-			NBYTE	m_seq;
-		} Ping;
-
 		// PCK_VendOpenBuy (0x74)
 		struct 
 		{

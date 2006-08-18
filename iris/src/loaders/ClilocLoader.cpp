@@ -2,7 +2,7 @@
 // File: ClilocLoader.cpp
 // Created by: ArT-iX ArT-iX@libero.it
 // 12.06.2005 modified by SiENcE
-//            -added support for all Cliloc Strings for non-english Languages 
+//            -added support for all Cliloc Strings for non-english Languages
 
 /*****
 *
@@ -47,7 +47,7 @@ typedef unsigned char    byte;
 typedef unsigned short   Unicode2Bytes;
 typedef unsigned int     Unicode4Bytes;
 
-void UTF8Decode2BytesUnicode(const std::vector< byte > &input, std::vector< Unicode2Bytes >& output)
+void UTF8Decode2BytesUnicode(const std::vector< byte > &input, std::vector< Unicode2Bytes > &output)
 {
 	for(unsigned int i=0; i < input.size();)
 	{
@@ -133,7 +133,7 @@ bool cClilocLoader::Init(std::string path)
 		msg.resize(msglen+1);
 		clilocfile.read ((char*)&msg[0], msglen);
 		msg[msglen] = 0;
-		
+
 		#if 0
 		output.clear();
 		UTF8Decode2BytesUnicode(msg, output);
@@ -142,12 +142,12 @@ bool cClilocLoader::Init(std::string path)
 		#else
 		message = (char*)&msg[0];
 		#endif
-		
+
 		cliloc_messages.insert (make_pair (index, message));
 	}
 
 	clilocfile.close ();
-	
+
 //	return true;
 
 	if ( language!=default_language )
@@ -175,7 +175,7 @@ bool cClilocLoader::Init(std::string path)
 			msg.resize(msglen+1);
 			clilocfile.read ((char*)&msg[0], msglen);
 			msg[msglen] = 0;
-			
+
 			#if 0
     		output.clear();
     		UTF8Decode2BytesUnicode(msg, output);
@@ -189,7 +189,7 @@ bool cClilocLoader::Init(std::string path)
 		}
 		clilocfile.close ();
 	}
-	
+
 	return true;
 }
 
@@ -258,7 +258,7 @@ std::string cClilocLoader::GetMessageWithArguments (int id, int args_num, vector
 		}
 		ret_msg += word;
 		// HARKON: why delete?
-		// delete[] newstr; 
+		// delete[] newstr;
 	}
 
 

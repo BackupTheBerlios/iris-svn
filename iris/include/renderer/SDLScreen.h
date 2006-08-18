@@ -65,7 +65,7 @@ public:
   
 	Uint16 GetDefaultHue( Uint32 id );
 
-	void SetLight( float factor );
+//	void SetLight( float factor );
 	void SetFogColor (Uint8 r, Uint8 g, Uint8 b);
 
 public:

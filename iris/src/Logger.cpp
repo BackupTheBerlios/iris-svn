@@ -1,6 +1,6 @@
 /*
  * Debug Logger, used to debug.
- * 
+ *
  * This is a logger which will debug everything if it is turned on.
  *
  * Used to debug the application, when getting weird values or to make sure something happens.
@@ -30,7 +30,6 @@
  */
 
 #include "Logger.h"
-
 
 
 
@@ -87,7 +86,7 @@ bool Logger::Init( const std::string sVersion, const std::string sLogName )
 		}
 	}
 
-	WriteLine( std::string( "Iris version " ) + sVersion.c_str() + 
+	WriteLine( std::string( "Iris version " ) + sVersion.c_str() +
 		std::string( " Copyright (©) 2003-2006 Iris Team" ) );
 	WriteLine( "Iris comes with ABSOLUTELY NO WARRANTY" );
 	WriteLine( "This is free software, and you are welcome to redistribute it" );
@@ -135,7 +134,7 @@ void Logger::Write( const char *cMessage, const char *cFileName, const int iLine
 
 	sprintf( cLineStr, "%d", iLine );
 
-	sErrorMsg += "(" + std::string( cFileName ) + "," + 
+	sErrorMsg += "(" + std::string( cFileName ) + "," +
 		std::string( cLineStr ) + "): " + std::string( cMessage );
 
 	// Dump the message out to a file

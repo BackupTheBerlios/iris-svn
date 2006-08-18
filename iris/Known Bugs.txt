@@ -1,3 +1,5 @@
+Needs debugging or fixing:
+_____________________________________________________________________________________________________________________
 - When clicking self it opens the tooltips but if you click somewhere it doesn't go away	- Needs fixing
 - Options "Music Off" does not work								- Needs fixing
 - When opening the "Bag" you can get multiple bags						- Needs fixing
@@ -14,6 +16,7 @@
 - Elfs don't wear clothes									- Needs fixing
 - tooltips don't shown in other containers than backpack, doesn't show in paperdoll		- Needs fixing
 - Iris chrashes receiving big gumps from the server						- Needs fixing
+- Drag & Drop drops the performance to almost null (SiENcE)					- Needs fixing
 
 - Skills can not be used (like meditation/taming/hide/etc) - (taming works!, SiENcE)		- Needs testing
 - Fix for walking code (still messed up with RunUO) (SiENcE)					- Needs testing
@@ -30,6 +33,9 @@ restarting iris)
 - crash when RunUO-Server uses KnivesChat 2.xx							- Needs testing
 - shadow is too small when mounted / also too big for Birds 					- Needs testing
 
+
+Features needed:
+_____________________________________________________________________________________________________________________
 - On login menu, after the music has stopped it does not start again (loop).			- New Feature
 - Hide cursor when changing the view (SiENcE)							- New Feature
 - Unicode support.										- New Feature
@@ -66,9 +72,9 @@ restarting iris)
 - Paging system											- New Feature
 - new Boat Models must be added with IrisEdit to uim file. Now only Small Boat is used for all. - New Feature
 
-
+Fixed in current SVN:
+_____________________________________________________________________________________________________________________
 - Beeing able to stop the Music.								- ADDED
-- Drag & Drop drops the performance to almost null (SiENcE)					- FIXED?
 - Crash on log out?										- FIXED
 - When clicking with the middle side button it crashes with "Unhandled exception" 		- FIXED
 - When clicking with the Right/Middle button (drag+drop) it crashes (login menu)		- FIXED

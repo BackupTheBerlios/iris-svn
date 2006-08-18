@@ -27,7 +27,9 @@
 
 // string generation
 std::string	strprintf	(const char* szFormat,...);
-std::string	strprintvf	(const char* szFormat,void* arglist);
+
+//unused
+//std::string	strprintvf	(const char* szFormat,void* arglist);
 
 
 /// also known as split,  explode("#","abc#def#ghi",res)  pushes  "abc","def","ghi" onto res
