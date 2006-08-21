@@ -243,6 +243,10 @@ public:
    bool Connect (char * address, Uint16 port);
    void Disconnect ();
    Uint32 Get_Local_IP();
+
+//SiENcE:new
+   int ready();
+
    void Poll ();
 
    void Send (cPacket * packet);

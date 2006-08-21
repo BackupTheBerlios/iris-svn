@@ -160,7 +160,7 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 	//  float groundnormals[9][9][3];
 
 	_generated = true;
-	
+
 //	light_vector[2] *= 10.0f;
 //	NormalizeVector( light_vector );
 
@@ -243,7 +243,7 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 			NormalizeVector( groundnormals[y][x] );
 
 			float *gnormal = groundnormals[y][x];
-			float light_fac = gnormal[0] * m_light_direction[0] + gnormal[1] * 
+			float light_fac = gnormal[0] * m_light_direction[0] + gnormal[1] *
 				m_light_direction[1] + gnormal[2] * m_light_direction[2];
 
 			ground_vertieces[y][x].x = (float)x;
@@ -254,16 +254,16 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 
 			for ( int i = 0; i < 3; i++ )
 			{
-				int value =	m_ambient_light_color.color_array[i] + 
+				int value =	m_ambient_light_color.color_array[i] +
 					(int)( (float) m_sun_light_color.color_array[i] * ((light_fac > 0.0f) ? light_fac : 0.0f) );
 				ground_vertieces[y][x].color.color_array[i] = (value < 255) ? value : 255;
 				// printf("%i\n", value);
 			}
-			
+
 			ground_vertieces[y][x].color.colorRGB.r = 255;
 			ground_vertieces[y][x].color.colorRGB.g = 128;
 			ground_vertieces[y][x].color.colorRGB.b = 128;
-			
+
 			ground_vertieces[y][x].color.colorRGB.a = 255;
 		}
 
@@ -288,7 +288,7 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
                  ((statics_p->TileID >=13422) && (statics_p->TileID <=13445)) ||
                  ((statics_p->TileID >=13460) && (statics_p->TileID <=13483)) ||
                  ((statics_p->TileID >=13496) && (statics_p->TileID <=13514)))
-			{                   // Filter out water 
+			{                   // Filter out water
 				watermap[(int)statics_p->y][(int) statics_p->x] = (int) statics_p->z + 128 | 1024;
 			}
 			else
@@ -316,7 +316,7 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
 							cMapblock *block = pMapbufferHandler.buffer()->Get (m_blockx + new_x, m_blocky + new_y);
 							if ( block )
 							{
-								((cMapblock3D *)block)->GetShaderMatrix()->AddModel (object->x - new_x * 8, object->y - new_y * 8, 
+								((cMapblock3D *)block)->GetShaderMatrix()->AddModel (object->x - new_x * 8, object->y - new_y * 8,
 									object->z, model );
 							}
 						}
@@ -376,13 +376,13 @@ bool cMapblock3D::Generate( cLightNodeEnvironment &environment )
      nodes.CalcLight(light_vector);
      GenerateStaticLight (); */
 //  nodequads.ReduceQuads();
-  //nodequads.Sort(); 
+  //nodequads.Sort();
   m_recalc_ambient_light = true;    // Make sure, that ambient lighting is done
 
   light_handler->CalcAmbientLight (m_ambient_light_color, m_sun_light_color, m_light_direction,
                                    &shader_matrix);
 
-  // Generate Water 
+  // Generate Water
   for (y = 0; y < 8; y++)
     for (x = 0; x < 8; x++)
       if (watermap[y][x] & 1024)
@@ -634,7 +634,7 @@ sStaticObject *cMapblock3D::CheckRay (float vecOrigin[3], float vecDir[3],
                                   }
                             }
                       }
-                      
+
                       }
               }
       }
@@ -747,7 +747,7 @@ void cMapblock3D::AddMultiObject(Uint32 id, Uint16 tileid, Uint16 dye, int x, in
         ((cMapblock3D *) block)->GetShaderMatrix ()->AddModel (object->x - new_x * 8,
                                                                object->y - new_y * 8,
                                                                object->z, model);
-    }		
+    }
 }
 
 void cMapblock3D::set_light_color (sColor ambient_color, sColor sun_color)

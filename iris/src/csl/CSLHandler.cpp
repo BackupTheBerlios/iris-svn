@@ -816,7 +816,7 @@ static ZString api_net_lastobj(ZCsl * aCsl)
 
   if(pClient)
    return ZString(pClient->lastObject());
-  return "-1"; 
+  return "-1";
 
 }
 
@@ -825,7 +825,7 @@ static ZString api_net_lasttarget(ZCsl * aCsl)
 
   if(pClient)
    return ZString(pClient->lastTarget());
-  return "-1"; 
+  return "-1";
 
 }
 
@@ -834,7 +834,7 @@ static ZString api_net_lastskill(ZCsl * aCsl)
 
   if(pClient)
    return ZString(pClient->lastSkill());
-  return "-1"; 
+  return "-1";
 
 }
 
@@ -843,7 +843,7 @@ static ZString api_net_lastspell(ZCsl * aCsl)
 
   if(pClient)
    return ZString(pClient->lastSpell());
-  return "-1"; 
+  return "-1";
 
 }
 
@@ -859,11 +859,11 @@ static ZString api_net_lastattack(ZCsl * aCsl)
 static ZString api_net_sendtarget(ZCsl * aCsl)
 {
   int id = aCsl->get("id").asInt();
-  
+
   if(pClient)
    pClient->Send_Target(Game::GetInstance()->cursorid(), (Uint32)id);
   Game::GetInstance()->click_mode(CLICK_NORMAL);
-  return "0"; 
+  return "0";
 
 }
 
@@ -873,7 +873,7 @@ static ZString api_net_waittarget(ZCsl* aCsl)
  std::cout << "fname: " << fname << std::endl;
  pClient->wait_for_target(fname);}
 
- 
+
  return "0";
 }
 
@@ -882,7 +882,7 @@ static ZString api_game_settimer(ZCsl* aCsl)
 
 	std::string func = std::string(aCsl->get("func").buffer());
  Game::GetInstance()->SetTimerFunction(func, aCsl->get("time").asInt());
- 
+
  return "0";
 }
 
@@ -902,7 +902,7 @@ int amount = aCsl->get("amount").asInt();
 
 //}
 
- 
+
  return "0";
 }
 
@@ -920,7 +920,7 @@ int amount = aCsl->get("amount").asInt();
 
 //}
 
- 
+
  return "0";
 }
 
@@ -930,7 +930,7 @@ static ZString api_net_togglerun(ZCsl* aCsl)
 
  if(pClient)
   pClient->toggleRunMode();
- return "0"; 
+ return "0";
 }
 
 static ZString api_camera_firstperson(ZCsl* aCsl)
@@ -1021,7 +1021,7 @@ static ZString api_gui_addart (ZCsl * aCsl)
           image->SetHue (hue);
         api_addcontrol (image);
         return ZString (image->GetID ());
-   
+
 }
 
 
@@ -1982,9 +1982,9 @@ static ZString api_config_setvalue (ZCsl * aCsl)
       case 5:
         Config::SetServer( aCsl->get("value").buffer() );
         break;
-      case 10:  
+      case 10:
        Config::SetPerspective( aCsl->get("value").asInt() );
-	   break; 
+	   break;
       case 17:
         Config::SetBrightness( aCsl->get("value").asInt() );
         break;
@@ -1995,7 +1995,7 @@ static ZString api_config_setvalue (ZCsl * aCsl)
         Config::SetRoofFadeTime( aCsl->get("value").asInt() );
       case 23:
         Config::SetRoofFade( aCsl->get("value").asInt() );
-		break;      
+		break;
       }
   return "0";
 }
@@ -2208,16 +2208,21 @@ static ZString api_net_createchar (ZCsl * aCsl)
     errorid = 14;
   else if ((doll.skill_val[0] + doll.skill_val[1] + doll.skill_val[2]) != 100)
     errorid = 15;
-  else if ((doll.skin_color < 0x3ea) || (doll.skin_color > 0x422))
-    errorid = 16;
-  else if ((doll.hair_color < 0x44e) || (doll.hair_color > 0x47d))
-    errorid = 17;
-  else if ((doll.facial_hair_color < 0x44e) || (doll.facial_hair_color > 0x47d))
-    errorid = 18;
-  else if (((doll.hair < 0x203b) || (doll.hair > 0x203d)) && ((doll.hair < 0x2044) || (doll.hair > 0x204a)))
-    errorid = 19;
-  else if (((doll.facial_hair < 0x203e) || (doll.facial_hair > 0x2041)) && ((doll.facial_hair < 0x204b) || (doll.facial_hair > 0x204d)))
-    errorid = 20;
+
+  else if ((doll.skin_color <= 0x83EA) || (doll.skin_color >= 0x8422))
+    doll.skin_color = 0x83EA;
+  else if ((doll.hair_color <= 0x44E) || (doll.hair_color >= 0x4AD))
+    doll.hair_color = 0x044E;
+  else if ((doll.facial_hair_color <= 0x44E) || (doll.facial_hair_color >= 0x4AD))
+    doll.facial_hair_color = 0x044E;
+
+  else if (!((doll.hair >= 0x203b && doll.hair <= 0x203d ) || ( doll.hair >= 0x2044 && doll.hair <= 0x204a )))
+    doll.hair = 0;
+
+  else if (!(((doll.facial_hair >= 0x203e && doll.facial_hair <= 0x2041) ||
+              (doll.facial_hair >= 0x204b && doll.facial_hair <= 0x204d )) || doll.sex ))
+    doll.facial_hair = 0;
+
   else if ((doll.pants_color < 2) || (doll.pants_color > 0x3e9))
     errorid = 21;
   else if ((doll.shirt_color < 2) || (doll.shirt_color > 0x3e9))
@@ -2573,7 +2578,7 @@ static ZString api_net_openquestgump( ZCsl *aCsl )
 		cCharacter *character = pClient->player_character();
 
 		if ( character )
-		{    
+		{
            //Send Quest request
            pClient->Send_AoSCommand(charid, subcmd);
         }
@@ -2970,10 +2975,10 @@ static ZString api_load_world_light_map (ZCsl * aCsl)
 
   if (!renderer)
     return "0";
-  
+
   renderer->world_environment().LoadLightColorMap (aCsl->get ("ambientfilename").buffer (), aCsl->get ("sunfilename").buffer ());
-  
-  return "0";       
+
+  return "0";
 }
 
 //Tensor: Loads world environment fogmap
@@ -2983,10 +2988,10 @@ static ZString api_load_world_fog_map (ZCsl * aCsl)
 
   if (!renderer)
     return "0";
-  
+
   renderer->world_environment().LoadFogColorMap (aCsl->get ("fogfilename").buffer ());
-  
-  return "0";       
+
+  return "0";
 }
 
 CSLHandler::CSLHandler ()
@@ -3035,7 +3040,7 @@ void CSLHandler::DeInit ()
 /*
 			if ( cont_content_list )
 				delete cont_content_list;
-			
+
 			cont_content_list = NULL;
 */
 			initialized = false;
@@ -3046,7 +3051,7 @@ void CSLHandler::DeInit ()
 			{
 				Logger::WriteLine (err[i]);
 			}
-			
+
 			if ( cslOk )
 			{
 				delete csl;
@@ -3399,7 +3404,7 @@ void CSLHandler::InitAPI (void)
                   api_net_sendpickup);
     csl->addFunc (module, "net_getaostooltip (const id, const index)",
                   api_net_getaostooltip);
-                  
+
     csl->addFunc(module, "net_lastobject ()", api_net_lastobj);
     csl->addFunc(module, "net_lasttarget ()", api_net_lasttarget);
     csl->addFunc(module, "net_sendtarget (const id)", api_net_sendtarget);
@@ -3408,7 +3413,7 @@ void CSLHandler::InitAPI (void)
     csl->addFunc(module, "net_waitfortarget(const funcname)", api_net_waittarget);
     csl->addFunc(module, "net_lastattack ()", api_net_lastattack);
     csl->addFunc (module, "game_settimer(const time, const func)",
-                  api_game_settimer);              
+                  api_game_settimer);
 
     csl->addFunc (module, "char_gethighlighthue (const id)",
                   api_char_gethighlight);
@@ -3424,11 +3429,11 @@ void CSLHandler::InitAPI (void)
                   api_char_getskill);
     csl->addFunc (module, "net_toggle_runmode()",
                   api_net_togglerun);
-                                              
+
     csl->addFunc (module,
                   "char_addtext (const id, const text, [ const timeout , const hue])",
                   api_char_addtext);
-    
+
     csl->addFunc(module, "control_getid (const name)", api_control_getid);
     csl->addFunc(module, "gui_addform (const x, const y, const gfm_file, [const is_container])", api_gui_addform);
 
@@ -3458,7 +3463,7 @@ void CSLHandler::InitAPI (void)
                   api_utils_rightshift);
     csl->addFunc (module, "utils_bit_leftshift(const a, const b)",
                   api_utils_leftshift);
-    
+
     // added in 0.8 Artix
     csl->addFunc (module, "camera_reset()", api_camera_reset);
 
@@ -3471,7 +3476,7 @@ void CSLHandler::InitAPI (void)
                            api_load_world_light_map);
     csl->addFunc (module, "load_world_fog_map(const fogfilename)",
                            api_load_world_fog_map);
-    
+
     // added in 0.86 SiENcE
     csl->addFunc (module, "net_openquestgump(const charid, const subcmd)", api_net_openquestgump);
   }

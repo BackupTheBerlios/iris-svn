@@ -56,7 +56,7 @@ Game::Game()
 
 	drag_id = 0;
 	drag_model = 0;
-	
+
 	timer_func = "";
     timer = 0;
 
@@ -289,7 +289,7 @@ void Game::InitRenderer( std::string sMulPath )
 		pStitchinLoader.Init( sMulPath + "Models/models.txt", sMulPath + "stitchin.def" );
 		//Profiler::End();
 	}
-	
+
 	if ( Config::GetClilocs() )
 	{
 		//Profiler::Begin( "Clilocs" );
@@ -305,7 +305,7 @@ void Game::InitRenderer( std::string sMulPath )
 	Logger::WriteLine( "\t| -> Texture Buffer" );
 	m_kTextureBuffer = new TextureBuffer();
 	//Profiler::End();
-	
+
 
 	//Profiler::Begin( "Model infos" );
 	Logger::WriteLine( "\t| -> model infos" );
@@ -316,17 +316,17 @@ void Game::InitRenderer( std::string sMulPath )
 	Logger::WriteLine( "\t| -> multis" );
 	pMultisLoader = new cMultisLoader( sMulPath + "multi.mul", sMulPath + "multi.idx" );
 	//Profiler::End();
-    
+
 	//Profiler::Begin( "Speech" );
     //Artix: speechloader loaded only if config option for speech is enabled
     if(Config::GetUseSpeech())
     {
         Logger::WriteLine( "\t| -> speech" );
         m_kSpeechLoader = new SpeechLoader( sMulPath );
-        Logger::WriteDebug( "\t| -> Bank word: " + m_kSpeechLoader->GetID( "*bank*" ) );
+        //Logger::WriteDebug( "\t| -> Bank word: " + m_kSpeechLoader->GetID( "*bank*" ) );
     }
 	//Profiler::End();
-    
+
 	//Profiler::Begin( "Macros" );
     Logger::WriteLine( "\t| -> macros" );
     pMacroLoader = new MacroLoader();
@@ -393,13 +393,13 @@ void Game::DeInitRenderer( void )
 		Logger::WriteLine( "\t| -> stitchinloader" );
 		pStitchinLoader.DeInit();
 	}
-	
+
 	if ( Config::GetClilocs() )
 	{
 		Logger::WriteLine( "\t| -> clilocs" );
 		pClilocLoader.DeInit();
 	}
-	
+
 	Logger::WriteLine( "\t| -> model infos" );
 	SAFE_DELETE( m_kModelInfoLoader );
 
@@ -456,7 +456,7 @@ void Game::Handle( void )
 {
 	static int counter = 0;
 	int new_tick = SDL_GetTicks();
-    
+
     if ( timer && !timer_func.empty() )
     {
 		if ( new_tick >= timer )
@@ -566,7 +566,7 @@ void Game::HandleMouseMotion( SDL_MouseMotionEvent * event )
 						int count = character->aostooltips_count();
 						callback_OnAOSTooltip( character->id (), count, cursorx +10, cursory +10);
 					}
-					
+
 					if ( object )
 					{
 						int count = object->aostooltips_count();
@@ -585,7 +585,7 @@ void Game::HandleMouseMotion( SDL_MouseMotionEvent * event )
 				}
 			}
 		}
-		
+
 		m_MouseLastTick = SDL_GetTicks();
 	}
 }
@@ -601,12 +601,12 @@ void Game::HandleClick( int x, int y, unsigned int buttonstate, bool double_clic
 	pCamera->GetRenderCoords(vecP, tx, ty); */
 
 	int artid;
-	
+
 	if ( ( buttonstate == SDL_BUTTON_LEFT ) && pClient )
 	{
 		cDynamicObject *object;
 		cCharacter *character;
-		
+
 		switch ( click_mode() )
 		{
 		case CLICK_NORMAL:
@@ -620,7 +620,7 @@ void Game::HandleClick( int x, int y, unsigned int buttonstate, bool double_clic
 				else
 				{
 					pClient->Send_Click( object->id );
-                          
+
 					if ( Config::GetPopup() == 1 )
 					{
 						pClient->Send_PopupRequest( object->id, x, y );
@@ -643,7 +643,7 @@ void Game::HandleClick( int x, int y, unsigned int buttonstate, bool double_clic
 				else
 				{
 					pClient->Send_Click( character->id() );
-					
+
 					if ( Config::GetPopup() == 1 )
 					{
 						pClient->Send_PopupRequest( character->id(), x, y );
@@ -654,18 +654,18 @@ void Game::HandleClick( int x, int y, unsigned int buttonstate, bool double_clic
 
 		case CLICK_TARGET_ID:
 			GrabDynamic( x, y, &object, &character );
-	
+
 			if ( object )
 			{
                 pClient->Send_Target ( (Uint32)cursorid(), (Uint32)object->id );
 			}
-             
+
 			if ( character )
 			{
 				pClient->Send_Target( (Uint32)cursorid(), (Uint32)character->id() );
 			}
-  
-			m_click_mode = CLICK_NORMAL;  
+
+			m_click_mode = CLICK_NORMAL;
 			break;
 
 		case CLICK_TARGET_XYZ:
@@ -750,7 +750,7 @@ void game_OnTarget( unsigned int cursorid, unsigned int type )
 {
 	if ( type == TARGET_ID )
 	{
-		// printf("Targetting Entity...\n"); 
+		// printf("Targetting Entity...\n");
 		Game::GetInstance()->click_mode( CLICK_TARGET_ID );
 	}
 	else
@@ -758,7 +758,7 @@ void game_OnTarget( unsigned int cursorid, unsigned int type )
 		// printf("Targetting Position...\n");
 		Game::GetInstance()->click_mode( CLICK_TARGET_XYZ );
 	}
-	
+
 	Game::GetInstance()->cursorid( cursorid );
 }
 
@@ -828,12 +828,12 @@ void Game::GrabDynamic( int x, int y, cDynamicObject **r_object, cCharacter **r_
 	{
 		*r_object = NULL;
 	}
-	
+
 	if ( r_character )
 	{
 		*r_character = NULL;
 	}
-	
+
 	if ( m_paused || !m_kRenderer )
 	{
 		return;
@@ -855,12 +855,12 @@ void Game::HandleMouseDown( int x, int y, int button )
 	cursorx = x;
 	cursory = y;
 	GrabMousePosition( cursorx, cursory, artid );
-  
+
 	if ( button == 1 )
 	{
 		button_left = true;
 	}
-  
+
 	if ( ( button == 2 ) || ( button == 3 ) )
 	{
 		button_right = true;
@@ -880,7 +880,7 @@ void Game::HandleMouseUp( int x, int y, int button )
 	cursorx = x;
 	cursory = y;
 	GrabMousePosition( cursorx, cursory, artid );
-  
+
 	if ( button == 1 )
 	{
 		button_left = false;
@@ -936,7 +936,7 @@ void Game::MoveToMouse()
 	{
 		float m = (float) dy / (float) dx;
 		angle = atan (m) / 3.14159f * 180.0f;
-		
+
 		if ( dx < 0 )
 		{
 			angle = 180.0f + angle;
@@ -955,7 +955,7 @@ void Game::MoveToMouse()
 	{
 		angle = 270.0f;
 	}
-  
+
 	angle += 22.5f;
 
 	int dir = (int)( ( angle + 90.0f ) / 45.0f );
@@ -964,7 +964,7 @@ void Game::MoveToMouse()
 	{
 		dir -= 8;
 	}
-  
+
 	if ( Config::GetPerspective() == 0 && !pCamera.forceRotation() )
 	{
 		pClient->Walk (dir | run_flag);
@@ -996,7 +996,7 @@ void Game::HandleDrag( int x, int y )
 		m_kRenderer->setDragModel( drag_model, cursor3d[0], cursor3d[1], cursor3d[2] );
 		pClient->Send_PickupRequest( object->id );
 	}
-  
+
 	if ( character && callback_OnStatusDrag )
 	{
 		callback_OnStatusDrag( character->id (), cursorx, cursory );
@@ -1010,7 +1010,7 @@ void Game::DragCancel()
 {
 	drag_id = 0;
     pUOGUI.LoadDragCursor( 0 );
-	
+
 	if ( m_kRenderer )
 	{
 		m_kRenderer->setDragModel( 0 );
@@ -1031,7 +1031,7 @@ void Game::Drag( Uint32 id, Uint16 model )
 	{
 		return;
 	}
-	
+
 	drag_id = id;
 
 	drag_model = model;
@@ -1041,7 +1041,7 @@ void Game::Drag( Uint32 id, Uint16 model )
 	if ( obj->itemcount > 1 )
 	{
 		Uint32 cont = obj->parent;
-        
+
 		if ( callback_OnDynamicDrag )
 		{
 			callback_OnDynamicDrag( id, model, obj->itemcount, obj->x, obj->y, cont );
@@ -1084,7 +1084,7 @@ void Game::UpdateDragMode( int mousex, int mousey )
 //		GrabMousePosition (mousex, mousey);
 		Uint32 containerid = 0;
 		bool value = !pUOGUI.FindDragContainer( mousex, mousey, &containerid );
-        
+
 		value = value || ( !containerid );  /* if gui element is not a container -> put to world */
 
         if ( value )

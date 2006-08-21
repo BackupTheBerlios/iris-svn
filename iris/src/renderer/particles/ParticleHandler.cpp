@@ -30,15 +30,10 @@
 #include "Geometry.h"
 #include "irisgl.h"
 
-
-
-
 using namespace std;
-
 
 namespace Particle
 {
-
   cParticle::cParticle (float x, float y, float z, float lifetime,
                         float appeartime)
   {
@@ -155,7 +150,7 @@ namespace Particle
     dest_x = 0.0f;
     dest_y = 0.0f;
     dest_z = 0.0f;
-                                      
+
     m_texture = NULL;
     m_texturewidth = 256;
     m_textureheight = 256;
@@ -166,18 +161,16 @@ namespace Particle
     m_y = y;
     m_z = z;
 
+    m_texture = pParticleLoader.texture_manager ()->loadTexture (m_definition->
+                                                                texture_name());
+    ASSERT (m_texture);
+    m_texturewidth = m_texture->GetWidth ();
+    m_textureheight = m_texture->GetHeight ();
 
-          m_texture =
-            pParticleLoader.texture_manager ()->loadTexture (m_definition->
-                                                              texture_name
-                                                              ());
-          ASSERT (m_texture);
-          m_texturewidth = m_texture->GetWidth ();
-          m_textureheight = m_texture->GetHeight ();
-          if (m_texturewidth < 32)
-            m_texturewidth = 32;
-          if (m_textureheight < 32)
-            m_textureheight = 32;
+    if (m_texturewidth < 32)
+        m_texturewidth = 32;
+    if (m_textureheight < 32)
+        m_textureheight = 32;
 
     Start ();
   }
@@ -214,7 +207,8 @@ namespace Particle
     if (time_fac >= 1.0f)
       time_fac = 1.0f;
     m_last_time = currenttick;
-    
+
+    //only for moving particles (artix)
     if(m_moving)
     {
      if(m_x < dest_x)
@@ -228,8 +222,9 @@ namespace Particle
      if(m_z < dest_z)
       m_z+=0.5f;
      if(m_z > dest_z)
-      m_z-=0.5f;     
-}
+      m_z-=0.5f;
+    }
+
     if(m_x == dest_x && m_y==dest_y && m_z == dest_z)
      Stop();
 
@@ -312,13 +307,11 @@ namespace Particle
                     }
 
               }
-
           if (m_definition->appeartype () == 0) // If Effect is Once then stop
             Stop ();
           else
             m_nextemission += m_definition->time ();  // otherwise schedule next emission
         }
-
   }
 
   void cParticleHandler::ClearParticles ()
@@ -355,10 +348,10 @@ namespace Particle
     vec[2][0] = 0.0f;
     vec[2][1] = 0.15f;
     vec[2][2] = 0.0f;
-    int i;
-    for (i = 0; i < 3; i++)
+
+    for (int i = 0; i < 3; i++)
       Vec3TransformCoord (vec[i], matrix, vec2[i]);
-    for (i = 0; i < 3; i++)
+    for (int i = 0; i < 3; i++)
         {
           dvec[0][i] = vec2[1][i] - vec2[0][i];
           dvec[1][i] = vec2[2][i] - vec2[0][i];
@@ -377,31 +370,24 @@ namespace Particle
     glPopMatrix ();
   }
 
-/*void cParticleEngine::LoadTexture(Texture * texture)
-{
-	if (m_texture)
-		delete m_texture;
-	m_texture = texture;
-} */
-
 void cParticleHandler::setX(float x)
 {
-  m_x = x;   
+  m_x = x;
 }
 
 void cParticleHandler::setY(float y)
 {
-  m_y = y;   
+  m_y = y;
 }
 
 void cParticleHandler::setZ(float z)
 {
-  m_z = z;   
+  m_z = z;
 }
 
 void cParticleHandler::setMoving(bool mov)
 {
- m_moving = mov;     
+ m_moving = mov;
 }
 
 void cParticleHandler::setDestination(float d_x, float d_y, float d_z)

@@ -43,34 +43,29 @@
 #include "loaders/StaticModelLoader.h"
 #include "loaders/StitchinLoader.h"
 #include "loaders/ModelInfoLoader.h"
+#include "loaders/MapInfo.h"
 
 #include "gui/GUIHandler.h"
 #include "gui/Label.h"
 
 #include "net/Client.h"
-#include "loaders/MapInfo.h"
 #include "Exception.h"
 
 #include "include.h"
 #include "Config.h"
 #include "Logger.h"
 #include "Game.h"
+#include "SynchronizedTime.h"
 
 #include "Geometry.h"
 
-
-
-
-//extern SDLScreen *SDLscreen;
 float water_phase = 0.0f;
+Uint8 worldtime = 100;
 
 // Make it better
 float light_angle = 0.4f;
 float light_angle_dir = 1.0f;
 int light_last_change = 0;
-
-//CalCoreModel m_calCoreModel;
-//CalModel m_calModel;
 
 float SkyBoxTexCoords[4][3] =
   { {0.0, 0.0}, {0.0, 1.0}, {1.0, 1.0}, {1.0, 0.0} };
@@ -115,7 +110,8 @@ int Renderer3D::Init (void)
   tex_char_shadow->LoadFromFile ("./textures/char_shadow.png");
 
 //removed because Skybox don't look good with dynamic lightning and fog
-//  LoadSkyboxTextures ();
+//SiENcE:new
+  LoadSkyboxTextures ();
 
   pUOGUI.LoadCursor (0, 0x205a);
   pUOGUI.LoadCursor (1, 0x205b);
@@ -133,8 +129,8 @@ void Renderer3D::LoadSkyboxTextures (int map)
       {
        if(skyboxtextures[index])
         delete skyboxtextures[index];
-      }   
-  char skyboxset[50]; 
+      }
+  char skyboxset[50];
   string skyboxtemp = "./textures/skybox/skybox";
   string skyboxtype;
 
@@ -174,181 +170,7 @@ void Renderer3D::DeInit( void )
 	tex_char_shadow = NULL;
 
 	free_vertex_buffer();
-
-	// destroy the model instance
-	/*
-	m_calModel.destroy();
-
-	// destroy the core model instance
-	m_calCoreModel.destroy();
-	*/
 }
-
-
-/*
-extern int m_count;
-
-void renderMesh ()
-{
-  // get the renderer of the model
-  CalRenderer *pCalRenderer;
-  pCalRenderer = m_calModel.getRenderer();
-  
-  m_calModel.update(0.1f);
-
-  glPushMatrix ();
-//  glLoadIdentity ();
-  glTranslatef(0,0,-50);
-  glScalef(-0.1,0.1,0.4);
-  glDisable(GL_BLEND);
-  glDisable(GL_ALPHA_TEST);
-  // begin the rendering loop
-  if(!pCalRenderer->beginRendering()) return;
-
-  // get the number of meshes
-  int meshCount;
-  meshCount = pCalRenderer->getMeshCount();
-  //glDisable(GL_TEXTURE_2D);
-  glColor4f(1.0f,1.0f,1.0f,1.0f);
-  //glDisable(GL_CULL_FACE);
-
-  // render all meshes of the model
-  int meshId;
-  for(meshId = 0; meshId < meshCount; meshId++)
-  {
-    // get the number of submeshes
-    int submeshCount;
-    submeshCount = pCalRenderer->getSubmeshCount(meshId);
-
-    // render all submeshes of the mesh
-    int submeshId;
-    for(submeshId = 0; submeshId < submeshCount; submeshId++)
-    {
-      // select mesh and submesh for further data access
-      if(pCalRenderer->selectMeshSubmesh(meshId, submeshId))
-      {
-        unsigned char meshColor[4];
-        GLfloat materialColor[4];
-
-        // get the transformed vertices of the submesh
-        static float meshVertices[30000][3];
-        int vertexCount;
-        vertexCount = pCalRenderer->getVertices(&meshVertices[0][0]);
-
-        // get the transformed normals of the submesh
-        static float meshNormals[30000][3];
-        pCalRenderer->getNormals(&meshNormals[0][0]);
-
-        // get the texture coordinates of the submesh
-        static float meshTextureCoordinates[30000][2];
-        int textureCoordinateCount;
-        textureCoordinateCount = pCalRenderer->getTextureCoordinates(0, &meshTextureCoordinates[0][0]);
-        
-
-        // get the faces of the submesh
-        static CalIndex meshFaces[50000][3];
-        int faceCount;
-        faceCount = pCalRenderer->getFaces(&meshFaces[0][0]);
-
-    glEnableClientState (GL_VERTEX_ARRAY);
-    glEnableClientState (GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState (GL_COLOR_ARRAY);
-        // set the vertex and normal buffers
-        glVertexPointer(3, GL_FLOAT, 0, &meshVertices[0][0]);
-        //glNormalPointer(GL_FLOAT, 0, &meshNormals[0][0]);
-
-/*        // set the texture coordinate buffer and state if necessary
-        if((pCalRenderer->getMapCount() > 0) && (textureCoordinateCount > 0))
-        {
-          glEnable(GL_TEXTURE_2D);
-          glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-          glEnable(GL_COLOR_MATERIAL);
-
-          // set the texture id we stored in the map user data
-          glBindTexture(GL_TEXTURE_2D, (GLuint)pCalRenderer->getMapUserData(0));
-
-          // set the texture coordinate buffer
-          glColor3f(1.0f, 1.0f, 1.0f);
-        }*/
-
-  //glBindTexture(GL_TEXTURE_2D, 0);
-  /*      glTexCoordPointer(2, GL_FLOAT, 0, &meshTextureCoordinates[0][0]);
-     // draw the submesh
-     if(sizeof(CalIndex)==2)
-     glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_SHORT, &meshFaces[0][0]);
-     else
-
-     glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_INT, &meshFaces[0][0]);
-
-
-
-
-     // disable the texture coordinate state if necessary
-     /*        if((pCalRenderer->getMapCount() > 0) && (textureCoordinateCount > 0))
-     {
-     glDisable(GL_COLOR_MATERIAL);
-     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-     glDisable(GL_TEXTURE_2D);
-     } */
-
-/*glBegin(GL_TRIANGLES);
-glColor3f(1.0f, 1.0f, 1.0f);
-int i;
-for (i = 0; i < faceCount; i++) {
-    glTexCoord2fv(meshTextureCoordinates[meshFaces[i][0]]);
-    glVertex3fv(meshVertices[meshFaces[i][0]]);
-    glTexCoord2fv(meshTextureCoordinates[meshFaces[i][1]]);
-    glVertex3fv(meshVertices[meshFaces[i][1]]);
-    glTexCoord2fv(meshTextureCoordinates[meshFaces[i][2]]);
-    glVertex3fv(meshVertices[meshFaces[i][2]]);
-}
-/*int vertexId;
-for(vertexId = 0; vertexId < vertexCount; vertexId++)
-{
-//  glVertex3f(meshVertices[vertexId][0], meshVertices[vertexId][1], meshVertices[vertexId][2]);
-/*const float scale = 0.3f;
-   printf("%.2f %.2f %.2f\n", meshVertices[vertexId][0], meshVertices[vertexId][1], meshVertices[vertexId][2]);
-  glVertex3f(meshVertices[vertexId][0], meshVertices[vertexId][1], meshVertices[vertexId][2]);
-  glVertex3f(meshVertices[vertexId][0] + meshNormals[vertexId][0] * scale, meshVertices[vertexId][1] + meshNormals[vertexId][1] * scale, meshVertices[vertexId][2] + meshNormals[vertexId][2] * scale);
-}*/
-//glEnd();
-
-// DEBUG-CODE //////////////////////////////////////////////////////////////////
-/*
-*/
-////////////////////////////////////////////////////////////////////////////////
-
-/*      }
-
-    }
-  }
-  // clear vertex array state
-  //glDisableClientState(GL_NORMAL_ARRAY);
-  //glDisableClientState(GL_VERTEX_ARRAY);
-
-  / reset the lighting mode
-  if(bLight)
-  {
-    glDisable(GL_LIGHTING);
-    glDisable(GL_LIGHT0);
-  }
-
-  // reset the global OpenGL states
-  glDisable(GL_DEPTH_TEST);*/
-
-  /*// reset wireframe mode if necessary
-     if(bWireframe)
-     {
-     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-     } */
-
-
-  // end the rendering
-/*  pCalRenderer->endRendering();
-  glPopMatrix ();
-    glEnable(GL_TEXTURE_2D);
-}*/
-
 
 void Renderer3D::RenderScene( void )
 {
@@ -373,11 +195,19 @@ void Renderer3D::RenderScene( void )
 
 	current_ticks = SDL_GetTicks();
 
-	if ( current_ticks - light_last_change > 150 )
+    //Cycles the Day&Night Effect (change the value 15000)
+	if ( current_ticks - light_last_change > 450 ) //4500
 	{
 		// Dirty hack (set real time instead of current_ticks / 250)
-   	     int worldtime = (current_ticks / 250) % 256;
-       
+//              int worldtime = (current_ticks / 250) % 256;
+
+        if (worldtime >= 255)
+            worldtime=0;
+        else
+            worldtime=worldtime+1;
+
+//        printf ("worldtime: %i\n", worldtime);
+
 		// This is a temporary day cycle
 		light_angle += ( current_ticks - light_last_change ) * 0.0001f * light_angle_dir;
 		light_angle = (float) worldtime / 256.0f * 3.14159f;
@@ -386,14 +216,14 @@ void Renderer3D::RenderScene( void )
 		m_light_direction[0] = cos( 0.2f ) * sin( light_angle );
 		m_light_direction[1] = cos( light_angle ) * sin( 0.2f );
 		m_light_direction[2] = sin( light_angle );
-        
+
 		// Normalize (NOTE: Multiplication is faster than division).
-		lightNormalize = 1 / sqrt( m_light_direction[0] * m_light_direction[0] + 
+		lightNormalize = 1 / sqrt( m_light_direction[0] * m_light_direction[0] +
 			m_light_direction[1] * m_light_direction[1] + m_light_direction[2] * m_light_direction[2] );
 		m_light_direction[0] *= lightNormalize;
 		m_light_direction[1] *= lightNormalize;
 		m_light_direction[2] *= lightNormalize;
-		
+
 		m_sun_light_color = world_environment().getSunLightColor (worldtime);
 		m_ambient_light_color = world_environment().getAmbientLightColor (worldtime);
 
@@ -411,7 +241,7 @@ void Renderer3D::RenderScene( void )
 		( (Mapbuffer3D *)pMapbufferHandler.buffer() )->SetLightColorAndDirection (m_ambient_light_color, m_sun_light_color, m_light_direction);
 		( (Mapbuffer3D *)pMapbufferHandler.buffer() )->SetRecalcAmbientLightFlag();
 		pDynamicObjectList.SetRecalcAmbientLightFlag ();
-		
+
 		sColor fogcolor = world_environment().getFogColor (worldtime);
     	SDLScreen::GetInstance()->SetFogColor (fogcolor.colorRGB.r, fogcolor.colorRGB.g, fogcolor.colorRGB.b);
 
@@ -449,7 +279,8 @@ void Renderer3D::RenderScene( void )
 	// Do our Skybox
 	pCamera.PlaceGLRotationMatrix();
 
-//	RenderSkybox();
+//SiENcE:new
+	RenderSkybox();
 
 	SDLScreen::GetInstance()->ClearZBuffer();
 
@@ -467,14 +298,14 @@ void Renderer3D::RenderScene( void )
 		nConfig::roof_fade_alpha = 255;
 	else
 		nConfig::roof_fade_alpha = 1;*/
- 
+
 	static int old_z = ROOF_NONE;
 	//static int force_fadein = 0;
 
 	if ( do_culling || ( old_z == ROOF_WAIT ) )
 	{
 		int z;// = GetRoofHeight ();
-	
+
 		if ( Config::GetRoofFade() )
 		{
 			z = GetRoofHeight ();
@@ -568,7 +399,7 @@ void Renderer3D::RenderSkybox ()
 			glBindTexture( GL_TEXTURE_2D, skyboxtextures[side]->GetGLTex() );
 
 			//Just a Test for correct Skybox ... GL_EXT Feature
-			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, /*0x812F */ GL_CLAMP_TO_EDGE); 
+			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, /*0x812F */ GL_CLAMP_TO_EDGE);
 			//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, /*0x812F */ GL_CLAMP_TO_EDGE);
 
 			glBegin( GL_QUADS );
@@ -719,10 +550,10 @@ void Renderer3D::RenderCharacters (bool do_culling)
   for (iter = characters->begin (); iter != characters->end (); iter++)
       {
         cCharacter *character = iter->second;
-        
+
 		if((character->id() == pClient->player_charid()) && Config::GetHideSelf() )
          continue;
-        
+
         if ((character->x () >= min_x) && (character->y () >= min_y)
             && (character->x () <= max_x) && (character->y () <= max_y))
             {
@@ -731,13 +562,13 @@ void Renderer3D::RenderCharacters (bool do_culling)
 
               float alpha = 1.0f;
               float scalex = 1.0f, scaley = 1.0f, scalez = 1.0f;
-              
+
               scalex = ModelInfoLoader::GetInstance()->getScaleFactor();
               scaley = ModelInfoLoader::GetInstance()->getScaleFactor();
               scalez = ModelInfoLoader::GetInstance()->getScaleFactor();
-              
+
               int defhue = 0, altbody = 0;
-              
+
               if(modelinfo)
               {
                scalex = modelinfo->scalex ();
@@ -816,7 +647,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                       pHueLoader.GetRGBHue (character->hue (), colr, colg,
                                              colb);
 /*
-                    if((m_kGame->GetPointedObj() == character->id()) || (pClient->GetEnemy() == character->id())) 
+                    if((m_kGame->GetPointedObj() == character->id()) || (pClient->GetEnemy() == character->id()))
                                               SDLScreen::GetInstance()->SetHue((int) character->getHighlightColor());
                                            else
                                               SDLScreen::GetInstance()->SetHue(character->hue());
@@ -887,7 +718,7 @@ void Renderer3D::RenderCharacters (bool do_culling)
                                     }
                               }
 
-                              //Harkon: 
+                              //Harkon:
                               //always render hands for recal hands matrix
                               bodyparts[3] = 0;
 
@@ -1108,7 +939,7 @@ void Renderer3D::GrabDynamic (int x, int y, cDynamicObject ** r_object,
             if (lambda < distance)
                 {
                   if ( Config::GetHideSelf() && character->id() == pClient->player_charid())
-                   return; 
+                   return;
                   *r_character = character;
                   return;
                 }
@@ -1163,7 +994,7 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3], in
   int picked_x = -1;
   int picked_y = -1;
   int picked_z = 0;
-  
+
   // current distance, in order to get the nearest item
   float distance = 1000000.0f;
 
@@ -1175,12 +1006,12 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3], in
             reinterpret_cast <
 
             cMapblock3D * >(pMapbufferHandler.buffer ()->CreateBlock (blockx + x, blocky + y));
-            
+
              if (block)
               {
                   float act_distance;
                   int z;
-                  
+
                   // Check for static objects
                   sStaticObject *result =
                      block->CheckRay (vecPickRayOrigin, vecPickRayDir,
@@ -1193,9 +1024,9 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3], in
                             picked_x = -1;
                             picked_y = -1;
                           }
-    
-                  
-                  
+
+
+
                    // Check for ground items
                    int id =
                       block->CheckRayOnGround (vecPickRayOrigin, vecPickRayDir,
@@ -1212,7 +1043,7 @@ void Renderer3D::GrabMousePosition (int x, int y, int max_z, int cursor3d[3], in
                                picked_z = z;
                             }
                        }
-                   
+
 
 
               }

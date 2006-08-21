@@ -277,10 +277,9 @@ void cCharacter::Handle (float time_factor)
 	bool two_handed = false;
 	bool armed = true;
 
-  if(particle_handler)
-  {
-   pParticleEngine.UpdateParticlePosition(particle_handler, (float)m_x * 1.0f, (float)m_y * 1.0f, (float)m_z / 10.0f);
-  }
+    if(particle_handler) {
+        pParticleEngine.UpdateParticlePosition(particle_handler, (float)m_x * 1.0f, (float)m_y * 1.0f, (float)m_z / 10.0f);
+    }
 
 	int new_animtype = 4;         // stand
 	bool mounted;
@@ -358,7 +357,7 @@ void cCharacter::Handle (float time_factor)
 
 	if (m_forceanim >= 0)
 		new_animtype = m_forceanim;
-	/*  
+	/*
 	if(mounted){
 	//std::cout << "MOUNTED" << endl;
 	new_animtype = 25;
@@ -428,7 +427,7 @@ void cCharacter::Handle (float time_factor)
 		m_y += dy * time_factor * 5.0;
 		m_z += dz * time_factor * 50.0;
 	}
-	/* TODO (#1#): Temporary fix for a bad memory leak...need to find a 
+	/* TODO (#1#): Temporary fix for a bad memory leak...need to find a
 	better solution in the future */
 	if(themount)
 		delete themount;
@@ -1029,5 +1028,5 @@ void cCharacter::setParticle(Uint32 particle_id)
 	if(particle_handler)
 		pParticleEngine.RemoveEffect(particle_handler);
 
-	particle_handler  =  particle_id;  
+	particle_handler  =  particle_id;
 }

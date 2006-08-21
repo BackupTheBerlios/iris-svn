@@ -1,6 +1,6 @@
 /*! \file Main.cpp
  * \brief Main - Program entry point
- * 
+ *
  * This is where it all starts, by initializing the engine and making everything work.
  *
  * Copyright (©) Iris Team
@@ -98,7 +98,7 @@ int main( int argc, char **args )
 		SDLscreen = new SDLScreen();
 		// Initialize Input(SDL) Event
 		SDLEvent *SDLevent = new SDLEvent();
- 
+
 		// Initialize SDL_music
 		SoundMix *pSoundMix;
 		if ( Config::GetMusic() || Config::GetSound() )
@@ -140,7 +140,7 @@ int main( int argc, char **args )
 		pCSLHandler.Load( (char *)sScriptPath.c_str() );
 
 		// Init game engine
-		if ( !kGame->Init() ) 
+		if ( !kGame->Init() )
 		{
 			Logger::WriteLine( "\t| -> Error while trying to initialize Game." );
 		}

@@ -28,9 +28,6 @@
 #include "include.h"
 #include "Logger.h"
 
-
-
-
 using namespace std;
 
 cParticleEngine pParticleEngine;
@@ -66,7 +63,6 @@ void cParticleEngine::Handle ()
 
 void cParticleEngine::Render ()
 {
-
   glDepthMask (GL_FALSE);
   glDisable (GL_CULL_FACE);
   glDisable (GL_ALPHA_TEST);
@@ -89,8 +85,8 @@ Uint32 cParticleEngine::AddEffect (cStaticModelParticleEffectInfo *
 {
   assert (effect_info);
   current_handle++;
-  printf ("[Adding Effect \"%s\" (%d)]\n", effect_info->name ().c_str (),
-          current_handle);
+
+//  printf ("[Adding Effect \"%s\" (%d)]\n", effect_info->name ().c_str (), current_handle);
 
 
         Particle::cEffectDefinition * effect_definition =
@@ -109,8 +105,7 @@ Uint32 cParticleEngine::AddEffect (cStaticModelParticleEffectInfo *
             }
         else
             {
-              Logger::WriteLine ("Warning: Effect not found: " +
-                          effect_info->name ());
+              Logger::WriteLine ("Warning: Effect not found: " + effect_info->name ());
             }
 
   return current_handle;
@@ -120,9 +115,8 @@ Uint32 cParticleEngine::AddEffect (Uint32 effect_id, float x, float y, float z)
 {
   assert (effect_id);
   current_handle++;
-  //printf ("[Adding Effect \"%s\" (%d)]\n", effect_info->name ().c_str (),
-    //      current_handle);
 
+//  printf ("[Adding Effect \"%s\" (%d)]\n", effect_id, current_handle);
 
         Particle::cEffectDefinition * effect_definition =
           pParticleLoader.getEffect (effect_id);
@@ -140,43 +134,35 @@ Uint32 cParticleEngine::AddEffect (Uint32 effect_id, float x, float y, float z)
             }
         else
             {
-              //Logger::WriteLine ("Warning: Effect not found: " +
-                //          effect_info->name ());
-               std::cout << "Warning: Effect not found: " << effect_id << endl; 
+              Logger::WriteLine ("Warning: Effect-ID not found: " + effect_id);
             }
 
   return current_handle;
 }
 
-//particle mods
+//Does this work correct??
 Uint32 cParticleEngine::AddMovingEffect(Uint32 effect_id, float x, float y, float z, float x2, float y2, float z2){
   assert (effect_id);
   current_handle++;
-  //printf ("[Adding Effect \"%s\" (%d)]\n", effect_info->name ().c_str (),
-    //      current_handle);
+//  printf ("[Adding Effect \"%s\" (%d)]\n", effect_id, current_handle);
 
 
         Particle::cEffectDefinition * effect_definition =
           pParticleLoader.getEffect (effect_id);
         if (effect_definition)
             {
-
-              Particle::cParticleHandler * handler =
+                Particle::cParticleHandler * handler =
                 new Particle::cParticleHandler (effect_definition,
                                                 x,
                                                 y,
                                                 z);
-                  handler->setMoving(true);
-                  handler->setDestination(x2, y2, z2);                              
-
-              particle_handlers.insert (make_pair (current_handle, handler));
-
+                handler->setMoving(true);
+                handler->setDestination(x2, y2, z2);
+                particle_handlers.insert (make_pair (current_handle, handler));
             }
         else
             {
-              //Logger::WriteLine ("Warning: Effect not found: " +
-                //          effect_info->name ());
-               std::cout << "Warning: Effect not found: " << effect_id << endl; 
+                Logger::WriteLine ("Warning: Effect-ID not found: " + effect_id);
             }
 
   return current_handle;
@@ -185,7 +171,7 @@ Uint32 cParticleEngine::AddMovingEffect(Uint32 effect_id, float x, float y, floa
 
 void cParticleEngine::RemoveEffect (Uint32 id)
 {
-  printf ("[Removing Effect %d]\n", id);
+  printf("[Removing Effect %d]\n", id);
   std::map < Uint32, Particle::cParticleHandler * >::iterator iter;
   iter = particle_handlers.find (id);
   if (iter != particle_handlers.end ())
@@ -194,7 +180,8 @@ void cParticleEngine::RemoveEffect (Uint32 id)
 
 void cParticleEngine::UpdateParticlePosition(Uint32 id, float newx, float newy, float newz)
 {
-     //printf ("[Moving Effect %d]\n", id);
+  printf("[Moving Effect %d]\n", id);
+
   std::map < Uint32, Particle::cParticleHandler * >::iterator iter;
   iter = particle_handlers.find (id);
   if (iter != particle_handlers.end ()){
@@ -202,6 +189,6 @@ void cParticleEngine::UpdateParticlePosition(Uint32 id, float newx, float newy, 
     iter->second->setY(newy);
     iter->second->setZ(newz);
     }
-    
+
 }
 

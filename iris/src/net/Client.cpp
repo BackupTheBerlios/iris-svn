@@ -83,6 +83,7 @@ Uint16 CheckIfBoat(Uint16 modelID)
    case 0x4001: new_modid = 15962; break;
    case 0x4002: new_modid = 16098; break;
    case 0x4003: new_modid = 15980; break;
+
    //Small Dragon Boat
    case 0x4004: new_modid = 16093; break;
    case 0x4005: new_modid = 15962; break;
@@ -454,14 +455,6 @@ void cClient::ClearLoginLists()
 
 bool cClient::Connect( char *address, Uint16 port )
 {
-	//if ( connected )
-	//{
-	//	// This should _NEVER_ happen
-	//	Logger::WriteDebug( "Something is wrong, we are disconnecting on connect." );
-	//	Disconnect();
-	//}
-	//connected = false;
-
 	IPaddress ip;
 
 	if ( SDLNet_ResolveHost( &ip, address, port ) == -1 )
@@ -520,63 +513,72 @@ void cClient::Disconnect()
 	{
 		return;
 	}
-
-	SDLNet_FreeSocketSet( socketset );
 	SDLNet_TCP_Close( socket );
-
+	SDLNet_FreeSocketSet( socketset );
 	socket = NULL;
+
 	connected = false;
 }
 
+/**
+ * Check to see if bytes ready to be read.
+ * @returns 0 = no bytes ready
+ */
+int cClient::ready()
+{
+    if (!socketset) return 0;
+
+    SDLNet_CheckSockets(socketset,0);
+    return SDLNet_SocketReady(socket);
+}
 
 void cClient::Poll()
 {
-	if ( !connected )
-	{
-		return;
-	}
+    if (!connected) return;
 
-	if ( !socketset )
-	{
-		return;
-	}
+    if ( ready() )
+    {
 
-	char packet[MAX_PACKET_LEN];
+//        if (network->read(act,1)!=-1)
+//            serverHandler->handlePacket(act[0]);
 
-	int len;
+        // This part should be rewritten sometime
+        //-----------------------------------------------------------------------
+        char packet[MAX_PACKET_LEN];
 
-	bool do_poll = true;
-	int poll_pos = 0;
+        bool do_poll = true;
+        int poll_pos = 0;
 
-	while ( do_poll )
-	{
-		do_poll = false;
-		const int numready = SDLNet_CheckSockets( socketset, 0 );
+        while ( do_poll )
+        {
+            do_poll = false;
+            const int numready = SDLNet_CheckSockets( socketset, 0 );
 
-        if ( numready == -1 )
-		{
-			Logger::WriteLine( "SDLNet_CheckSockets: " + std::string( SDLNet_GetError() ) );
-			return;
-		}
+            if ( numready == -1 )
+            {
+                Logger::WriteLine( "SDLNet_CheckSockets: " + std::string( SDLNet_GetError() ) );
+                return;
+            }
 
-		if ( numready && SDLNet_SocketReady( socket ) )
-		{
-			len = SDLNet_TCP_Recv( socket, packet + poll_pos, MAX_PACKET_LEN );
-			if ( len <= 0 )
-			{
-				if (len < 0) Logger::WriteLine( "SDLNet_TCP_Recv: " + std::string( SDLNet_GetError() ) );
-				break;
-			}
+            if ( numready && SDLNet_SocketReady( socket ) )
+            {
+                int len = SDLNet_TCP_Recv( socket, packet + poll_pos, MAX_PACKET_LEN );
+                if ( len <= 0 )
+                {
+                    if (len < 0) Logger::WriteLine( "SDLNet_TCP_Recv: " + std::string( SDLNet_GetError() ) );
+                    break;
+                }
 
-			if ( len > 0 )
-			{
-				do_poll = true;
-				poll_pos += len;
-			}
-		}
-	}
-
-	OnData( packet, poll_pos );
+                if ( len > 0 )
+                {
+                    do_poll = true;
+                    poll_pos += len;
+                }
+            }
+        }
+        //-----------------------------------------------------------------------
+        OnData( packet, poll_pos );
+    }
 }
 
 void LogStream(void* data, int orig_len, bool dir)
@@ -852,6 +854,7 @@ void cClient::OnData( void *data, unsigned int len )
 		ToDo Packets.
 		Ignore following packets
 		*/
+		case PCK_Effect:
 		case PCK_EffectUpdate:
 		case PCK_ZoneChange:
 		case PCK_UnkUpdateRange:
@@ -1192,6 +1195,7 @@ void cClient::Act_Char (cPacket * packet)
         character->setDirection (direction);
         character->setHue (skin);
         character->setHighlightColor (GetHighlightColor (notoriety));
+        character->setBody(model);
 
           while ((itemID = packet->GetDword ()))
               {
@@ -1341,11 +1345,15 @@ void cClient::Act_Put (cPacket * packet)
   model &= 0x7fff;
   x &= 0x7fff;
   y &= 0x3fff;
+
+  //Character died
   if (model == 0x2006)
       {
               cCharacter *character =  pCharacterList.Add (id, x, y, z, itemcount);
               character->setHue (dye & 32767);
-              std::cout << "Corpse hue: " << dye << endl;
+
+            std::cout << "Corpse hue: " << dye << endl;
+
               character->setDirection (direction);
               character->setAsCorpse ();
       }
@@ -1382,8 +1390,9 @@ void cClient::Act_View (cPacket * packet)
                                (Uint16) packet->packet.View.m_y,
                                (Sint8) packet->packet.View.m_z,
                                (Uint16) packet->packet.View.m_bodyType);
-        //character->setDirection ((Uint8) packet->packet.View.m_dir);
+
         character->RotateTo((Uint8) packet->packet.View.m_dir);
+
         if(IsInBoat(packet->packet.View.m_x, packet->packet.View.m_y))
          character->setPosition ((Uint16) packet->packet.View.m_x,
                                 (Uint16) packet->packet.View.m_y,
@@ -1518,8 +1527,6 @@ void cClient::Act_VendOpenSell (cPacket * packet)
   if (callback_OnSellWindowOpen)
     callback_OnSellWindowOpen (inventory_id);
 
-
-
   Uint32 id;
   Uint16 model;
   Uint16 count;
@@ -1527,8 +1534,6 @@ void cClient::Act_VendOpenSell (cPacket * packet)
   Uint16 price;
   Uint16 namelen;
   char name[257];
-
-
 
   for (int i = 0; i < item_count; i++)
       {
@@ -1675,7 +1680,7 @@ void cClient::Act_WalkAck (cPacket * packet)
                     if (mount != NULL)
                       footsteps_snd = 298;
 					if ( SoundMix::GetInstance() )
-						SoundMix::GetInstance()->PlaySound (footsteps_snd, 128, (char) 0,
+						SoundMix::GetInstance()->PlaySound (footsteps_snd, Config::GetSoundVolume(), (char) 0,
                                             (int) mychar->x (),
                                             (int) mychar->y (), mychar->z ());
                   }
@@ -2006,6 +2011,7 @@ void cClient::Act_ContOpen (cPacket * packet)
      backpack_opened = true;
      std::cout << "Backpackopend == true" << std::endl;
   }
+
   if (callback_OnOpenContainer)
     callback_OnOpenContainer (id, gump);
 }
@@ -2382,12 +2388,12 @@ void cClient::Act_GumpDialog( cPacket *packet )
 	Uint32 px = packet->GetDword();
 	Uint32 py = packet->GetDword();
 
-	printf( "[GumpDialog (Size: %d, ID: %d, GumpID: %d, Position(%d, %d))]\n", size, id, gumpid, px, py );
+//	printf( "[GumpDialog (Size: %d, ID: %d, GumpID: %d, Position(%d, %d))]\n", size, id, gumpid, px, py );
 
 	// parse gump commando-lines
 	Uint16 cmds_len = packet->GetWord();
 
-	// printf( "Command Length: %d\n", cmds_len ); // 676 -> DEBUG <-
+//	printf( "Command Length: %d\n", cmds_len ); // 676 -> DEBUG <-
 
 	char *cmds = new char[cmds_len + 1];
 	memset( cmds, 0, cmds_len + 1 );
@@ -2395,7 +2401,8 @@ void cClient::Act_GumpDialog( cPacket *packet )
 
 	//converts cmds to lowerspace
 	char *conv = cmds;
-	// printf( "Conv: %s\n", conv ); -> DEBUG <-
+//	printf( "Conv: %s\n", conv ); -> DEBUG <-
+
 	while ( *conv )
 	{
 		if ( ( *conv >= 65 ) && ( *conv <= 90 ) )
@@ -2428,8 +2435,6 @@ void cClient::Act_GumpDialog( cPacket *packet )
 		{
 			char *line = new char[line_len * 2];
 			packet->GetData( line, line_len * 2 );
-			//HARKON: bug fixed - ansi len : line_len*2, unicode len: line_len
-			//cUnicode unistring((NCHAR*) line,line_len * 2);
 			cUnicode unistring( (NCHAR*)line, line_len );
 
 			if ( strlen( unistring.m_charBuf ) > 0 )
@@ -2463,7 +2468,6 @@ void cClient::Act_GumpDialog( cPacket *packet )
 	for ( it = cmds_list.begin(); it != cmds_list.end(); it++ )
 	{
 		//SiENcE: params has false value in it, don't know why
-
 		std::stringstream stream;
 		std::string command;
 		stream << (*it);
@@ -2794,9 +2798,9 @@ void cClient::Act_CharAction (cPacket * packet)
   assert (packet);
         cCharacter *character =
           pCharacterList.Get ((int) packet->packet.CharAction.m_id);
+
         if (character)
             {
-
               character->DoAnimation ((int) packet->packet.CharAction.
                                       m_movement,
                                       (int) packet->packet.CharAction.
@@ -2813,12 +2817,15 @@ void cClient::Act_SubCommands (cPacket * packet)
 
   switch (subcmd)
       {
+	  //change Worldmap (maps.xml)
 	  case 0x8:
 		{
 		  Uint8 mapID = packet->GetByte();
+
 		  if(actual_map == mapID)
-		  break;
-		  Logger::WriteLine("CHANGE MAP");
+			  break;
+
+		  Logger::WriteLine("MAP changed");
 
 		  if(pMapLoader)
 			delete pMapLoader;
@@ -2828,34 +2835,26 @@ void cClient::Act_SubCommands (cPacket * packet)
 		  cMapInfoEntry * mapinfo_entry = MapInfoLoader::GetInstance()->GetMapInfo(mapID);
 				if(!mapinfo_entry)
 					THROWEXCEPTION ("Wanted to change to an unknown map!");
-/*
-				if(mapinfo_entry->base_id () >= 0)
-					mapID =  mapinfo_entry->base_id ();
 
-		  char mapstr[2];
-		  mapstr[1] = 0;
-		  sprintf(mapstr, "%i", (int) mapID);
-		  std::cout << "Map changed from : "<< actual_map << " to: " << mapstr << std::endl;
-*/
 		  pMapLoader = new UOMapLoader((int)mapID);
 
 		  actual_map = mapID;
 
 		  Renderer * renderer = Game::GetInstance()->GetRenderer();
 
-//removed because Skybox don't look good with dynamic lightning and fog
-//		  renderer->LoadSkyboxTextures (actual_map);
-
-/*		  //This is now handled by WorldEnvironment.cpp
+//SiENcE:new
+		  renderer->LoadSkyboxTextures (actual_map);
+		  //This is now handled by WorldEnvironment.cpp
           GLfloat fogColor[4] = {(float) mapinfo_entry->fog_r() / 255.0f, (float) mapinfo_entry->fog_g() / 255.0f,(float) mapinfo_entry->fog_b() / 255.0f, 1.0 };
 		  glFogfv(GL_FOG_COLOR, fogColor);
-*/
 
 		  break;
 		}
+	  // Display Gump-Popup
       case 0x14:
         {
-          Logger::WriteLine ("DISPLAY POPUP");
+          Logger::WriteLine ("DISPLAY Popup");
+
           popup_entries.clear ();
           popup_tags.clear ();
           Uint16 unkn = packet->GetWord ();
@@ -2875,9 +2874,11 @@ void cClient::Act_SubCommands (cPacket * packet)
             callback_OnPopupDisplay (popup_entries.size (), m_popupx, m_popupy);
           break;
         }
+	  // Displays AoS Spellbook
       case 0x1B:
         {                       // AoS spellbooks
-          Logger::WriteLine ("AOS SPELLBOOK");
+          Logger::WriteLine ("AOS Spellbook");
+
           Uint16 unkn1 = packet->GetWord ();
           Uint32 SpellBookSerial = packet->GetDword ();
           Uint16 SpellBookModel = packet->GetWord ();
@@ -2893,8 +2894,11 @@ void cClient::Act_SubCommands (cPacket * packet)
           break;
 
         }
+	  // Display AOSTooltip
       case 0x10:
         {
+          Logger::WriteLine ("AOS Tooltip");
+
           Uint32 objserial = packet->GetDword ();
           Uint32 listID = packet->GetDword ();
           cCharacter *mob = NULL;
@@ -2923,20 +2927,20 @@ void cClient::Act_SubCommands (cPacket * packet)
           Send (&pck);
           break;
         }
-        //Harkon's packet addition
+        // Damage Packet
         case 0x22:
         {
-             //Damage Packet
-             packet->GetByte();  // 1
-             Uint32 id = packet->GetDword(); // id
-             Uint8 damage = packet->GetByte();  // damage amount
-             //printf("id:0x%x, damage: %d\n", id, damage);
-             char buf[10];
+          Logger::WriteLine ("Damage recv.");
 
-             sprintf(buf, "%d", damage);
-             callback_OnSpeech(buf, "", id, 0x35);
-//             callback_OnSpeech(itoa(damage,buf,10), "", id, 0x35);
-             break;
+          packet->GetByte();  // 1
+          Uint32 id = packet->GetDword(); // id
+          Uint8 damage = packet->GetByte();  // damage amount
+          //printf("id:0x%x, damage: %d\n", id, damage);
+          char buf[10];
+
+          sprintf(buf, "%d", damage);
+          callback_OnSpeech(buf, "", id, 0x35);
+          break;
         }
 
       }

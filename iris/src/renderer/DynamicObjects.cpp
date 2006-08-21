@@ -144,7 +144,7 @@ cDynamicObject *cDynamicObjectList::Add( Uint32 id )
 {
 	dynamiclist_t::iterator iter;
 	iter = dynamiclist.find( id );
-	
+
 
 	if ( iter != dynamiclist.end() )
 	{
@@ -207,7 +207,7 @@ int cDynamicObjectList::UpdateFader( int min_z, Uint8 alpha, cFader *fader, bool
 	bool ok;
 	for ( iter = dynamiclist.begin(); iter != dynamiclist.end(); iter++ )
 	{
-		ok = ( ( (iter->second->z >= min_z) && (!below)) || 
+		ok = ( ( (iter->second->z >= min_z) && (!below)) ||
 			( (iter->second->z < min_z) && (below) ) );
 		if ( ok && (iter->second->alpha == alpha) )
 		{
@@ -268,7 +268,7 @@ int cDynamicObjectList::GetRoofHeight( int x, int y, int z )
 			}
 			continue;
 		}
-		
+
 		if ( (object->x == x) && (object->y == y) && (object->z > z) )
 		{
 			if ( object->z < roof )
@@ -327,80 +327,79 @@ cDynamicObject *cDynamicObjectList::AddContainerContent (Uint32 id,
   return result;
 }
 
-cDynamicObject *cDynamicObjectList::AddWorldItem( Uint32 id, Uint16 model, Uint16 dye, int x, int y, int z, 
+cDynamicObject *cDynamicObjectList::AddWorldItem( Uint32 id, Uint16 model, Uint16 dye, int x, int y, int z,
 												  int itemcount, int incrcounter, int direction, int flag )
 {
-	/*
-     Tensor: what did we do here? Imho not the best idea, since we don't cleanup anything...
-     
+    //-----------------------------------------------------------------------------------------
+    //Tensor: old method was simply a:
+    //	cDynamicObject *result  = Add( id );
+    //-----------------------------------------------------------------------------------------
+
+	//Tensor: what did we do here? Imho not the best idea, since we don't cleanup anything...
+    //-----------------------------------------------------------------------------------------
 	cDynamicObject *result = Get( id );
-
-
 	// much better with that check!
 	if ( !( result && result->x == x && result->y == y && result->z == z ) )
 	{
+        //printf("[WorldItem-ID  (%d)]\n", id);
 		result = Add( id );
-	}*/
+    //-----------------------------------------------------------------------------------------
+        assert( result );
+        result->id = id;
+        result->type = DYNAMICTYPE_WORLD;
+        result->model = model;
 
-    // Tensor: old method was simply a:
-	cDynamicObject *result  = Add( id );
-	
-	assert( result );
-	result->id = id;
-	result->type = DYNAMICTYPE_WORLD;
-	result->model = model;
+        // SiENcE: just for debugging
+        // char msg[128];
+        // sprintf (msg, "ModelID: %i\n", model);
+        // printf(msg);
 
-	// SiENcE: just for debugging
-	// char msg[128];
-	// sprintf (msg, "ModelID: %i\n", model);
-	// printf(msg);
+        result->x = x;
+        result->y = y;
+        result->z = z;
+        result->itemcount = itemcount;
+        result->incrcounter = incrcounter;
+        result->dye = dye;
+        result->direction = direction;
+        result->flag = flag;
 
-	result->x = x;
-	result->y = y;
-	result->z = z;
-	result->itemcount = itemcount;
-	result->incrcounter = incrcounter;
-	result->dye = dye;
-	result->direction = direction;
-	result->flag = flag;
+        cStaticModel *static_model = StaticModelLoader::GetInstance()->getModel( model );
+        if ( static_model )
+        {
+            int blockx = x / 8;
+            int blocky = y / 8;
 
-	cStaticModel *static_model = StaticModelLoader::GetInstance()->getModel( model );
-	if ( static_model )
-	{
-		int blockx = x / 8;
-		int blocky = y / 8;
+            cMotiveBasedLight *light = new cMotiveBasedLight_Entity( (float)(x % 8), (float)(y % 8), (float)z, blockx, blocky, static_model );
+            vLights.push_back( light );
+            result->setMotive( light );
+            if ( static_model->GetLightSourceInfo() )
+            {
+                result->setLightSource( pLightManager.AddDefinedStaticLightSource( x, y, z,static_model->GetLightSourceInfo() ) );
+            }
 
-		cMotiveBasedLight *light = new cMotiveBasedLight_Entity( (float)(x % 8), (float)(y % 8), (float)z, blockx, blocky, static_model );
-		vLights.push_back( light );
-		result->setMotive( light );
-		if ( static_model->GetLightSourceInfo() )
-		{
-			result->setLightSource( pLightManager.AddDefinedStaticLightSource( x, y, z,static_model->GetLightSourceInfo() ) );
-		}
+            std::list<cLight3D *> static_light_list = pLightManager.static_light_list();
+            std::list<cLight3D *>::iterator light_iter;
+            for ( light_iter = static_light_list.begin(); light_iter != static_light_list.end(); light_iter++ )
+            {
+                if ( (*light_iter)->light_in_block( blockx, blocky ) )
+                {
+                    light->AddLight( *light_iter );
+                }
+            }
+            //much better to init. effects here...effects should be independent from lightlist
+            if ( static_model->GetParticleEffectInfo() )
+            {
+                result->SetParticleEffectHandle( pParticleEngine.AddEffect( static_model->GetParticleEffectInfo(),
+                    (float)x, (float)y - 0.8, z * 0.1f ) );
+                    //-0.8 is a hack for p.effects
+            }
+        }
 
-		std::list<cLight3D *> static_light_list = pLightManager.static_light_list();
-		std::list<cLight3D *>::iterator light_iter;
-		for ( light_iter = static_light_list.begin(); light_iter != static_light_list.end(); light_iter++ )
-		{
-			if ( (*light_iter)->light_in_block( blockx, blocky ) )
-			{
-				light->AddLight( *light_iter );
-			}
-
-			if ( static_model->GetParticleEffectInfo() )
-			{
-				printf("Effect");
-				result->SetParticleEffectHandle( pParticleEngine.AddEffect( static_model->GetParticleEffectInfo(), 
-					(float)x, (float)y, z * 0.1f ) );
-			}
-		}
+        if ( callback_OnAdd )
+        {
+            callback_OnAdd( result );
+        }
 	}
-
-	if ( callback_OnAdd )
-	{
-		callback_OnAdd( result );
-	}
-
 	return result;
 }
 
